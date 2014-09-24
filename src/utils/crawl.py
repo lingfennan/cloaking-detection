@@ -1,3 +1,8 @@
+# Usage:
+# python crawl.py $URL_FILE $USER_AGENT_FILE
+#
+#
+
 import hashlib
 import sys
 import os
@@ -6,6 +11,10 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from sets import Set
 from util import start_browser
+
+DELIMETER = "#Delimeter#"
+# To be compatible with program finished at Google
+COMMA = ","
 
 def hex_md5(string):
 	# util function to return md5 in hex of the input string.
@@ -41,58 +50,71 @@ class Crawler:
 		mkdir_if_not_exist(user_agent_md5_dir)
 
 		# md5 - user agent mapping logs
-		self.md5_UA_f.write(use_agent_md5 + ":" + user_agent + "\n")
+		self.md5_UA_f.write(user_agent_md5 + ":" + user_agent + "\n")
 
 		# the user could create multiple sessions
 		# for each session, the program can be threaded
 		if 'Chrome' in user_agent:
-			browser_type = 'Chrome'
+			self.browser_type = 'Chrome'
 		elif 'Firefox' in user_agent:
-			browser_type = 'Firefox'
+			self.browser_type = 'Firefox'
 		elif 'bot' in user_agent:
-			browser_type = 'Firefox'
+			self.browser_type = 'Firefox'
 		else:
-			browser_type = 'Firefox'
-		browser = start_browser(browser_type, incognito=False, user_agent=user_agent)
+			self.browser_type = 'Firefox'
+		browser = start_browser(self.browser_type, incognito=False, user_agent=user_agent)
 
 		# url md5 - landing url logs
-		url_md5_LP_f = open(user_agent_md5_dir + 'landing_page', 'r')
-		success_f = open(user_agent_md5_dir + 'success', 'r')
-		failure_f = open(user_agent_md5_dir + 'failure', 'r')
+		url_md5_LP_f = open(user_agent_md5_dir + 'landing_page', 'w')
+		success_f = open(user_agent_md5_dir + 'success', 'w')
+		failure_f = open(user_agent_md5_dir + 'failure', 'w')
 
 		for url in self.urls:
 			browser.get(url)
-			# if url loading failed!
-			#############
-			# md5 the original url
 			url_md5 = hex_md5(url)
-			url_md5_dir = user_agent_md5_dir + url_md5 + '/'
-			mkdir_if_not_exist(url_md5_dir)
-			# get the landing url
-			landing_url = browser.current_url
-			landing_url_md5 = hex_md5(landing_url)
-			# get the whole page source
-			response = browser.execute_script("return document.documentElement.innerHTML;")
-			response_filename = url_md5_dir + 'index.html'
-			f = open(response_filename, 'w')
-			f.write(response.encode('utf-8'))
-			f.close()
+			# record whether url loading failed!
+			success = True
+			if self.browser_type == 'Chrome' and (('404 Not Found' in browser.title) or ('Error 404' in browser.title) or ('is not available' in browser.title)):
+				success = False
+			elif self.browser_type == 'Firefox' and (('404 Not Found' in browser.title) or ('Error 404' in browser.title) or ('Problem loading page' in browser.title)):
+				success = False
+			else:
+				#############
+				# md5 the original url
+				url_md5_dir = user_agent_md5_dir + url_md5 + '/'
+				mkdir_if_not_exist(url_md5_dir)
+				# get the landing url
+				landing_url = browser.current_url
+				landing_url_md5 = hex_md5(landing_url)
+				# get the whole page source
+				response = browser.execute_script("return document.documentElement.innerHTML;")
+				response_filename = url_md5_dir + 'index.html'
+				f = open(response_filename, 'w')
+				f.write(response.encode('utf-8'))
+				f.close()
 
-			# md5 - landing page mapping logs
-			url_md5_LP_f.write(url_md5 + ':' + landing_url + '\n')
-			log_str = url_md5 + ':' + url + ':' + landing_url_md5 + ':' + landing_url + '\n'
+				# md5 - landing page mapping logs
+				self.htmls_f.write(response_filename + COMMA + landing_url + '\n')
+				url_md5_LP_f.write(url_md5 + DELIMETER + landing_url + '\n')
 			if success:
+				print browser.title
+				log_str = url_md5 + DELIMETER + url + DELIMETER + landing_url_md5 + DELIMETER + landing_url + '\n'
 				success_f.write(log_str)
 			else:
+				log_str = url_md5 + DELIMETER + url + '\n'
+				print browser.title
+				print log_str
 				failure_f.write(log_str)
+		browser.quit()
 
 def main(argv):
-	print len(argv)
 	"""
 	crawler = Crawler('', '', '')
 	crawler.new_session('', 'Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X; en-us) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53', '', 10)
 	crawler.new_session('', 'Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>', '', 10)
 	"""
+	if not len(argv) == 2:
+		return
 	crawler = Crawler(argv[0], argv[1])
 	for user_agent in crawler.user_agents:
 		crawler.new_session(user_agent, 10)
