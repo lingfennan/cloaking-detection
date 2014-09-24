@@ -1,7 +1,0 @@
-How to run:
-python crawl.py
-
-Dependencies:
-selenium
-simhash-py
-
