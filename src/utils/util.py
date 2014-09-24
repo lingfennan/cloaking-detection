@@ -1,6 +1,7 @@
 import sys, getopt
 import csv
 import os
+import platform
 import re
 import random
 import time
@@ -33,7 +34,13 @@ Example Usage:
 	ls trend/*2013*Web\ Search.csv | python util.py -f ad_list -o data/US_2013_WS_list
 """
 
-CHROMEDRIVER_PATH = '/home/ruian/Desktop/cloaking-detection/src/utils/trend/chromedriver'
+if platform.system == 'Darwin':
+	CHROMEDRIVER_PATH = 'trend/mac_chromedriver'
+elif platform.system == 'Linux':
+	CHROMEDRIVER_PATH = 'trend/linux_chromedriver'
+else:
+	print 'System {0} not supported'.format(platform.system)
+	sys.exit(1)
 
 def get_clickstring(words_file):
 	clickstring_set = Set()
