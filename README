@@ -1,0 +1,9 @@
+How to run:
+python crawl.py
+
+Dependencies:
+selenium
+http://www.seleniumhq.org
+simhash
+https://pypi.python.org/pypi/simhash/1.4.6
+
