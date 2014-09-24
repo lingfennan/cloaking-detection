@@ -1,5 +1,10 @@
 Progress
-1. Selenium browser automation
+1. selenium browser automation
+	hot words crawling from Google Trend (6254)
+	advertisement list crawling from Google Search (2795)
+	advertisement visiting with selenium 
+2. simhash-py
+	hash algorithm, hash key, clustering algorithms
 
 
 Questions to answer
@@ -8,9 +13,16 @@ a. Timing: When are we going to grab the content and compute simhash?
 The page could deliver bad content after a while, which simply bypasses our detection.
 b. Structure vs. Text: 
 
+2. Privacy and Attack Model
+Proof?
+
+3. Properties of simhash. Is it distributive? commutative? 
+what simhash essentially captures? Show several (very) simple cases and compute/compare actual simhash results on them. This has to be (almost always) done when you are introducing/using some distance measures to the new problem.
+
+
 
 Next Steps
-1. Get my advisor involved
+1. Get advisor or labmates involved?
 2. Set up regular meetings
 3. Target Oakland or USENIX
 
