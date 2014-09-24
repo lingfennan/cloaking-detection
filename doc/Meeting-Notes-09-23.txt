@@ -1,17 +1,32 @@
 Progress ==========================================================================
 1. selenium browser automation
 	hot words crawling from Google Trend (6254)
+		# more words
 	advertisement list crawling from Google Search (2795)
-	advertisement visiting with selenium 
+		# volume of ads, too small -> no need for automation or too big -> no need for 
+		# research volume of ads
+	advertisement visiting with selenium
+		# referer string, not needed. Or we can argue that
 2. simhash-py
 	hash algorithm, hash key, clustering algorithms
+		#
 
 
 Questions to answer ==========================================================================
 1. Robustness
 a. Timing: When are we going to grab the content and compute simhash?
 The page could deliver bad content after a while, which simply bypasses our detection.
+	# if they do, affects user experience, seems suspicious. user could report. compared to what cloakers can do now.
+	# good content first, then spammy content. randomize our simhash calculation time (from 2 - 10 seconds).
+
 b. Structure vs. Text: How are we going to define cloaking?
+	# structure or text, structure and text
+	# we are analyzing problem and provide possible solutions. each solution has pros and cons, it is for the user to decide.
+	# 1. the or condition will catch more
+	# 2. the and condition will catch less, but lower false positive
+	# 3. if we can relax the threshold, additional false positives
+	# Note: 0.3% percent is good enough for manual check (eight seconds per URL.)
+
 
 2. Privacy and Attack Model
 Attack Model: get simhash, want to find out content
@@ -19,6 +34,7 @@ Simhash: One-wayness
 Attacker could not get content
 
 Attack Model: get URL and corresponding simhash, want to find out some sensitive field on that page, e.g. name
+	
 Collision probability: Pr[h(x) = h(y)] = sim(x,y)
 Attacker could not do dictionary attack on sensitive field of that page. Because feature set is large and difference in several features doesn’t cause the simhash to change
 
@@ -31,7 +47,10 @@ Mixed gaussian dist? would be better fit for this problem since we have multiple
 
 Next Steps ==========================================================================
 1. Get advisor or labmates involved?
+	# yes
 2. Set up regular meetings
+	# wait for response from Ji
 3. Target Oakland or USENIX
+	# Oakland is too early, USENIX may be better
 
 
