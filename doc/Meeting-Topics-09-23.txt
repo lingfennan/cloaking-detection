@@ -1,0 +1,17 @@
+Progress
+1. Selenium browser automation
+
+
+Questions to answer
+1. Robustness
+a. Timing: When are we going to grab the content and compute simhash?
+The page could deliver bad content after a while, which simply bypasses our detection.
+b. Structure vs. Text: 
+
+
+Next Steps
+1. Get my advisor involved
+2. Set up regular meetings
+3. Target Oakland or USENIX
+
+

@@ -1,0 +1,415 @@
+<head><script language="javascript">
+function TrackLinkAtlas(LinkDesc, destURL, ProspectID, ISN)
+{
+	var imgPixel = new Image( 1, 1 );
+	imgPixel.src = "https://view.atdmt.com/action/" + LinkDesc + "/v3/atz." + ProspectID + "/atc1." + ISN + "";
+	if(destURL != null)
+	{
+		var cmd = "location.href='" + destURL + "'";
+		var t = setTimeout( cmd, 900 );
+	}
+}
+
+function TrackLinkSiteCatalyst(LinkDesc, eVar35, ISN, bSubmitted)
+{
+	var s=s_gi(getCitiRegion());
+	if( eVar35 != null )
+	{
+		s.eVar35=eVar35;
+		if(bSubmitted)
+		{
+			s.linkTrackEvents='event18';
+			s.events="event18";
+		}
+		else
+		{
+			s.linkTrackEvents='event17';
+			s.events="event17";
+		}
+	}
+	
+	s.campaign = ISN; 
+	if ( s.linkTrackVars ) {
+		s.linkTrackVars += ',eVar35,campaign';
+	} else {
+		s.linkTrackVars = 'eVar35,campaign';
+	}
+
+	s.tl(this,'o',LinkDesc);
+}
+</script><script type="text/javascript" src="/_scripts/_form_utils.js"></script>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>	   <html class="no-js"> <![endif]-->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="content-language" content="en">
+    <meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta http-equiv="Expires" content="-1">
+    <title>Mortgage calculator, home loan, closing costs, buy a home - Citibank Mortgage</title>
+    <meta name="description" content="Citibank Mortgage helps with home buying - mortgage calculator, home loans, closing costs, buying a home and home loan products.">
+	<meta name="keywords" content="Mortgage calculator, buy a home, real estate, home loan, closing costs, new homes">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=0.8">
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+	<style>html{display : none ; }</style>
+    <!--script src="js/vendor/jquery-1.9.0.min.js"></script-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="js/vendor/jquery.easymodal.js"></script>
+    <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+	<script type="text/javascript" src="js/validate.js"></script>
+		<script language="javascript">
+		if( self == top ) {
+		document.documentElement.style.display = 'block' ;
+		} else {
+		top.location = self.location ;
+		}
+
+		var bFormActvity = false;
+		function activateForm()
+		{
+			//alert('bFormActvity: ' + bFormActvity);
+			if(!bFormActvity)
+			{
+				//alert('Test2');
+				TrackLinkSiteCatalyst('ContactMeStart|LP5_Dynamic_C_PS_2014Q1', 'Campaign ContactMe', '13262-00009');
+				bFormActvity = true;
+			}
+		}
+
+		function submitForm()
+		{		
+			cleanMyForm(document.form);
+			document.form.submit();
+		}
+		function TrackPixel(pixID,action)
+		{
+			var r = Math.random() * 100000000;
+			var imgPixel = new Image( 1, 1 );
+			imgPixel.src = "/track/?id=" + pixID + "&r=" + r;  
+			var t = setTimeout( action, 500 );
+		}
+		
+		var bSuppressSurvey = false;
+		var bShowPopUp = true;
+		
+		setTimeout( 'SuppressSurvey()', 14000 );
+		
+		function SuppressSurvey()
+		{
+			bSuppressSurvey = true;
+			bShowPopUp = false;
+			//alert("bSuppressSurvey: " + bSuppressSurvey);
+		}
+		
+		function LaunchSurvey() 
+		{
+			if(!bSuppressSurvey && bShowPopUp)
+			{
+				TrackPixel('52136','');
+				window.open("//citibank.periscopeiq.com/citisurveyP.asp?p=y&ISN=13262-9", "winSurvey", "width=610,height=500,top=10,left=150,screenY=50,screenX=50,toolbar=no,status=no,scrollbars=yes,location=yes");
+			}
+		}
+	
+		</script>
+    <noscript>Your browser does not support JavaScript!</noscript>
+
+    <!--[if gte IE 9]>
+    <style type="text/css">
+        .hero .headline, 
+        .top,
+        .rightCol,
+        .midCol,
+        .leftCol{
+            filter: none;
+        }
+    </style>
+    <![endif]-->
+</head>
+<body onunload="LaunchSurvey();">
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+<![endif]-->
+
+<!-- begin header -->
+<header>
+    <h1>Citi</h1>
+
+    <ul>
+        <li>
+            <span>Need Help?</span> Call us Mon-Fri:
+            <span>8:00 AM to 10:00 PM ET</span>, Sat:
+            <span>9:00 AM to 7:00 PM ET</span>.
+        </li>
+        <li>
+            <span>Call us at:</span>
+            <span class="phone">1-877-675-1374</span>
+        </li>
+        <li class="last">
+            <a href="javascript:void(0);" onclick="javascript:SuppressSurvey();TrackLinkSiteCatalyst('BranchLocatorHeader|LP5_Dynamic_C_PS_2014Q1', 'Campaign VisitBranch', '13262-00009');setTimeout( '', 900 );TrackLinkAtlas('CMI_D_S_C_GEN_LP5_Dy_N_18OFFSS_TB_2122014', '/track/?ProspectID=2247743E1CBF47F69C9B08C27AD56D5B&amp;isn=13262&amp;TGT=111586&amp;ID=51082', '2247743E1CBF47F69C9B08C27AD56D5B', '13262-9' );">Find your nearest Citibank <span class="underline">branch</span></a>
+        </li>
+    </ul>
+
+</header>
+<!-- end header -->
+
+<!-- begin section -->
+<section>
+
+    <div class="hero">
+        <img src="img/hero.png" alt="Mortgage calculator to help with your home loan" border="none">
+        
+        <div class="headline">
+            <h2 style="font-size: 21px;padding:0px 0 4px 0px;"><strong>Special Offer!</strong> <br>Refinance and get 1/8<span style="position:relative; top:-7px; font-size:11px; padding: 0px 0 0 0px;">th</span> off your rate.¹</h2>
+            <span><strong>Buying a home?</strong> It's easy with LOW rates, NO COST SureStart<sup>®</sup> mortgage pre-approval² AND $1500 On-Time Closing Guarantee.³</span>
+        </div>
+    </div>
+
+    <div class="rates">
+        <div class="title">Today's 1/8<span style="position:relative; top:-6px; font-size:10px; padding: 0px 0 0 0px;font-style: normal;">th</span> off rates in <span>GA</span>, as low as:</div>
+        <ul class="apr">
+            <li>                
+                <span class="arm">5/1<br>ARM</span>
+                <span class="col">
+                    4.000% <small></small><br>
+                    3.339% <small> APR*</small>
+                </span>
+                <span class="col last">
+                    $695.28<small><br> est payment**</small>
+                </span>   
+            </li>
+            <li>                
+                <span class="arm">30 YR.<br>fixed<br>rate</span>
+                <span class="col">
+                    4.375% <small></small><br>
+                    4.493% <small> APR</small>
+                </span>
+                <span class="col last">
+                    $728.25<small><br> est payment**</small>
+                </span>   
+            </li>
+            <li class="last">                
+                <span class="arm">15 YR.<br>fixed<br>rate</span>
+                <span class="col">
+                    3.750% <small></small><br>
+                    3.929% <small> APR</small>
+                </span>
+                <span class="col last">
+                    $1,058.86<small><br> est payment**</small>
+                </span>   
+            </li>
+        </ul>
+        <div class="calculators">
+            <div class="subtitle">calculators</div>
+            <ul>
+                <li onclick="javascript:TrackPixel('51460','');TrackLinkSiteCatalyst('MonthlyPayStandalone|LP5_Dynamic_C_PS_2014Q1', null, '13262-00009');window.open('//online.citibank.com/JRS/portal/template.do?ID=standalone_mortgage_calculator','citi','height=650,width=775,scrollbars=yes,location=yes,resizable=yes');">
+                    Calculate your monthly mortgage payments
+                    
+                </li>
+				
+					<li id="cal-loan" onclick="javascript:TrackPixel('51462','');TrackLinkSiteCatalyst('RefiStandalone|LP5_Dynamic_C_PS_2014Q1', null, '13262-00009');window.open('//online.citibank.com/JRS/portal/template.do?ID=standalone_refinancing_calculator','citi','height=650,width=775,scrollbars=yes,location=yes,resizable=yes');">
+						Find out if refinancing is right for you
+					</li>
+				
+            </ul>
+        </div>
+        <p>*The ARM APR may increase after consummation.<br>
+            Internet rates and APR good through today 11am ET.
+        </p>
+    </div>
+    <!-- end rates -->
+
+    <div class="top">Citibank mortgage representatives can walk you through every step of the process.<br>We'll help find the loan option that's right for you.</div>
+
+    <div class="leftCol">
+
+        <h2>Get Started Now</h2>
+
+        <p><span>It takes just a few minutes</span>
+            to begin the home loan process online.</p>
+        <a href="javascript:void(0);" onclick="javascript:SuppressSurvey();TrackLinkSiteCatalyst('PurchGetStarted|LP5_Dynamic_C_PS_2014Q1', 'Campaign GetStarted', '13262-00009');setTimeout( '', 900 );TrackLinkAtlas('CMI_D_S_C_GEN_LP5_Dy_N_18OFFSS_BGS_2122014', '/cmi/14/_bt_appredir.asp?selectedOption=START_APPLICATION&amp;TID=92469&amp;ID=51073&amp;ProspectID=2247743E1CBF47F69C9B08C27AD56D5B&amp;isn=13262&amp;isl=00009', '2247743E1CBF47F69C9B08C27AD56D5B', '13262-9');">Begin Now</a>        
+
+
+        <p class="refinance"><span>Refinancing a home?</span></p>
+        <a href="javascript:void(0);" onclick="javascript:SuppressSurvey();TrackLinkSiteCatalyst('RefiGetStarted|LP5_Dynamic_C_PS_2014Q1', 'Campaign GetStarted', '13262-00009');setTimeout( '', 900 );TrackLinkAtlas('CMI_D_S_C_GEN_LP5_Dy_N_18OFFSS_RGS_2122014', '/cmi/14/_bt_appredir.asp?selectedOption=START_APPLICATION&amp;TID=92470&amp;ID=51074&amp;ProspectID=2247743E1CBF47F69C9B08C27AD56D5B&amp;isn=13262&amp;isl=00009', '2247743E1CBF47F69C9B08C27AD56D5B', '13262-9');">Begin Now</a>
+
+    </div>
+
+    <div class="midCol">
+        <h2>Visit a Citibank<br>Mortgage Representative<br>Near You</h2>
+
+        <a href="javascript:void(0);" onclick="javascript:SuppressSurvey();TrackLinkSiteCatalyst('BranchLocatorBody|LP5_Dynamic_C_PS_2014Q1', 'Campaign VisitBranch', '13262-00009');setTimeout( '', 900 );TrackLinkAtlas('CMI_D_S_C_GEN_LP5_Dy_N_18OFFSS_BB_2122014', '/track/?ProspectID=2247743E1CBF47F69C9B08C27AD56D5B&amp;isn=13262&amp;TGT=111586&amp;ID=51075', '2247743E1CBF47F69C9B08C27AD56D5B', '13262-9');">Locate your Branch</a>
+
+        <small>USE OFFER CODE <span>13262-9</span></small>
+
+    </div>
+
+    <div class="rightCol">
+	
+        <h2>Talk to a Citibank<br>Mortgage Representative<br>Today</h2>
+
+        <h3><span>1-877-675-1374</span></h3>
+
+        <small>USE OFFER CODE <span>13262-9</span></small>
+
+        <img src="img/or.gif" alt="" class="img" border="none">
+
+        <div style="margin-left:26px;" rel="#contact-form" class="nav-toggle"><img src="img/arrows_closed.png" alt="We'll contact you" border="none"></div>
+
+        <div id="contact-form">
+            <form name="form" method="post" action="default.htm?ISN=13262-9&amp;BTPS_TGT=https%3A%2F%2Fmortgage.citimortgage.com%2Fcmi%2Fpaidsearch%2FConforming%2Flp5%2Fdefault.htm%3FISN%3D13262-9&amp;INSEF=13262&amp;BTPS_BU=CMI&amp;BTPS_PUB=GOO&amp;BTPS_DOM=Atlas.Com&amp;BTPS_KPROFID=10001&amp;BTPS_MTYPE=Exact&amp;BTPS_AD=&amp;BTPS_GRP=Top_10_Conforming&amp;BTPS_CMP=Conforming_Atlanta_GA_BaseNoFicoLTV_Refi&amp;BTPS_KWD=mortgage_rates&amp;ProspectID=2247743E1CBF47F69C9B08C27AD56D5B" autocomplete="off">
+
+
+                <label for="fname">First Name: 
+                    <input id="fname" name="fname" value="" onclick="activateForm();" maxlength="20" placeholder="John" required="" autofocus="" type="text">
+                </label>
+
+                <label for="lname" class="rgt">Last Name: 
+                    <input id="lname" name="lname" value="" onclick="activateForm();" maxlength="20" placeholder="Doe" required="" autofocus="" type="text">
+                </label>
+
+                <label for="telephone1">Primary Phone:
+                    <input id="telephone1" name="phone" value="" onclick="activateForm();" maxlength="13" type="tel">
+                </label>
+
+                <label for="telephone2">Secondary Phone:
+                    <input id="telephone2" name="sec_phone" value="" onclick="activateForm();" maxlength="13" type="tel">
+                </label>
+
+                <label for="email" class="rgt">Email Address: 
+                    <input id="email" name="email" value="" onclick="activateForm();" maxlength="30" placeholder="johndoe@example.com" required="" type="email">
+                </label>              
+
+                <label for="zip" class="rgt">Zip Code:
+                    <input id="zip" name="zip_code" value="" onclick="activateForm();" maxlength="5" type="tel">
+                </label>
+
+                <!--<button type="submit" value="Submit" id="submit-button" class="submit" />Submit</button>-->
+                <p id="req-field-desc"><span class="required"></span>Required fields</p>
+
+				<img id="submit-button" class="submit" src="img/submit.png" alt="Submit" onclick="javascript:TrackPixel('51080',submitForm());" border="0">
+                
+
+                <div class="clearfix"></div>
+			<input name="isSubmitted" id="isSubmitted" value="1" type="hidden">
+            </form>
+        </div>
+	
+    </div>
+
+</section>
+<!-- end section -->
+
+<!-- begin footer -->
+<footer>
+
+    <!-- terms and condition -->
+    <div class="terms">
+        <p>Terms, conditions and fees of accounts, programs, products and services are subject to change. This is not a commitment to lend. All loans are subject to credit and property approval. Certain restrictions may apply on all programs. Offer cannot be combined with any other mortgage offer.</p>
+        
+        <p>**5/1 ARM Loan:<br>
+        For a 5/1 ARM, the initial fixed rate for the first 60 months will be 4.000%, and the monthly payment will be $695.28 and is estimated to adjust based upon the sum of the index and margin to 2.830% for the next 12 months and the monthly payment will be $613.06. The interest rate may adjust annually thereafter. The monthly payment reflects principal and interest only and does not include taxes and hazard insurance. Your monthly payment may be higher.</p>
+
+        <p>**30 Year Fixed Rate Loan:<br>
+        The monthly payment for a 30 year mortgage loan is 360 monthly payment of $728.25. The monthly payments reflects principal and interest only and does not include taxes and hazard insurance. Your monthly payment may be higher.</p>
+
+        <p>**15 Year Fixed Rate Loan:<br>
+        The monthly payment for a 15 year mortgage loan is 180 monthly payment of $1,058.86. The monthly payments reflects principal and interest only and does not include taxes and hazard insurance. Your monthly payment may be higher.</p>   
+
+		<p>Terms and conditions of these rates:</p>
+
+        • Excellent credit - score 780 and above<br>
+        • Loan-to-Value Ratio of 80% for loans up to and including $1.5 million, Loan-to-Value ratio for loans in excess of $1.5 million is 75%<br>
+        • Single Family Primary Residence<br>
+        • 60-day lock period<br>
+        • Fees are based on an average loan of $143,839.37 in the state of GA. Actual fees may vary.<br>
+        • Actual interest rate will vary depending upon loan-to-value and credit score.<br>
+
+        <p>Rates displayed are available on conforming rate/term refinance transactions only.
+        <br>
+        Citibank mortgage rates may change without notice subject to market conditions.</p>
+
+        <p><sup>1</sup> Offer available on refinance transactions only. Offer cannot be combined with any other offer and is available only when referencing the Offer Code to your Citibank mortgage representative.</p>
+
+        <p><sup>2</sup> SureStart<sup>®</sup> is a registered service mark of Citigroup Inc. Final commitment is subject to verification of information, receipt of a satisfactory sales contract on the home you wish to purchase, appraisal and title report, and meeting our customary closing conditions. This offer is not a commitment to lend and is subject to change without notice. There is no charge for the SureStart pre-approval, but standard application and commitment fees apply.</p>
+		
+		<p><sup>3</sup> If you are purchasing a home, we guarantee to close by the date specified in your purchase contract, unless prohibited by federal law,* and further provided that the date is at least 30 days after the application date and the date of your purchase contract. If your loan fails to close on time due to a delay by Citibank, you will receive a credit toward closing costs of $1,500. Offer not available for refinance loans, co-ops, unapproved condos, residences under construction, community lending programs and government loans. 
+		In Texas, the credit may not result in your receiving cash back. (*Federal law requires certain disclosures be delivered to the borrower at least 3 business days before consummation. The Guarantee to close does not apply if such disclosures are required and your closing is delayed due to the 3-business-day waiting period.)</p>
+
+        <p class="ehl">© 2014 Citibank, N.A. equal housing lender, member FDIC, NMLS #412915. Citi, Citibank, Arc Design and Citi with Arc Design are registered service marks of Citigroup Inc.</p>
+    </div>
+
+
+    <ul>
+        <li><a target="_blank" href="http://www.citigroup.com/citi/homepage/">Citigroup.com</a></li>
+        <li><a target="_blank" href="https://www.agentsite.com/CitiMortgage_Disclosures/disclosures.aspx?disc=S&amp;ref=&amp;td=id19130778|1">Security</a></li>
+        <li><a target="_blank" href="https://www.agentsite.com/CitiMortgage_Disclosures/disclosures.aspx?disc=TC&amp;ref=&amp;td=id19130778|1">Terms and Conditions</a></li>
+        <li><a target="_blank" href="https://www.agentsite.com/CitiMortgage_Disclosures/disclosures.aspx?disc=P&amp;ref=&amp;td=id19130778|1">Privacy</a></li>
+    </ul>
+
+
+    <div class="copyright">
+        <p>Citi</p>
+        <small>Copyright © 2014 Citigroup</small>
+    </div>
+
+</footer>
+<div style="display: none;" class="modal" id="modal">
+	<a class="close top-close" href="#close">Click here to close this window</a>
+	<a class="close btn-close" href="#close">close</a>
+    <iframe src="//citibank.periscopeiq.com/citisurvey.asp?ISN=13262-9" width="100%" frameborder="0" height="100%"></iframe>
+    <a class="close bot-close" href="#close">Click here to close this window</a>
+</div>
+<style>
+a.top-close, a.bot-close {color: #fff; text-decoration: underline;; font-size: 12px; position: absolute; z-index: 999px; left: 35%;}
+a.top-close{top: -20px;}
+a.bot-close{bottom: -20px;}
+</style>
+<!-- end footer -->
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+<script language="javascript">
+$(document).ready(function () {
+	        //get collapse content selector
+            var collapse_content_selector = $('.nav-toggle').attr('rel');
+
+            //make the collapse content to be shown or hide
+            var toggle_switch = $('.nav-toggle');
+			
+});
+</script>
+<img src="//citibank.periscopeiq.com/images/clear.gif?random=2.81673916770874E+17" width="1" height="1" border="0">
+
+	<img src="/track/?id=51072&amp;random=2.81673916770874E+17" width="1" height="1" border="0">
+	<!-- Atlas tag on home page -->
+	<script>document.write('<s'+'cript language="JavaScript" src="//view.atdmt.com/jaction/CMI_D_S_C_GEN_LP5_Dy_N_18OFFSS_LP_2122014/v3/atz.2247743E1CBF47F69C9B08C27AD56D5B/atc1.13262-9"></s'+'cript>')</script><script language="JavaScript" src="//view.atdmt.com/jaction/CMI_D_S_C_GEN_LP5_Dy_N_18OFFSS_LP_2122014/v3/atz.2247743E1CBF47F69C9B08C27AD56D5B/atc1.13262-9"></script>
+	<noscript><iframe src="//view.atdmt.com/iaction/CMI_D_S_C_GEN_LP5_Dy_N_18OFFSS_LP_2122014/v3/atz.2247743E1CBF47F69C9B08C27AD56D5B/atc1.13262-9" width="1" height="1" frameborder="0" scrolling="No" marginheight="0" marginwidth="0" topmargin="0" leftmargin="0"></iframe></noscript>
+<!-- SiteCatalyst code version: H.22.1.
+Copyright 1996-2010 Adobe, Inc. All Rights Reserved
+More info available at http://www.omniture.com -->
+<script type="text/javascript" language="javascript">
+s_account="citinaprod";//ACCOUNT NUMBER(S)
+var campaign="13262-00009";//CAMPAIGN
+//alert(campaign);
+</script>
+<script type="text/javascript" language="javascript" src="/cmi/_include/SiteCatalyst_2011/s_codev6.js"></script>
+<!-- You may give each page an identifying name, server, and channel on
+the next lines. -->
+<script type="text/javascript" language="javascript">
+s.pageName="Campaign|LP5_Dynamic_C_PS_2014Q1";//PAGE NAME(S)
+
+//s.channel="TBD"
+/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+var s_code=s.t();if(s_code)document.write(s_code)
+</script>
+<!-- End SiteCatalyst code version: H.22.1. -->
+
+
+
+</body>
