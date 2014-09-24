@@ -32,6 +32,12 @@ Example Usage:
 	# get hot search words list from downloaded csv, visit and get ad clickstrings.
 	ls trend/*2013*Web\ Search.csv | python util.py -f ad_list -o data/US_2013_WS_list
 """
+<<<<<<< HEAD
+
+CHROMEDRIVER_PATH = '/home/ruian/Desktop/cloaking-detection/src/utils/trend/chromedriver'
+
+=======
+>>>>>>> 72deeb24177dfa5bb14370bacf5ea26347740181
 def get_clickstring(words_file):
 	clickstring_set = Set()
 	words = filter(bool, open(words_file, 'r').read().split('\n'))
@@ -259,7 +265,11 @@ def start_browser(browser_type, incognito=False, user_agent=None):
 		if user_agent:
 			options.add_argument("--user-agent=\"" + user_agent + "\"")
 		options.add_experimental_option("excludeSwitches", ["ignore-certificate-errors"])
+<<<<<<< HEAD
+		browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
+=======
 		browser = webdriver.Chrome(executable_path='/home/ruian/Desktop/cloaking_detection/utils/trend/chromedriver', chrome_options=options)
+>>>>>>> 72deeb24177dfa5bb14370bacf5ea26347740181
 	else:
 		print 'Invalid browser type, or browser type not handled currently.'
 		sys.exit(2)

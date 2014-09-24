@@ -1,0 +1,502 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>ESL Library - English Lesson Plans, English Flashcards, for ESL Teachers</title>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="author" content="Red River Press" />
+<meta name="copyright" content="Copyright 2010 Red River Press" />
+		
+<link rel="shortcut icon" href="/img/favicon.ico" />
+
+<script type="text/javascript" src="inc/js/swfobject/swfobject.js"></script>
+<script type="text/javascript" src="inc/audioplayer/audio-player.js"></script>
+
+<!--<script src="inc/prototype/prototype.js" type="text/javascript"></script>
+<script src="inc/prototype/effects.js" type="text/javascript"></script>
+<script src="inc/prototype/dragdrop.js" type="text/javascript"></script>
+<script src="inc/prototype/controls.js" type="text/javascript"></script>
+<script src="inc/prototype/slider.js" type="text/javascript"></script>-->
+
+<script src="inc/js/jquery.js" type="text/javascript"></script>
+<script src="inc/js/facebox.js" type="text/javascript"></script>
+<script src="inc/js/easySlider1.7.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function($) {
+      $('a[rel*=facebox]').facebox({
+        loadingImage : 'img/loading.gif',
+        closeImage   : 'img/close.png'
+      })
+    })
+</script>
+
+<!-- CSS -->
+<link href="inc/css/style.css" rel="stylesheet" type="text/css" />
+<link href="inc/css/facebox.css" media="screen" rel="stylesheet" type="text/css" />
+
+<!--[if IE 6]>
+<link href="inc/css/ie6.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+
+<!--[if IE 7]>
+<link href="inc/css/ie7.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+
+<!--[if IE 8]>
+<link href="inc/css/ie8.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+
+
+<script language="Javascript">
+
+$(document).ready(function() {
+    $.facebox.settings.opacity = 0.2
+});
+
+</script>
+
+
+
+<script type="text/javascript" src="_login/login.js"></script>
+<script type="text/javascript" src="js/esl.js"></script>
+<script language="javascript" src="js/ajax.js"></script>
+<script type="text/javascript" src="tool.js"></script>
+<script type="text/javascript" src="_membership/membership.js"></script>
+
+</head>
+
+
+<!--
+<body class="homepage">
+<div id="mainpage-home">
+-->
+<body class="homepage">
+
+<noscript><div id="noscript">This site has features that require <strong>javascript</strong>. Follow these simple instructions to <a href="http://www.activatejavascript.org" target="_blank">enable JavaScript in your web browser</a>.</div></noscript>
+
+	<div id="header">
+		<div id="innerhead">
+			
+		<h1 id="logo"><a href="http://esl-library.com" title="ESL-Library">ESL-Library</a></h1>
+		<h3 id="slogan"><em>Preparing for class is easy... Just hit print!</em></h3>
+		
+		<span id="smallnavcap"></span>
+		
+		<ul id="smallnav">
+			<li><a href="http://www.esl-library.com/company.php?mode=aboutus" title="About">ABOUT</a></li>
+			<li><a href="http://www.esl-library.com/company.php?mode=contactus" title="Contact">CONTACT</a></li>
+			<li style="display:none"><a href="http://www.esl-library.com/account.php" title="Account">ACCOUNT</a></li>
+			<li><a href="http://www.esl-library.com/news.php?mode=whatsnew" title="News">NEWS</a></li>
+			<li class="lastone" style="display:">
+				<a href="javascript:login()" title="Login">LOGIN</a>
+			</li>
+  			<li class="lastone" style="display:none" id="log_out">
+				<a href="javascript:auth('logout')" title="Login">LOGOUT</a>
+			</li>
+		</ul>
+		
+		
+
+			<ul id="nav">
+	<!--
+    <li id="navLessonPlan"><a class="navTab" href="/lessons.php">Lesson Plan Library</a></li>
+	<li id="navFlashcard"><a class="navTab" href="/flashcards.php">Flashcard Library</a></li>
+	<li id="navShop"><a class="navTab" href="/store.php">Shop</a></li>
+	<li id="navNews"><a class="navTab" href="/news.php">News</a></li>
+	<li id="navTour"><a class="navTab" href="/tour.php">Tour</a></li>
+	<li id="navJoinNow"><a class="navTab" href="/membership.php">Join Now</a></li>
+	-->
+	<li id="navLessonPlan"><a class="navTab" href="http://www.esl-library.com/lessons.php">Lesson Plan Library</a></li>
+	<li id="navFlashcard"><a class="navTab" href="http://www.esl-library.com/flashcards.php">Flashcard Library</a></li>
+	<!--<li id="navShop"><a class="navTab" href="http://www.esl-library.com/store.php">Shop</a></li>-->
+	<li id="navNews"><a class="navTab" href="http://www.esl-library.com/blog/">Blog</a></li>
+	<li id="navTour"><a class="navTab" href="http://www.esl-library.com/tour.php">Tour</a></li>
+	<li id="navJoinNow"><a class="navTab" href="https://www.esl-library.com/membership.php">Join Now</a></li>
+</ul> <!-- nav -->
+			<div id="search" class="one">			
+	   		   <form name="search_form" id="search_form" action="/search.php" method="post">
+				<input type="text" name="mainsearch" id="mainsearch" size="40"/>
+				<input type="submit" name="searchbut" value="Search" id="searchbut" onclick="return search_esl()" />
+			  </form>
+			  
+			  	<script>
+					function search_esl()
+					{
+						val = getObjValue("mainsearch");
+						if(val == "")
+						{
+							alert("Enter a keyword to search");
+							document.search_form.mainsearch.focus();
+						}
+						else
+						{
+							document.search_form.action="/search.php?keyword=" + escape(val);
+							return true;
+						}
+						return false;
+					}
+				</script>
+   			</div> <!-- search -->
+   		
+   			<hr />
+
+   			<!--[if lte IE 6]>
+				<div id="iewarning">
+				<div id="iewarning_inner">
+				<h4>Did you know that your Internet Explorer is out of date?</h4>
+				<p>To get the best possible experience using our website we recommend that you upgrade to a newer version or other web browser. A list of the most popular web browsers can be found below.</p>
+				<p>Just click on the icons to get to the download page</p>
+				
+				<div class="browser"><a href="http://www.microsoft.com/windows/Internet-explorer/default.aspx"><img src="inc/js/ie6/browser_ie.gif" /> Internet Explorer 7+</a></div>
+				<div class="browser"><a href="http://www.mozilla.com/firefox/"><img src="inc/js/ie6/browser_firefox.gif" /> Firefox 3+</a></div>
+				<div class="browser"><a href="http://www.apple.com/safari/download/"><img src="inc/js/ie6/browser_safari.gif" /> Safari 3+</a></div>
+				<div class="browser"><a href="http://www.opera.com/download/"><img src="inc/js/ie6/browser_opera.gif" /> Opera 9.5+</a></div>
+				<div class="browser"><a href="http://www.google.com/chrome"><img src="inc/js/ie6/browser_chrome.gif" /> Chrome 2.0+</a></div>
+				
+				</div>
+				</div>
+			<![endif]-->
+			
+	
+   		</div> <!-- innerhead -->	
+			
+	</div> <!-- header -->	
+   			
+   		<div id="slider">
+	
+	<script type="text/javascript">
+		$(document).ready(function(){	
+			$("#slider").easySlider({
+				auto: true, 
+				continuous: true,
+				pause: 6000,
+				vertical: true,
+				numeric: true
+			});
+		});	
+	</script>
+		
+		<ul>				
+			<li id="feat1">
+				<a href="tour.php" class="hidefeat" title="">
+				<h4>Ready-made resources for busy English teachers.</h4>
+				<p>Preparing for class is easy... Just hit print!</p>
+				</a>
+				<div class="belowcarousel">
+					<div class="belowcarousel_inner">
+						<a class="home_join" href="https://esl-library.com/membership.php" title="Join Today!">Join Today!</a>
+						<a class="home_tour" href="tour.php" title="Take a Tour...">Take a Tour</a>
+						<a class="home_login" href="javascript:login()" title="login" style="display:">Login</a>
+					</div> <!-- belowcarousel inner -->
+				</div> <!-- belowcarousel -->
+			</li> <!-- feat1 -->
+			
+			<li id="feat2">
+				<a href="lessons.php" class="hidefeat" title="">
+				<h4>We make lesson plans, so you don't have to.</h4>
+				<p>Hundreds of ready-to-print lesson plans for busy English teachers.</p>
+				</a>
+				<div class="belowcarousel">
+					<div class="belowcarousel_inner">
+						<a class="home_join" href="https://esl-library.com/membership.php" title="Join Today!">Join Today!</a>
+						<a class="home_tour" href="tour.php" title="Take a Tour...">Take a Tour</a>
+						<a class="home_login" href="javascript:login()" title="login" style="display:">Login</a>
+					</div> <!-- belowcarousel inner -->
+				</div> <!-- belowcarousel -->
+			</li> <!-- feat2 -->
+
+			
+			<li id="feat3">
+				<a href="flashcards.php" class="hidefeat" title="">
+				<h4>Flashcards at the click of your mouse.</h4>
+				<p>Over 2000 flashcards for teaching and eliciting language.</p>
+				</a>
+				<div class="belowcarousel">
+					<div class="belowcarousel_inner">
+						<a class="home_join" href="https://esl-library.com/membership.php" title="Join Today!">Join Today!</a>
+						<a class="home_tour" href="tour.php" title="Take a Tour...">Take a Tour</a>
+						<a class="home_login" href="javascript:login()" title="login" style="display:">Login</a>
+					</div> <!-- belowcarousel inner -->
+				</div> <!-- belowcarousel -->
+			</li> <!-- feat3 -->
+				
+			<li id="feat4">
+				<a href="https://esl-library.com/membership.php" class="hidefeat" title="">
+				<h4>Make your teaching life a whole lot easier.</h4>
+				<p>Join us today to access all our resources. We think you'll love ESL-Library.com.</p>
+				</a>
+				<div class="belowcarousel">
+					<div class="belowcarousel_inner">
+						<a class="home_join" href="https://esl-library.com/membership.php" title="Join Today!">Join Today!</a>
+						<a class="home_tour" href="tour.php" title="Take a Tour...">Take a Tour</a>
+						<a class="home_login" href="javascript:login()" title="login" style="display:">Login</a>
+					</div> <!-- belowcarousel inner -->
+				</div> <!-- belowcarousel -->
+			</li> <!-- feat4 -->						
+		</ul>
+		
+	</div> <!-- slider -->
+		
+</div> <!-- mainpage-home -->	   			
+	<div id="mainpage">   	
+
+		
+		<div id="home-top">
+		
+			<div id="home-topleft">
+				<h2>We love making Resources for busy English Teachers!</h2>
+				<p>We love making fun, student-centred lesson plans with lots of pair and group activities, and topics that are relevant today.</p>
+			</div> <!-- home top left -->
+			
+			<div id="home-topright">
+				<div id="news_feature" class="home">
+					
+						<div id="news_feature_inner" class="home">
+							<h4 id="news_feattitle">Your English students want to discuss real issues.</h4>
+
+							<div id="horzslide" class="news_slidey">
+	
+								<script type="text/javascript">
+									$(document).ready(function(){	
+										$("#horzslide").easySlider({
+											auto: false, 
+											controlsShow: true,
+											prevNext: true,
+											nextId: "arrow_next",
+											prevId: "arrow_prev",
+											continuous: true,
+											pause: 5000
+										});
+									});	
+								</script>
+									
+									<ul>				
+										<li id="news1">
+											<a href="http://www.esl-library.com/lessons.php?section_id=112" title="How did the police become so militarized?" class="iconlink"><img title="How did the police become so militarized?" src="http://www.esl-library.com/images/lessons/lg/1109.size2.png" alt="" /><span class="badge_featured">featured</span></a>
+														
+										<div class="news_feature_content">
+											<h4><a href="http://www.esl-library.com/lessons.php?section_id=112" title="How did the police become so militarized?">How did the police become so militarized?</a></h4>
+										<p>In this English lesson plan, your students will read about, discuss, and debate the militarization of police forces across the US. How did police forces acquire so much military equipment and how is it affecting their relationship with local citizens. This topic is very current and the lesson is sure to get your students talking!</p>
+ 
+
+										</div> <!-- news feature content -->			
+							
+										</li> <!-- news1 -->
+							
+										<li id="news2">
+											<a href="http://www.esl-library.com/lessons.php?section_id=112" title="Why do we waste so much food? " class="iconlink"><img title="Why do we waste so much food? " src="http://www.esl-library.com/images/lessons/lg/1089.size2.png" alt="" /><span class="badge_featured">featured</span></a>
+														
+										<div class="news_feature_content">
+											<h4><a href="http://www.esl-library.com/lessons.php?section_id=112" title="Why do we waste so much food? ">Why do we waste so much food? </a></h4>
+										<p>With famine and droughts increasing around the world, we must ask ourselves how we justify wasting so much food in our daily lives. Our latest Discussion Starter English lesson plan looks at the reality and absurdity of wasting food. This lesson is sure to spark some lively discussions with your students.</p>
+ 
+										
+										</div> <!-- news feature content -->			
+							
+										</li> <!-- news2 -->
+
+										<li id="news3">
+											<a href="http://www.esl-library.com/lessons.php?section_id=112" title="Are we all addicted to the Internet?" class="iconlink"><img title="Are we all addicted to the Internet?" src="http://www.esl-library.com/images/lessons/lg/1069.size2.png" alt="" /><span class="badge_featured">featured</span></a>
+														
+										<div class="news_feature_content">
+											<h4><a href="http://www.esl-library.com/lessons.php?section_id=112" title="Are we all addicted to the Internet?">Are we all addicted to the Internet?</a></h4>
+										<p>Many people spend much of their day connected to the Internet, on their phones, computers, tablets, and watches. Is it necessity, habit, addiction, or all of the above? Try our latest Discussion Starter lesson plan on Internet Addiction with your English students this week. We&#8217;re sure this topic will spark some lively conversations in your classes.</p>
+ 
+											
+										</div> <!-- news feature content -->			
+							
+										</li> <!-- news3 -->
+
+									</ul>
+							</div> <!-- horzslide -->
+							
+						</div> <!-- news feature inner -->	
+						<span id="news_featurebottom" class="home"></span>
+				</div> <!-- news feature -->
+			</div> <!-- home top right -->
+		
+		</div> <!-- home-top -->
+	
+	<div id="maincon">
+	
+		<span id="topthing" class="home">
+		
+		<ul>
+			<li id="homefind">Find and print over 500 ready-made English lesson plans</li>
+			<li id="homeprint">Over 2000 vocabulary images to make your own flashcards</li>
+			<li id="homesave">Save time preparing for class</li>
+		</ul>
+		
+		</span>
+		
+		<div id="middlecon">	
+		
+			<div id="homeleft">
+				<h3>Why do so many English teachers love us?</h3>
+				<p><strong>Over 25,000 English teachers in more than 100 countries</strong> subscribe to ESL-Library to access our lesson plans and flashcards. A paid membership gets you full access to print and photocopy any resource in our Lesson Plan Library and Flashcard Library. We have over 500 professionally written lesson plans and over 2000 vocabulary images to use in your classroom.  You'll love how easy it is to pick a lesson for your next class and just start teaching.</p>
+			</div> <!-- homeleft -->
+			
+			<div id="homeright">
+				<h3>Get your students talking!</h3>
+				<ul class="home_list">
+					<li>Tons of pair and group activities</li>
+					<li>New lessons added every month</li>
+					<li>Topics relevant to today's world</li>
+					<li>Short readings to inspire debate and discussions</li>
+					<li>Lots of idiom and vocabulary practice</li>
+					<li>Mini Dialogues, role plays, drills, projects, and so much more...</li>						
+						</ul>
+			</div> <!-- homeleft -->	
+						
+		</div> <!-- middle content -->
+		
+		<hr />
+		<div id="subfooter">
+			<ul id="subfoot_features">
+			
+				<li><a href="http://bit.ly/lWp1g8" title="ESL English Lesson Plans"><img width="174" height="96" src="http://www.esl-library.com/blog/wp-content/uploads/Footer_Feature_Calendar.png" class="attachment-fullsize wp-post-image" alt="ESL English Lesson Plans" title="ESL English Lesson Plans" /></a></li>
+				<li><a href="http://www.esl-library.com/lessons.php?section_id=51" title="Students love our Discussion Starters!"><img width="174" height="96" src="http://www.esl-library.com/blog/wp-content/uploads/Footer_Feature_discussions.png" class="attachment-fullsize wp-post-image" alt="Footer_Feature_discussions" title="Students love our Discussion Starters!" /></a></li>
+				<li><a href="http://www.esl-library.com/lessons.php?section_id=27" title="Everyday Dialogues ESL English Lesson Plans"><img width="174" height="96" src="http://www.esl-library.com/blog/wp-content/uploads/everyday_dialogues1.png" class="attachment-fullsize wp-post-image" alt="everyday_dialogues" title="Everyday Dialogues ESL English Lesson Plans" /></a></li>
+				<li><a href="http://www.esl-library.com/lessons.php?section_id=48" title="Grammar Practice Worksheets ESL English Lesson Plans"><img width="174" height="96" src="http://www.esl-library.com/blog/wp-content/uploads/Grammar-Practice-Worksheets2.png" class="attachment-fullsize wp-post-image" alt="Grammar-Practice-Worksheets" title="Grammar Practice Worksheets ESL English Lesson Plans" /></a></li>
+				<li class="lastone"><a href="http://www.esl-library.com/lessons.php?section_id=122" title="English At Work, ESL Lesson Plan, English Lesson Plan"><img width="174" height="96" src="http://www.esl-library.com/blog/wp-content/uploads/English-At-Work.png" class="attachment-fullsize wp-post-image" alt="English-At-Work" title="English At Work, ESL Lesson Plan, English Lesson Plan" /></a></li>
+			</ul>
+			
+			<div id="subfootboxes">
+			
+				<div id="subfootboxes_inner">
+					
+					<div id="popularlp">
+						<h4>Popular Lesson Plans</h4>
+						<ul>
+							<li><a href="http://www.esl-library.com/lessons.php?section_id=112" title="Modern Slavery"><strong>Modern Slavery</strong><br />Discussion Starters</a></li>
+							<li><a href="http://esl-library.com/lessons.php?section_id=322" title="Body Paragraphs"><strong>Body Paragraphs</strong><br />Writing in English</a></li>
+							<li><a href="http://esl-library.com/lessons.php?section_id=118" title="Robin Williams"><strong>Robin Williams</strong><br />Famous People</a></li>
+							<li><a href="http://esl-library.com/lessons.php?section_id=111" title="Recreation"><strong>Recreation</strong><br />Living in English</a></li>
+							<li><a href="http://esl-library.com/lessons.php?section_id=122" title="Making a Phone Call"><strong>Making a Phone Call</strong><br />English At Work</a></li>
+						</ul>
+					</div> <!-- popular lesson plans -->
+					
+					<div id="newlp">
+						<h4>New Lesson Plans</h4>
+						<ul>
+							<li><a href="http://www.esl-library.com/lessons.php?section_id=112" title="Militarized Police"><strong>Militarized Police</strong><br />Discussion Starters</a></li>
+							<li><a href="http://www.esl-library.com/lessons.php?section_id=127" title="Modals of Advice"><strong>Modals of Advice</strong><br />Grammar Practice</a></li>
+							<li><a href="http://www.esl-library.com/lessons.php?section_id=322" title="Using Apostrophes"><strong>Using Apostrophes</strong><br />Writing in English</a></li>
+							<li><a href="http://www.esl-library.com/lessons.php?section_id=118" title="Robin Williams"><strong>Robin Williams</strong><br />Famous People</a></li>
+							<li><a href="http://www.esl-library.com/lessons.php?section_id=117" title="Ordering Pizza"><strong>Ordering Pizza</strong><br />Everyday Dialogues</a></li>
+						</ul>
+					</div> <!-- new lesson plans -->
+					
+					<div id="talkabout">
+						<h4>Something to talk about</h4>
+						<h5>A &#8220;Firestorm&#8221; Over E-Cigarettes</h5>
+						<p><p>Are e-cigarettes a safe alternative to traditional cigarettes? Should users be allowed to use these devices in public? Get your students talking! </p>
+</p>
+						<p><a href="http://www.esl-library.com/blog/2014/08/29/a-firestorm-over-e-cigarettes/" title="Useful links to articles and resources for this topic...">Great links to articles and resources for this topic...</a></p>
+					</div> <!-- something to talk about -->
+					
+					<div id="blogblurb">
+						<h4>Either Vs. Neither</h4>
+						<h5>ESL-Library blog: September 18, 2014</h5>
+						<p><p>Are your students clear on when to use <em>either </em>and <em>neither</em>? Our editor has some handy teaching tips on when to use each one and the differences in pronunciation.</p>
+</p>
+						<a href="http://www.esl-library.com/blog/2014/09/18/either-vs-neither/" title="Read On" id="readonlink">Read On...</a>
+					</div> <!-- blogblurb -->
+					
+				</div> <!-- subfoot boxes inner -->
+				
+				<span id="subfootboxes_innerbottom"></span>
+				
+			</div> <!-- subfoot boxes -->	
+		
+		</div> <!-- subfooter -->
+		
+		<span id="bottomthing"></span>				
+	</div> <!-- main content -->
+	
+	
+			<div id="foot_join">
+				<div id="foot_join_inner">
+				
+					<div id="foot_join_left">
+						<h3>Why should I join?</h3>
+						<p>Our goal at ESL-Library is to continually produce and offer high quality lesson plans and flashcards for English teachers. We know that many teachers are over-worked and out of time. We love making resources that make your teaching life a whole lot easier. <a href="/company.php?mode=aboutus" title="Learn More about ESL-Library" onclick="return learn_more()">(Find out more about us...)</a></p>
+					</div> <!-- footjoin left -->
+					
+					<div id="foot_join_right">
+						<h5 id="foot_join_sun"><a href="/membership.php" title="">Sign-up Now!</a></h5>
+						<p id="foot_join_what"><a href="/tour.php" title="">What do I get as a ESL-Library member?</a></p>
+				
+					</div> <!-- footjoin right -->
+					
+				</div> <!-- footjoin inner -->	
+			</div> <!-- footerjoin -->
+			
+
+			
+</div> <!-- main page -->
+
+<div id="greenfooter">
+	<div id="greenfooter_inner">
+		
+		<div id="keepintouch">
+			<ul>
+				<li id="keep_facebook"><a href="http://www.facebook.com/ESLlibrary" title="Find us on Facebook!">Find us on Facebook!</a></li>
+				<li id="keep_twitter"><a href="http://twitter.com/esllibrary" title="Follow us on Twitter!">Follow us on Twitter!</a></li>
+				<li id="keep_gplus"><a href="https://plus.google.com/u/0/b/106209490557300087464/106209490557300087464/posts" title="Add us on Google+!">Add us on Google+!</a></li>
+				<li id="keep_rss"><a href="/blog/" title="RSS Feed">RSS Feed</a></li>
+				<li id="keep_email"><a href="company.php?mode=contactus" title="Email Us!">Email Us!</a></li>
+				
+			</ul>		
+		</div> <!-- keep in touch -->
+		
+		<div id="greensignup">
+			<a href="membership.php" title="">Easy-to-use, fun-to-teach, ready-to-print lesson plans and flashcards. Sign-up now!</a>		
+		</div> <!-- green signup -->
+		
+		<div id="greengroup">
+			<ul>
+				<li id="green_newsletter"><a href="/membership.php?mode=freeaccount" title="">Get our Newsletter</a></li>
+				<li id="green_feedback"><a href="/company.php?mode=feedback" title="">Send us Feedback</a></li>
+				<li id="green_team"><a href="/company.php?mode=meet" title="">Meet the Team</a></li>
+			</ul>
+		</div> <!-- green group -->
+		
+		<div id="green_appad">
+			<a href="http://redriverpress.com/apps.php" title="">Tell your students to practice English on the go! Check out our apps for iPhone and iPod Touch.</a>	
+		</div> <!-- green signup -->
+		
+		<h5 id="green_owned">ESL-Library.com is owned and managed by Red River Press Inc., the little online publishing company from Canada.</h5>
+		
+		<div id="green_info">
+			<p>Suite 76, 162 - 2025 Corydon Ave.<br />Winnipeg, Manitoba<br />Canada, R3P 0N5</p>
+			<p class="longer">Toll Free from US/Canada: 1-866-896-7123<br />International Calls: 1-204-452-8241<br />Fax: 1-204-452-8241</p>
+			<p><a href="/legal_privacy.php?mode=terms" title="Terms of Use">Terms of Use</a> | <a href="/legal_privacy.php?mode=privacy" title="Privacy Policy">Privacy Policy</a><br />
+			<a href="http://www.redriverpress.com" title="Red River Press" target="_blank">www.redriverpress.com</a><br />&copy; Red River Press. All rights reserved.</p>
+		</div> <!-- green info -->
+		
+	</div> <!-- green footer inner -->	
+</div> <!-- green footer -->
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-80779-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+	
+</body>
+
+</html>
