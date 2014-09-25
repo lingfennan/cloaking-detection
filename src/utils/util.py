@@ -28,19 +28,29 @@ Example Usage:
 	python util.py -f pattern_distance_distribution -i file.dist -o stats_file
 
 	# visit Google trends data and collect information from there, report.csv for each configuration is downloaded..
-	python util.py -f hot_search_words -b Chrome -o trend/
+	python util.py -f hot_search_words -b Chrome -o trend/csv/
 
 	# get hot search words list from downloaded csv, visit and get ad clickstrings.
 	ls trend/*2013*Web\ Search.csv | python util.py -f ad_list -o data/US_2013_WS_list
 """
 
-if platform.system == 'Darwin':
+# hot_search_words 
+TREND_PROGRESS = 'trend/.progress'
+
+# hot_search_words, ad_list
+if platform.system() == 'Darwin':
 	CHROMEDRIVER_PATH = 'trend/mac_chromedriver'
-elif platform.system == 'Linux':
+	DOWNLOAD_PATH = '/Users/ruian/Downloads/'
+elif platform.system() == 'Linux':
 	CHROMEDRIVER_PATH = 'trend/linux_chromedriver'
+	DOWNLOAD_PATH = '/home/ruian/Downloads/'
 else:
-	print 'System {0} not supported'.format(platform.system)
+	print 'System {0} not supported'.format(platform.system())
 	sys.exit(1)
+
+def mkdir_if_not_exist(directory):
+	if not os.path.exists(directory):
+		os.makedirs(directory)
 
 def get_clickstring(words_file):
 	clickstring_set = Set()
@@ -171,7 +181,7 @@ def get_end(browser, picker_ids, popup_ids):
 
 class Progress:
 	
-	current_file = '/home/ruian/Desktop/cloaking_detection/utils/trend/.progress'
+	current_file = TREND_PROGRESS
 
 	def __init__(self):
 		try:
@@ -209,9 +219,10 @@ class Progress:
 		open(self.current_file, 'w').write('\n'.join(current_str))
 
 def picker_popup(browser, picker_ids, popup_ids, output_dir):
+	mkdir_if_not_exist(output_dir)
 	to_prefix = output_dir
 	# preset variables
-	from_prefix = '/home/ruian/Downloads/'
+	from_prefix = DOWNLOAD_PATH
 	max_tries = 5
 
 	# geo: 8 is United States 
@@ -258,7 +269,7 @@ def start_browser(browser_type, incognito=False, user_agent=None):
 		fp.set_preference("browser.download.folderList",2)
 		fp.set_preference("browser.download.manager.showWhenStarting", False)
 		# fp.set_preference("browser.download.dir",getcwd())
-		fp.set_preference("browser.download.dir","/home/ruian/Downloads")
+		fp.set_preference("browser.download.dir", DOWNLOAD_PATH)
 		fp.set_preference("browser.helperApps.neverAsk.saveToDisk","text/csv")
 		browser = webdriver.Firefox(firefox_profile=fp)
 	elif browser_type == 'Chrome':

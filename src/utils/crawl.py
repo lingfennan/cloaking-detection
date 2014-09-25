@@ -10,7 +10,7 @@ from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from sets import Set
-from util import start_browser
+from util import start_browser, mkdir_if_not_exist
 
 DELIMETER = "#Delimeter#"
 # To be compatible with program finished at Google
@@ -21,10 +21,6 @@ def hex_md5(string):
 	m = hashlib.md5()
 	m.update(string.encode('utf-8'))
 	return m.hexdigest()
-
-def mkdir_if_not_exist(directory):
-	if not os.path.exists(directory):
-		os.makedirs(directory)
 
 class Crawler:
 	# 1. Because we are working on visiting URLs or ad clickstrings (from Google ads), assume we don't need the referer file.
