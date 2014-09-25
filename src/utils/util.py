@@ -5,6 +5,7 @@ import platform
 import re
 import random
 import time
+from datetime import datetime
 from itertools import izip
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -28,7 +29,8 @@ Example Usage:
 	python util.py -f pattern_distance_distribution -i file.dist -o stats_file
 
 	# visit Google trends data and collect information from there, report.csv for each configuration is downloaded..
-	python util.py -f hot_search_words -b Chrome -o trend/csv/
+	# output directory is output_dir + 'csv.' + date + '/'
+	python util.py -f hot_search_words -b Chrome -o trend/
 
 	# get hot search words list from downloaded csv, visit and get ad clickstrings.
 	ls trend/*2013*Web\ Search.csv | python util.py -f ad_list -o data/US_2013_WS_list
@@ -219,6 +221,8 @@ class Progress:
 		open(self.current_file, 'w').write('\n'.join(current_str))
 
 def picker_popup(browser, picker_ids, popup_ids, output_dir):
+	now = datetime.now().strftime("%Y%m%d-%H%M%S")
+	output_dir = output_dir + 'csv.' + now + '/'
 	mkdir_if_not_exist(output_dir)
 	to_prefix = output_dir
 	# preset variables
