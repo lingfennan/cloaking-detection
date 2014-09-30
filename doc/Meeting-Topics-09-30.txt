@@ -1,0 +1,40 @@
+Progress ==========================================================================
+1. hot word list, advertisement list
+	hot words crawling from Google Trend (6254 words)
+		# more words
+	advertisement list crawling from Google Search (2795 advertisements)
+		# volume of ads, too small -> no need for automation or too big -> no need for 
+		# research volume of ads
+	advertisement visiting with selenium
+		# referer string, not needed. Or we can argue that
+
+2. Decription of work: Modeling Webpage Dynamics using Simhash, for Cloaking Detection
+
+
+Questions to answer ==========================================================================
+1. Motivation
+35% advertisement violations. Non-public Google data. How can we justify the motivation?
+
+2. Minhash (random sampling) vs. Simhash (dimension reduction)
+Which one is better for cloaking detection (capturing both differences and similarities)?
+
+3. What would be the user's incentives to install the extension to collect simhash from them? Enforce by Google?
+
+4. User privacy? formal proof? 
+If size(feature set) > epsilon, then collision probability = 1
+
+5. Same URL (website) definition?
+
+
+Next Steps ========================================================================
+1. Planet Lab Experiment
+
+2. Google IP vs. User IP, hot word list
+
+3. Evaluations
+
+4. In real world, how many differences result in complete different simhash?
+
+5. Model Learning Algorithm
+
+
