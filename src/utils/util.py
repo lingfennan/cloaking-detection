@@ -30,7 +30,7 @@ Example Usage:
 
 	# visit Google trends data and collect information from there, report.csv for each configuration is downloaded..
 	# output directory is output_dir + 'csv.' + date + '/'
-	python util.py -f hot_search_words -b Chrome -o trend/
+	python util.py -f hot_search_words -b Chrome -i credentials -o trend/
 
 	# get hot search words list from downloaded csv, visit and get ad clickstrings.
 	ls trend/*2013*Web\ Search.csv | python util.py -f ad_list -o data/US_2013_WS_list
@@ -38,6 +38,7 @@ Example Usage:
 
 # hot_search_words 
 TREND_PROGRESS = 'trend/.progress'
+LEVEL = 2
 
 # hot_search_words, ad_list
 if platform.system() == 'Darwin':
@@ -119,6 +120,12 @@ def trend_query_url(trend_url, params):
 	trend_url += '&'.join(params_str_list)
 	return trend_url
 
+class QuoteError(Exception):
+	def __init__(self, progress):
+		self.progress = progress 
+	def __str__(self):
+		return repr(self.progress)
+
 def sign_in_gmail(browser, username, password):
 	# if chrome
 	browser.get("http://mail.google.com")
@@ -137,6 +144,12 @@ def download_csv(browser):
 	exportMI_button = browser.find_element_by_id('exportMI')	# Find download csv button
 	exportMI_button.click()
 
+def collapse_all(popup):
+	items_to_collapse = popup.find_elements_by_css_selector(".goog-tree-item[aria-level='1'][aria-expanded='true']")
+	for item in items_to_collapse:
+		collapse_item = item.find_element_by_css_selector(".goog-tree-expand-icon[type='expand']")
+		collapse_item.click()
+
 def load_progress(browser, picker_ids, popup_ids, progress, enforce_geo_us=True):
 	current_picker = 0
 	config_list = list()
@@ -144,41 +157,67 @@ def load_progress(browser, picker_ids, popup_ids, progress, enforce_geo_us=True)
 		picker = browser.find_element_by_id(picker_id)
 		picker.click()
 		popup = browser.find_element_by_id(popup_id)
-		items = popup.find_elements_by_class_name('goog-tree-item')
-		if len(items) == 0:
-			items = popup.find_elements_by_class_name('goog-menuitem')
+		# for category, do subselection
+		if picker_id == 'resPckrcat_anchor':
+			# collapse all expaneded items
+			collapse_all(popup)
+			# click aria-level 1 and 2
+			selection = popup.find_elements_by_css_selector(".goog-tree-item[aria-level='1']")
+			item = selection[progress[current_picker+1]]
+			config_list.append(item.text)
+			expand_item = item.find_element_by_css_selector(".goog-tree-expand-icon[type='expand']")
+			expand_item.click()
+			subselection = item.find_elements_by_css_selector(".goog-tree-item[aria-level='2']")
+			subitem = subselection[progress[current_picker]]
+			config_list.append(subitem.text)
+			subitem.click()
 
-		if current_picker == 0 and enforce_geo_us:
-			item = items[0] # default world wide
-			for i in items:
-				if i.text == 'United States':
-					item = i
-					break
+			aria_level_2_size = len(subselection)
+			current_picker += 2
 		else:
-			item = items[progress[current_picker]]
-		# print item.text
-		config_list.append(item.text)
-		item.click()
-		current_picker += 1
-	return config_list
+			items = popup.find_elements_by_class_name('goog-tree-item')
+			if len(items) == 0:
+				items = popup.find_elements_by_class_name('goog-menuitem')
 
-def get_end(browser, picker_ids, popup_ids):
-	count = [1, 1, 1, 1]
+			if current_picker == 0 and enforce_geo_us:
+				item = items[0] # default world wide
+				for i in items:
+					if i.text == 'United States':
+						item = i
+						break
+			else:
+				item = items[progress[current_picker]]
+			# print item.text
+			config_list.append(item.text)
+			item.click()
+			current_picker += 1
+	return config_list, aria_level_2_size
+
+def get_end(browser, picker_ids, popup_ids, aria_level_2_size):
+	count = [1, 1, 1, 1, 1]
 	current_picker = 0
 	for picker_id, popup_id in izip(picker_ids, popup_ids):
 		picker = browser.find_element_by_id(picker_id)
 		picker.click()
 		popup = browser.find_element_by_id(popup_id)
-		items = popup.find_elements_by_class_name('goog-tree-item')
-		if len(items) == 0:
-			items = popup.find_elements_by_class_name('goog-menuitem')
-		count[current_picker] = len(items)
-		current_picker += 1
+		# for category, do subselection
+		if picker_id == 'resPckrcat_anchor':
+			selection = popup.find_elements_by_css_selector(".goog-tree-item[aria-level='1']")
+			count[current_picker+1] = len(selection)
+			count[current_picker] = aria_level_2_size
+			current_picker += 2
+		else:
+			items = popup.find_elements_by_class_name('goog-tree-item')
+			# if no goog-tree-item is found, then look for goog-menuitem
+			if len(items) == 0:
+				items = popup.find_elements_by_class_name('goog-menuitem')
+			count[current_picker] = len(items)
+			current_picker += 1
 	time.sleep(2)
 	end = count
 	end[0] = 9
 	end[1] -= 1
-	# end[3] = 2
+	# end[4] = 2
 	return end
 
 class Progress:
@@ -188,14 +227,14 @@ class Progress:
 	def __init__(self):
 		try:
 			values = filter(bool, open(self.current_file, 'r').read().split('\n'))
-			self.current = [int(value) for value in values]
-			if len(self.current) != 4:
+			self.current = [int(value)  for value in values ]
+			if len(self.current) != 5:
 				raise Exception
 		except:
-			self.current = [8, 0, 1, 0]
+			self.current = [8, 0, 0, 0, 0]
 	
 	def next(self, start, end):
-		# [3] is the higher bit, [0] is the lower bit
+		# [4] is the higher bit, [0] is the lower bit
 		# Find the lowest incrementable bit, increment it, and set the lower bits to start
 		width = len(start)
 		if width != len(end):
@@ -221,9 +260,6 @@ class Progress:
 		open(self.current_file, 'w').write('\n'.join(current_str))
 
 def picker_popup(browser, picker_ids, popup_ids, output_dir):
-	now = datetime.now().strftime("%Y%m%d-%H%M%S")
-	output_dir = output_dir + 'csv.' + now + '/'
-	mkdir_if_not_exist(output_dir)
 	to_prefix = output_dir
 	# preset variables
 	from_prefix = DOWNLOAD_PATH
@@ -231,14 +267,16 @@ def picker_popup(browser, picker_ids, popup_ids, output_dir):
 
 	# geo: 8 is United States 
 	# dat: last one is select dates
-	# cat: 0 is All Categories, therefore use 1 instead
-	start = [8, 0, 1, 0]
+	# cat: category is special because its a two level selection, it will either be [selection] or [selection, sub_selection]
+	# gprop: iterate through all the values
+	start = [8, 0, 0, 0, 0]
 	# need to update the end
 	progress = Progress()
 	current = progress.current
 	while(current):
 		print current
-		filename = load_progress(browser, picker_ids, popup_ids, current)
+		# 'aria-level 2' size, which can be used to update end[3] 
+		[filename, aria_level_2_size] = load_progress(browser, picker_ids, popup_ids, current)
 		filename = '_'.join(filename) + '.csv'
 		print filename
 		download_csv(browser)
@@ -254,12 +292,12 @@ def picker_popup(browser, picker_ids, popup_ids, output_dir):
 			counter += 1
 		# The daily quote limit has been reached.
 		if counter == max_tries:
-			break
+			raise QuoteError
 
 		# a. save progress only when this one is finished
 		# b. restarting program will execute this one again
 		progress.save()
-		end = get_end(browser, picker_ids, popup_ids)
+		end = get_end(browser, picker_ids, popup_ids, aria_level_2_size)
 		current = progress.next(start, end)
 	
 def start_browser(browser_type, incognito=False, user_agent=None):
@@ -290,26 +328,36 @@ def start_browser(browser_type, incognito=False, user_agent=None):
 		sys.exit(2)
 	return browser
 
-def hot_search_words(output_dir, browser_type='Firefox'):
-	# valid options for browser_type is: Firefox, Chrome
-	trend_url = "http://www.google.com/trends/explore#"
-	params = {'geo':'US', 'date':'today%2012-m', 'cat':'0-3', 'cmpt':'q'}
-	# past 7 days, 30 days, 90 days, 12 months
-	dates = ['today%207-d', 'today%201-m', 'today%203-m', 'date=today%2012-m']
-	# start browser
-	browser = start_browser(browser_type)
-	# download csv requires sign-in
-	# sign_in_gmail(browser, 'lingfennan', 'lingfennan123')
-	sign_in_gmail(browser, 'gaochaisheng', 'gaochaisheng123')
+def hot_search_words(credentials, output_dir, browser_type='Firefox'):
+	# generate a unique output directory each run
+	now = datetime.now().strftime("%Y%m%d-%H%M%S")
+	output_dir = output_dir + 'csv.' + now + '/'
+	mkdir_if_not_exist(output_dir)
 
-	# download all the keywords and manipulate them
-	url = trend_query_url(trend_url, params)
-	browser.get(url)
-	
-	picker_ids = ['resPckrgeo_anchor', 'resPckrdate_anchor', 'resPckrcat_anchor', 'resPckrgprop_anchor']
-	popup_ids = ['resPckrgeo_content', 'resPckrdate_content', 'resPckrcat_content', 'resPckrgprop_content']
-	picker_popup(browser, picker_ids, popup_ids, output_dir)
-	browser.quit()
+	# load user credentials
+	usr_pwds = filter(bool, open(credentials, 'r').read().split('\n'))
+	for usr_pwd in usr_pwds:
+		[usr, pwd] = usr_pwd.split('\t')
+		try:
+			# valid options for browser_type is: Firefox, Chrome
+			trend_url = "http://www.google.com/trends/explore#"
+			params = {'geo':'US', 'date':'today%2012-m', 'cat':'0-3', 'cmpt':'q'}
+			# start browser
+			browser = start_browser(browser_type)
+			# download csv requires sign-in
+			# sign_in_gmail(browser, 'lingfennan', 'lingfennan123')
+			sign_in_gmail(browser, usr, pwd)
+
+			# download all the keywords and manipulate them
+			url = trend_query_url(trend_url, params)
+			browser.get(url)
+			
+			picker_ids = ['resPckrgeo_anchor', 'resPckrdate_anchor', 'resPckrcat_anchor', 'resPckrgprop_anchor']
+			popup_ids = ['resPckrgeo_content', 'resPckrdate_content', 'resPckrcat_content', 'resPckrgprop_content']
+			picker_popup(browser, picker_ids, popup_ids, output_dir)
+			browser.quit()
+		except QuoteError as e:
+			print 'Current progress is', e.progress
 
 def pattern_distance_distribution(inputfile, outputfile):
 	lines = [line for line in open(inputfile, 'r').read().split('\n') if (line and line[0] == '[')]
@@ -496,7 +544,7 @@ def merge_logs(merge_list, outputfile, config):
 
 def main(argv):
 	has_function = False
-	help_msg = 'util.py -f <function>  [-o <outputfile> -c <config>] [-i <click_string> -o <url_list>] [-i <inputfile> -o <output_dir> -n <test_number>] [-i <file.dist> -o <stats_file>] [-b <browser_type> -o <output_dir>] [-o <ad_list>], valid functions are merge_logs, format_links, generate_test, pattern_distance_distribution, hot_search_words, ad_list'
+	help_msg = 'util.py -f <function>  [-o <outputfile> -c <config>] [-i <click_string> -o <url_list>] [-i <inputfile> -o <output_dir> -n <test_number>] [-i <file.dist> -o <stats_file>] [-b <browser_type> -i <credentials> -o <output_dir>] [-o <ad_list>], valid functions are merge_logs, format_links, generate_test, pattern_distance_distribution, hot_search_words, ad_list'
 	try:
 		opts, args = getopt.getopt(argv, "hf:i:o:c:n:b:a", ["function=", "ifile=", "ofile=", "config=", "test_number=", "browser_type="])
 	except getopt.GetoptError:
@@ -547,7 +595,7 @@ def main(argv):
 	elif function == 'hot_search_words':
 		print 'function is', function
 		output_dir = outputfile
-		hot_search_words(output_dir, browser_type)
+		hot_search_words(inputfile, output_dir, browser_type)
 	elif function == 'ad_list':
 		print 'function is', function
 		report_list = [line[:-1] for line in sys.stdin]

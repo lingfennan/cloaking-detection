@@ -1,2 +1,1 @@
-rm -r data/*.crawl
-rm *.log
+rm -r data/*.selenium.crawl
