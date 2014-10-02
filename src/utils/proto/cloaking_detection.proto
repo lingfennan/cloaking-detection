@@ -1,0 +1,47 @@
+package cloaking_detection;
+
+// This is the learned sites. Learn each site separately.
+// For one site, there may be several patterns, each pattern has 
+// its own distribution.
+message LearnedSites {
+  repeated SitePatterns site = 1;
+  optional string timestamp = 2;
+}
+
+message SitePatterns {
+  required string name = 1;
+  repeated Pattern pattern = 2;
+}
+
+message Pattern {
+  required double mean = 1;
+  required double std = 2;
+  repeated Item item = 3;
+}
+
+message Item {
+  required uint64 simhash = 1;
+  optional uint64 count = 2 [default = 1];
+}
+  
+
+// Text features
+message HtmlText {
+  repeated Feature word = 1;
+  repeated Feature bi_gram = 2;
+  repeated Feature tri_gram = 3;
+}
+
+message HtmlDom {
+  repeated Feature node = 1;
+  repeated Feature bi_node = 2;
+  repeated Feature tri_node = 3;
+}
+
+message Feature {
+  required string name = 1;
+  optional int32 int_value = 2;
+  optional double double_value = 3;
+  optional string string_value = 4;
+}
+
