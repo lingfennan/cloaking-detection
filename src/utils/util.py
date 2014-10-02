@@ -292,6 +292,7 @@ def picker_popup(browser, picker_ids, popup_ids, output_dir):
 			counter += 1
 		# The daily quote limit has been reached.
 		if counter == max_tries:
+			browser.quit()
 			raise QuoteError
 
 		# a. save progress only when this one is finished
@@ -358,6 +359,8 @@ def hot_search_words(credentials, output_dir, browser_type='Firefox'):
 			browser.quit()
 		except QuoteError as e:
 			print 'Current progress is', e.progress
+		except:
+			print 'Unknown error!'
 
 def pattern_distance_distribution(inputfile, outputfile):
 	lines = [line for line in open(inputfile, 'r').read().split('\n') if (line and line[0] == '[')]
