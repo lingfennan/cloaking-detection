@@ -1,13 +1,26 @@
 How to run:
 python crawl.py
+python simhash_computer.py
 
 Dependencies:
 pip install selenium
 pip install simhash
+pip install beautifulsoup4
 
 Reference:
 selenium
-http://www.seleniumhq.org
+	http://www.seleniumhq.org
 simhash
-https://pypi.python.org/pypi/simhash/1.4.6
+	https://pypi.python.org/pypi/simhash/1.4.6
+beautifulsoup4
+	http://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
+Note:
+doesn't use the following because not needed yet.
+cython
+	http://cython.org
+libJudy
+	http://judy.sourceforge.net
+simhash-py
+	https://github.com/seomoz/simhash-py
+	This uses simhash-cpp to compute simhash.

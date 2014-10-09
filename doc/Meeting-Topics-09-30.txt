@@ -14,6 +14,7 @@ Progress =======================================================================
 Questions to answer ==========================================================================
 1. Motivation
 35% advertisement violations. Non-public Google data. How can we justify the motivation?
+# advertisement, search engine
 
 2. Minhash (random sampling) vs. Simhash (dimension reduction)
 Which one is better for cloaking detection (capturing both differences and similarities)?
@@ -24,6 +25,11 @@ Which one is better for cloaking detection (capturing both differences and simil
 If size(feature set) > epsilon, then collision probability = 1
 
 5. Same URL (website) definition?
+
+6. Why Google adsbot?
+Google will evaluate the landing page quality and show a score for your advertisements.
+The Microsoft AdCenter Robot
+"adidxbot" or "MSNPTC/1.0".
 
 
 Next Steps ========================================================================
@@ -38,3 +44,9 @@ Next Steps =====================================================================
 5. Model Learning Algorithm
 
 
+Currently
+1. lack of data, crawl the web, manually label data
+2. Evaluate on real world data set.
+3. Implement the simhash computing et al. urgent!!!
+4. Proto buffer
+5. Browser extension implementation

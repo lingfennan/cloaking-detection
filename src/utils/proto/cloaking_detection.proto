@@ -23,7 +23,6 @@ message Item {
   required uint64 simhash = 1;
   optional uint64 count = 2 [default = 1];
 }
-  
 
 // Text features
 message HtmlText {
@@ -45,3 +44,17 @@ message Feature {
   optional string string_value = 4;
 }
 
+message SimhashConfig {
+  enum SimhashType {
+    TEXT = 0;
+    DOM = 1;
+    TEXT_DOM = 2;  // Not used now
+  }
+  required SimhashType simhash_type = 1;
+  message FeatureUsage {
+    optional bool gram = 1 [default = true];
+    optional bool bi_gram = 2 [default = true];
+    optional bool tri_gram = 3 [default = false];
+  }
+  optional FeatureUsage usage = 2;
+}
