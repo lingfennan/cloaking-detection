@@ -24,6 +24,22 @@ message Item {
   optional uint64 count = 2 [default = 1];
 }
 
+// Sites to classify. This is used in learning and detection phase.
+message ObservedSites {
+  repeated SiteObservations site = 1;
+}
+
+message SiteObservations {
+  required string name = 1;
+  repeated Observation observation = 2;
+}
+
+message Observation {
+  required string landing_url = 1;
+  required string file_path = 2;
+  optional string timestamp = 3;
+}
+
 // Text features
 message HtmlText {
   repeated Feature word = 1;
@@ -31,6 +47,7 @@ message HtmlText {
   repeated Feature tri_gram = 3;
 }
 
+// Dom tree features
 message HtmlDom {
   repeated Feature node = 1;
   repeated Feature bi_node = 2;
@@ -39,11 +56,12 @@ message HtmlDom {
 
 message Feature {
   required string name = 1;
-  optional int32 int_value = 2;
+  optional int32 int_value = 2 [default = 1];
   optional double double_value = 3;
   optional string string_value = 4;
 }
 
+// Configuration for simhash computing
 message SimhashConfig {
   enum SimhashType {
     TEXT = 0;
@@ -58,3 +76,16 @@ message SimhashConfig {
   }
   optional FeatureUsage usage = 2;
 }
+
+// Configuration for simhash clustering
+message ClusterConfig {
+  enum Algorithm {
+    HAMMING_THRESHOLD = 0;  // Deprecated. Because have no theory support.
+    K_MEANS = 1;  
+    SPECTRAL_CLUSTERING = 2;
+    HIERARCHICAL_CLUSTERING = 3;
+  }
+  required Algorithm algorithm = 1;
+  optional int32 cluster_number = 2;
+}
+

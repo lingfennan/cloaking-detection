@@ -50,9 +50,9 @@ class Html_Simhash_Computer(object):
 			raise Exception("Bad parameter")
 
 	def build_by_features(self, features):
-		print features
+		# print features
 		if isinstance(features, collections.Iterable):
-			return Simhash(features).value
+			return Simhash(features)
 		else:
 			raise Exception("Bad parameter")
 
@@ -123,6 +123,7 @@ class Html_Simhash_Computer(object):
 
 	def build_by_text(self, html_text):
 		if isinstance(html_text, CD.HtmlText):
+			# weighted features are not supported by now
 			features = list()
 			if self.simhash_config.usage.gram:
 				for feature in html_text.word:
@@ -165,26 +166,23 @@ class Html_Simhash_Computer(object):
 			result.append(self.build_by_dom(html_dom))
 		return result
 
-# HtmlText
-
-# HtmlDom
-# Read Dom Tree
-# https://docs.python.org/2/library/xml.dom.html
-# filename = 'utils/data/forever21.html'
-filename = 'utils/data/example.html'
-data = open(filename, 'r').read()
-# print visible_text(data)
 
 
+if __name__ == "__main__":
+	# HtmlText, HtmlDom
+	# filename = 'utils/data/forever21.html'
+	filename = 'utils/data/example.html'
+	data = open(filename, 'r').read()
+	# print visible_text(data)
 
-config = CD.SimhashConfig()
-config.simhash_type = CD.SimhashConfig.TEXT
-config.usage.tri_gram = True
-res = Html_Simhash_Computer(config).compute_simhash(data)
-print '%x' % res[0]
+	config = CD.SimhashConfig()
+	config.simhash_type = CD.SimhashConfig.TEXT
+	config.usage.tri_gram = True
+	res = Html_Simhash_Computer(config).compute_simhash(data)
+	print '%x' % res[0].value
 
 
-config.simhash_type = CD.SimhashConfig.DOM
-res = Html_Simhash_Computer(config).compute_simhash(data)
-print '%x' % res[0]
+	config.simhash_type = CD.SimhashConfig.DOM
+	res = Html_Simhash_Computer(config).compute_simhash(data)
+	print '%x' % res[0].value
 
