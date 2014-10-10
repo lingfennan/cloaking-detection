@@ -34,6 +34,6 @@ if __name__=="__main__":
 	link = 'http://www.walmart.com/search/search-ng.do?search_query=Bicycles&adid=222222    22220202379358&wmlspartner=wmtlabs&wl0=e&wl1=g&wl2=c&wl3=30633615476&wl4=&veh=sem'
 	print link
 	print _strip_parameter(link)
-	site_list_filenames = ['utils/data/US_list_10.20141010-180519.selenium.crawl/html_path_list']
+	site_list_filenames = ['data/US_list_10.20141010-180519.selenium.crawl/html_path_list']
 	print load_observed_sites(site_list_filenames)
 
