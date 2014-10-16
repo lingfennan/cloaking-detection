@@ -32,6 +32,15 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Item_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Item_reflection_ = NULL;
+const ::google::protobuf::Descriptor* ObservedSites_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  ObservedSites_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SiteObservations_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SiteObservations_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Observation_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Observation_reflection_ = NULL;
 const ::google::protobuf::Descriptor* HtmlText_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   HtmlText_reflection_ = NULL;
@@ -41,6 +50,17 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Feature_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Feature_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SimhashConfig_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SimhashConfig_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SimhashConfig_FeatureUsage_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SimhashConfig_FeatureUsage_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* SimhashConfig_SimhashType_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* ClusterConfig_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  ClusterConfig_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* ClusterConfig_Algorithm_descriptor_ = NULL;
 
 }  // namespace
 
@@ -116,7 +136,57 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Item));
-  HtmlText_descriptor_ = file->message_type(4);
+  ObservedSites_descriptor_ = file->message_type(4);
+  static const int ObservedSites_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObservedSites, site_),
+  };
+  ObservedSites_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      ObservedSites_descriptor_,
+      ObservedSites::default_instance_,
+      ObservedSites_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObservedSites, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObservedSites, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(ObservedSites));
+  SiteObservations_descriptor_ = file->message_type(5);
+  static const int SiteObservations_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SiteObservations, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SiteObservations, observation_),
+  };
+  SiteObservations_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SiteObservations_descriptor_,
+      SiteObservations::default_instance_,
+      SiteObservations_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SiteObservations, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SiteObservations, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SiteObservations));
+  Observation_descriptor_ = file->message_type(6);
+  static const int Observation_offsets_[5] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Observation, landing_url_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Observation, file_path_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Observation, timestamp_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Observation, text_simhash_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Observation, dom_simhash_),
+  };
+  Observation_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Observation_descriptor_,
+      Observation::default_instance_,
+      Observation_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Observation, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Observation, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Observation));
+  HtmlText_descriptor_ = file->message_type(7);
   static const int HtmlText_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HtmlText, word_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HtmlText, bi_gram_),
@@ -133,7 +203,7 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(HtmlText));
-  HtmlDom_descriptor_ = file->message_type(5);
+  HtmlDom_descriptor_ = file->message_type(8);
   static const int HtmlDom_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HtmlDom, node_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HtmlDom, bi_node_),
@@ -150,7 +220,7 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(HtmlDom));
-  Feature_descriptor_ = file->message_type(6);
+  Feature_descriptor_ = file->message_type(9);
   static const int Feature_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Feature, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Feature, int_value_),
@@ -168,6 +238,59 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Feature));
+  SimhashConfig_descriptor_ = file->message_type(10);
+  static const int SimhashConfig_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashConfig, simhash_type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashConfig, usage_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashConfig, maximum_threads_),
+  };
+  SimhashConfig_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SimhashConfig_descriptor_,
+      SimhashConfig::default_instance_,
+      SimhashConfig_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashConfig, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashConfig, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SimhashConfig));
+  SimhashConfig_FeatureUsage_descriptor_ = SimhashConfig_descriptor_->nested_type(0);
+  static const int SimhashConfig_FeatureUsage_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashConfig_FeatureUsage, gram_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashConfig_FeatureUsage, bi_gram_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashConfig_FeatureUsage, tri_gram_),
+  };
+  SimhashConfig_FeatureUsage_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SimhashConfig_FeatureUsage_descriptor_,
+      SimhashConfig_FeatureUsage::default_instance_,
+      SimhashConfig_FeatureUsage_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashConfig_FeatureUsage, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashConfig_FeatureUsage, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SimhashConfig_FeatureUsage));
+  SimhashConfig_SimhashType_descriptor_ = SimhashConfig_descriptor_->enum_type(0);
+  ClusterConfig_descriptor_ = file->message_type(11);
+  static const int ClusterConfig_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClusterConfig, algorithm_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClusterConfig, cluster_number_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClusterConfig, maximum_threads_),
+  };
+  ClusterConfig_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      ClusterConfig_descriptor_,
+      ClusterConfig::default_instance_,
+      ClusterConfig_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClusterConfig, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClusterConfig, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(ClusterConfig));
+  ClusterConfig_Algorithm_descriptor_ = ClusterConfig_descriptor_->enum_type(0);
 }
 
 namespace {
@@ -189,11 +312,23 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Item_descriptor_, &Item::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    ObservedSites_descriptor_, &ObservedSites::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SiteObservations_descriptor_, &SiteObservations::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Observation_descriptor_, &Observation::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     HtmlText_descriptor_, &HtmlText::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     HtmlDom_descriptor_, &HtmlDom::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Feature_descriptor_, &Feature::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SimhashConfig_descriptor_, &SimhashConfig::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SimhashConfig_FeatureUsage_descriptor_, &SimhashConfig_FeatureUsage::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    ClusterConfig_descriptor_, &ClusterConfig::default_instance());
 }
 
 }  // namespace
@@ -207,12 +342,24 @@ void protobuf_ShutdownFile_cloaking_5fdetection_2eproto() {
   delete Pattern_reflection_;
   delete Item::default_instance_;
   delete Item_reflection_;
+  delete ObservedSites::default_instance_;
+  delete ObservedSites_reflection_;
+  delete SiteObservations::default_instance_;
+  delete SiteObservations_reflection_;
+  delete Observation::default_instance_;
+  delete Observation_reflection_;
   delete HtmlText::default_instance_;
   delete HtmlText_reflection_;
   delete HtmlDom::default_instance_;
   delete HtmlDom_reflection_;
   delete Feature::default_instance_;
   delete Feature_reflection_;
+  delete SimhashConfig::default_instance_;
+  delete SimhashConfig_reflection_;
+  delete SimhashConfig_FeatureUsage::default_instance_;
+  delete SimhashConfig_FeatureUsage_reflection_;
+  delete ClusterConfig::default_instance_;
+  delete ClusterConfig_reflection_;
 }
 
 void protobuf_AddDesc_cloaking_5fdetection_2eproto() {
@@ -230,32 +377,65 @@ void protobuf_AddDesc_cloaking_5fdetection_2eproto() {
     "ttern\"L\n\007Pattern\022\014\n\004mean\030\001 \002(\001\022\013\n\003std\030\002 "
     "\002(\001\022&\n\004item\030\003 \003(\0132\030.cloaking_detection.I"
     "tem\")\n\004Item\022\017\n\007simhash\030\001 \002(\004\022\020\n\005count\030\002 "
-    "\001(\004:\0011\"\222\001\n\010HtmlText\022)\n\004word\030\001 \003(\0132\033.cloa"
-    "king_detection.Feature\022,\n\007bi_gram\030\002 \003(\0132"
-    "\033.cloaking_detection.Feature\022-\n\010tri_gram"
-    "\030\003 \003(\0132\033.cloaking_detection.Feature\"\221\001\n\007"
-    "HtmlDom\022)\n\004node\030\001 \003(\0132\033.cloaking_detecti"
-    "on.Feature\022,\n\007bi_node\030\002 \003(\0132\033.cloaking_d"
-    "etection.Feature\022-\n\010tri_node\030\003 \003(\0132\033.clo"
-    "aking_detection.Feature\"V\n\007Feature\022\014\n\004na"
-    "me\030\001 \002(\t\022\021\n\tint_value\030\002 \001(\005\022\024\n\014double_va"
-    "lue\030\003 \001(\001\022\024\n\014string_value\030\004 \001(\t", 711);
+    "\001(\004:\0011\"C\n\rObservedSites\0222\n\004site\030\001 \003(\0132$."
+    "cloaking_detection.SiteObservations\"V\n\020S"
+    "iteObservations\022\014\n\004name\030\001 \002(\t\0224\n\013observa"
+    "tion\030\002 \003(\0132\037.cloaking_detection.Observat"
+    "ion\"s\n\013Observation\022\023\n\013landing_url\030\001 \002(\t\022"
+    "\021\n\tfile_path\030\002 \002(\t\022\021\n\ttimestamp\030\003 \001(\t\022\024\n"
+    "\014text_simhash\030\004 \001(\004\022\023\n\013dom_simhash\030\005 \001(\004"
+    "\"\222\001\n\010HtmlText\022)\n\004word\030\001 \003(\0132\033.cloaking_d"
+    "etection.Feature\022,\n\007bi_gram\030\002 \003(\0132\033.cloa"
+    "king_detection.Feature\022-\n\010tri_gram\030\003 \003(\013"
+    "2\033.cloaking_detection.Feature\"\221\001\n\007HtmlDo"
+    "m\022)\n\004node\030\001 \003(\0132\033.cloaking_detection.Fea"
+    "ture\022,\n\007bi_node\030\002 \003(\0132\033.cloaking_detecti"
+    "on.Feature\022-\n\010tri_node\030\003 \003(\0132\033.cloaking_"
+    "detection.Feature\"Y\n\007Feature\022\014\n\004name\030\001 \002"
+    "(\t\022\024\n\tint_value\030\002 \001(\005:\0011\022\024\n\014double_value"
+    "\030\003 \001(\001\022\024\n\014string_value\030\004 \001(\t\"\264\002\n\rSimhash"
+    "Config\022C\n\014simhash_type\030\001 \002(\0162-.cloaking_"
+    "detection.SimhashConfig.SimhashType\022=\n\005u"
+    "sage\030\002 \001(\0132..cloaking_detection.SimhashC"
+    "onfig.FeatureUsage\022\033\n\017maximum_threads\030\003 "
+    "\001(\005:\00210\032R\n\014FeatureUsage\022\022\n\004gram\030\001 \001(\010:\004t"
+    "rue\022\025\n\007bi_gram\030\002 \001(\010:\004true\022\027\n\010tri_gram\030\003"
+    " \001(\010:\005false\".\n\013SimhashType\022\010\n\004TEXT\020\000\022\007\n\003"
+    "DOM\020\001\022\014\n\010TEXT_DOM\020\002\"\353\001\n\rClusterConfig\022>\n"
+    "\talgorithm\030\001 \002(\0162+.cloaking_detection.Cl"
+    "usterConfig.Algorithm\022\026\n\016cluster_number\030"
+    "\002 \001(\005\022\033\n\017maximum_threads\030\003 \001(\005:\00210\"e\n\tAl"
+    "gorithm\022\025\n\021HAMMING_THRESHOLD\020\000\022\013\n\007K_MEAN"
+    "S\020\001\022\027\n\023SPECTRAL_CLUSTERING\020\002\022\033\n\027HIERARCH"
+    "ICAL_CLUSTERING\020\003", 1537);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "cloaking_detection.proto", &protobuf_RegisterTypes);
   LearnedSites::default_instance_ = new LearnedSites();
   SitePatterns::default_instance_ = new SitePatterns();
   Pattern::default_instance_ = new Pattern();
   Item::default_instance_ = new Item();
+  ObservedSites::default_instance_ = new ObservedSites();
+  SiteObservations::default_instance_ = new SiteObservations();
+  Observation::default_instance_ = new Observation();
   HtmlText::default_instance_ = new HtmlText();
   HtmlDom::default_instance_ = new HtmlDom();
   Feature::default_instance_ = new Feature();
+  SimhashConfig::default_instance_ = new SimhashConfig();
+  SimhashConfig_FeatureUsage::default_instance_ = new SimhashConfig_FeatureUsage();
+  ClusterConfig::default_instance_ = new ClusterConfig();
   LearnedSites::default_instance_->InitAsDefaultInstance();
   SitePatterns::default_instance_->InitAsDefaultInstance();
   Pattern::default_instance_->InitAsDefaultInstance();
   Item::default_instance_->InitAsDefaultInstance();
+  ObservedSites::default_instance_->InitAsDefaultInstance();
+  SiteObservations::default_instance_->InitAsDefaultInstance();
+  Observation::default_instance_->InitAsDefaultInstance();
   HtmlText::default_instance_->InitAsDefaultInstance();
   HtmlDom::default_instance_->InitAsDefaultInstance();
   Feature::default_instance_->InitAsDefaultInstance();
+  SimhashConfig::default_instance_->InitAsDefaultInstance();
+  SimhashConfig_FeatureUsage::default_instance_->InitAsDefaultInstance();
+  ClusterConfig::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_cloaking_5fdetection_2eproto);
 }
 
@@ -1412,6 +1592,965 @@ void Item::Swap(Item* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int ObservedSites::kSiteFieldNumber;
+#endif  // !_MSC_VER
+
+ObservedSites::ObservedSites()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.ObservedSites)
+}
+
+void ObservedSites::InitAsDefaultInstance() {
+}
+
+ObservedSites::ObservedSites(const ObservedSites& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.ObservedSites)
+}
+
+void ObservedSites::SharedCtor() {
+  _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+ObservedSites::~ObservedSites() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.ObservedSites)
+  SharedDtor();
+}
+
+void ObservedSites::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void ObservedSites::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* ObservedSites::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ObservedSites_descriptor_;
+}
+
+const ObservedSites& ObservedSites::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+ObservedSites* ObservedSites::default_instance_ = NULL;
+
+ObservedSites* ObservedSites::New() const {
+  return new ObservedSites;
+}
+
+void ObservedSites::Clear() {
+  site_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool ObservedSites::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.ObservedSites)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .cloaking_detection.SiteObservations site = 1;
+      case 1: {
+        if (tag == 10) {
+         parse_site:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_site()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(10)) goto parse_site;
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.ObservedSites)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.ObservedSites)
+  return false;
+#undef DO_
+}
+
+void ObservedSites::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.ObservedSites)
+  // repeated .cloaking_detection.SiteObservations site = 1;
+  for (int i = 0; i < this->site_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->site(i), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.ObservedSites)
+}
+
+::google::protobuf::uint8* ObservedSites::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.ObservedSites)
+  // repeated .cloaking_detection.SiteObservations site = 1;
+  for (int i = 0; i < this->site_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->site(i), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.ObservedSites)
+  return target;
+}
+
+int ObservedSites::ByteSize() const {
+  int total_size = 0;
+
+  // repeated .cloaking_detection.SiteObservations site = 1;
+  total_size += 1 * this->site_size();
+  for (int i = 0; i < this->site_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->site(i));
+  }
+
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void ObservedSites::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const ObservedSites* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const ObservedSites*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void ObservedSites::MergeFrom(const ObservedSites& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  site_.MergeFrom(from.site_);
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void ObservedSites::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void ObservedSites::CopyFrom(const ObservedSites& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ObservedSites::IsInitialized() const {
+
+  if (!::google::protobuf::internal::AllAreInitialized(this->site())) return false;
+  return true;
+}
+
+void ObservedSites::Swap(ObservedSites* other) {
+  if (other != this) {
+    site_.Swap(&other->site_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata ObservedSites::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = ObservedSites_descriptor_;
+  metadata.reflection = ObservedSites_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int SiteObservations::kNameFieldNumber;
+const int SiteObservations::kObservationFieldNumber;
+#endif  // !_MSC_VER
+
+SiteObservations::SiteObservations()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.SiteObservations)
+}
+
+void SiteObservations::InitAsDefaultInstance() {
+}
+
+SiteObservations::SiteObservations(const SiteObservations& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.SiteObservations)
+}
+
+void SiteObservations::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SiteObservations::~SiteObservations() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.SiteObservations)
+  SharedDtor();
+}
+
+void SiteObservations::SharedDtor() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void SiteObservations::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SiteObservations::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SiteObservations_descriptor_;
+}
+
+const SiteObservations& SiteObservations::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+SiteObservations* SiteObservations::default_instance_ = NULL;
+
+SiteObservations* SiteObservations::New() const {
+  return new SiteObservations;
+}
+
+void SiteObservations::Clear() {
+  if (has_name()) {
+    if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+      name_->clear();
+    }
+  }
+  observation_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SiteObservations::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.SiteObservations)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required string name = 1;
+      case 1: {
+        if (tag == 10) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "name");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_observation;
+        break;
+      }
+
+      // repeated .cloaking_detection.Observation observation = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_observation:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_observation()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_observation;
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.SiteObservations)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.SiteObservations)
+  return false;
+#undef DO_
+}
+
+void SiteObservations::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.SiteObservations)
+  // required string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->name(), output);
+  }
+
+  // repeated .cloaking_detection.Observation observation = 2;
+  for (int i = 0; i < this->observation_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->observation(i), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.SiteObservations)
+}
+
+::google::protobuf::uint8* SiteObservations::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.SiteObservations)
+  // required string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->name(), target);
+  }
+
+  // repeated .cloaking_detection.Observation observation = 2;
+  for (int i = 0; i < this->observation_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->observation(i), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.SiteObservations)
+  return target;
+}
+
+int SiteObservations::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required string name = 1;
+    if (has_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->name());
+    }
+
+  }
+  // repeated .cloaking_detection.Observation observation = 2;
+  total_size += 1 * this->observation_size();
+  for (int i = 0; i < this->observation_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->observation(i));
+  }
+
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SiteObservations::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SiteObservations* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SiteObservations*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SiteObservations::MergeFrom(const SiteObservations& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  observation_.MergeFrom(from.observation_);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_name()) {
+      set_name(from.name());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SiteObservations::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SiteObservations::CopyFrom(const SiteObservations& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SiteObservations::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  if (!::google::protobuf::internal::AllAreInitialized(this->observation())) return false;
+  return true;
+}
+
+void SiteObservations::Swap(SiteObservations* other) {
+  if (other != this) {
+    std::swap(name_, other->name_);
+    observation_.Swap(&other->observation_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SiteObservations::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SiteObservations_descriptor_;
+  metadata.reflection = SiteObservations_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int Observation::kLandingUrlFieldNumber;
+const int Observation::kFilePathFieldNumber;
+const int Observation::kTimestampFieldNumber;
+const int Observation::kTextSimhashFieldNumber;
+const int Observation::kDomSimhashFieldNumber;
+#endif  // !_MSC_VER
+
+Observation::Observation()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.Observation)
+}
+
+void Observation::InitAsDefaultInstance() {
+}
+
+Observation::Observation(const Observation& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.Observation)
+}
+
+void Observation::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  landing_url_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  timestamp_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  text_simhash_ = GOOGLE_ULONGLONG(0);
+  dom_simhash_ = GOOGLE_ULONGLONG(0);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Observation::~Observation() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.Observation)
+  SharedDtor();
+}
+
+void Observation::SharedDtor() {
+  if (landing_url_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete landing_url_;
+  }
+  if (file_path_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete file_path_;
+  }
+  if (timestamp_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete timestamp_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void Observation::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Observation::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Observation_descriptor_;
+}
+
+const Observation& Observation::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+Observation* Observation::default_instance_ = NULL;
+
+Observation* Observation::New() const {
+  return new Observation;
+}
+
+void Observation::Clear() {
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<Observation*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 31) {
+    ZR_(text_simhash_, dom_simhash_);
+    if (has_landing_url()) {
+      if (landing_url_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        landing_url_->clear();
+      }
+    }
+    if (has_file_path()) {
+      if (file_path_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        file_path_->clear();
+      }
+    }
+    if (has_timestamp()) {
+      if (timestamp_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        timestamp_->clear();
+      }
+    }
+  }
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Observation::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.Observation)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required string landing_url = 1;
+      case 1: {
+        if (tag == 10) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_landing_url()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->landing_url().data(), this->landing_url().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "landing_url");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_file_path;
+        break;
+      }
+
+      // required string file_path = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_file_path:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_file_path()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->file_path().data(), this->file_path().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "file_path");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(26)) goto parse_timestamp;
+        break;
+      }
+
+      // optional string timestamp = 3;
+      case 3: {
+        if (tag == 26) {
+         parse_timestamp:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_timestamp()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->timestamp().data(), this->timestamp().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "timestamp");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(32)) goto parse_text_simhash;
+        break;
+      }
+
+      // optional uint64 text_simhash = 4;
+      case 4: {
+        if (tag == 32) {
+         parse_text_simhash:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &text_simhash_)));
+          set_has_text_simhash();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(40)) goto parse_dom_simhash;
+        break;
+      }
+
+      // optional uint64 dom_simhash = 5;
+      case 5: {
+        if (tag == 40) {
+         parse_dom_simhash:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &dom_simhash_)));
+          set_has_dom_simhash();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.Observation)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.Observation)
+  return false;
+#undef DO_
+}
+
+void Observation::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.Observation)
+  // required string landing_url = 1;
+  if (has_landing_url()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->landing_url().data(), this->landing_url().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "landing_url");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->landing_url(), output);
+  }
+
+  // required string file_path = 2;
+  if (has_file_path()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->file_path().data(), this->file_path().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "file_path");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      2, this->file_path(), output);
+  }
+
+  // optional string timestamp = 3;
+  if (has_timestamp()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->timestamp().data(), this->timestamp().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "timestamp");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      3, this->timestamp(), output);
+  }
+
+  // optional uint64 text_simhash = 4;
+  if (has_text_simhash()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(4, this->text_simhash(), output);
+  }
+
+  // optional uint64 dom_simhash = 5;
+  if (has_dom_simhash()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(5, this->dom_simhash(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.Observation)
+}
+
+::google::protobuf::uint8* Observation::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.Observation)
+  // required string landing_url = 1;
+  if (has_landing_url()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->landing_url().data(), this->landing_url().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "landing_url");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->landing_url(), target);
+  }
+
+  // required string file_path = 2;
+  if (has_file_path()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->file_path().data(), this->file_path().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "file_path");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->file_path(), target);
+  }
+
+  // optional string timestamp = 3;
+  if (has_timestamp()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->timestamp().data(), this->timestamp().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "timestamp");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        3, this->timestamp(), target);
+  }
+
+  // optional uint64 text_simhash = 4;
+  if (has_text_simhash()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(4, this->text_simhash(), target);
+  }
+
+  // optional uint64 dom_simhash = 5;
+  if (has_dom_simhash()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(5, this->dom_simhash(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.Observation)
+  return target;
+}
+
+int Observation::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required string landing_url = 1;
+    if (has_landing_url()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->landing_url());
+    }
+
+    // required string file_path = 2;
+    if (has_file_path()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->file_path());
+    }
+
+    // optional string timestamp = 3;
+    if (has_timestamp()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->timestamp());
+    }
+
+    // optional uint64 text_simhash = 4;
+    if (has_text_simhash()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->text_simhash());
+    }
+
+    // optional uint64 dom_simhash = 5;
+    if (has_dom_simhash()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->dom_simhash());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Observation::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Observation* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Observation*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Observation::MergeFrom(const Observation& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_landing_url()) {
+      set_landing_url(from.landing_url());
+    }
+    if (from.has_file_path()) {
+      set_file_path(from.file_path());
+    }
+    if (from.has_timestamp()) {
+      set_timestamp(from.timestamp());
+    }
+    if (from.has_text_simhash()) {
+      set_text_simhash(from.text_simhash());
+    }
+    if (from.has_dom_simhash()) {
+      set_dom_simhash(from.dom_simhash());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Observation::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Observation::CopyFrom(const Observation& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Observation::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+
+  return true;
+}
+
+void Observation::Swap(Observation* other) {
+  if (other != this) {
+    std::swap(landing_url_, other->landing_url_);
+    std::swap(file_path_, other->file_path_);
+    std::swap(timestamp_, other->timestamp_);
+    std::swap(text_simhash_, other->text_simhash_);
+    std::swap(dom_simhash_, other->dom_simhash_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Observation::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Observation_descriptor_;
+  metadata.reflection = Observation_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
 const int HtmlText::kWordFieldNumber;
 const int HtmlText::kBiGramFieldNumber;
 const int HtmlText::kTriGramFieldNumber;
@@ -2038,7 +3177,7 @@ void Feature::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  int_value_ = 0;
+  int_value_ = 1;
   double_value_ = 0;
   string_value_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2088,7 +3227,7 @@ void Feature::Clear() {
         name_->clear();
       }
     }
-    int_value_ = 0;
+    int_value_ = 1;
     double_value_ = 0;
     if (has_string_value()) {
       if (string_value_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
@@ -2126,7 +3265,7 @@ bool Feature::MergePartialFromCodedStream(
         break;
       }
 
-      // optional int32 int_value = 2;
+      // optional int32 int_value = 2 [default = 1];
       case 2: {
         if (tag == 16) {
          parse_int_value:
@@ -2208,7 +3347,7 @@ void Feature::SerializeWithCachedSizes(
       1, this->name(), output);
   }
 
-  // optional int32 int_value = 2;
+  // optional int32 int_value = 2 [default = 1];
   if (has_int_value()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->int_value(), output);
   }
@@ -2249,7 +3388,7 @@ void Feature::SerializeWithCachedSizes(
         1, this->name(), target);
   }
 
-  // optional int32 int_value = 2;
+  // optional int32 int_value = 2 [default = 1];
   if (has_int_value()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->int_value(), target);
   }
@@ -2289,7 +3428,7 @@ int Feature::ByteSize() const {
           this->name());
     }
 
-    // optional int32 int_value = 2;
+    // optional int32 int_value = 2 [default = 1];
     if (has_int_value()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
@@ -2386,6 +3525,986 @@ void Feature::Swap(Feature* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = Feature_descriptor_;
   metadata.reflection = Feature_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+const ::google::protobuf::EnumDescriptor* SimhashConfig_SimhashType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SimhashConfig_SimhashType_descriptor_;
+}
+bool SimhashConfig_SimhashType_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+    case 2:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const SimhashConfig_SimhashType SimhashConfig::TEXT;
+const SimhashConfig_SimhashType SimhashConfig::DOM;
+const SimhashConfig_SimhashType SimhashConfig::TEXT_DOM;
+const SimhashConfig_SimhashType SimhashConfig::SimhashType_MIN;
+const SimhashConfig_SimhashType SimhashConfig::SimhashType_MAX;
+const int SimhashConfig::SimhashType_ARRAYSIZE;
+#endif  // _MSC_VER
+#ifndef _MSC_VER
+const int SimhashConfig_FeatureUsage::kGramFieldNumber;
+const int SimhashConfig_FeatureUsage::kBiGramFieldNumber;
+const int SimhashConfig_FeatureUsage::kTriGramFieldNumber;
+#endif  // !_MSC_VER
+
+SimhashConfig_FeatureUsage::SimhashConfig_FeatureUsage()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.SimhashConfig.FeatureUsage)
+}
+
+void SimhashConfig_FeatureUsage::InitAsDefaultInstance() {
+}
+
+SimhashConfig_FeatureUsage::SimhashConfig_FeatureUsage(const SimhashConfig_FeatureUsage& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.SimhashConfig.FeatureUsage)
+}
+
+void SimhashConfig_FeatureUsage::SharedCtor() {
+  _cached_size_ = 0;
+  gram_ = true;
+  bi_gram_ = true;
+  tri_gram_ = false;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SimhashConfig_FeatureUsage::~SimhashConfig_FeatureUsage() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.SimhashConfig.FeatureUsage)
+  SharedDtor();
+}
+
+void SimhashConfig_FeatureUsage::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void SimhashConfig_FeatureUsage::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SimhashConfig_FeatureUsage::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SimhashConfig_FeatureUsage_descriptor_;
+}
+
+const SimhashConfig_FeatureUsage& SimhashConfig_FeatureUsage::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+SimhashConfig_FeatureUsage* SimhashConfig_FeatureUsage::default_instance_ = NULL;
+
+SimhashConfig_FeatureUsage* SimhashConfig_FeatureUsage::New() const {
+  return new SimhashConfig_FeatureUsage;
+}
+
+void SimhashConfig_FeatureUsage::Clear() {
+  if (_has_bits_[0 / 32] & 7) {
+    gram_ = true;
+    bi_gram_ = true;
+    tri_gram_ = false;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SimhashConfig_FeatureUsage::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.SimhashConfig.FeatureUsage)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bool gram = 1 [default = true];
+      case 1: {
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &gram_)));
+          set_has_gram();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_bi_gram;
+        break;
+      }
+
+      // optional bool bi_gram = 2 [default = true];
+      case 2: {
+        if (tag == 16) {
+         parse_bi_gram:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &bi_gram_)));
+          set_has_bi_gram();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_tri_gram;
+        break;
+      }
+
+      // optional bool tri_gram = 3 [default = false];
+      case 3: {
+        if (tag == 24) {
+         parse_tri_gram:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &tri_gram_)));
+          set_has_tri_gram();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.SimhashConfig.FeatureUsage)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.SimhashConfig.FeatureUsage)
+  return false;
+#undef DO_
+}
+
+void SimhashConfig_FeatureUsage::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.SimhashConfig.FeatureUsage)
+  // optional bool gram = 1 [default = true];
+  if (has_gram()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->gram(), output);
+  }
+
+  // optional bool bi_gram = 2 [default = true];
+  if (has_bi_gram()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->bi_gram(), output);
+  }
+
+  // optional bool tri_gram = 3 [default = false];
+  if (has_tri_gram()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->tri_gram(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.SimhashConfig.FeatureUsage)
+}
+
+::google::protobuf::uint8* SimhashConfig_FeatureUsage::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.SimhashConfig.FeatureUsage)
+  // optional bool gram = 1 [default = true];
+  if (has_gram()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->gram(), target);
+  }
+
+  // optional bool bi_gram = 2 [default = true];
+  if (has_bi_gram()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->bi_gram(), target);
+  }
+
+  // optional bool tri_gram = 3 [default = false];
+  if (has_tri_gram()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->tri_gram(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.SimhashConfig.FeatureUsage)
+  return target;
+}
+
+int SimhashConfig_FeatureUsage::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional bool gram = 1 [default = true];
+    if (has_gram()) {
+      total_size += 1 + 1;
+    }
+
+    // optional bool bi_gram = 2 [default = true];
+    if (has_bi_gram()) {
+      total_size += 1 + 1;
+    }
+
+    // optional bool tri_gram = 3 [default = false];
+    if (has_tri_gram()) {
+      total_size += 1 + 1;
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SimhashConfig_FeatureUsage::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SimhashConfig_FeatureUsage* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SimhashConfig_FeatureUsage*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SimhashConfig_FeatureUsage::MergeFrom(const SimhashConfig_FeatureUsage& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_gram()) {
+      set_gram(from.gram());
+    }
+    if (from.has_bi_gram()) {
+      set_bi_gram(from.bi_gram());
+    }
+    if (from.has_tri_gram()) {
+      set_tri_gram(from.tri_gram());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SimhashConfig_FeatureUsage::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SimhashConfig_FeatureUsage::CopyFrom(const SimhashConfig_FeatureUsage& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SimhashConfig_FeatureUsage::IsInitialized() const {
+
+  return true;
+}
+
+void SimhashConfig_FeatureUsage::Swap(SimhashConfig_FeatureUsage* other) {
+  if (other != this) {
+    std::swap(gram_, other->gram_);
+    std::swap(bi_gram_, other->bi_gram_);
+    std::swap(tri_gram_, other->tri_gram_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SimhashConfig_FeatureUsage::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SimhashConfig_FeatureUsage_descriptor_;
+  metadata.reflection = SimhashConfig_FeatureUsage_reflection_;
+  return metadata;
+}
+
+
+// -------------------------------------------------------------------
+
+#ifndef _MSC_VER
+const int SimhashConfig::kSimhashTypeFieldNumber;
+const int SimhashConfig::kUsageFieldNumber;
+const int SimhashConfig::kMaximumThreadsFieldNumber;
+#endif  // !_MSC_VER
+
+SimhashConfig::SimhashConfig()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.SimhashConfig)
+}
+
+void SimhashConfig::InitAsDefaultInstance() {
+  usage_ = const_cast< ::cloaking_detection::SimhashConfig_FeatureUsage*>(&::cloaking_detection::SimhashConfig_FeatureUsage::default_instance());
+}
+
+SimhashConfig::SimhashConfig(const SimhashConfig& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.SimhashConfig)
+}
+
+void SimhashConfig::SharedCtor() {
+  _cached_size_ = 0;
+  simhash_type_ = 0;
+  usage_ = NULL;
+  maximum_threads_ = 10;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SimhashConfig::~SimhashConfig() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.SimhashConfig)
+  SharedDtor();
+}
+
+void SimhashConfig::SharedDtor() {
+  if (this != default_instance_) {
+    delete usage_;
+  }
+}
+
+void SimhashConfig::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SimhashConfig::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SimhashConfig_descriptor_;
+}
+
+const SimhashConfig& SimhashConfig::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+SimhashConfig* SimhashConfig::default_instance_ = NULL;
+
+SimhashConfig* SimhashConfig::New() const {
+  return new SimhashConfig;
+}
+
+void SimhashConfig::Clear() {
+  if (_has_bits_[0 / 32] & 7) {
+    simhash_type_ = 0;
+    if (has_usage()) {
+      if (usage_ != NULL) usage_->::cloaking_detection::SimhashConfig_FeatureUsage::Clear();
+    }
+    maximum_threads_ = 10;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SimhashConfig::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.SimhashConfig)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required .cloaking_detection.SimhashConfig.SimhashType simhash_type = 1;
+      case 1: {
+        if (tag == 8) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::cloaking_detection::SimhashConfig_SimhashType_IsValid(value)) {
+            set_simhash_type(static_cast< ::cloaking_detection::SimhashConfig_SimhashType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_usage;
+        break;
+      }
+
+      // optional .cloaking_detection.SimhashConfig.FeatureUsage usage = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_usage:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_usage()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_maximum_threads;
+        break;
+      }
+
+      // optional int32 maximum_threads = 3 [default = 10];
+      case 3: {
+        if (tag == 24) {
+         parse_maximum_threads:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &maximum_threads_)));
+          set_has_maximum_threads();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.SimhashConfig)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.SimhashConfig)
+  return false;
+#undef DO_
+}
+
+void SimhashConfig::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.SimhashConfig)
+  // required .cloaking_detection.SimhashConfig.SimhashType simhash_type = 1;
+  if (has_simhash_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->simhash_type(), output);
+  }
+
+  // optional .cloaking_detection.SimhashConfig.FeatureUsage usage = 2;
+  if (has_usage()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->usage(), output);
+  }
+
+  // optional int32 maximum_threads = 3 [default = 10];
+  if (has_maximum_threads()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->maximum_threads(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.SimhashConfig)
+}
+
+::google::protobuf::uint8* SimhashConfig::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.SimhashConfig)
+  // required .cloaking_detection.SimhashConfig.SimhashType simhash_type = 1;
+  if (has_simhash_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->simhash_type(), target);
+  }
+
+  // optional .cloaking_detection.SimhashConfig.FeatureUsage usage = 2;
+  if (has_usage()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->usage(), target);
+  }
+
+  // optional int32 maximum_threads = 3 [default = 10];
+  if (has_maximum_threads()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->maximum_threads(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.SimhashConfig)
+  return target;
+}
+
+int SimhashConfig::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required .cloaking_detection.SimhashConfig.SimhashType simhash_type = 1;
+    if (has_simhash_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->simhash_type());
+    }
+
+    // optional .cloaking_detection.SimhashConfig.FeatureUsage usage = 2;
+    if (has_usage()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->usage());
+    }
+
+    // optional int32 maximum_threads = 3 [default = 10];
+    if (has_maximum_threads()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->maximum_threads());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SimhashConfig::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SimhashConfig* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SimhashConfig*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SimhashConfig::MergeFrom(const SimhashConfig& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_simhash_type()) {
+      set_simhash_type(from.simhash_type());
+    }
+    if (from.has_usage()) {
+      mutable_usage()->::cloaking_detection::SimhashConfig_FeatureUsage::MergeFrom(from.usage());
+    }
+    if (from.has_maximum_threads()) {
+      set_maximum_threads(from.maximum_threads());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SimhashConfig::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SimhashConfig::CopyFrom(const SimhashConfig& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SimhashConfig::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  return true;
+}
+
+void SimhashConfig::Swap(SimhashConfig* other) {
+  if (other != this) {
+    std::swap(simhash_type_, other->simhash_type_);
+    std::swap(usage_, other->usage_);
+    std::swap(maximum_threads_, other->maximum_threads_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SimhashConfig::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SimhashConfig_descriptor_;
+  metadata.reflection = SimhashConfig_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+const ::google::protobuf::EnumDescriptor* ClusterConfig_Algorithm_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ClusterConfig_Algorithm_descriptor_;
+}
+bool ClusterConfig_Algorithm_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const ClusterConfig_Algorithm ClusterConfig::HAMMING_THRESHOLD;
+const ClusterConfig_Algorithm ClusterConfig::K_MEANS;
+const ClusterConfig_Algorithm ClusterConfig::SPECTRAL_CLUSTERING;
+const ClusterConfig_Algorithm ClusterConfig::HIERARCHICAL_CLUSTERING;
+const ClusterConfig_Algorithm ClusterConfig::Algorithm_MIN;
+const ClusterConfig_Algorithm ClusterConfig::Algorithm_MAX;
+const int ClusterConfig::Algorithm_ARRAYSIZE;
+#endif  // _MSC_VER
+#ifndef _MSC_VER
+const int ClusterConfig::kAlgorithmFieldNumber;
+const int ClusterConfig::kClusterNumberFieldNumber;
+const int ClusterConfig::kMaximumThreadsFieldNumber;
+#endif  // !_MSC_VER
+
+ClusterConfig::ClusterConfig()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.ClusterConfig)
+}
+
+void ClusterConfig::InitAsDefaultInstance() {
+}
+
+ClusterConfig::ClusterConfig(const ClusterConfig& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.ClusterConfig)
+}
+
+void ClusterConfig::SharedCtor() {
+  _cached_size_ = 0;
+  algorithm_ = 0;
+  cluster_number_ = 0;
+  maximum_threads_ = 10;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+ClusterConfig::~ClusterConfig() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.ClusterConfig)
+  SharedDtor();
+}
+
+void ClusterConfig::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void ClusterConfig::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* ClusterConfig::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ClusterConfig_descriptor_;
+}
+
+const ClusterConfig& ClusterConfig::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+ClusterConfig* ClusterConfig::default_instance_ = NULL;
+
+ClusterConfig* ClusterConfig::New() const {
+  return new ClusterConfig;
+}
+
+void ClusterConfig::Clear() {
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<ClusterConfig*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 7) {
+    ZR_(algorithm_, cluster_number_);
+    maximum_threads_ = 10;
+  }
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool ClusterConfig::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.ClusterConfig)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required .cloaking_detection.ClusterConfig.Algorithm algorithm = 1;
+      case 1: {
+        if (tag == 8) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::cloaking_detection::ClusterConfig_Algorithm_IsValid(value)) {
+            set_algorithm(static_cast< ::cloaking_detection::ClusterConfig_Algorithm >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_cluster_number;
+        break;
+      }
+
+      // optional int32 cluster_number = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_cluster_number:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &cluster_number_)));
+          set_has_cluster_number();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_maximum_threads;
+        break;
+      }
+
+      // optional int32 maximum_threads = 3 [default = 10];
+      case 3: {
+        if (tag == 24) {
+         parse_maximum_threads:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &maximum_threads_)));
+          set_has_maximum_threads();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.ClusterConfig)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.ClusterConfig)
+  return false;
+#undef DO_
+}
+
+void ClusterConfig::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.ClusterConfig)
+  // required .cloaking_detection.ClusterConfig.Algorithm algorithm = 1;
+  if (has_algorithm()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->algorithm(), output);
+  }
+
+  // optional int32 cluster_number = 2;
+  if (has_cluster_number()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->cluster_number(), output);
+  }
+
+  // optional int32 maximum_threads = 3 [default = 10];
+  if (has_maximum_threads()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->maximum_threads(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.ClusterConfig)
+}
+
+::google::protobuf::uint8* ClusterConfig::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.ClusterConfig)
+  // required .cloaking_detection.ClusterConfig.Algorithm algorithm = 1;
+  if (has_algorithm()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->algorithm(), target);
+  }
+
+  // optional int32 cluster_number = 2;
+  if (has_cluster_number()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->cluster_number(), target);
+  }
+
+  // optional int32 maximum_threads = 3 [default = 10];
+  if (has_maximum_threads()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->maximum_threads(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.ClusterConfig)
+  return target;
+}
+
+int ClusterConfig::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required .cloaking_detection.ClusterConfig.Algorithm algorithm = 1;
+    if (has_algorithm()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->algorithm());
+    }
+
+    // optional int32 cluster_number = 2;
+    if (has_cluster_number()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->cluster_number());
+    }
+
+    // optional int32 maximum_threads = 3 [default = 10];
+    if (has_maximum_threads()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->maximum_threads());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void ClusterConfig::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const ClusterConfig* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const ClusterConfig*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void ClusterConfig::MergeFrom(const ClusterConfig& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_algorithm()) {
+      set_algorithm(from.algorithm());
+    }
+    if (from.has_cluster_number()) {
+      set_cluster_number(from.cluster_number());
+    }
+    if (from.has_maximum_threads()) {
+      set_maximum_threads(from.maximum_threads());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void ClusterConfig::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void ClusterConfig::CopyFrom(const ClusterConfig& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ClusterConfig::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  return true;
+}
+
+void ClusterConfig::Swap(ClusterConfig* other) {
+  if (other != this) {
+    std::swap(algorithm_, other->algorithm_);
+    std::swap(cluster_number_, other->cluster_number_);
+    std::swap(maximum_threads_, other->maximum_threads_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata ClusterConfig::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = ClusterConfig_descriptor_;
+  metadata.reflection = ClusterConfig_reflection_;
   return metadata;
 }
 

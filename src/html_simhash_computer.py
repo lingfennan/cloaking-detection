@@ -26,7 +26,7 @@ def strip_tags(html):
 '''
 
 def visible_text(html, twice=True):
-	texts = BeautifulSoup(data).findAll(text=True)
+	texts = BeautifulSoup(html).findAll(text=True)
 	def visible(element):
 		if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
 			return False
@@ -41,6 +41,12 @@ def visible_text(html, twice=True):
 		return " ".join(re.sub('<[^<]+?>', '', res).split())
 	return res
 
+class HtmlDomSet(object):
+	def __init__(self):
+		self.node = set()
+		self.bi_node = set()
+		self.tri_node = set()
+
 class Html_Simhash_Computer(object):
 	# input is CD.SimhashConfig
 	def __init__(self, simhash_config):
@@ -49,8 +55,11 @@ class Html_Simhash_Computer(object):
 		else:
 			raise Exception("Bad parameter")
 
+	def maximum_threads(self):
+		return self.simhash_config.maximum_threads
+
 	def build_by_features(self, features):
-		# print features
+		# print len(features)
 		if isinstance(features, collections.Iterable):
 			return Simhash(features)
 		else:
@@ -75,16 +84,15 @@ class Html_Simhash_Computer(object):
 			tri_gram.name = w
 		return html_text
 
-	class HtmlDomSet:
-		node = set()
-		bi_node = set()
-		tri_node = set()
-
 	def _extract_html_node(self, node, html_dom_set):
 		# current node is tag
-		if node.name is not None:
+		try:
+			name = node.name
+		except:
+			return
+		if name is not None:
 			# process node
-			node_str = node.name
+			node_str = name
 			for attr_name in node.attrs.keys():
 				node_str += '_' + attr_name
 			html_dom_set.node.add(node_str)
@@ -106,7 +114,7 @@ class Html_Simhash_Computer(object):
 	
 	def _extract_html_dom(self, tree):
 		html_dom = CD.HtmlDom()
-		html_dom_set = self.HtmlDomSet()
+		html_dom_set = HtmlDomSet()
 		# Traverse the tree
 		# ROOT_TAG_NAME = u'[document]'
 		self._extract_html_node(tree, html_dom_set)
@@ -166,23 +174,28 @@ class Html_Simhash_Computer(object):
 			result.append(self.build_by_dom(html_dom))
 		return result
 
-
-
 if __name__ == "__main__":
 	# HtmlText, HtmlDom
-	# filename = 'utils/data/forever21.html'
-	filename = 'utils/data/example.html'
-	data = open(filename, 'r').read()
-	# print visible_text(data)
+	filenames= ['utils/data/example.html', 'utils/data/US_list_10.20141010-180519.selenium.crawl/d8535ad6fd8ced25f6f25197a820deef/02b6345901e1142aca2d31f1f295d646/index.html']
+	# text_simhash for second one: 9414395266106367332
+	# dom_simhash for second one: 4243381963081104893
+	for filename in filenames:
+		print filename
+		data = open(filename, 'r').read()
+		# print visible_text(data)
 
-	config = CD.SimhashConfig()
-	config.simhash_type = CD.SimhashConfig.TEXT
-	config.usage.tri_gram = True
-	res = Html_Simhash_Computer(config).compute_simhash(data)
-	print '%x' % res[0].value
+		config = CD.SimhashConfig()
+		config.simhash_type = CD.SimhashConfig.TEXT
+		config.usage.tri_gram = True
+		res = Html_Simhash_Computer(config).compute_simhash(data)
+		# print '%x' % res[0].value
+		print res[0].value
 
-
-	config.simhash_type = CD.SimhashConfig.DOM
-	res = Html_Simhash_Computer(config).compute_simhash(data)
-	print '%x' % res[0].value
+		data = open(filename, 'r').read()
+		config = CD.SimhashConfig()
+		config.simhash_type = CD.SimhashConfig.DOM
+		config.usage.tri_gram = False
+		res = Html_Simhash_Computer(config).compute_simhash(data)
+		print res[0].value
+		# print '%x' % res[0].value
 

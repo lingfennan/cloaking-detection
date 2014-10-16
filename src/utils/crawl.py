@@ -9,6 +9,8 @@ import os
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import UnexpectedAlertPresentException
+from selenium.common.exceptions import WebDriverException
 from sets import Set
 from util import start_browser, mkdir_if_not_exist
 
@@ -70,35 +72,44 @@ class Crawler:
 			url_md5 = hex_md5(url)
 			# record whether url loading failed!
 			success = True
-			if self.browser_type == 'Chrome' and (('404 Not Found' in browser.title) or ('Error 404' in browser.title) or ('is not available' in browser.title)):
-				success = False
-			elif self.browser_type == 'Firefox' and (('404 Not Found' in browser.title) or ('Error 404' in browser.title) or ('Problem loading page' in browser.title)):
-				success = False
-			else:
-				#############
-				# md5 the original url
-				url_md5_dir = user_agent_md5_dir + url_md5 + '/'
-				mkdir_if_not_exist(url_md5_dir)
-				# get the landing url
-				landing_url = browser.current_url
-				landing_url_md5 = hex_md5(landing_url)
-				# get the whole page source
-				response = browser.execute_script("return document.documentElement.innerHTML;")
-				response_filename = url_md5_dir + 'index.html'
-				f = open(response_filename, 'w')
-				f.write(response.encode('utf-8'))
-				f.close()
+			try:
+				if self.browser_type == 'Chrome' and (('404 Not Found' in browser.title) or ('Error 404' in browser.title) or ('is not available' in browser.title)):
+					success = False
+				elif self.browser_type == 'Firefox' and (('404 Not Found' in browser.title) or ('Error 404' in browser.title) or ('Problem loading page' in browser.title)):
+					success = False
+				else:
+					#############
+					# md5 the original url
+					url_md5_dir = user_agent_md5_dir + url_md5 + '/'
+					mkdir_if_not_exist(url_md5_dir)
+					# get the landing url
+					landing_url = browser.current_url
+					landing_url_md5 = hex_md5(landing_url)
+					# get the whole page source
+					response = browser.execute_script("return document.documentElement.innerHTML;")
+					response_filename = url_md5_dir + 'index.html'
+					f = open(response_filename, 'w')
+					f.write(response.encode('utf-8'))
+					f.close()
 
-				# md5 - landing page mapping logs
-				self.htmls_f.write(response_filename + COMMA + landing_url + '\n')
-				url_md5_LP_f.write(url_md5 + DELIMETER + landing_url + '\n')
+					# md5 - landing page mapping logs
+					self.htmls_f.write(response_filename + COMMA + landing_url + '\n')
+					url_md5_LP_f.write(url_md5 + DELIMETER + landing_url + '\n')
+			except:
+				# except (UnexpectedAlertPresentException, WebDriverException) as e:
+				success = False
+				print sys.exc_info()[0]
+				browser.quit()
+				browser = start_browser(self.browser_type, incognito=False, user_agent=user_agent)
+				continue
 			if success:
 				print browser.title
 				log_str = url_md5 + DELIMETER + url + DELIMETER + landing_url_md5 + DELIMETER + landing_url + '\n'
 				success_f.write(log_str)
 			else:
 				log_str = url_md5 + DELIMETER + url + '\n'
-				print browser.title
+				# diable the following line because UnexpectedAlertPresentException can not access browser.title
+				# print browser.title
 				print log_str
 				failure_f.write(log_str)
 		browser.quit()

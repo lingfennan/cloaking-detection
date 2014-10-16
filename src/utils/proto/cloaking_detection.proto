@@ -38,6 +38,8 @@ message Observation {
   required string landing_url = 1;
   required string file_path = 2;
   optional string timestamp = 3;
+  optional uint64 text_simhash = 4;
+  optional uint64 dom_simhash = 5;
 }
 
 // Text features
@@ -66,7 +68,7 @@ message SimhashConfig {
   enum SimhashType {
     TEXT = 0;
     DOM = 1;
-    TEXT_DOM = 2;  // Not used now
+    TEXT_DOM = 2;  // First TEXT, then DOM
   }
   required SimhashType simhash_type = 1;
   message FeatureUsage {
@@ -75,6 +77,7 @@ message SimhashConfig {
     optional bool tri_gram = 3 [default = false];
   }
   optional FeatureUsage usage = 2;
+  optional int32 maximum_threads = 3 [default = 10];
 }
 
 // Configuration for simhash clustering
@@ -87,5 +90,6 @@ message ClusterConfig {
   }
   required Algorithm algorithm = 1;
   optional int32 cluster_number = 2;
+  optional int32 maximum_threads = 3 [default = 10];
 }
 

@@ -58,7 +58,7 @@ def mkdir_if_not_exist(directory):
 def get_clickstring(words_file):
 	clickstring_set = Set()
 	words = filter(bool, open(words_file, 'r').read().split('\n'))
-	browser = start_browser('Chrome', True)
+	browser = start_browser('Chrome', incognito=True)
 	for word in words:
 		# google search advertisements
 		url = 'https://www.google.com/?gws_rd=ssl#q='
@@ -150,10 +150,28 @@ def collapse_all(popup):
 		collapse_item = item.find_element_by_css_selector(".goog-tree-expand-icon[type='expand']")
 		collapse_item.click()
 
-def load_progress(browser, picker_ids, popup_ids, progress, enforce_geo_us=True):
+def load_progress(browser, picker_ids, popup_ids, progress, previous, enforce_geo_us=True):
 	current_picker = 0
 	config_list = list()
 	for picker_id, popup_id in izip(picker_ids, popup_ids):
+		# Try to click less buttons to save time
+		if previous and previous[0][current_picker] == progress[current_picker]:
+			if picker_id == 'resPckrcat_anchor':
+				if previous[0][current_picker+1] == progress[current_picker+1]:
+					# If for category, both selection hasn't changed, then don't click it.
+					# This may be redundant, because, it seems if the selection changes, subselection will definitely change.
+					# But I kept it here, for complete reasoning.
+					config_list.append(previous[1][current_picker])
+					config_list.append(previous[1][current_picker+1])
+					aria_level_2_size = previous[2]
+					current_picker += 2
+					continue
+			else:
+				# If for this picker_id, nothing has changed, then don't click it
+				config_list.append(previous[1][current_picker])
+				current_picker += 1
+				continue
+
 		picker = browser.find_element_by_id(picker_id)
 		picker.click()
 		popup = browser.find_element_by_id(popup_id)
@@ -219,7 +237,6 @@ def get_end(browser, picker_ids, popup_ids, aria_level_2_size):
 	end[1] -= 1
 	# end[4] = 2
 	return end
-
 class Progress:
 	
 	current_file = TREND_PROGRESS
@@ -273,10 +290,13 @@ def picker_popup(browser, picker_ids, popup_ids, output_dir):
 	# need to update the end
 	progress = Progress()
 	current = progress.current
+	previous = None
 	while(current):
 		print current
+		# use previous and current, compare to see if there is update on the corresponding index, try to speed up the program
 		# 'aria-level 2' size, which can be used to update end[3] 
-		[filename, aria_level_2_size] = load_progress(browser, picker_ids, popup_ids, current)
+		[filename, aria_level_2_size] = load_progress(browser, picker_ids, popup_ids, current, previous)
+		config_list = filename
 		filename = '_'.join(filename) + '.csv'
 		print filename
 		download_csv(browser)
@@ -299,9 +319,10 @@ def picker_popup(browser, picker_ids, popup_ids, output_dir):
 		# b. restarting program will execute this one again
 		progress.save()
 		end = get_end(browser, picker_ids, popup_ids, aria_level_2_size)
+		previous = [list(current), config_list, aria_level_2_size]
 		current = progress.next(start, end)
 	
-def start_browser(browser_type, incognito=False, user_agent=None):
+def start_browser(browser_type, incognito=False, user_agent=None, use_tor=False):
 	if browser_type == 'Firefox':
 		# configure firefox to download by default
 		fp = webdriver.FirefoxProfile()
@@ -309,6 +330,10 @@ def start_browser(browser_type, incognito=False, user_agent=None):
 			fp.set_preference("browser.private.browsing.autostart", True)
 		if user_agent:
 			fp.set_preference("general.useragent.override", user_agent)
+		if use_tor:
+			fp.set_preference("network.proxy.type", 1)
+			fp.set_preference("network.proxy.socks", "127.0.0.1")
+			fp.set_preference("network.proxy.socks_port", 9050)
 		fp.set_preference("browser.download.folderList",2)
 		fp.set_preference("browser.download.manager.showWhenStarting", False)
 		# fp.set_preference("browser.download.dir",getcwd())
@@ -322,6 +347,9 @@ def start_browser(browser_type, incognito=False, user_agent=None):
 			options.add_argument("--incognito")
 		if user_agent:
 			options.add_argument("--user-agent=\"" + user_agent + "\"")
+		if use_tor:
+			PROXY = "socks5://127.0.0.1:9050"
+			options.add_argument("--proxy-server=%s" % PROXY)
 		options.add_experimental_option("excludeSwitches", ["ignore-certificate-errors"])
 		browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
 	else:
@@ -335,8 +363,9 @@ def hot_search_words(credentials, output_dir, browser_type='Firefox'):
 	output_dir = output_dir + 'csv.' + now + '/'
 	mkdir_if_not_exist(output_dir)
 
-	# load user credentials
+	# load user credentials, and shuffle order of the accounts
 	usr_pwds = filter(bool, open(credentials, 'r').read().split('\n'))
+	random.shuffle(usr_pwds)
 	for usr_pwd in usr_pwds:
 		[usr, pwd] = usr_pwd.split('\t')
 		try:
@@ -344,7 +373,7 @@ def hot_search_words(credentials, output_dir, browser_type='Firefox'):
 			trend_url = "http://www.google.com/trends/explore#"
 			params = {'geo':'US', 'date':'today%2012-m', 'cat':'0-3', 'cmpt':'q'}
 			# start browser
-			browser = start_browser(browser_type)
+			browser = start_browser(browser_type) #, use_tor=True)
 			# download csv requires sign-in
 			# sign_in_gmail(browser, 'lingfennan', 'lingfennan123')
 			sign_in_gmail(browser, usr, pwd)
@@ -360,7 +389,8 @@ def hot_search_words(credentials, output_dir, browser_type='Firefox'):
 		except QuoteError as e:
 			print 'Current progress is', e.progress
 		except:
-			print 'Unknown error!'
+			print 'Unknown error:', sys.exc_info()[0]
+			raise
 
 def pattern_distance_distribution(inputfile, outputfile):
 	lines = [line for line in open(inputfile, 'r').read().split('\n') if (line and line[0] == '[')]
