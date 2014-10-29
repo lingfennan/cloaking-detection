@@ -380,7 +380,7 @@ def HierarchicalClustering(cluster_config, observed_site):
 		item.CopyFrom(simhash_item_vector[0])
 		return learned_site
 	dist_mat, weight_list = distance_matrix(simhash_item_vector)
-	left_out_ratio = cluster_config.left_out_ratio
+	left_out_ratio = cluster_config.algorithm.left_out_ratio
 	"""
 	linkage_mat = h.linkage(dist_mat, method = 'single')
 	# linkage matrix are sorted by distance between clusters

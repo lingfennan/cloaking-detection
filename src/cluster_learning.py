@@ -71,6 +71,15 @@ def compute(site_list_filenames):
 	res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
 	write_proto_to_file(res, dom_out_filename)
 
+def learn(observed_sites_filename):
+	out_filename = observed_sites_filename + '.learned'
+	cluster_learner = ClusterLearning()
+	cluster_config = CD.ClusterConfig()
+	cluster_config.algorithm.name = CD.Algorithm.HIERARCHICAL_CLUSTERING
+	cluster_config.algorithm.left_out_ratio = 5 # left out ratio is 5%
+	res = cluster_learner.learn(observed_sites_filename, cluster_config)
+	write_proto_to_file(res, out_filename)
+
 def test_learner():
 	in_filename = 'utils/data/US_list_10.20141010-180519.selenium.crawl/html_path_list.text'
 	out_filename = in_filename + '.learned'
@@ -85,7 +94,6 @@ def test_learner():
 	print res
 
 	cluster_config.algorithm.name = CD.Algorithm.HIERARCHICAL_CLUSTERING
-	cluster_config.algorithm.thres = 5
 	cluster_config.algorithm.left_out_ratio = 5  # left out ratio is 5%
 	res = cluster_learner.learn(in_filename, cluster_config)
 	write_proto_to_file(res, out_filename)
@@ -125,7 +133,7 @@ def test_computer():
 
 def main(argv):
 	has_function = False
-	help_msg = 'cloaking_detection.py -f <function> [-i <inputfile>], valid functions are compute'
+	help_msg = 'cloaking_detection.py -f <function> [-i <inputfile>], valid functions are compute, learn'
 	try:
 		opts, args = getopt.getopt(argv, "hf:i:", ["function=", "ifile="])
 	except getopt.GetoptError:
@@ -152,6 +160,9 @@ def main(argv):
 	if function == 'compute':
 		site_list_filenames = [inputfile]
 		compute(site_list_filenames)
+	elif function == 'learn':
+		observed_sites_filename = inputfile
+		learn(observed_sites_filename)
 	else:
 		print help_msg
 		sys.exit(2)
