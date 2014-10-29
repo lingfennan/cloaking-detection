@@ -81,7 +81,17 @@ def test_learner():
 	cluster_config.algorithm.left_out_ratio = 5  # left out ratio is 5%
 	res = cluster_learner.learn(in_filename, cluster_config)
 	write_proto_to_file(res, out_filename)
+	print "result for hamming threhold clustering"
 	print res
+
+	cluster_config.algorithm.name = CD.Algorithm.HIERARCHICAL_CLUSTERING
+	cluster_config.algorithm.thres = 5
+	cluster_config.algorithm.left_out_ratio = 5  # left out ratio is 5%
+	res = cluster_learner.learn(in_filename, cluster_config)
+	write_proto_to_file(res, out_filename)
+	print "result for hierarchical clustering"
+	print res
+
 
 def test_computer():
 	site_list_filenames = ['utils/data/US_list_10.20141010-180519.selenium.crawl/html_path_list']
