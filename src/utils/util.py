@@ -9,7 +9,6 @@ from datetime import datetime
 from itertools import izip
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from sets import Set
 
 """
 Dependencies:
@@ -56,7 +55,7 @@ def mkdir_if_not_exist(directory):
 		os.makedirs(directory)
 
 def get_clickstring(words_file):
-	clickstring_set = Set()
+	clickstring_set = set()
 	words = filter(bool, open(words_file, 'r').read().split('\n'))
 	browser = start_browser('Chrome', incognito=True)
 	for word in words:
@@ -78,8 +77,8 @@ def get_clickstring(words_file):
 	return clickstring_set
 
 def ad_list(report_list, outputfile):
-	hot_word_set = Set()
-	rising_word_set = Set()
+	hot_word_set = set()
+	rising_word_set = set()
 	for report_file in report_list:
 		lines = open(report_file, 'r').read().split('\n')
 		# whether we have started to retrieve data

@@ -3,6 +3,7 @@ import re
 import sys
 from simhash import Simhash
 from bs4 import BeautifulSoup
+from utils.learning_detection_util import valid_instance
 import utils.proto.cloaking_detection_pb2 as CD
 
 
@@ -50,20 +51,16 @@ class HtmlDomSet(object):
 class Html_Simhash_Computer(object):
 	# input is CD.SimhashConfig
 	def __init__(self, simhash_config):
-		if isinstance(simhash_config, CD.SimhashConfig):
+		if valid_instance(simhash_config, CD.SimhashConfig):
 			self.simhash_config = simhash_config
-		else:
-			raise Exception("Bad parameter")
 
 	def maximum_threads(self):
 		return self.simhash_config.maximum_threads
 
 	def build_by_features(self, features):
 		# print len(features)
-		if isinstance(features, collections.Iterable):
+		if valid_instance(features, collections.Iterable):
 			return Simhash(features)
-		else:
-			raise Exception("Bad parameter")
 
 	def _extract_html_text(self, text):
 		html_text = CD.HtmlText()
@@ -130,7 +127,7 @@ class Html_Simhash_Computer(object):
 		return html_dom
 
 	def build_by_text(self, html_text):
-		if isinstance(html_text, CD.HtmlText):
+		if valid_instance(html_text, CD.HtmlText):
 			# weighted features are not supported by now
 			features = list()
 			if self.simhash_config.usage.gram:
@@ -143,11 +140,9 @@ class Html_Simhash_Computer(object):
 				for feature in html_text.tri_gram:
 					features.append(feature.name)
 			return self.build_by_features(features)
-		else:
-			raise Exception("Bad parameter")
 	
 	def build_by_dom(self, html_dom):
-		if isinstance(html_dom, CD.HtmlDom):
+		if valid_instance(html_dom, CD.HtmlDom):
 			features = list()
 			if self.simhash_config.usage.gram:
 				for feature in html_dom.node:
@@ -159,16 +154,14 @@ class Html_Simhash_Computer(object):
 				for feature in html_dom.tri_node:
 					features.append(feature.name)
 			return self.build_by_features(features)
-		else:
-			raise Exception("Bad parameter")
 	
 	def compute_simhash(self, data):
 		result = list()
-		if self.simhash_config.simhash_type in [CD.SimhashConfig.TEXT, CD.SimhashConfig.TEXT_DOM]:
+		if self.simhash_config.simhash_type in [CD.TEXT, CD.TEXT_DOM]:
 			text = visible_text(data)
 			html_text = self._extract_html_text(text)
 			result.append(self.build_by_text(html_text))
-		if self.simhash_config.simhash_type in [CD.SimhashConfig.DOM, CD.SimhashConfig.TEXT_DOM]:
+		if self.simhash_config.simhash_type in [CD.DOM, CD.TEXT_DOM]:
 			soup = BeautifulSoup(data)
 			html_dom = self._extract_html_dom(soup)
 			result.append(self.build_by_dom(html_dom))
@@ -185,7 +178,7 @@ if __name__ == "__main__":
 		# print visible_text(data)
 
 		config = CD.SimhashConfig()
-		config.simhash_type = CD.SimhashConfig.TEXT
+		config.simhash_type = CD.TEXT
 		config.usage.tri_gram = True
 		res = Html_Simhash_Computer(config).compute_simhash(data)
 		# print '%x' % res[0].value
@@ -193,7 +186,7 @@ if __name__ == "__main__":
 
 		data = open(filename, 'r').read()
 		config = CD.SimhashConfig()
-		config.simhash_type = CD.SimhashConfig.DOM
+		config.simhash_type = CD.DOM
 		config.usage.tri_gram = False
 		res = Html_Simhash_Computer(config).compute_simhash(data)
 		print res[0].value

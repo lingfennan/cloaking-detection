@@ -5,8 +5,17 @@ import time
 class _ThreadWorker(threading.Thread):
 	"""
 	Thread-safe. With queue and exit_checker
+	@parameter
+	ID: Identifier for current thread
+	name: name for current thread
+	q: queue has the list that threads need to fetch and iterate parameter from.
+	lock: lock for the q
+	exit_checker: signal all the threads to exit
+	runnable_object: the object to run
+	function: the member function to the runnable_object to call
+	default_paras: the parameters for function, first parameter is element in q, default paras are after that.
 	"""
-	def __init__(self, ID, name, q, lock, exit_checker, runnable_object, function):
+	def __init__(self, ID, name, q, lock, exit_checker, runnable_object, function, default_paras=None):
 		threading.Thread.__init__(self)
 		self.ID = ID
 		self.name = name
@@ -15,6 +24,7 @@ class _ThreadWorker(threading.Thread):
 		self.exit_checker = exit_checker
 		self.runnable_object = runnable_object
 		self.function = function
+		self.default_paras = default_paras
 		self.result = list()
 	def run(self):
 		while not self.exit_checker.exit_flag:
@@ -23,7 +33,10 @@ class _ThreadWorker(threading.Thread):
 				file_path = self.q.get()
 				self.lock.release()
 				data = open(file_path, 'r').read()
-				res = getattr(self.runnable_object, self.function)(data)
+				if self.default_paras:
+					res = getattr(self.runnable_object, self.function)(data, *self.default_paras)
+				else:
+					res = getattr(self.runnable_object, self.function)(data)
 				print "%s processing %s" % (self.name, file_path)
 				self.result.append([file_path, res])
 			else:
@@ -33,6 +46,7 @@ class _ThreadWorker(threading.Thread):
 class ThreadComputer(object):
 	"""
 	Thead-safe computer. Performs [runnable_object.function(open(para, 'r').read()) for para in para_list].
+	or [runnable_object.function(para) for para in para_list]
 	@parameter
 	runnable_object: should have member function 'maximum_threads', and function.
 	function: should accept open(element, 'r').read() in para_list as input.
@@ -41,11 +55,12 @@ class ThreadComputer(object):
 	@return
 	self.result
 	"""
-	def __init__(self, runnable_object, function, para_list):
+	def __init__(self, runnable_object, function, para_list, default_paras=None):
 		self.runnable_object = runnable_object
 		self.maximum_threads = runnable_object.maximum_threads()
 		self.function = function
 		self.para_list = para_list
+		self.default_paras = default_paras
 		self.exit_flag = 0
 
 		self.lock = threading.Lock()
@@ -59,7 +74,7 @@ class ThreadComputer(object):
 		print "created {0} threads".format(len(name_list))
 		ID = 0
 		for name in name_list:
-			thread = _ThreadWorker(ID, name, self.q, self.lock, self, self.runnable_object, self.function)
+			thread = _ThreadWorker(ID, name, self.q, self.lock, self, self.runnable_object, self.function, self.default_paras)
 			thread.start()
 			threads.append(thread)
 			ID += 1
