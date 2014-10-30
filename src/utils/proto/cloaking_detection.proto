@@ -19,13 +19,13 @@ message Pattern {
   // mean and std is used for NORMAL_DISTRIBUTION
   required double mean = 1;
   required double std = 2;
-  repeated Item item = 3;
+  repeated SimhashItem item = 3;
   // centroid and threshold is used for GRADIENT_DESCENT
   repeated double centroid = 4 [packed=true];
   optional double threshold = 5;
 }
 
-message Item {
+message SimhashItem {
   required uint64 simhash = 1;
   optional uint64 count = 2 [default = 1];
 }
@@ -33,6 +33,7 @@ message Item {
 // Sites to classify. This is used in learning and detection phase.
 message ObservedSites {
   repeated SiteObservations site = 1;
+  optional SimhashConfig config = 2;
 }
 
 message SiteObservations {
@@ -69,13 +70,13 @@ message Feature {
   optional string string_value = 4;
 }
 
-// Configuration for simhash computing
+enum SimhashType {
+  TEXT = 0;
+  DOM = 1;
+  TEXT_DOM = 2;  // First TEXT, then DOM
+}
+
 message SimhashConfig {
-  enum SimhashType {
-    TEXT = 0;
-    DOM = 1;
-    TEXT_DOM = 2;  // First TEXT, then DOM
-  }
   required SimhashType simhash_type = 1;
   message FeatureUsage {
     optional bool gram = 1 [default = true];
@@ -87,16 +88,24 @@ message SimhashConfig {
 }
 
 // Configuration for simhash clustering
-message ClusterConfig {
-  enum Algorithm {
+message Algorithm {
+  enum AlgoName {
     HAMMING_THRESHOLD = 0;  // Deprecated. Because have no theory support.
     K_MEANS = 1;  
     SPECTRAL_CLUSTERING = 2;
     HIERARCHICAL_CLUSTERING = 3;
   }
+  required AlgoName name = 1;
+  optional int32 thres = 2; // thres used by hamming threshold
+  optional int32 k = 3;  // k used by k-means, and spectral clustering
+  optional int32 left_out_ratio = 4;  // left out ratio used by hierarchical clustering
+}
+
+message ClusterConfig {
   required Algorithm algorithm = 1;
-  optional int32 cluster_number = 2;
+  optional int32 minimum_cluster_size = 2 [default = 2];
   optional int32 maximum_threads = 3 [default = 10];
+  optional SimhashType simhash_type = 4 [default = TEXT];
 }
 
 // Configuration for cloaking detection
