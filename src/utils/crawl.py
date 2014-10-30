@@ -28,11 +28,12 @@ def fetch_url(url, browser, browser_type, user_agent, user_agent_md5_dir, fileha
 	if not len(filehandles) == 4:
 		raise Exception("Wrong number of parameters. filehandles should have size 4.")
 	[htmls_f, url_md5_LP_f, success_f, failure_f] = filehandles
-	browser.get(url)
-	url_md5 = hex_md5(url)
 	# record whether url loading failed!
 	success = True
 	try:
+		# may throw socket errors
+		browser.get(url)
+		url_md5 = hex_md5(url)
 		if browser_type == 'Chrome' and (('404 Not Found' in browser.title) or ('Error 404' in browser.title) or ('is not available' in browser.title)):
 			success = False
 		elif browser_type == 'Firefox' and (('404 Not Found' in browser.title) or ('Error 404' in browser.title) or ('Problem loading page' in browser.title)):

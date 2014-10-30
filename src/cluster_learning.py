@@ -133,7 +133,7 @@ def test_computer():
 
 def main(argv):
 	has_function = False
-	help_msg = 'cloaking_detection.py -f <function> [-i <inputfile>], valid functions are compute, learn'
+	help_msg = 'cluster_learning.py -f <function> [-i <inputfile>], valid functions are compute, learn'
 	try:
 		opts, args = getopt.getopt(argv, "hf:i:", ["function=", "ifile="])
 	except getopt.GetoptError:
