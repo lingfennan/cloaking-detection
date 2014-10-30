@@ -18,7 +18,7 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='cloaking_detection.proto',
   package='cloaking_detection',
-  serialized_pb=_b('\n\x18\x63loaking_detection.proto\x12\x12\x63loaking_detection\"Q\n\x0cLearnedSites\x12.\n\x04site\x18\x01 \x03(\x0b\x32 .cloaking_detection.SitePatterns\x12\x11\n\ttimestamp\x18\x02 \x01(\t\"J\n\x0cSitePatterns\x12\x0c\n\x04name\x18\x01 \x02(\t\x12,\n\x07pattern\x18\x02 \x03(\x0b\x32\x1b.cloaking_detection.Pattern\"L\n\x07Pattern\x12\x0c\n\x04mean\x18\x01 \x02(\x01\x12\x0b\n\x03std\x18\x02 \x02(\x01\x12&\n\x04item\x18\x03 \x03(\x0b\x32\x18.cloaking_detection.Item\")\n\x04Item\x12\x0f\n\x07simhash\x18\x01 \x02(\x04\x12\x10\n\x05\x63ount\x18\x02 \x01(\x04:\x01\x31\"C\n\rObservedSites\x12\x32\n\x04site\x18\x01 \x03(\x0b\x32$.cloaking_detection.SiteObservations\"V\n\x10SiteObservations\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x34\n\x0bobservation\x18\x02 \x03(\x0b\x32\x1f.cloaking_detection.Observation\"s\n\x0bObservation\x12\x13\n\x0blanding_url\x18\x01 \x02(\t\x12\x11\n\tfile_path\x18\x02 \x02(\t\x12\x11\n\ttimestamp\x18\x03 \x01(\t\x12\x14\n\x0ctext_simhash\x18\x04 \x01(\x04\x12\x13\n\x0b\x64om_simhash\x18\x05 \x01(\x04\"\x92\x01\n\x08HtmlText\x12)\n\x04word\x18\x01 \x03(\x0b\x32\x1b.cloaking_detection.Feature\x12,\n\x07\x62i_gram\x18\x02 \x03(\x0b\x32\x1b.cloaking_detection.Feature\x12-\n\x08tri_gram\x18\x03 \x03(\x0b\x32\x1b.cloaking_detection.Feature\"\x91\x01\n\x07HtmlDom\x12)\n\x04node\x18\x01 \x03(\x0b\x32\x1b.cloaking_detection.Feature\x12,\n\x07\x62i_node\x18\x02 \x03(\x0b\x32\x1b.cloaking_detection.Feature\x12-\n\x08tri_node\x18\x03 \x03(\x0b\x32\x1b.cloaking_detection.Feature\"Y\n\x07\x46\x65\x61ture\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x14\n\tint_value\x18\x02 \x01(\x05:\x01\x31\x12\x14\n\x0c\x64ouble_value\x18\x03 \x01(\x01\x12\x14\n\x0cstring_value\x18\x04 \x01(\t\"\xb4\x02\n\rSimhashConfig\x12\x43\n\x0csimhash_type\x18\x01 \x02(\x0e\x32-.cloaking_detection.SimhashConfig.SimhashType\x12=\n\x05usage\x18\x02 \x01(\x0b\x32..cloaking_detection.SimhashConfig.FeatureUsage\x12\x1b\n\x0fmaximum_threads\x18\x03 \x01(\x05:\x02\x31\x30\x1aR\n\x0c\x46\x65\x61tureUsage\x12\x12\n\x04gram\x18\x01 \x01(\x08:\x04true\x12\x15\n\x07\x62i_gram\x18\x02 \x01(\x08:\x04true\x12\x17\n\x08tri_gram\x18\x03 \x01(\x08:\x05\x66\x61lse\".\n\x0bSimhashType\x12\x08\n\x04TEXT\x10\x00\x12\x07\n\x03\x44OM\x10\x01\x12\x0c\n\x08TEXT_DOM\x10\x02\"\xeb\x01\n\rClusterConfig\x12>\n\talgorithm\x18\x01 \x02(\x0e\x32+.cloaking_detection.ClusterConfig.Algorithm\x12\x16\n\x0e\x63luster_number\x18\x02 \x01(\x05\x12\x1b\n\x0fmaximum_threads\x18\x03 \x01(\x05:\x02\x31\x30\"e\n\tAlgorithm\x12\x15\n\x11HAMMING_THRESHOLD\x10\x00\x12\x0b\n\x07K_MEANS\x10\x01\x12\x17\n\x13SPECTRAL_CLUSTERING\x10\x02\x12\x1b\n\x17HIERARCHICAL_CLUSTERING\x10\x03')
+  serialized_pb=_b('\n\x18\x63loaking_detection.proto\x12\x12\x63loaking_detection\"Q\n\x0cLearnedSites\x12.\n\x04site\x18\x01 \x03(\x0b\x32 .cloaking_detection.SitePatterns\x12\x11\n\ttimestamp\x18\x02 \x01(\t\"J\n\x0cSitePatterns\x12\x0c\n\x04name\x18\x01 \x02(\t\x12,\n\x07pattern\x18\x02 \x03(\x0b\x32\x1b.cloaking_detection.Pattern\"u\n\x07Pattern\x12\x0c\n\x04mean\x18\x01 \x02(\x01\x12\x0b\n\x03std\x18\x02 \x02(\x01\x12&\n\x04item\x18\x03 \x03(\x0b\x32\x18.cloaking_detection.Item\x12\x14\n\x08\x63\x65ntroid\x18\x04 \x03(\x01\x42\x02\x10\x01\x12\x11\n\tthreshold\x18\x05 \x01(\x01\")\n\x04Item\x12\x0f\n\x07simhash\x18\x01 \x02(\x04\x12\x10\n\x05\x63ount\x18\x02 \x01(\x04:\x01\x31\"C\n\rObservedSites\x12\x32\n\x04site\x18\x01 \x03(\x0b\x32$.cloaking_detection.SiteObservations\"V\n\x10SiteObservations\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x34\n\x0bobservation\x18\x02 \x03(\x0b\x32\x1f.cloaking_detection.Observation\"s\n\x0bObservation\x12\x13\n\x0blanding_url\x18\x01 \x02(\t\x12\x11\n\tfile_path\x18\x02 \x02(\t\x12\x11\n\ttimestamp\x18\x03 \x01(\t\x12\x14\n\x0ctext_simhash\x18\x04 \x01(\x04\x12\x13\n\x0b\x64om_simhash\x18\x05 \x01(\x04\"\x92\x01\n\x08HtmlText\x12)\n\x04word\x18\x01 \x03(\x0b\x32\x1b.cloaking_detection.Feature\x12,\n\x07\x62i_gram\x18\x02 \x03(\x0b\x32\x1b.cloaking_detection.Feature\x12-\n\x08tri_gram\x18\x03 \x03(\x0b\x32\x1b.cloaking_detection.Feature\"\x91\x01\n\x07HtmlDom\x12)\n\x04node\x18\x01 \x03(\x0b\x32\x1b.cloaking_detection.Feature\x12,\n\x07\x62i_node\x18\x02 \x03(\x0b\x32\x1b.cloaking_detection.Feature\x12-\n\x08tri_node\x18\x03 \x03(\x0b\x32\x1b.cloaking_detection.Feature\"Y\n\x07\x46\x65\x61ture\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x14\n\tint_value\x18\x02 \x01(\x05:\x01\x31\x12\x14\n\x0c\x64ouble_value\x18\x03 \x01(\x01\x12\x14\n\x0cstring_value\x18\x04 \x01(\t\"\xb4\x02\n\rSimhashConfig\x12\x43\n\x0csimhash_type\x18\x01 \x02(\x0e\x32-.cloaking_detection.SimhashConfig.SimhashType\x12=\n\x05usage\x18\x02 \x01(\x0b\x32..cloaking_detection.SimhashConfig.FeatureUsage\x12\x1b\n\x0fmaximum_threads\x18\x03 \x01(\x05:\x02\x31\x30\x1aR\n\x0c\x46\x65\x61tureUsage\x12\x12\n\x04gram\x18\x01 \x01(\x08:\x04true\x12\x15\n\x07\x62i_gram\x18\x02 \x01(\x08:\x04true\x12\x17\n\x08tri_gram\x18\x03 \x01(\x08:\x05\x66\x61lse\".\n\x0bSimhashType\x12\x08\n\x04TEXT\x10\x00\x12\x07\n\x03\x44OM\x10\x01\x12\x0c\n\x08TEXT_DOM\x10\x02\"\xeb\x01\n\rClusterConfig\x12>\n\talgorithm\x18\x01 \x02(\x0e\x32+.cloaking_detection.ClusterConfig.Algorithm\x12\x16\n\x0e\x63luster_number\x18\x02 \x01(\x05\x12\x1b\n\x0fmaximum_threads\x18\x03 \x01(\x05:\x02\x31\x30\"e\n\tAlgorithm\x12\x15\n\x11HAMMING_THRESHOLD\x10\x00\x12\x0b\n\x07K_MEANS\x10\x01\x12\x17\n\x13SPECTRAL_CLUSTERING\x10\x02\x12\x1b\n\x17HIERARCHICAL_CLUSTERING\x10\x03\"\xa5\x01\n\x0f\x44\x65tectionConfig\x12@\n\talgorithm\x18\x01 \x02(\x0e\x32-.cloaking_detection.DetectionConfig.Algorithm\x12\x14\n\x0cstd_constant\x18\x02 \x01(\x05\":\n\tAlgorithm\x12\x17\n\x13NORMAL_DISTRIBUTION\x10\x00\x12\x14\n\x10GRADIENT_DESCENT\x10\x01')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -45,8 +45,8 @@ _SIMHASHCONFIG_SIMHASHTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1253,
-  serialized_end=1299,
+  serialized_start=1294,
+  serialized_end=1340,
 )
 _sym_db.RegisterEnumDescriptor(_SIMHASHCONFIG_SIMHASHTYPE)
 
@@ -75,10 +75,32 @@ _CLUSTERCONFIG_ALGORITHM = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1436,
-  serialized_end=1537,
+  serialized_start=1477,
+  serialized_end=1578,
 )
 _sym_db.RegisterEnumDescriptor(_CLUSTERCONFIG_ALGORITHM)
+
+_DETECTIONCONFIG_ALGORITHM = _descriptor.EnumDescriptor(
+  name='Algorithm',
+  full_name='cloaking_detection.DetectionConfig.Algorithm',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='NORMAL_DISTRIBUTION', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='GRADIENT_DESCENT', index=1, number=1,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=1688,
+  serialized_end=1746,
+)
+_sym_db.RegisterEnumDescriptor(_DETECTIONCONFIG_ALGORITHM)
 
 
 _LEARNEDSITES = _descriptor.Descriptor(
@@ -183,6 +205,20 @@ _PATTERN = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='centroid', full_name='cloaking_detection.Pattern.centroid', index=3,
+      number=4, type=1, cpp_type=5, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\020\001'))),
+    _descriptor.FieldDescriptor(
+      name='threshold', full_name='cloaking_detection.Pattern.threshold', index=4,
+      number=5, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -195,7 +231,7 @@ _PATTERN = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=207,
-  serialized_end=283,
+  serialized_end=324,
 )
 
 
@@ -231,8 +267,8 @@ _ITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=285,
-  serialized_end=326,
+  serialized_start=326,
+  serialized_end=367,
 )
 
 
@@ -261,8 +297,8 @@ _OBSERVEDSITES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=328,
-  serialized_end=395,
+  serialized_start=369,
+  serialized_end=436,
 )
 
 
@@ -298,8 +334,8 @@ _SITEOBSERVATIONS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=397,
-  serialized_end=483,
+  serialized_start=438,
+  serialized_end=524,
 )
 
 
@@ -356,8 +392,8 @@ _OBSERVATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=485,
-  serialized_end=600,
+  serialized_start=526,
+  serialized_end=641,
 )
 
 
@@ -400,8 +436,8 @@ _HTMLTEXT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=603,
-  serialized_end=749,
+  serialized_start=644,
+  serialized_end=790,
 )
 
 
@@ -444,8 +480,8 @@ _HTMLDOM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=752,
-  serialized_end=897,
+  serialized_start=793,
+  serialized_end=938,
 )
 
 
@@ -495,8 +531,8 @@ _FEATURE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=899,
-  serialized_end=988,
+  serialized_start=940,
+  serialized_end=1029,
 )
 
 
@@ -539,8 +575,8 @@ _SIMHASHCONFIG_FEATUREUSAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1169,
-  serialized_end=1251,
+  serialized_start=1210,
+  serialized_end=1292,
 )
 
 _SIMHASHCONFIG = _descriptor.Descriptor(
@@ -583,8 +619,8 @@ _SIMHASHCONFIG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=991,
-  serialized_end=1299,
+  serialized_start=1032,
+  serialized_end=1340,
 )
 
 
@@ -628,8 +664,46 @@ _CLUSTERCONFIG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1302,
-  serialized_end=1537,
+  serialized_start=1343,
+  serialized_end=1578,
+)
+
+
+_DETECTIONCONFIG = _descriptor.Descriptor(
+  name='DetectionConfig',
+  full_name='cloaking_detection.DetectionConfig',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='algorithm', full_name='cloaking_detection.DetectionConfig.algorithm', index=0,
+      number=1, type=14, cpp_type=8, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='std_constant', full_name='cloaking_detection.DetectionConfig.std_constant', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+    _DETECTIONCONFIG_ALGORITHM,
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1581,
+  serialized_end=1746,
 )
 
 _LEARNEDSITES.fields_by_name['site'].message_type = _SITEPATTERNS
@@ -649,6 +723,8 @@ _SIMHASHCONFIG.fields_by_name['usage'].message_type = _SIMHASHCONFIG_FEATUREUSAG
 _SIMHASHCONFIG_SIMHASHTYPE.containing_type = _SIMHASHCONFIG
 _CLUSTERCONFIG.fields_by_name['algorithm'].enum_type = _CLUSTERCONFIG_ALGORITHM
 _CLUSTERCONFIG_ALGORITHM.containing_type = _CLUSTERCONFIG
+_DETECTIONCONFIG.fields_by_name['algorithm'].enum_type = _DETECTIONCONFIG_ALGORITHM
+_DETECTIONCONFIG_ALGORITHM.containing_type = _DETECTIONCONFIG
 DESCRIPTOR.message_types_by_name['LearnedSites'] = _LEARNEDSITES
 DESCRIPTOR.message_types_by_name['SitePatterns'] = _SITEPATTERNS
 DESCRIPTOR.message_types_by_name['Pattern'] = _PATTERN
@@ -661,6 +737,7 @@ DESCRIPTOR.message_types_by_name['HtmlDom'] = _HTMLDOM
 DESCRIPTOR.message_types_by_name['Feature'] = _FEATURE
 DESCRIPTOR.message_types_by_name['SimhashConfig'] = _SIMHASHCONFIG
 DESCRIPTOR.message_types_by_name['ClusterConfig'] = _CLUSTERCONFIG
+DESCRIPTOR.message_types_by_name['DetectionConfig'] = _DETECTIONCONFIG
 
 LearnedSites = _reflection.GeneratedProtocolMessageType('LearnedSites', (_message.Message,), dict(
   DESCRIPTOR = _LEARNEDSITES,
@@ -754,5 +831,14 @@ ClusterConfig = _reflection.GeneratedProtocolMessageType('ClusterConfig', (_mess
   ))
 _sym_db.RegisterMessage(ClusterConfig)
 
+DetectionConfig = _reflection.GeneratedProtocolMessageType('DetectionConfig', (_message.Message,), dict(
+  DESCRIPTOR = _DETECTIONCONFIG,
+  __module__ = 'cloaking_detection_pb2'
+  # @@protoc_insertion_point(class_scope:cloaking_detection.DetectionConfig)
+  ))
+_sym_db.RegisterMessage(DetectionConfig)
 
+
+_PATTERN.fields_by_name['centroid'].has_options = True
+_PATTERN.fields_by_name['centroid']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\020\001'))
 # @@protoc_insertion_point(module_scope)

@@ -1,5 +1,7 @@
 package cloaking_detection;
 
+// Requires protocol buffer version >= 2.3.0
+
 // This is the learned sites. Learn each site separately.
 // For one site, there may be several patterns, each pattern has 
 // its own distribution.
@@ -14,9 +16,13 @@ message SitePatterns {
 }
 
 message Pattern {
+  // mean and std is used for NORMAL_DISTRIBUTION
   required double mean = 1;
   required double std = 2;
   repeated Item item = 3;
+  // centroid and threshold is used for GRADIENT_DESCENT
+  repeated double centroid = 4 [packed=true];
+  optional double threshold = 5;
 }
 
 message Item {
@@ -93,3 +99,14 @@ message ClusterConfig {
   optional int32 maximum_threads = 3 [default = 10];
 }
 
+// Configuration for cloaking detection
+message DetectionConfig {
+  enum Algorithm {
+    NORMAL_DISTRIBUTION = 0;  // Use (mean + std_constant * std) as threshold
+    // Assume threshold to be k_i, for cluster i. 
+    // Object function = sum(Type I error) + sum(Type II error), compute to get k_i.
+    GRADIENT_DESCENT = 1;  
+  }
+  required Algorithm algorithm = 1;
+  optional int32 std_constant = 2;
+}
