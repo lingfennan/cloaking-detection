@@ -1,3 +1,9 @@
+"""
+How to use:
+python cluster_learning.py -f compute -i <inputfile>
+python cluster_learning.py -f learn -i <inputfile>
+"""
+
 import sys, getopt
 import simhash
 from threading import Thread
@@ -42,16 +48,19 @@ class ClusterLearning(object):
 		read_proto_from_file(observed_sites, observed_sites_filename)
 		cluster_config.simhash_type = observed_sites.config.simhash_type
 		for observed_site in observed_sites.site:
-			learned_site = learned_sites.site.add()
 			# either TEXT or DOM can be handled now. TEXT_DOM is not supported.
 			if cluster_config.algorithm.name == CD.Algorithm.HAMMING_THRESHOLD:
-				learned_site.CopyFrom(HammingTreshold(cluster_config, observed_site))
+				result = HammingTreshold(cluster_config, observed_site)
 			if cluster_config.algorithm.name == CD.Algorithm.K_MEANS:
-				learned_site.CopyFrom(KMeans(cluster_config, observed_site))
+				result = KMeans(cluster_config, observed_site)
 			if cluster_config.algorithm.name == CD.Algorithm.SPECTRAL_CLUSTERING:
-				learned_site.CopyFrom(SpectralClustering(cluster_config, observed_site))
+				result = SpectralClustering(cluster_config, observed_site)
 			if cluster_config.algorithm.name == CD.Algorithm.HIERARCHICAL_CLUSTERING:
-				learned_site.CopyFrom(HierarchicalClustering(cluster_config, observed_site))
+				result = HierarchicalClustering(cluster_config, observed_site)
+			# If no pattern can be extracted, return None
+			if result:
+				learned_site = learned_sites.site.add()
+				learned_site.CopyFrom(result)
 		return learned_sites
 
 def compute(site_list_filenames):
@@ -77,6 +86,7 @@ def learn(observed_sites_filename):
 	cluster_config = CD.ClusterConfig()
 	cluster_config.algorithm.name = CD.Algorithm.HIERARCHICAL_CLUSTERING
 	cluster_config.algorithm.left_out_ratio = 5 # left out ratio is 5%
+	cluster_config.minimum_cluster_size = 5
 	res = cluster_learner.learn(observed_sites_filename, cluster_config)
 	write_proto_to_file(res, out_filename)
 

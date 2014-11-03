@@ -1,3 +1,8 @@
+"""
+How to use:
+python -f detect -i <inputfile> -l <learned_sites> [-t <simhash_type>]
+"""
+
 import sys, getopt
 import simhash
 from threading import Thread
@@ -78,14 +83,21 @@ class CloakingDetection(object):
 		for observed_site in observed_sites.site:
 			result = self.get_cloaking_site(observed_site)
 			if result:
-				cloaking_site = cloaking_sites.add()
+				cloaking_site = cloaking_sites.site.add()
 				cloaking_site.CopyFrom(result)
 		return cloaking_sites
 
-def cloaking_detection(learned_sites_filename, observed_sites_filename):
+def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type=None):
 	detection_config = CD.DetectionConfig()
 	detection_config.algorithm = CD.DetectionConfig.NORMAL_DISTRIBUTION
 	detection_config.std_constant = 3
+	if simhash_type:
+		if simhash_type == "DOM":
+			detection_config.simhash_type = CD.DOM
+		elif simhash_type == "TEXT":
+			detection_config.simhash_type = CD.TEXT
+		else:
+			raise Exception("Invalid simhash_type. Only DOM and TEXT are supported.")
 	learned_sites = CD.LearnedSites()
 	read_proto_from_file(learned_sites, learned_sites_filename)
 	observed_sites = CD.ObservedSites()
@@ -94,15 +106,17 @@ def cloaking_detection(learned_sites_filename, observed_sites_filename):
 	cloaking_sites = detector.detect(observed_sites)
 	out_filename = observed_sites_filename + '.cloaking'
 	write_proto_to_file(cloaking_sites, out_filename)
+	print cloaking_sites
 
 def main(argv):
 	has_function = False
-	help_msg = 'cloaking_detection.py -f <function> [-i <inputfile> -l <learnedfile>], valid functions are detect'
+	help_msg = 'cloaking_detection.py -f <function> [-i <inputfile> -l <learnedfile> -t <simhash_type>], valid functions are detect'
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:l:", ["function=", "ifile=", "lfile="])
+		opts, args = getopt.getopt(argv, "hf:i:l:t:", ["function=", "ifile=", "lfile=", "type="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
+	simhash_type = None
 	for opt, arg in opts:
 		if opt == '-h':
 			print help_msg
@@ -114,6 +128,8 @@ def main(argv):
 			inputfile = arg
 		elif opt in ("-l", "--lfile"):
 			learnedfile = arg
+		elif opt in ("-t", "--type"):
+			simhash_type = arg
 		else:
 			print help_msg
 			sys.exit(2)
@@ -123,7 +139,7 @@ def main(argv):
 		test()
 		sys.exit()
 	if function == 'detect':
-		cloaking_detection(learnedfile, inputfile)
+		cloaking_detection(learnedfile, inputfile, simhash_type)
 	else:
 		print help_msg
 		sys.exit(2)

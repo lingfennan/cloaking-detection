@@ -59,20 +59,23 @@ def get_clickstring(words_file):
 	words = filter(bool, open(words_file, 'r').read().split('\n'))
 	browser = start_browser('Chrome', incognito=True)
 	for word in words:
-		# google search advertisements
-		url = 'https://www.google.com/?gws_rd=ssl#q='
-		url += '+'.join(word.split(' '))
-		browser.get(url)
-		time.sleep(4)
-		ads_ad_list = browser.find_elements_by_class_name('ads-ad')
-		# print word
-		for ads_ad in ads_ad_list:
-			tags = ads_ad.find_elements_by_tag_name('a')
-			for tag in tags:
-				clickstring = tag.get_attribute('href')
-				clickstring_set.add(clickstring)
-				# print clickstring
-				break
+		try:
+			# google search advertisements
+			url = 'https://www.google.com/?gws_rd=ssl#q='
+			url += '+'.join(word.split(' '))
+			browser.get(url)
+			time.sleep(4)
+			ads_ad_list = browser.find_elements_by_class_name('ads-ad')
+			# print word
+			for ads_ad in ads_ad_list:
+				tags = ads_ad.find_elements_by_tag_name('a')
+				for tag in tags:
+					clickstring = tag.get_attribute('href')
+					clickstring_set.add(clickstring)
+					# print clickstring
+					break
+		except:
+			continue
 	browser.quit()
 	return clickstring_set
 

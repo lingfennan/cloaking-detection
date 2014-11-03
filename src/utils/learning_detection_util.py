@@ -319,8 +319,11 @@ def HammingTreshold(cluster_config, observed_site):
 	learned_site = CD.SitePatterns()
 	learned_site.name = observed_site.name
 	# Compute the learned site
-	if vector_size == 0:
-		return learned_site
+	num_observation = 0
+	for s in simhash_item_vector:
+		num_observation += s.count
+	if num_observation < cluster_config.minimum_cluster_size or vector_size == 0:
+		return None
 	elif vector_size == 1:
 		# Only one simhash, just one pattern.
 		pattern = learned_site.pattern.add()
@@ -378,8 +381,11 @@ def HierarchicalClustering(cluster_config, observed_site):
 	learned_site = CD.SitePatterns()
 	learned_site.name = observed_site.name
 	# Compute the learned site
-	if vector_size == 0:
-		return learned_site
+	num_observation = 0
+	for s in simhash_item_vector:
+		num_observation += s.count
+	if num_observation < cluster_config.minimum_cluster_size or vector_size == 0:
+		return None
 	elif vector_size == 1:
 		# Only one simhash, just one pattern.
 		pattern = learned_site.pattern.add()
