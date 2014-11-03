@@ -22,8 +22,11 @@ class CloakingDetection(object):
 		site_name: site name of observation
 		ob_simhash: simhash of observation
 		@return
-		True if not seen, o.w. False
+		True if the site is learned and this observation is not seen, o.w. False
 		"""
+		if not site_name in self.learned_sites_map:
+			# If current site is not learned, return False.
+			return False
 		for pattern in self.learned_sites_map[site_name]:
 			avg_dist = average_distance(pattern, ob_simhash)
 			# less or equal, have equal because std may be zero.
