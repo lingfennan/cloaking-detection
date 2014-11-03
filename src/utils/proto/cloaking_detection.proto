@@ -118,4 +118,5 @@ message DetectionConfig {
   }
   required Algorithm algorithm = 1;
   optional int32 std_constant = 2;
+  optional SimhashType simhash_type = 3 [default = TEXT];
 }

@@ -2,11 +2,22 @@ import numpy as np
 from learning_detection_util import hierarchical_clustering, load_observed_sites, _strip_parameter
 import proto.cloaking_detection_pb2 as CD
 
+def test_load_observed_sites():
+	site_list_filenames = ['data/US_list_10.20141010-180519.selenium.crawl/html_path_list']
+	s, p = load_observed_sites(site_list_filenames)
+	print s
+	print p
+
+def test__strip_parameter():
+	link = 'http://www.walmart.com/search/search-ng.do?search_query=Bicycles&adid=22222222220202379358&wmlspartner=wmtlabs&wl0=e&wl1=g&wl2=c&wl3=30633615476&wl4=&veh=sem'
+	print link
+	print _strip_parameter(link)
+
 def _prepare_observed_site():
 	observed_site = CD.SiteObservations()
 	observation = observed_site.add()
 
-def test_HammingDistance():
+def test_HammingThreshold():
 	cluster_config = CD.ClusterConfig()
 	observed_site = _prepare_observed_site()
 	HammingThreshold(cluster_config, observed_site)
@@ -60,20 +71,32 @@ def test_hierarchical_clustering():
 	print "result should be: [[0,4],[1,3]]"
 	print clusters
 
-
-def test_observed_sites():
-	site_list_filenames = ['data/US_list_10.20141010-180519.selenium.crawl/html_path_list']
-	s, p = load_observed_sites(site_list_filenames)
-	print s
-	print p
-
-def test__strip_parameter():
-	link = 'http://www.walmart.com/search/search-ng.do?search_query=Bicycles&adid=22222222220202379358&wmlspartner=wmtlabs&wl0=e&wl1=g&wl2=c&wl3=30633615476&wl4=&veh=sem'
-	print link
-	print _strip_parameter(link)
+def test_average_distance():
+	pattern = CD.Pattern()
+	item = pattern.item.add()
+	item.simhash = 0x0000000000001111
+	item.count = 10
+	item = pattern.item.add()
+	item.simhash = 0x1111000000000000
+	item.count = 10
+	item = pattern.item.add()
+	item.simhash = 0x0011000000000011
+	item.count = 10
+	pattern.mean = 4
+	pattern.std = 0
+	test_1 = 0x0011000000000011
+	test_2 = 0x0011000000001100
+	test_3 = 0x1111111100000000
+	print "result should be: 3.67"
+	print average_distance(pattern, test_1)
+	print "result should be: 4"
+	print average_distance(pattern, test_2)
+	print "result should be: 8"
+	print average_distance(pattern, test_3)
 
 if __name__=="__main__":
 	test__strip_parameter()
-	test_observed_sites()
+	test_load_observed_sites()
 	test_hierarchical_clustering()
+	test_average_distance()
 

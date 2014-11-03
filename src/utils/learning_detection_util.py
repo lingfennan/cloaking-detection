@@ -107,6 +107,15 @@ def valid_instance(source, target):
 	else:
 		raise Exception("Bad parameter")
 
+def average_distance(pattern, s):
+	valid_instance(pattern, CD.Pattern)
+	total_dist = 0
+	total_count = 0
+	for item in pattern.item:
+		total_count += item.count
+		total_dist += hamming_distance(item.simhash, s) * item.count
+	return float(total_dist) / total_count
+
 def hamming_distance(u, v, f = 64):
 	"""
 	compute the hamming distance between u and v, f is the bit size of both u and v

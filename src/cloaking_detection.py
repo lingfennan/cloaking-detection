@@ -2,7 +2,7 @@ import sys, getopt
 import simhash
 from threading import Thread
 from html_simhash_computer import Html_Simhash_Computer
-from utils.learning_detection_util import write_proto_to_file, read_proto_from_file, valid_instance
+from utils.learning_detection_util import write_proto_to_file, read_proto_from_file, valid_instance, average_distance
 from utils.thread_computer import ThreadComputer
 import utils.proto.cloaking_detection_pb2 as CD
 
@@ -11,25 +11,74 @@ class CloakingDetection(object):
 		valid_instance(detection_config, CD.DetectionConfig)
 		valid_instance(learned_sites, CD.LearnedSites)
 		self.detection_config = detection_config
-		self.leanred_sites = learned_sites
+		# load learned sites map, which maps site name to related patterns
+		self.learned_sites_map = dict()
+		for site in learned_sites.site:
+			self.learned_sites_map[site.name] = site.pattern
 	
-	def _normal_distribution_detection(self, observation):
-		None
+	def _normal_distribution_detection(self, site_name, ob_simhash):
+		"""
+		@parameter
+		site_name: site name of observation
+		ob_simhash: simhash of observation
+		@return
+		True if not seen, o.w. False
+		"""
 
-	def _gradient_descent_detection(self, observation):
-		None
+		for pattern in self.learned_sites_map[site_name]:
+			avg_dist = average_distance(pattern, ob_simhash)
+			# less or equal, have equal because std may be zero.
+			if avg_dist <= pattern.mean + self.detection_config.std_constant * pattern.std:
+				return False 
+		return True 
 
-	def is_cloaking(self, observation):
-		valid_instance(observation, CD.Observation)
+	def _gradient_descent_detection(self, site_name, observation):
+		return True
+
+	def get_cloaking_site(self, observed_site):
+		"""
+		Read observed_site and compare with learned sites. Return cloaking_site
+		@parameter
+		observed_site: observations of a site to be tested
+		@return
+		cloaking_site: cloaking observations of this site. None if no observations are cloaking
+		"""
+		valid_instance(observed_site, CD.SiteObservations)
+		cloaking_site = CD.SiteObservations()
 		if self.detection_config.algorithm == CD.DetectionConfig.NORMAL_DISTRIBUTION:
-			return _normal_distribution_detection(observation)
+			detection_algorithm = "_normal_distribution_detection"
 		elif self.detection_config.algorithm == CD.DetectionConfig.GRADIENT_DESCENT:
-			return _gradient_descent_detection(observation)
+			detection_algorithm = "_gradient_descent_detection"
+		else:
+			raise Exception("Unknown detection algorithm!")
+		has_cloaking = False
+		for observation in observed_site.observation:
+			if self.detection_config.simhash_type == CD.TEXT:
+				ob_simhash = observation.text_simhash
+			elif self.detection_config.simhash_type == CD.DOM:
+				ob_simhash = observation.dom_simhash
+			else:
+				raise Exception("Detection config only supports simhash_type TEXT and DOM")
+			if getattr(self, detection_algorithm)(observed_site.name, ob_simhash):
+				if not has_cloaking:
+					has_cloaking = True
+					cloaking_site.name = observed_site.name
+				cloaking_observation = cloaking_site.observation.add()
+				cloaking_observation.CopyFrom(observation)
+		if not has_cloaking:
+			return None
+		else:
+			return cloaking_site
 			
 	def detect(self, observed_sites):
 		valid_instance(observed_sites, CD.ObservedSites)
+		cloaking_sites = CD.ObservedSites()
 		for observed_site in observed_sites.site:
-
+			result = self.get_cloaking_site(observed_site)
+			if result:
+				cloaking_site = cloaking_sites.add()
+				cloaking_site.CopyFrom(result)
+		return cloaking_sites
 
 def cloaking_detection(learned_sites_filename, observed_sites_filename):
 	detection_config = CD.DetectionConfig()
