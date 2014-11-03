@@ -1,5 +1,5 @@
 import numpy as np
-from learning_detection_util import hierarchical_clustering, load_observed_sites, _strip_parameter
+from learning_detection_util import hierarchical_clustering, load_observed_sites, _strip_parameter, average_distance
 import proto.cloaking_detection_pb2 as CD
 
 def test_load_observed_sites():
@@ -87,7 +87,7 @@ def test_average_distance():
 	test_1 = 0x0011000000000011
 	test_2 = 0x0011000000001100
 	test_3 = 0x1111111100000000
-	print "result should be: 3.67"
+	print "result should be: 2.67"
 	print average_distance(pattern, test_1)
 	print "result should be: 4"
 	print average_distance(pattern, test_2)
