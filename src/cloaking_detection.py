@@ -24,7 +24,6 @@ class CloakingDetection(object):
 		@return
 		True if not seen, o.w. False
 		"""
-
 		for pattern in self.learned_sites_map[site_name]:
 			avg_dist = average_distance(pattern, ob_simhash)
 			# less or equal, have equal because std may be zero.
