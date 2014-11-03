@@ -54,10 +54,10 @@ def mkdir_if_not_exist(directory):
 	if not os.path.exists(directory):
 		os.makedirs(directory)
 
-def get_clickstring(words_file):
+def get_clickstring(words_file, browser_type):
 	clickstring_set = set()
 	words = filter(bool, open(words_file, 'r').read().split('\n'))
-	browser = start_browser('Chrome', incognito=True)
+	browser = start_browser(browser_type, incognito=True)
 	for word in words:
 		try:
 			# google search advertisements
@@ -79,7 +79,7 @@ def get_clickstring(words_file):
 	browser.quit()
 	return clickstring_set
 
-def ad_list(report_list, outputfile):
+def ad_list(report_list, outputfile, browser_type):
 	hot_word_set = set()
 	rising_word_set = set()
 	for report_file in report_list:
@@ -112,7 +112,7 @@ def ad_list(report_list, outputfile):
 	open(word_file, 'w').write('\n'.join(hot_word_set | rising_word_set))
 	# which file should we use to get the ad clickstring list
 	open(intersect_word_file, 'w').write('\n'.join(hot_word_set & rising_word_set))
-	clickstring_set = get_clickstring(word_file)
+	clickstring_set = get_clickstring(word_file, browser_type)
 	open(outputfile, 'w').write('\n'.join(clickstring_set))
 
 def trend_query_url(trend_url, params):
@@ -579,7 +579,7 @@ def merge_logs(merge_list, outputfile, config):
 
 def main(argv):
 	has_function = False
-	help_msg = 'util.py -f <function>  [-o <outputfile> -c <config>] [-i <click_string> -o <url_list>] [-i <inputfile> -o <output_dir> -n <test_number>] [-i <file.dist> -o <stats_file>] [-b <browser_type> -i <credentials> -o <output_dir>] [-o <ad_list>], valid functions are merge_logs, format_links, generate_test, pattern_distance_distribution, hot_search_words, ad_list'
+	help_msg = 'util.py -f <function>  [-o <outputfile> -c <config>] [-i <click_string> -o <url_list>] [-i <inputfile> -o <output_dir> -n <test_number>] [-i <file.dist> -o <stats_file>] [-b <browser_type> -i <credentials> -o <output_dir>] [-b <browser_type> -o <ad_list>], valid functions are merge_logs, format_links, generate_test, pattern_distance_distribution, hot_search_words, ad_list'
 	try:
 		opts, args = getopt.getopt(argv, "hf:i:o:c:n:b:a", ["function=", "ifile=", "ofile=", "config=", "test_number=", "browser_type="])
 	except getopt.GetoptError:
@@ -634,7 +634,7 @@ def main(argv):
 	elif function == 'ad_list':
 		print 'function is', function
 		report_list = [line[:-1] for line in sys.stdin]
-		ad_list(report_list, outputfile)
+		ad_list(report_list, outputfile, browser_type)
 	else:
 		print help_msg
 		sys.exit(2)
