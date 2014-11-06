@@ -80,6 +80,7 @@ class CloakingDetection(object):
 	def detect(self, observed_sites):
 		valid_instance(observed_sites, CD.ObservedSites)
 		cloaking_sites = CD.ObservedSites()
+		# iterate through all the URLs
 		for observed_site in observed_sites.site:
 			result = self.get_cloaking_site(observed_site)
 			if result:
@@ -96,6 +97,10 @@ def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_
 			detection_config.simhash_type = CD.DOM
 		elif simhash_type == "TEXT":
 			detection_config.simhash_type = CD.TEXT
+		elif simhash_type == "TEXT_DOM":
+			# Essentially we want to combine DOM and TEXT,
+			# but how to do that is still not decided yet.
+			None
 		else:
 			raise Exception("Invalid simhash_type. Only DOM and TEXT are supported.")
 	learned_sites = CD.LearnedSites()
@@ -106,7 +111,48 @@ def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_
 	cloaking_sites = detector.detect(observed_sites)
 	out_filename = observed_sites_filename + '.cloaking'
 	write_proto_to_file(cloaking_sites, out_filename)
+
+	# how to get this
+	# evaluation(cloaking_sites, expected, total)
 	print cloaking_sites
+
+def file_path_set(observed_sites):
+	valid_instance(detected, CD.ObservedSites)
+	result = set()
+	for site in observed_sites.site:
+		for observation in site.observation:
+			result.add(observation.file_path)
+	return result
+
+def evaluation(detected, expected, total):
+	"""
+	Evaluate the result and return two kind of measures.
+	(1) True positive rate/False positive rate, this can be used to plot ROC curve.
+	TPR/FPR is independent of test size.
+	(2) Precision/Recall. This is dependent on test size.
+	@parameter
+	detected: detected cloaking sites
+	expected: expected cloaking sites
+	total: total number of sites tested
+	@return
+	rate, pr: rate is true positive rate and false positive rate, pr is precision and recall
+	"""
+	valid_instance(detected, CD.ObservedSites)
+	valid_instance(expected, CD.ObservedSites)
+	detected_files = file_path_set(detected)
+	expected_files = file_path_set(expected)
+	detected_size = len(detected_files)
+	true_total = len(expected_files)
+	false_total = total - true_total
+	true_positive = len(detected_files & expected_files)
+	false_positive = detected_size - true_positive
+	true_positive_rate = (float) true_positive / true_total
+	false_positive_rate = (float) false_positive / false_total
+	precision = (float) true_positive / detected_size
+	recall = true_positive_rate
+	rate = [true_positive_rate, false_positive_rate]
+	pr = [precision, recall]
+	return rate, pr
 
 def main(argv):
 	has_function = False

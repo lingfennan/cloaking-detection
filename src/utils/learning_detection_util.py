@@ -299,6 +299,10 @@ def compute_model(learned_site):
 		avg_dist_array = np.array(avg_dist_list)
 		pattern.mean = np.mean(avg_dist_array)
 		pattern.std = np.std(avg_dist_array)
+
+
+		# The following code are to compute centroid and threshold for pattern
+		
 	return learned_site
 
 """

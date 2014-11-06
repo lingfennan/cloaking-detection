@@ -66,6 +66,7 @@ def fetch_url(url, browser, browser_type, user_agent, user_agent_md5_dir, fileha
 			return
 		except:
 			# In case browser.quit() freezes, keyboard interrupt and continue the program after that
+			browser = start_browser(browser_type, incognito=False, user_agent=user_agent)
 			return
 	if success:
 		print browser.title
@@ -77,7 +78,6 @@ def fetch_url(url, browser, browser_type, user_agent, user_agent_md5_dir, fileha
 		# print browser.title
 		print log_str
 		failure_f.write(log_str)
-
 
 
 class Crawler:
