@@ -1,18 +1,19 @@
 # Usage:
-# python crawl.py $URL_FILE $USER_AGENT_FILE
+# python crawl.py $URL_FILE $USER_AGENT_FILE [$THREAD_NUMBER]
 #
 #
 
 import hashlib
+import Queue
 import sys
+import time
+import threading
 import os
 from datetime import datetime
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import UnexpectedAlertPresentException
-from selenium.common.exceptions import WebDriverException
 from util import start_browser, mkdir_if_not_exist
 from learning_detection_util import valid_instance, write_proto_to_file, read_proto_from_file
+from thread_computer import ThreadComputer
 import proto.cloaking_detection_pb2 as CD
 
 def hex_md5(string):
@@ -20,12 +21,6 @@ def hex_md5(string):
 	m = hashlib.md5()
 	m.update(string.encode('utf-8'))
 	return m.hexdigest()
-
-class FetchError(Exception):
-	def __init__(self, url):
-		self.url = url
-	def __str__(self):
-		return repr(self.url)
 
 class UrlFetcher(object):
 	def __init__(self, crawl_config):
@@ -39,8 +34,18 @@ class UrlFetcher(object):
 			self.browser_type = 'Firefox'
 		else:
 			self.browser_type = 'Firefox'
-		self.browser = start_browser(self.browser_type, incognito=False, \
-				user_agent=self.crawl_config.user_agent)
+		self.browser_queue = Queue.Queue()
+		for i in xrange(self.crawl_config.maximum_threads):
+			browser = start_browser(self.browser_type, incognito=False, \
+					user_agent=self.crawl_config.user_agent)
+			browser.set_page_load_timeout(30)
+			self.browser_queue.put(browser)
+		self.lock = threading.Lock()
+
+	def quit(self):
+		while not self.browser_queue.empty():
+			browser = self.browser_queue.get()
+			browser.quit()
 
 	def maximum_threads(self):
 		return self.crawl_config.maximum_threads
@@ -49,23 +54,33 @@ class UrlFetcher(object):
 		return CD.NORMAL
 
 	def fetch_url(self, url):
+		while True:
+			self.lock.acquire()
+			if self.browser_queue.empty():
+				self.lock.release()
+				time.sleep(5)
+			else:
+				browser = self.browser_queue.get()
+				self.lock.release()
+				break
 		result = CD.CrawlResult()
 		# record whether url loading failed!
 		result.url = url
 		result.url_md5 = hex_md5(url)
 		result.success = True
 		try:
-			# may throw socket errors
-			self.browser.get(result.url)
+			# This line is used to handle alert: <stay on this page> <leave this page>
+			browser.execute_script("window.onbeforeunload = function() {};")
+			browser.get(result.url)
 			if self.browser_type == 'Chrome' and \
-					(('404 Not Found' in self.browser.title) \
-					or ('Error 404' in self.browser.title) \
-					or ('is not available' in self.browser.title)):
+					(('404 Not Found' in browser.title) \
+					or ('Error 404' in browser.title) \
+					or ('is not available' in browser.title)):
 				result.success = False
 			elif self.browser_type == 'Firefox' and \
-					(('404 Not Found' in self.browser.title) \
-					or ('Error 404' in self.browser.title) \
-					or ('Problem loading page' in self.browser.title)):
+					(('404 Not Found' in browser.title) \
+					or ('Error 404' in browser.title) \
+					or ('Problem loading page' in browser.title)):
 				result.success = False
 			else:
 				#############
@@ -73,19 +88,17 @@ class UrlFetcher(object):
 				url_md5_dir = self.crawl_config.user_agent_md5_dir + result.url_md5 + '/'
 				mkdir_if_not_exist(url_md5_dir)
 				# get the landing url
-				result.landing_url = self.browser.current_url
+				result.landing_url = browser.current_url
 				result.landing_url_md5 = hex_md5(result.landing_url)
 				# get the whole page source
-				response = self.browser.execute_script("return document.documentElement.innerHTML;")
+				response = browser.execute_script("return document.documentElement.innerHTML;")
 				result.file_path = url_md5_dir + 'index.html'
 				f = open(result.file_path, 'w')
 				f.write(response.encode('utf-8'))
 				f.close()
 		except:
 			result.success = False
-			# raise FetchError(result.url)
-			self.browser = start_browser(self.browser_type, incognito=False, \
-					user_agent=self.crawl_config.user_agent)
+		self.browser_queue.put(browser)
 		return result
 
 class Crawler:
@@ -105,7 +118,7 @@ class Crawler:
 		# Prepare log files
 		# self.htmls_f = open(self.base_dir + 'html_path_list', 'a')
 		self.md5_UA_f = open(self.base_dir + 'md5_UA.log', 'a')  # user agent
-		crawl_log_filename = self.base_dir + 'crawl_log'
+		self.crawl_log_filename = self.base_dir + 'crawl_log'
 	
 	def crawl(self):
 		has_written = False
@@ -116,23 +129,26 @@ class Crawler:
 			mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
 			# md5 - user agent mapping logs
 			self.md5_UA_f.write(user_agent_md5 + ":" + user_agent + "\n")
-			# url md5 - landing url logs
-			url_md5_LP_f = open(user_agent_md5_dir + 'landing_page', 'w')
-			success_f = open(user_agent_md5_dir + 'success', 'w')
-			failure_f = open(user_agent_md5_dir + 'failure', 'w')
-
-			url_fetcher = UrlFetcher(crawl_config)
+			# crawl web pages
+			url_fetcher = UrlFetcher(self.crawl_config)
 			thread_computer = ThreadComputer(url_fetcher, 'fetch_url', self.urls)
-
-			crawl_log = CD.CrawlLog()
-			if has_written:
-				read_proto_from_file(crawl_log, crawl_log_filename)
+			url_fetcher.quit()
+			# Write log for current user agent
+			current_log = CD.CrawlLog()
+			current_log_filename = self.crawl_config.user_agent_md5_dir + 'crawl_log'
+			for p, s in thread_computer.result:
+				result = current_log.result.add()
+				result.CopyFrom(s)
+			write_proto_to_file(current_log, current_log_filename)
+			# Write global crawl_log
+			crawl_log = CD.CrawlLog() if has_written:
+				read_proto_from_file(crawl_log, self.crawl_log_filename)
 			else:
 				has_written = True
-			for p, s in thread_computer.result:
+			for s in current_log.result:
 				result = crawl_log.result.add()
 				result.CopyFrom(s)
-			write_proto_to_file(crawl_log, crawl_log_filename)
+			write_proto_to_file(crawl_log, self.crawl_log_filename)
 
 def main(argv):
 	"""
@@ -140,10 +156,13 @@ def main(argv):
 	crawler.new_session('', 'Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X; en-us) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53', '', 10)
 	crawler.new_session('', 'Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>', '', 10)
 	"""
-	if not len(argv) == 2:
-		return
+	if len(argv) < 2 or len(argv) > 3:
+		print "Wrong number of args! python crawl.py $URL_FILE $USER_AGENT_FILE [$THREAD_NUMBER]"
+		sys.exit(1)
 	crawl_config = CD.CrawlConfig()
 	crawl_config.maximum_threads = 6
+	if len(argv) == 3:
+		crawl_config.maximum_threads = int(argv[2])
 	crawler = Crawler(argv[0], argv[1], crawl_config)
 	crawler.crawl()
 

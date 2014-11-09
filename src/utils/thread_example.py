@@ -20,13 +20,14 @@ class myThread (threading.Thread):
 
 def process_data(threadName, q, lock):
     while not exitFlag:
-        queueLock.acquire()
+	queueLock.acquire()
         if not q.empty():
             data = q.get()
-            queueLock.release()
+	    queueLock.release()
             print "%s processing %s" % (threadName, data)
         else:
-            queueLock.release()
+	    None
+	    queueLock.release()
         time.sleep(1)
 
 threadList = ["Thread-1", "Thread-2", "Thread-3", "Thread-4", "Thread-5", "Thread-6"]

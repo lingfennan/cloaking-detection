@@ -1,7 +1,7 @@
 import Queue
 import threading
 import time
-import utils.proto.cloaking_detection_pb2 as CD
+import proto.cloaking_detection_pb2 as CD
 
 class _ThreadWorker(threading.Thread):
 	"""
