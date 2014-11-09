@@ -28,11 +28,10 @@ def load_observed_sites(site_list_filenames):
 	site_observations_map = dict()
 	path_list = list()
 	for site_list_filename in site_list_filenames:
-		site_list = filter(bool, open(site_list_filename, 'r').read().split('\n'))
-		"""
-		split by ',' is not safe, because links may contains comma.
-		"""
-		site_list = [[path_link.split(',')[0], ','.join(path_link.split(',')[1:])] for path_link in site_list]
+		crawl_log = CD.CrawlLog()
+		read_proto_from_file(crawl_log, site_list_filename)
+		site_list = [[result.file_path, result.landing_url] for result in crawl_log.result \
+				if result.success == True]
 		site_list_path = site_list_filename.split('/')
 		prefix = ''
 		"""

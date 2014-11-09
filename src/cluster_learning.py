@@ -91,7 +91,7 @@ def learn(observed_sites_filename):
 	write_proto_to_file(res, out_filename)
 
 def test_learner():
-	in_filename = 'utils/data/US_list_10.20141010-180519.selenium.crawl/html_path_list.text'
+	in_filename = 'utils/data/US_list_10.20141109-180617.selenium.crawl/crawl_log.text'
 	out_filename = in_filename + '.learned'
 	cluster_learner = ClusterLearning()
 	cluster_config = CD.ClusterConfig()
@@ -112,8 +112,8 @@ def test_learner():
 
 
 def test_computer():
-	site_list_filenames = ['utils/data/US_list_10.20141010-180519.selenium.crawl/html_path_list']
-	out_filename = 'utils/data/US_list_10.20141010-180519.selenium.crawl/html_path_list.text'
+	site_list_filenames = ['utils/data/US_list_10.20141109-180617.selenium.crawl/crawl_log']
+	out_filename = 'utils/data/US_list_10.20141109-180617.selenium.crawl/crawl_log.text'
 	cluster_learner = ClusterLearning()
 	simhash_config = CD.SimhashConfig()
 	simhash_config.simhash_type = CD.TEXT
@@ -122,7 +122,7 @@ def test_computer():
 	write_proto_to_file(res, out_filename)
 	print res
 
-	out_filename = 'utils/data/US_list_10.20141010-180519.selenium.crawl/html_path_list.dom'
+	out_filename = 'utils/data/US_list_10.20141109-180617.selenium.crawl/crawl_log.dom'
 	cluster_learner = ClusterLearning()
 	simhash_config = CD.SimhashConfig()
 	simhash_config.simhash_type = CD.DOM
@@ -132,7 +132,7 @@ def test_computer():
 	print res
 
 	# cluster_config = CD.ClusterConfig()
-	out_filename = 'utils/data/US_list_10.20141010-180519.selenium.crawl/html_path_list.text_dom'
+	out_filename = 'utils/data/US_list_10.20141109-180617.selenium.crawl/crawl_log.text_dom'
 	cluster_learner = ClusterLearning()
 	simhash_config = CD.SimhashConfig()
 	simhash_config.simhash_type = CD.TEXT_DOM
@@ -164,7 +164,7 @@ def main(argv):
 	if not has_function:
 		print help_msg
 		print 'Testing'
-		# test_computer()
+		test_computer()
 		test_learner()
 		sys.exit()
 	if function == 'compute':
