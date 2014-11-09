@@ -48,7 +48,7 @@ class HtmlDomSet(object):
 		self.bi_node = set()
 		self.tri_node = set()
 
-class Html_Simhash_Computer(object):
+class HtmlSimhashComputer(object):
 	# input is CD.SimhashConfig
 	def __init__(self, simhash_config):
 		if valid_instance(simhash_config, CD.SimhashConfig):
@@ -56,6 +56,9 @@ class Html_Simhash_Computer(object):
 
 	def maximum_threads(self):
 		return self.simhash_config.maximum_threads
+
+	def para_type(self):
+		return CD.FILE_PATH
 
 	def build_by_features(self, features):
 		# print len(features)
@@ -180,7 +183,7 @@ if __name__ == "__main__":
 		config = CD.SimhashConfig()
 		config.simhash_type = CD.TEXT
 		config.usage.tri_gram = True
-		res = Html_Simhash_Computer(config).compute_simhash(data)
+		res = HtmlSimhashComputer(config).compute_simhash(data)
 		# print '%x' % res[0].value
 		print res[0].value
 
@@ -188,7 +191,7 @@ if __name__ == "__main__":
 		config = CD.SimhashConfig()
 		config.simhash_type = CD.DOM
 		config.usage.tri_gram = False
-		res = Html_Simhash_Computer(config).compute_simhash(data)
+		res = HtmlSimhashComputer(config).compute_simhash(data)
 		print res[0].value
 		# print '%x' % res[0].value
 

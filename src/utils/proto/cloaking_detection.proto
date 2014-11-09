@@ -120,3 +120,30 @@ message DetectionConfig {
   optional int32 std_constant = 2;
   optional SimhashType simhash_type = 3 [default = TEXT];
 }
+
+// Crawler data structures, used by crawler to store information.
+message CrawlConfig {
+  optional int32 maximum_threads = 1;
+  optional string user_agent = 2;
+  optional string user_agent_md5_dir = 3;
+}
+
+message CrawlLog {
+  repeated CrawlResult result = 1;
+}
+
+message CrawlResult {
+  optional string file_path = 1;
+  optional string landing_url = 2;
+  optional string landing_url_md5 =3 
+  optional string url = 4;
+  optional string url_md5 = 5;
+  optional string timestamp = 6;
+  optional bool success = 7;
+}
+
+// Parameter Type. Used for thread computer.
+enum ParaType {
+  NORMAL = 0;  // Call runnable_object.function(para)
+  FILE_PATH = 1;  // Call runnable_object.function(open(para, 'r').read())
+}

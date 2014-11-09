@@ -7,7 +7,7 @@ python cluster_learning.py -f learn -i <inputfile>
 import sys, getopt
 import simhash
 from threading import Thread
-from html_simhash_computer import Html_Simhash_Computer
+from html_simhash_computer import HtmlSimhashComputer
 from utils.learning_detection_util import load_observed_sites, write_proto_to_file, read_proto_from_file, valid_instance
 from utils.learning_detection_util import HammingTreshold, KMeans, SpectralClustering, HierarchicalClustering
 from utils.thread_computer import ThreadComputer
@@ -23,7 +23,7 @@ class ClusterLearning(object):
 	def compute_simhash(self, site_list_filenames, simhash_config):
 		valid_instance(simhash_config, CD.SimhashConfig)
 		observed_sites, path_list = load_observed_sites(site_list_filenames)  # Input is a list of site_list_filename
-		simhash_computer = Html_Simhash_Computer(simhash_config)
+		simhash_computer = HtmlSimhashComputer(simhash_config)
 		thread_computer = ThreadComputer(simhash_computer, 'compute_simhash', path_list)
 		path_simhash_dict = dict()
 		for p, s in thread_computer.result:

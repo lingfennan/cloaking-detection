@@ -6,7 +6,7 @@ python -f detect -i <inputfile> -l <learned_sites> [-t <simhash_type>]
 import sys, getopt
 import simhash
 from threading import Thread
-from html_simhash_computer import Html_Simhash_Computer
+from html_simhash_computer import HtmlSimhashComputer
 from utils.learning_detection_util import write_proto_to_file, read_proto_from_file, valid_instance, average_distance
 from utils.thread_computer import ThreadComputer
 import utils.proto.cloaking_detection_pb2 as CD
