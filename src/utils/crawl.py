@@ -141,7 +141,8 @@ class Crawler:
 				result.CopyFrom(s)
 			write_proto_to_file(current_log, current_log_filename)
 			# Write global crawl_log
-			crawl_log = CD.CrawlLog() if has_written:
+			crawl_log = CD.CrawlLog()
+			if has_written:
 				read_proto_from_file(crawl_log, self.crawl_log_filename)
 			else:
 				has_written = True
