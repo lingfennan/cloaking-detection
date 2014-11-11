@@ -19,10 +19,11 @@ message Pattern {
   // mean and std is used for NORMAL_DISTRIBUTION
   required double mean = 1;
   required double std = 2;
-  repeated SimhashItem item = 3;
+  repeated SimhashItem item = 3 [deprecated=true];
   // centroid and threshold is used for GRADIENT_DESCENT
   repeated double centroid = 4 [packed=true];
-  optional double threshold = 5;
+  optional int32 size = 5;
+  optional double threshold = 6;
 }
 
 message SimhashItem {

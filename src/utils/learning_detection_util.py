@@ -107,6 +107,9 @@ def valid_instance(source, target):
 		raise Exception("Bad parameter")
 
 def average_distance(pattern, s):
+	"""
+	Compute the average distance from s to all items in pattern.
+	"""
 	valid_instance(pattern, CD.Pattern)
 	total_dist = 0
 	total_count = 0
@@ -114,6 +117,34 @@ def average_distance(pattern, s):
 		total_count += item.count
 		total_dist += hamming_distance(item.simhash, s) * item.count
 	return float(total_dist) / total_count
+
+def centroid_distance(pattern, s):
+	"""
+	Compute the distance from s to centroid of pattern.
+	@parameter
+	pattern: the pattern to compare against, pattern.centroid and pattern.size are used
+	s: simhash value to be compared
+	@return
+	dist: the distance from s to centroid of pattern.
+	"""
+	"""
+	############################################
+	example:
+	pattern: size = 8, centroid = [1,0,0,5,0,0,0,0, 8,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, ...]
+	s: [10000000 10000000 00000000 ...]
+	total_dist: 8-1 + 5 + 8-8 = 12
+	dist: 12 / 8 = 1.5
+	"""
+	valid_instance(pattern, CD.Pattern)
+	total_dist = 0
+	base = 1
+	for centroid in pattern.centroid:
+		if s & base:
+			total_dist += pattern.size - centroid
+		else:
+			total_dist += centroid
+		base = base << 1
+	return float(total_dist) / pattern.size
 
 def hamming_distance(u, v, f = 64):
 	"""
@@ -269,6 +300,48 @@ def distance_matrix(simhash_item_vector):
 
 def compute_model(learned_site):
 	"""
+	Compute centroid, mean and std for each pattern.
+	@parameter
+	learned_site: patterns for learned_site.name, centroid, size, mean and std are not set.
+	@return
+	learned_site: centroid, size, mean and std are set. Performs in-place operation.
+	"""
+	for pattern in learned_site.pattern:
+		# set size and centroid
+		total_size = 0
+		centroid = np.zeros((64,), dtype=np.int)
+		for item in pattern.item:
+			total_size += item.count
+			simhash = item.simhash
+			base = 1
+			for index in xrange(64):
+				if simhash & base:
+					centroid[index] += item.count
+				base = base << 1
+		pattern.size = total_size
+		for c in centroid:
+			p_c = pattern.centroid.add()
+			p_c = c
+		# set mean and std
+		dist_list = list()  # the list of dist for each simhash_item
+		for item in pattern.item:
+			"""
+			Difference from compute_model_old. Need to prove that normal distribution still hold. (TODO)
+			New: Compute centroid and compare simhash to centroid, which takes into account the current simhash itself.
+			Old: Compute avg_dist from simhash to all the other simhash, which doesn't consider current simhash.
+			"""
+			dist = centroid_distance(pattern, item.simhash)
+			for j in xrange(item.count):
+				dist_list.append(dist)
+		dist_array = np.array(dist_list)
+		pattern.mean = np.mean(dist_array)
+		pattern.std = np.std(dist_array)
+	return learned_site
+
+# This method is deprecated because the comptation cost is high.
+# But can be used to verify implementation of new method.
+def compute_model_old(learned_site):
+	"""
 	Compute mean and std for each pattern.
 	@parameter
 	learned_site: patterns for learned_site.name, mean and std are not set.
@@ -298,10 +371,6 @@ def compute_model(learned_site):
 		avg_dist_array = np.array(avg_dist_list)
 		pattern.mean = np.mean(avg_dist_array)
 		pattern.std = np.std(avg_dist_array)
-
-
-		# The following code are to compute centroid and threshold for pattern
-		
 	return learned_site
 
 """
