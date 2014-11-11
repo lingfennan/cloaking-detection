@@ -126,6 +126,11 @@ message CrawlConfig {
   optional int32 maximum_threads = 1;
   optional string user_agent = 2;
   optional string user_agent_md5_dir = 3;
+  enum BrowserType {
+    CHROME = 0;
+    FIREFOX = 1;
+  }
+  optional BrowserType browser_type = 4;
 }
 
 message CrawlLog {

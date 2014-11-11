@@ -9,6 +9,7 @@ from datetime import datetime
 from itertools import izip
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import proto.cloaking_detection_pb2 as CD
 
 """
 Dependencies:
@@ -325,7 +326,7 @@ def picker_popup(browser, picker_ids, popup_ids, output_dir):
 		current = progress.next(start, end)
 	
 def start_browser(browser_type, incognito=False, user_agent=None, use_tor=False):
-	if browser_type == 'Firefox':
+	if browser_type == 'Firefox' or browser_type == CD.CrawlConfig.FIREFOX:
 		# configure firefox to download by default
 		fp = webdriver.FirefoxProfile()
 		if incognito:
@@ -342,7 +343,7 @@ def start_browser(browser_type, incognito=False, user_agent=None, use_tor=False)
 		fp.set_preference("browser.download.dir", DOWNLOAD_PATH)
 		fp.set_preference("browser.helperApps.neverAsk.saveToDisk","text/csv")
 		browser = webdriver.Firefox(firefox_profile=fp)
-	elif browser_type == 'Chrome':
+	elif browser_type == 'Chrome' or browser_type == CD.CrawlConfig.CHROME:
 		# configure chrome to disable the warning 'ignore-certificate-errors'
 		options = webdriver.ChromeOptions()
 		if incognito:

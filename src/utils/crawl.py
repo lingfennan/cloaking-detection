@@ -26,19 +26,11 @@ class UrlFetcher(object):
 	def __init__(self, crawl_config):
 		valid_instance(crawl_config, CD.CrawlConfig)
 		self.crawl_config = crawl_config
-		if 'Chrome' in self.crawl_config.user_agent:
-			self.browser_type = 'Chrome'
-		elif 'Firefox' in self.crawl_config.user_agent:
-			self.browser_type = 'Firefox'
-		elif 'bot' in self.crawl_config.user_agent:
-			self.browser_type = 'Firefox'
-		else:
-			self.browser_type = 'Firefox'
 		self.browser_queue = Queue.Queue()
 		for i in xrange(self.crawl_config.maximum_threads):
-			browser = start_browser(self.browser_type, incognito=False, \
+			browser = start_browser(self.crawl_config.browser_type, incognito=False, \
 					user_agent=self.crawl_config.user_agent)
-			browser.set_page_load_timeout(30)
+			browser.set_page_load_timeout(15)
 			self.browser_queue.put(browser)
 		self.lock = threading.Lock()
 
@@ -72,12 +64,12 @@ class UrlFetcher(object):
 			# This line is used to handle alert: <stay on this page> <leave this page>
 			browser.execute_script("window.onbeforeunload = function() {};")
 			browser.get(result.url)
-			if self.browser_type == 'Chrome' and \
+			if self.crawl_config.browser_type == 'Chrome' and \
 					(('404 Not Found' in browser.title) \
 					or ('Error 404' in browser.title) \
 					or ('is not available' in browser.title)):
 				result.success = False
-			elif self.browser_type == 'Firefox' and \
+			elif self.crawl_config.browser_type == 'Firefox' and \
 					(('404 Not Found' in browser.title) \
 					or ('Error 404' in browser.title) \
 					or ('Problem loading page' in browser.title)):
@@ -98,6 +90,10 @@ class UrlFetcher(object):
 				f.close()
 		except:
 			result.success = False
+			browser.quit()
+			browser = start_browser(self.crawl_config.browser_type, incognito=False, \
+					user_agent=self.crawl_config.user_agent)
+			browser.set_page_load_timeout(15)
 		self.browser_queue.put(browser)
 		return result
 
@@ -117,18 +113,32 @@ class Crawler:
 
 		# Prepare log files
 		# self.htmls_f = open(self.base_dir + 'html_path_list', 'a')
-		self.md5_UA_f = open(self.base_dir + 'md5_UA.log', 'a')  # user agent
+		self.md5_UA_filename = self.base_dir + 'md5_UA.log'
 		self.crawl_log_filename = self.base_dir + 'crawl_log'
 	
+	def _set_browser_type(self, crawl_config):
+		if 'Chrome' in crawl_config.user_agent:
+			crawl_config.browser_type = CD.CrawlConfig.CHROME
+		elif 'Firefox' in crawl_config.user_agent:
+			crawl_config.browser_type = CD.CrawlConfig.FIREFOX
+		elif 'bot' in crawl_config.user_agent:
+			crawl_config.browser_type = CD.CrawlConfig.CHROME
+		else:
+			crawl_config.browser_type = CD.CrawlConfig.CHROME
+
 	def crawl(self):
 		has_written = False
 		for user_agent in self.user_agents:
 			user_agent_md5 = hex_md5(user_agent)
 			self.crawl_config.user_agent = user_agent
 			self.crawl_config.user_agent_md5_dir = self.base_dir + user_agent_md5 + '/'
+			# specify which type of browser to use
+			self._set_browser_type(self.crawl_config)
 			mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
 			# md5 - user agent mapping logs
-			self.md5_UA_f.write(user_agent_md5 + ":" + user_agent + "\n")
+			md5_UA_f = open(self.md5_UA_filename, 'a')  # user agent
+			md5_UA_f.write(user_agent_md5 + ":" + user_agent + "\n")
+			md5_UA_f.close()
 			# crawl web pages
 			url_fetcher = UrlFetcher(self.crawl_config)
 			thread_computer = ThreadComputer(url_fetcher, 'fetch_url', self.urls)
@@ -162,6 +172,7 @@ def main(argv):
 		sys.exit(1)
 	crawl_config = CD.CrawlConfig()
 	crawl_config.maximum_threads = 6
+	# crawl_config.browser_type = CD.CrawlConfig.CHROME
 	if len(argv) == 3:
 		crawl_config.maximum_threads = int(argv[2])
 	crawler = Crawler(argv[0], argv[1], crawl_config)
