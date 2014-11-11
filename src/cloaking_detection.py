@@ -33,9 +33,10 @@ class CloakingDetection(object):
 			# If current site is not learned, return False.
 			return False
 		for pattern in self.learned_sites_map[site_name]:
-			avg_dist = average_distance(pattern, ob_simhash)
+			# dist = average_distance(pattern, ob_simhash), deprecated
+			dist = centroid_distance(pattern, ob_simhash)
 			# less or equal, have equal because std may be zero.
-			if avg_dist <= pattern.mean + self.detection_config.std_constant * pattern.std:
+			if dist <= pattern.mean + self.detection_config.std_constant * pattern.std:
 				return False 
 		return True 
 

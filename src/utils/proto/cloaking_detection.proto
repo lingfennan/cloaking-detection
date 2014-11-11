@@ -20,9 +20,11 @@ message Pattern {
   required double mean = 1;
   required double std = 2;
   repeated SimhashItem item = 3 [deprecated=true];
-  // centroid and threshold is used for GRADIENT_DESCENT
-  repeated double centroid = 4 [packed=true];
+  // centroid is used to represent the center. This reduces computation cost.
+  // centroid / size is the actual center
+  repeated int32 centroid = 4 [packed=true];
   optional int32 size = 5;
+  // threshold is used for GRADIENT_DESCENT
   optional double threshold = 6;
 }
 
