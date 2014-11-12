@@ -320,8 +320,7 @@ def compute_model(learned_site):
 				base = base << 1
 		pattern.size = total_size
 		for c in centroid:
-			p_c = pattern.centroid.add()
-			p_c = c
+			pattern.centroid.append(c)
 		# set mean and std
 		dist_list = list()  # the list of dist for each simhash_item
 		for item in pattern.item:
