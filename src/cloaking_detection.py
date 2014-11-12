@@ -1,6 +1,6 @@
 """
 How to use:
-python -f detect -i <inputfile> -l <learned_sites> [-t <simhash_type>]
+python -f detect -i <inputfile> -l <learned_sites> [-t <simhash_type>, default to TEXT]
 """
 
 import sys, getopt
