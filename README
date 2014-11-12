@@ -3,6 +3,7 @@ python crawl.py
 python simhash_computer.py
 
 Dependencies:
+python
 pip install selenium
 pip install simhash
 pip install beautifulsoup4
