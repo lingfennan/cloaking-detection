@@ -32,3 +32,11 @@ libJudy
 simhash-py
 	https://github.com/seomoz/simhash-py
 	This uses simhash-cpp to compute simhash.
+
+protocol buffer issue:
+	cpp_implementation of python need to fix one issue
+	(1) put the following line in to setup.py py_modules
+	'google.protobuf.pyext.cpp_message',
+	(2) then do the following
+	python setup.py build --cpp_implementation
+	python setup.py install --cpp_implementation
