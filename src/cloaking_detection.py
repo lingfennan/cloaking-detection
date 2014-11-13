@@ -1,6 +1,6 @@
 """
 How to use:
-python -f detect -i <inputfile> -l <learned_sites> [-t <simhash_type>, default to TEXT]
+python cloaking_detection.py -f detect -i <inputfile> -l <learned_sites> [-t <simhash_type>, default to TEXT]
 """
 
 import sys, getopt
@@ -147,9 +147,9 @@ def evaluation(detected, expected, total):
 	false_total = total - true_total
 	true_positive = len(detected_files & expected_files)
 	false_positive = detected_size - true_positive
-	true_positive_rate = (float) true_positive / true_total
-	false_positive_rate = (float) false_positive / false_total
-	precision = (float) true_positive / detected_size
+	true_positive_rate = float (true_positive) / true_total
+	false_positive_rate = float (false_positive) / false_total
+	precision = float (true_positive) / detected_size
 	recall = true_positive_rate
 	rate = [true_positive_rate, false_positive_rate]
 	pr = [precision, recall]
