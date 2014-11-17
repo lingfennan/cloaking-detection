@@ -16,6 +16,13 @@ message SitePatterns {
 }
 
 message Pattern {
+  // Currently there are three ways to represent (model) a pattern,
+  // NORMAL_DISTRIBUTION, GRADIENT_DESCENT, JOINT_DISTRIBUTION
+  // centroid, size: the center of a pattern
+  // mean, std: mean and standard deviation of point to centroid distance, for NORMAL_DISTRIBUTION
+  // threshold: for GRADIENT_DESCENT
+  // distribution: for JOINT_DISTRIBUTION
+  //
   // mean and std is used for NORMAL_DISTRIBUTION
   required double mean = 1;
   required double std = 2;
@@ -23,9 +30,23 @@ message Pattern {
   // centroid is used to represent the center. This reduces computation cost.
   // centroid / size is the actual center
   repeated uint64 centroid = 4 [packed=true];
-  optional int32 size = 5;
+  optional uint64 size = 5;
   // threshold is used for GRADIENT_DESCENT
   optional double threshold = 6;
+  // distribution is used for JOINT_DISTRIBUTION
+  // the complement of CDF is the extreme upper tail probabilities and is used in detection.
+  // P(x) = (size - count) / size
+  optional CDF cdf = 7;
+}
+
+message CDF {
+  repeated Point point = 1;
+  required uint64 size = 2;
+}
+
+message Point {
+  required uint32 x = 1;  // x range in [0, 64]
+  required uint64 count = 2;  // number of points with distance to centroid less than x
 }
 
 message SimhashItem {
@@ -114,10 +135,13 @@ message ClusterConfig {
 // Configuration for cloaking detection
 message DetectionConfig {
   enum Algorithm {
-    NORMAL_DISTRIBUTION = 0;  // Use (mean + std_constant * std) as threshold
+    // Use (mean + std_constant * std) as threshold
+    NORMAL_DISTRIBUTION = 0;  
     // Assume threshold to be k_i, for cluster i. 
     // Object function = sum(Type I error) + sum(Type II error), compute to get k_i.
     GRADIENT_DESCENT = 1;  
+    // Histogram the centroid_distances and compute distribution.
+    JOINT_DISTRIBUTION = 2;
   }
   required Algorithm algorithm = 1;
   optional int32 std_constant = 2;
