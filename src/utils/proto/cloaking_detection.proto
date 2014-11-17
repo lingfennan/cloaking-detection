@@ -20,6 +20,7 @@ message Pattern {
   // NORMAL_DISTRIBUTION, GRADIENT_DESCENT, JOINT_DISTRIBUTION
   // centroid, size: the center of a pattern
   // mean, std: mean and standard deviation of point to centroid distance, for NORMAL_DISTRIBUTION
+  // percentile: an alternative for NORMAL_DISTRIBUTION
   // threshold: for GRADIENT_DESCENT
   // distribution: for JOINT_DISTRIBUTION
   //
@@ -37,16 +38,27 @@ message Pattern {
   // the complement of CDF is the extreme upper tail probabilities and is used in detection.
   // P(x) = (size - count) / size
   optional CDF cdf = 7;
+  // percentile is used for NORMAL_DITRIBUTION
+  // mean + 3 * std should be the same as percentile.p99
+  optional Percentile percentile = 8;
+}
+
+message Percentile {
+  optional uint32 p99 = 1;  // pXX range in [0, 64]
+  optional uint32 p97 = 2;
+  optional uint32 p95 = 3;
+  optional uint32 p90 = 4;
+  optional uint32 p75 = 5;
+  optional uint32 p50 = 6;
 }
 
 message CDF {
   repeated Point point = 1;
-  required uint64 size = 2;
 }
 
 message Point {
   required uint32 x = 1;  // x range in [0, 64]
-  required uint64 count = 2;  // number of points with distance to centroid less than x
+  required uint64 count = 2;  // number of points with distance to centroid less or equal than x
 }
 
 message SimhashItem {

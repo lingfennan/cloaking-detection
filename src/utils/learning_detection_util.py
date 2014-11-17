@@ -338,11 +338,13 @@ def compute_model(learned_site):
 		# set threshold (TODO)
 
 		# set percentile
-		pattern.percentile.p99 = np.percentile(dist_array, 99)
-		pattern.percentile.p95 = np.percentile(dist_array, 95)
-		pattern.percentile.p90 = np.percentile(dist_array, 90)
-		pattern.percentile.p75 = np.percentile(dist_array, 75)
-		pattern.percentile.p50 = np.percentile(dist_array, 50)
+		[p50, p75, p90, p95, p97, p99] = np.percentile(dist_array, [50,75,90,95,97,99])
+		pattern.percentile.p99 = int(p99)
+		pattern.percentile.p97 = int(p97)
+		pattern.percentile.p95 = int(p95)
+		pattern.percentile.p90 = int(p90)
+		pattern.percentile.p75 = int(p75)
+		pattern.percentile.p50 = int(p50)
 		# set cdf
 		hist, edges = np.histogram(dist_array, bins=np.arange(66))
 		hist = np.cumsum(hist)
@@ -352,8 +354,8 @@ def compute_model(learned_site):
 			x range in [0, 64], so there are 65 points.
 			"""
 			p = pattern.cdf.point.add()
-			p.x = x
-			p.count = count
+			p.x = int(x)
+			p.count = int(count)
 	return learned_site
 
 # This method is deprecated because the comptation cost is high.
