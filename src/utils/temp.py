@@ -15,3 +15,18 @@ for result in crawl_log.result:
 print suc_counter
 print fail_counter
 # print crawl_log
+
+learned_sites = CD.LearnedSites()
+in_filename = 'data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.text.learned'
+read_proto_from_file(learned_sites, in_filename)
+print learned_sites
+# suc_counter = 0
+# fail_counter = 0
+# for result in crawl_log.result:
+# 	if result.success:
+# 		suc_counter += 1
+# 	else:
+# 		fail_counter += 1
+# 
+# print suc_counter
+# print fail_counter
