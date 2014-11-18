@@ -2,8 +2,15 @@ import numpy as np
 from learning_detection_util import hierarchical_clustering, load_observed_sites, _strip_parameter, average_distance
 import proto.cloaking_detection_pb2 as CD
 
+def assert_equal(actual_value, expected_value):
+	if not actual_value == expected_value:
+		print "result should be: "
+		print expected_value
+		print "but actual value is: "
+		print actual_value
+
 def test_load_observed_sites():
-	site_list_filenames = ['data/US_list_10.20141010-180519.selenium.crawl/html_path_list']
+	site_list_filenames = ['data/US_list_10.20141109-180617.selenium.crawl/crawl_log']
 	s, p = load_observed_sites(site_list_filenames)
 	print s
 	print p
@@ -36,40 +43,35 @@ def test_hierarchical_clustering():
 	min_cluster_size = 5
 	left_out_ratio = 10
 	clusters = hierarchical_clustering(dist_mat, weight_list, min_cluster_size, left_out_ratio)
-	print "result should be: [[0,1],[2,3]]"
-	print clusters
+	assert_equal(clusters, [set([0,1]), set([2,3])])
 
 	dist_mat = np.array([1,7,10,10,10,8,10,1,10,10])
 	weight_list = np.array([10,8,1,10,2])
 	min_cluster_size = 5
 	left_out_ratio = 10
 	clusters = hierarchical_clustering(dist_mat, weight_list, min_cluster_size, left_out_ratio)
-	print "result should be: [[0,1],[2,3]]"
-	print clusters
+	assert_equal(clusters, [set([0,1]), set([2,3])])
 
 	dist_mat = np.array([1,7,10,10,10,8,10,1,10,10])
 	weight_list = np.array([10,8,1,10,4])
 	min_cluster_size = 5
 	left_out_ratio = 10
 	clusters = hierarchical_clustering(dist_mat, weight_list, min_cluster_size, left_out_ratio)
-	print "result should be: [[0,1,2,3,4]]"
-	print clusters
+	assert_equal(clusters, [set([0,1,2,3,4])])
 
 	dist_mat = np.array([15,15,10,9,10,8,10,1,10,10])
 	weight_list = np.array([10,8,1,10,4])
 	min_cluster_size = 5
 	left_out_ratio = 10
 	clusters = hierarchical_clustering(dist_mat, weight_list, min_cluster_size, left_out_ratio)
-	print "result should be: [[0,4],[1,2,3]]"
-	print clusters
+	assert_equal(clusters, [set([0,4]), set([1,2,3])])
 
 	dist_mat = np.array([15,15,10,9,10,8,10,10,10,10])
 	weight_list = np.array([10,8,1,10,4])
 	min_cluster_size = 5
 	left_out_ratio = 10
 	clusters = hierarchical_clustering(dist_mat, weight_list, min_cluster_size, left_out_ratio)
-	print "result should be: [[0,4],[1,3]]"
-	print clusters
+	assert_equal(clusters, [set([0,4]), set([1,3])])
 
 def test_average_distance():
 	pattern = CD.Pattern()
@@ -87,16 +89,15 @@ def test_average_distance():
 	test_1 = 0x0011000000000011
 	test_2 = 0x0011000000001100
 	test_3 = 0x1111111100000000
-	print "result should be: 2.67"
-	print average_distance(pattern, test_1)
-	print "result should be: 4"
-	print average_distance(pattern, test_2)
-	print "result should be: 8"
-	print average_distance(pattern, test_3)
+	dist_1 = average_distance(pattern, test_1)
+	dist_2 = average_distance(pattern, test_2)
+	dist_3 = average_distance(pattern, test_3)
+	assert_equal(dist_1, float(8)/3)
+	assert_equal(dist_2, 4)
+	assert_equal(dist_3, 8)
 
 if __name__=="__main__":
 	test__strip_parameter()
 	test_load_observed_sites()
 	test_hierarchical_clustering()
 	test_average_distance()
-

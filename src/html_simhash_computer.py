@@ -159,6 +159,12 @@ class HtmlSimhashComputer(object):
 			return self.build_by_features(features)
 	
 	def compute_simhash(self, data):
+		"""
+		@parameter
+		data: content of html file
+		@return
+		result: one of [text_simhash], [dom_simhash], [text_simhash, dom_simhash]
+		"""
 		result = list()
 		if self.simhash_config.simhash_type in [CD.TEXT, CD.TEXT_DOM]:
 			text = visible_text(data)

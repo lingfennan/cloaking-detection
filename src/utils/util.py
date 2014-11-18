@@ -9,6 +9,7 @@ from datetime import datetime
 from itertools import izip
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from learning_detection_util import read_proto_from_file, write_proto_to_file
 import proto.cloaking_detection_pb2 as CD
 
 """
@@ -23,7 +24,7 @@ Example Usage:
 	python util.py -f format_links -i click_string -o url_list [-a]
 
 	# generate test_list and test_list.mismatch
-	python util.py -f generate_test -i html_path_list -n test_list_size -o output_dir
+	python util.py -f generate_test -i computed_observed_sites -n test_list_size -m mismatch_list_size
 
 	# aggregate average distance distribution for each URL patterns, the result is used to show distance distribution within patterns.
 	python util.py -f pattern_distance_distribution -i file.dist -o stats_file
@@ -420,6 +421,78 @@ def pattern_distance_distribution(inputfile, outputfile):
 def top_domain(URL):
 	return URL.split('://')[-1].split('?')[0].split('/')[0]
 
+
+def generate_test(observed_sites_filename, test_size=5000, positive_size=1000):
+	text_observed_sites_filename = observed_sites_filename + ".text"
+	dom_observed_sites_filename = observed_sites_filename + ".dom"
+	if not (os.path.exists(dom_observed_sites_filename) and os.path.exists(text_observed_sites_filename)):
+		raise Exception("Computed observed sites file doesn't exist!")
+
+	# select for text simhash first
+	computed_observed_sites_filename = text_observed_sites_filename
+	observed_sites = CD.ObservedSites()
+	read_proto_from_file(observed_sites, computed_observed_sites_filename)
+	observed_site_list = list()
+	for observed_site in observed_sites.site:
+		observed_site_list.append(observed_site)
+	random.shuffle(observed_site_list)
+	# test_size is number of sites, actual observation should be more than this.
+	test_sites = CD.ObservedSites()
+	mismatch_sites = CD.ObservedSites()
+	test_sites.config.CopyFrom(observed_sites.config)
+	mismatch_sites.config.CopyFrom(observed_sites.config)
+
+	test_list = observed_site_list[0:test_size]
+	mismatch_list = test_list[0:positive_size]
+	# original_label_list and mismatch_label_mapping is used in dom select.
+	original_label_list = [observed_site.name for observed_site in test_list]
+	mismatch_label_mapping = dict()
+	for observed_site in mismatch_list:
+		# observed_site in test_list are also changed.
+		current_label = observed_site.name
+		mismatch_label = random.sample(observed_site_list, 1)[0].name
+		while (top_domain(current_label) == top_domain(mismatch_label)):
+			mismatch_label = random.sample(observed_site_list, 1)[0].name
+		observed_site.name = mismatch_label
+		mismatch_site = mismatch_sites.site.add()
+		mismatch_site.CopyFrom(observed_site)
+		mismatch_label_mapping[current_label] = mismatch_label
+	for observed_site in test_list:
+		test_site = test_sites.site.add()
+		test_site.CopyFrom(observed_site)
+	mismatch_sites_filename = computed_observed_sites_filename + ".mismatch"
+	test_sites_filename = computed_observed_sites_filename + ".test"
+	write_proto_to_file(mismatch_sites, mismatch_sites_filename)
+	write_proto_to_file(test_sites, test_sites_filename)
+
+	# select for dom simhash now
+	computed_observed_sites_filename = dom_observed_sites_filename
+	observed_sites = CD.ObservedSites()
+	read_proto_from_file(observed_sites, computed_observed_sites_filename)
+	observed_sites_map = dict()
+	for observed_site in observed_sites.site:
+		observed_sites_map[observed_site.name] = observed_site
+	test_sites = CD.ObservedSites()
+	mismatch_sites = CD.ObservedSites()
+	test_sites.config.CopyFrom(observed_sites.config)
+	mismatch_sites.config.CopyFrom(observed_sites.config)
+
+	test_list = list()
+	for label in original_label_list:
+		test_list.append(observed_sites_map[label])
+	for label in mismatch_label_mapping:
+		observed_sites_map[label].name = mismatch_label_mapping[label]
+		mismatch_site = mismatch_sites.site.add()
+		mismatch_site.CopyFrom(observed_sites_map[label])
+	for observed_site in test_list:
+		test_site = test_sites.site.add()
+		test_site.CopyFrom(observed_site)
+	mismatch_sites_filename = computed_observed_sites_filename + ".mismatch"
+	test_sites_filename = computed_observed_sites_filename + ".test"
+	write_proto_to_file(mismatch_sites, mismatch_sites_filename)
+	write_proto_to_file(test_sites, test_sites_filename)
+
+"""
 def generate_test(inputfile, output_dir, test_number):
 	# given input list, generate a test list with test_number instances, write to output_dir + 'test_list_$(test_number)',
 	# generate an expected mismatch list with test_number/10 instances, write to output_dir + 'test_list_$(test_number).mismatch'
@@ -460,6 +533,7 @@ def generate_test(inputfile, output_dir, test_number):
 	    os.makedirs(os.path.dirname(test_list_filename))
 	open(test_list_filename, 'w').write('\n'.join(test_content))
 	open(test_list_mismatch_filename, 'w').write('\n'.join(test_mismatch_content))
+"""
 
 def format_links(inputfile, outputfile, all_info):
 	prefix = 'http://www.google.com'
@@ -580,9 +654,9 @@ def merge_logs(merge_list, outputfile, config):
 
 def main(argv):
 	has_function = False
-	help_msg = 'util.py -f <function>  [-o <outputfile> -c <config>] [-i <click_string> -o <url_list>] [-i <inputfile> -o <output_dir> -n <test_number>] [-i <file.dist> -o <stats_file>] [-b <browser_type> -i <credentials> -o <output_dir>] [-b <browser_type> -o <ad_list>], valid functions are merge_logs, format_links, generate_test, pattern_distance_distribution, hot_search_words, ad_list'
+	help_msg = 'util.py -f <function>  [-o <outputfile> -c <config>] [-i <click_string> -o <url_list>] [-i <inputfile> -n <test_number> -m <mismatch_number>] [-i <file.dist> -o <stats_file>] [-b <browser_type> -i <credentials> -o <output_dir>] [-b <browser_type> -o <ad_list>], valid functions are merge_logs, format_links, generate_test, pattern_distance_distribution, hot_search_words, ad_list'
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:o:c:n:b:a", ["function=", "ifile=", "ofile=", "config=", "test_number=", "browser_type="])
+		opts, args = getopt.getopt(argv, "hf:i:o:c:n:b:m:a", ["function=", "ifile=", "ofile=", "config=", "test_number=", "browser_type=", "mismatch_number="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
@@ -605,6 +679,8 @@ def main(argv):
 			config = arg
 		elif opt in ("-n", "--test_number"):
 			test_number = int(arg)
+		elif opt in ("-m", "--mismatch_number"):
+			mismatch_number = int(arg)
 		elif opt in ("-b", "--browser_type"):
 			browser_type = arg
 		else:
@@ -623,8 +699,7 @@ def main(argv):
 		format_links(inputfile, outputfile, all_info)
 	elif function == 'generate_test':
 		print 'function is', function
-		output_dir = outputfile
-		generate_test(inputfile, output_dir, test_number)
+		generate_test(inputfile, test_number, mismatch_number)
 	elif function == 'pattern_distance_distribution':
 		print 'function is', function
 		pattern_distance_distribution(inputfile, outputfile)
@@ -641,5 +716,6 @@ def main(argv):
 		sys.exit(2)
 
 if __name__ == "__main__":
-	main(sys.argv[1:])
+	generate_test("data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log")
+	# main(sys.argv[1:])
 
