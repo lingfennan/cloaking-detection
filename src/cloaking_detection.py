@@ -40,7 +40,21 @@ class CloakingDetection(object):
 				return False 
 		return True 
 
-	def _gradient_descent_detection(self, site_name, observation):
+	def _gradient_descent_detection(self, site_name, ob_simhash):
+		return True
+
+	def _joint_distribution_detection(self, site_name, ob_simhash):
+		return True
+
+	def _percentile_detection(self, site_name, ob_simhash):
+		p = 'p' + str(self.detection_config.p)
+		if not site_name in self.learned_sites_map:
+			return False
+		for pattern in self.learned_sites_map[site_name]:
+			dist = centroid_distance(pattern, ob_simhash)
+			# use percentile 97 for now
+			if dist <= getattr(pattern.percentile, p):
+				return False
 		return True
 
 	def get_cloaking_site(self, observed_site):
@@ -57,6 +71,10 @@ class CloakingDetection(object):
 			detection_algorithm = "_normal_distribution_detection"
 		elif self.detection_config.algorithm == CD.DetectionConfig.GRADIENT_DESCENT:
 			detection_algorithm = "_gradient_descent_detection"
+		elif self.detection_config.algorithm == CD.DetectionConfig.JOINT_DISTRIBUTION:
+			detection_algorithm = "_joint_distribution_detection"
+		elif self.detection_config.algorithm == CD.DetectionConfig.PERCENTILE:
+			detection_algorithm = "_percentile_detection"
 		else:
 			raise Exception("Unknown detection algorithm!")
 		has_cloaking = False
@@ -82,16 +100,22 @@ class CloakingDetection(object):
 		valid_instance(observed_sites, CD.ObservedSites)
 		cloaking_sites = CD.ObservedSites()
 		# iterate through all the URLs
+		size = 0
 		for observed_site in observed_sites.site:
 			result = self.get_cloaking_site(observed_site)
 			if result:
 				cloaking_site = cloaking_sites.site.add()
 				cloaking_site.CopyFrom(result)
+				size += len(cloaking_site.observation)
+		print "cloaking count"
+		print size
 		return cloaking_sites
 
 def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type=None):
 	detection_config = CD.DetectionConfig()
 	detection_config.algorithm = CD.DetectionConfig.NORMAL_DISTRIBUTION
+	# detection_config.algorithm = CD.DetectionConfig.PERCENTILE
+	detection_config.p = 99
 	detection_config.std_constant = 3
 	if simhash_type:
 		if simhash_type == "DOM":

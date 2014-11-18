@@ -154,10 +154,13 @@ message DetectionConfig {
     GRADIENT_DESCENT = 1;  
     // Histogram the centroid_distances and compute distribution.
     JOINT_DISTRIBUTION = 2;
+    // Use Percentile as threshold, percentile is given by p.
+    PERCENTILE = 3;
   }
   required Algorithm algorithm = 1;
   optional int32 std_constant = 2;
   optional SimhashType simhash_type = 3 [default = TEXT];
+  optional int32 p = 4 [default = 97];  // percentile
 }
 
 // Crawler data structures, used by crawler to store information.

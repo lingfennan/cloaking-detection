@@ -414,24 +414,23 @@ def HammingTreshold(cluster_config, observed_site):
 	num_observation = 0
 	for s in simhash_item_vector:
 		num_observation += s.count
-	if num_observation < cluster_config.minimum_cluster_size or vector_size == 0:
+	if vector_size == 0 or num_observation < cluster_config.minimum_cluster_size:
 		return None
 	elif vector_size == 1:
 		# Only one simhash, just one pattern.
 		pattern = learned_site.pattern.add()
-		pattern.mean = 0
-		pattern.std = 0
 		item = pattern.item.add()
 		item.CopyFrom(simhash_item_vector[0])
-		return learned_site
-	dist_mat, weight_list = distance_matrix(simhash_item_vector)
-	adj_list = adjacency_list(dist_mat, vector_size, cluster_config.algorithm.thres)
-	clusters = connected_components(adj_list, weight_list, cluster_config.minimum_cluster_size)
-	for cluster in clusters:
-		pattern = learned_site.pattern.add()
-		for index in cluster:
-			item = pattern.item.add()
-			item.CopyFrom(simhash_item_vector[index])
+	else:
+		dist_mat, weight_list = distance_matrix(simhash_item_vector)
+		adj_list = adjacency_list(dist_mat, vector_size, cluster_config.algorithm.thres)
+		clusters = connected_components(adj_list, weight_list, cluster_config.minimum_cluster_size)
+		for cluster in clusters:
+			pattern = learned_site.pattern.add()
+			for index in cluster:
+				item = pattern.item.add()
+				item.CopyFrom(simhash_item_vector[index])
+	# Compute the cluster information.
 	learned_site = compute_model(learned_site)
 	return learned_site
 
@@ -476,32 +475,32 @@ def HierarchicalClustering(cluster_config, observed_site):
 	num_observation = 0
 	for s in simhash_item_vector:
 		num_observation += s.count
-	if num_observation < cluster_config.minimum_cluster_size or vector_size == 0:
+	if vector_size == 0 or num_observation < cluster_config.minimum_cluster_size:
 		return None
 	elif vector_size == 1:
 		# Only one simhash, just one pattern.
 		pattern = learned_site.pattern.add()
-		pattern.mean = 0
-		pattern.std = 0
 		item = pattern.item.add()
 		item.CopyFrom(simhash_item_vector[0])
-		return learned_site
-	dist_mat, weight_list = distance_matrix(simhash_item_vector)
-	left_out_ratio = cluster_config.algorithm.left_out_ratio
-	"""
-	linkage_mat = h.linkage(dist_mat, method = 'single')
-	# linkage matrix are sorted by distance between clusters
-	# how to do the cut, hierarchical clustering is used to get cut threshold
-	cut_thres = cut_threshold(linkage_mat, weight_list, left_out_ratio)
-	this is to use third library to do the cut.
-	cluster = h.fcluster(linkage_mat, cut_thres, criterion='distance')
-	"""
-	clusters = hierarchical_clustering(dist_mat, weight_list, cluster_config.minimum_cluster_size, left_out_ratio) 
-	for cluster in clusters:
-		pattern = learned_site.pattern.add()
-		for index in cluster:
-			item = pattern.item.add()
-			item.CopyFrom(simhash_item_vector[index])
+	else:
+		dist_mat, weight_list = distance_matrix(simhash_item_vector)
+		left_out_ratio = cluster_config.algorithm.left_out_ratio
+		"""
+		linkage_mat = h.linkage(dist_mat, method = 'single')
+		# linkage matrix are sorted by distance between clusters
+		# how to do the cut, hierarchical clustering is used to get cut threshold
+		cut_thres = cut_threshold(linkage_mat, weight_list, left_out_ratio)
+		this is to use third library to do the cut.
+		cluster = h.fcluster(linkage_mat, cut_thres, criterion='distance')
+		"""
+		clusters = hierarchical_clustering(dist_mat, weight_list, \
+				cluster_config.minimum_cluster_size, left_out_ratio) 
+		for cluster in clusters:
+			pattern = learned_site.pattern.add()
+			for index in cluster:
+				item = pattern.item.add()
+				item.CopyFrom(simhash_item_vector[index])
+	# Compute the cluster information.
 	learned_site = compute_model(learned_site)
 	return learned_site
 
