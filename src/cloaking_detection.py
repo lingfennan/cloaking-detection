@@ -44,7 +44,29 @@ class CloakingDetection(object):
 		return True
 
 	def _joint_distribution_detection(self, site_name, ob_simhash):
-		return True
+		"""
+
+		@parameter
+		site_name: site name of observation
+		ob_simhash: simhash of observation
+		@return
+		True if the site is learned and this observation is not seen False
+		"""
+		if not site_name in self.learned_sites_map:
+			return False
+		prob = 1
+		for pattern in self.learned_sites_map[site_name]:
+			dist = centroid_distance(pattern, ob_simhash)
+			for point in pattern.cdf.point:
+				if(int(math.ceil(dist)) == point.x): 
+					#the prob is not belong to this pattern
+					prob = prob * (1-(pattern.size-point.count)/pattern.size)
+					break
+		threshold = 0.8
+		prob_positive = 1 - prob	
+		if(prob_positive > threshold):
+			return True
+		return False
 
 	def _percentile_detection(self, site_name, ob_simhash):
 		p = 'p' + str(self.detection_config.p)
