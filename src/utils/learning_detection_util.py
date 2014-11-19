@@ -8,6 +8,10 @@ from urllib import urlencode
 from urlparse import urlparse, urlunparse, parse_qs
 import proto.cloaking_detection_pb2 as CD
 
+
+"""
+Below are util functions.
+"""
 def _strip_parameter(link):
 	parsed_link = urlparse(link)
 	query = parse_qs(parsed_link.query)

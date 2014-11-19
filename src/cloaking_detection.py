@@ -1,6 +1,9 @@
 """
 How to use:
-python cloaking_detection.py -f detect -i <inputfile> -l <learned_sites> [-t <simhash_type>, default to TEXT]
+python cloaking_detection.py -f detect -i <inputfile> -l <learnedfile> [-t <simhash_type>, default to TEXT]
+
+python cloaking_detection.py -f evaluate -i <inputfile> -l <learnedfile> -e <expectedfile> [-t <simhash_type>]
+
 """
 
 import sys, getopt
@@ -133,7 +136,7 @@ class CloakingDetection(object):
 		print size
 		return cloaking_sites
 
-def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type=None):
+def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type):
 	detection_config = CD.DetectionConfig()
 	detection_config.algorithm = CD.DetectionConfig.NORMAL_DISTRIBUTION
 	# detection_config.algorithm = CD.DetectionConfig.PERCENTILE
@@ -158,20 +161,19 @@ def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_
 	cloaking_sites = detector.detect(observed_sites)
 	out_filename = observed_sites_filename + '.cloaking'
 	write_proto_to_file(cloaking_sites, out_filename)
-
-	# how to get this
 	# evaluation(cloaking_sites, expected, total)
-	print cloaking_sites
+	# print cloaking_sites
+	return cloaking_sites
 
 def file_path_set(observed_sites):
-	valid_instance(detected, CD.ObservedSites)
+	valid_instance(observed_sites, CD.ObservedSites)
 	result = set()
 	for site in observed_sites.site:
 		for observation in site.observation:
 			result.add(observation.file_path)
 	return result
 
-def evaluation(detected, expected, total):
+def compute_metrics(detected, expected, total):
 	"""
 	Evaluate the result and return two kind of measures.
 	(1) True positive rate/False positive rate, this can be used to plot ROC curve.
@@ -201,17 +203,33 @@ def evaluation(detected, expected, total):
 	pr = [precision, recall]
 	return rate, pr
 
+def _get_total(observed_sites):
+	valid_instance(observed_sites, CD.ObservedSites)
+	total = 0
+	for observed_site in observed_sites.site:
+		total += len(observed_site.observation)
+	return total
+
+def evaluate(learned_sites_filename, observed_sites_filename, simhash_type, expected_sites_filename):
+	cloaking_sites = cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type)
+	expected_sites = CD.ObservedSites()
+	read_proto_from_file(expected_sites, expected_sites_filename)
+	observed_sites = CD.ObservedSites()
+	read_proto_from_file(observed_sites, observed_sites_filename)
+	total = _get_total(observed_sites)
+	print compute_metrics(cloaking_sites, expected_sites, total)
+
 def main(argv):
 	has_function = False
-	help_msg = 'cloaking_detection.py -f <function> [-i <inputfile> -l <learnedfile> -t <simhash_type>], valid functions are detect'
+	help_msg = "cloaking_detection.py -f <function> [-i <inputfile> -l <learnedfile> -t <simhash_type>][-i <testfile> -l <learnedfile> -e <expectedfile> -t <simhash_type>], valid functions are detect, evaluate"
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:l:t:", ["function=", "ifile=", "lfile=", "type="])
+		opts, args = getopt.getopt(argv, "hf:i:l:e:t:", ["function=", "ifile=", "lfile=", "efile=", "type="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
 	simhash_type = None
 	for opt, arg in opts:
-		if opt == '-h':
+		if opt == "-h":
 			print help_msg
 			sys.exit()
 		elif opt in ("-f", "--function"):
@@ -221,6 +239,8 @@ def main(argv):
 			inputfile = arg
 		elif opt in ("-l", "--lfile"):
 			learnedfile = arg
+		elif opt in ("-e", "--efile"):
+			expectedfile = arg
 		elif opt in ("-t", "--type"):
 			simhash_type = arg
 		else:
@@ -228,11 +248,12 @@ def main(argv):
 			sys.exit(2)
 	if not has_function:
 		print help_msg
-		print 'Testing'
-		test()
+		print "Testing"
 		sys.exit()
-	if function == 'detect':
+	if function == "detect":
 		cloaking_detection(learnedfile, inputfile, simhash_type)
+	elif function == "evaluate":
+		evaluate(learnedfile, inputfile, simhash_type, expectedfile)
 	else:
 		print help_msg
 		sys.exit(2)
