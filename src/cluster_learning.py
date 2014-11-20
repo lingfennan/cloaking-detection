@@ -8,7 +8,7 @@ import sys, getopt
 import simhash
 from threading import Thread
 from html_simhash_computer import HtmlSimhashComputer
-from utils.learning_detection_util import load_observed_sites, write_proto_to_file, read_proto_from_file, valid_instance
+from utils.learning_detection_util import load_observed_sites, merge_observed_sites, write_proto_to_file, read_proto_from_file, valid_instance
 from utils.learning_detection_util import HammingTreshold, KMeans, SpectralClustering, HierarchicalClustering
 from utils.thread_computer import ThreadComputer
 import utils.proto.cloaking_detection_pb2 as CD
@@ -37,15 +37,14 @@ class ClusterLearning(object):
 					observation.dom_simhash = path_simhash_dict[observation.file_path][-1].value
 		return observed_sites
 
-	def learn(self, observed_sites_filename, cluster_config=None):
+	def learn(self, observed_sites_filenames, cluster_config=None):
 		if (not cluster_config) and (not self.cluster_config):
 			raise Exception("Cluster config missing")
 		elif cluster_config and valid_instance(cluster_config, CD.ClusterConfig):
 			self.cluster_config = cluster_config
 		# learn the clusters
-		observed_sites = CD.ObservedSites()
+		observed_sites = merge_observed_sites(observed_sites_filenames)
 		learned_sites = CD.LearnedSites()
-		read_proto_from_file(observed_sites, observed_sites_filename)
 		cluster_config.simhash_type = observed_sites.config.simhash_type
 		for observed_site in observed_sites.site:
 			# either TEXT or DOM can be handled now. TEXT_DOM is not supported.
@@ -80,32 +79,32 @@ def compute(site_list_filenames):
 	res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
 	write_proto_to_file(res, dom_out_filename)
 
-def learn(observed_sites_filename):
-	out_filename = observed_sites_filename + '.learned'
+def learn(observed_sites_filenames):
+	out_filename = observed_sites_filenames[0] + '.learned'
 	cluster_learner = ClusterLearning()
 	cluster_config = CD.ClusterConfig()
 	cluster_config.algorithm.name = CD.Algorithm.HIERARCHICAL_CLUSTERING
 	cluster_config.algorithm.left_out_ratio = 5 # left out ratio is 5%
 	cluster_config.minimum_cluster_size = 5
-	res = cluster_learner.learn(observed_sites_filename, cluster_config)
+	res = cluster_learner.learn(observed_sites_filenames, cluster_config)
 	write_proto_to_file(res, out_filename)
 
 def test_learner():
-	in_filename = 'utils/data/US_list_10.20141109-180617.selenium.crawl/crawl_log.text'
-	out_filename = in_filename + '.learned'
+	in_filenames = ['utils/data/US_list_10.20141109-180617.selenium.crawl/crawl_log.text']
+	out_filename = in_filenames[0] + '.learned'
 	cluster_learner = ClusterLearning()
 	cluster_config = CD.ClusterConfig()
 	cluster_config.algorithm.name = CD.Algorithm.HAMMING_THRESHOLD
 	cluster_config.algorithm.thres = 5
 	cluster_config.algorithm.left_out_ratio = 5  # left out ratio is 5%
-	res = cluster_learner.learn(in_filename, cluster_config)
+	res = cluster_learner.learn(in_filenames, cluster_config)
 	write_proto_to_file(res, out_filename)
 	print "result for hamming threhold clustering"
 	print res
 
 	cluster_config.algorithm.name = CD.Algorithm.HIERARCHICAL_CLUSTERING
 	cluster_config.algorithm.left_out_ratio = 5  # left out ratio is 5%
-	res = cluster_learner.learn(in_filename, cluster_config)
+	res = cluster_learner.learn(in_filenames, cluster_config)
 	write_proto_to_file(res, out_filename)
 	print "result for hierarchical clustering"
 	print res

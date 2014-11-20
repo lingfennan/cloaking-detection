@@ -65,6 +65,32 @@ def load_observed_sites(site_list_filenames):
 			observation.file_path = path 
 	return observed_sites, path_list
 
+def merge_observed_sites(observed_sites_filenames):
+	"""
+	Different from load_observed_sites which extracts site name and fill observed_sites.
+	Load observed_sites from multiple files and merge them.
+	@parameter
+	site_list_filenames: observed site list files to merge.
+	@return
+	observed_sites: the merged result.
+	"""
+	observed_sites = CD.ObservedSites()
+	observed_sites_map = dict()
+	for observed_sites_filename in observed_sites_filenames:
+		temp_observed_sites = CD.ObservedSites()
+		read_proto_from_file(temp_observed_sites, observed_sites_filename)
+		for observed_site in temp_observed_sites.site:
+			if observed_site.name in observed_sites_map:
+				observed_sites_map[observed_site.name].MergeFrom(observed_site)
+			else:
+				observed_sites_map[observed_site.name] = CD.SiteObservations()
+				observed_sites_map[observed_site.name].CopyFrom(observed_site)
+	observed_sites.config.CopyFrom(temp_observed_sites.config)
+	for site_name in observed_sites_map:
+		observed_site = observed_sites.site.add()
+		observed_site.CopyFrom(observed_sites_map[site_name])
+	return observed_sites
+
 def write_proto_to_file(proto, filename):
 	f = open(filename, "wb")
 	f.write(proto.SerializeToString())
