@@ -38,6 +38,8 @@ def test_check_equal():
 	assert_equal(check_equal(first_file, second_file), True)
 	assert_equal(check_equal(first_file, third_file), False)
 	assert_equal(check_equal(third_file, fourth_file), True)
+	assert_equal(check_equal(second_file, fourth_file), False)
+
 
 def test__strip_parameter():
 	link = 'http://www.walmart.com/search/search-ng.do?search_query=Bicycles&adid=22222222220202379358&wmlspartner=wmtlabs&wl0=e&wl1=g&wl2=c&wl3=30633615476&wl4=&veh=sem'
