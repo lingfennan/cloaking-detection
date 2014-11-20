@@ -29,9 +29,18 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Pattern_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Pattern_reflection_ = NULL;
-const ::google::protobuf::Descriptor* Item_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* Percentile_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  Item_reflection_ = NULL;
+  Percentile_reflection_ = NULL;
+const ::google::protobuf::Descriptor* CDF_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  CDF_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Point_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Point_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SimhashItem_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SimhashItem_reflection_ = NULL;
 const ::google::protobuf::Descriptor* ObservedSites_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ObservedSites_reflection_ = NULL;
@@ -56,11 +65,29 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* SimhashConfig_FeatureUsage_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SimhashConfig_FeatureUsage_reflection_ = NULL;
-const ::google::protobuf::EnumDescriptor* SimhashConfig_SimhashType_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* Algorithm_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Algorithm_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* Algorithm_AlgoName_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* ClusterConfig_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ClusterConfig_reflection_ = NULL;
-const ::google::protobuf::EnumDescriptor* ClusterConfig_Algorithm_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* DetectionConfig_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  DetectionConfig_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* DetectionConfig_Algorithm_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* CrawlConfig_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  CrawlConfig_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* CrawlConfig_BrowserType_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* CrawlLog_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  CrawlLog_reflection_ = NULL;
+const ::google::protobuf::Descriptor* CrawlResult_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  CrawlResult_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* SimhashType_descriptor_ = NULL;
+const ::google::protobuf::EnumDescriptor* ParaType_descriptor_ = NULL;
 
 }  // namespace
 
@@ -104,10 +131,15 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SitePatterns));
   Pattern_descriptor_ = file->message_type(2);
-  static const int Pattern_offsets_[3] = {
+  static const int Pattern_offsets_[8] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pattern, mean_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pattern, std_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pattern, item_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pattern, centroid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pattern, size_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pattern, threshold_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pattern, cdf_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pattern, percentile_),
   };
   Pattern_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -120,25 +152,77 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Pattern));
-  Item_descriptor_ = file->message_type(3);
-  static const int Item_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Item, simhash_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Item, count_),
+  Percentile_descriptor_ = file->message_type(3);
+  static const int Percentile_offsets_[6] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Percentile, p99_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Percentile, p97_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Percentile, p95_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Percentile, p90_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Percentile, p75_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Percentile, p50_),
   };
-  Item_reflection_ =
+  Percentile_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      Item_descriptor_,
-      Item::default_instance_,
-      Item_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Item, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Item, _unknown_fields_),
+      Percentile_descriptor_,
+      Percentile::default_instance_,
+      Percentile_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Percentile, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Percentile, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(Item));
-  ObservedSites_descriptor_ = file->message_type(4);
-  static const int ObservedSites_offsets_[1] = {
+      sizeof(Percentile));
+  CDF_descriptor_ = file->message_type(4);
+  static const int CDF_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CDF, point_),
+  };
+  CDF_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      CDF_descriptor_,
+      CDF::default_instance_,
+      CDF_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CDF, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CDF, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(CDF));
+  Point_descriptor_ = file->message_type(5);
+  static const int Point_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Point, x_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Point, count_),
+  };
+  Point_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Point_descriptor_,
+      Point::default_instance_,
+      Point_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Point, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Point, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Point));
+  SimhashItem_descriptor_ = file->message_type(6);
+  static const int SimhashItem_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashItem, simhash_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashItem, count_),
+  };
+  SimhashItem_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SimhashItem_descriptor_,
+      SimhashItem::default_instance_,
+      SimhashItem_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashItem, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashItem, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SimhashItem));
+  ObservedSites_descriptor_ = file->message_type(7);
+  static const int ObservedSites_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObservedSites, site_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObservedSites, config_),
   };
   ObservedSites_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -151,7 +235,7 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ObservedSites));
-  SiteObservations_descriptor_ = file->message_type(5);
+  SiteObservations_descriptor_ = file->message_type(8);
   static const int SiteObservations_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SiteObservations, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SiteObservations, observation_),
@@ -167,7 +251,7 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SiteObservations));
-  Observation_descriptor_ = file->message_type(6);
+  Observation_descriptor_ = file->message_type(9);
   static const int Observation_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Observation, landing_url_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Observation, file_path_),
@@ -186,7 +270,7 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Observation));
-  HtmlText_descriptor_ = file->message_type(7);
+  HtmlText_descriptor_ = file->message_type(10);
   static const int HtmlText_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HtmlText, word_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HtmlText, bi_gram_),
@@ -203,7 +287,7 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(HtmlText));
-  HtmlDom_descriptor_ = file->message_type(8);
+  HtmlDom_descriptor_ = file->message_type(11);
   static const int HtmlDom_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HtmlDom, node_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HtmlDom, bi_node_),
@@ -220,7 +304,7 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(HtmlDom));
-  Feature_descriptor_ = file->message_type(9);
+  Feature_descriptor_ = file->message_type(12);
   static const int Feature_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Feature, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Feature, int_value_),
@@ -238,7 +322,7 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Feature));
-  SimhashConfig_descriptor_ = file->message_type(10);
+  SimhashConfig_descriptor_ = file->message_type(13);
   static const int SimhashConfig_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashConfig, simhash_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SimhashConfig, usage_),
@@ -272,12 +356,31 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SimhashConfig_FeatureUsage));
-  SimhashConfig_SimhashType_descriptor_ = SimhashConfig_descriptor_->enum_type(0);
-  ClusterConfig_descriptor_ = file->message_type(11);
-  static const int ClusterConfig_offsets_[3] = {
+  Algorithm_descriptor_ = file->message_type(14);
+  static const int Algorithm_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Algorithm, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Algorithm, thres_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Algorithm, k_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Algorithm, left_out_ratio_),
+  };
+  Algorithm_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Algorithm_descriptor_,
+      Algorithm::default_instance_,
+      Algorithm_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Algorithm, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Algorithm, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Algorithm));
+  Algorithm_AlgoName_descriptor_ = Algorithm_descriptor_->enum_type(0);
+  ClusterConfig_descriptor_ = file->message_type(15);
+  static const int ClusterConfig_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClusterConfig, algorithm_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClusterConfig, cluster_number_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClusterConfig, minimum_cluster_size_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClusterConfig, maximum_threads_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClusterConfig, simhash_type_),
   };
   ClusterConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -290,7 +393,82 @@ void protobuf_AssignDesc_cloaking_5fdetection_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ClusterConfig));
-  ClusterConfig_Algorithm_descriptor_ = ClusterConfig_descriptor_->enum_type(0);
+  DetectionConfig_descriptor_ = file->message_type(16);
+  static const int DetectionConfig_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DetectionConfig, algorithm_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DetectionConfig, std_constant_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DetectionConfig, simhash_type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DetectionConfig, p_),
+  };
+  DetectionConfig_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      DetectionConfig_descriptor_,
+      DetectionConfig::default_instance_,
+      DetectionConfig_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DetectionConfig, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DetectionConfig, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(DetectionConfig));
+  DetectionConfig_Algorithm_descriptor_ = DetectionConfig_descriptor_->enum_type(0);
+  CrawlConfig_descriptor_ = file->message_type(17);
+  static const int CrawlConfig_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlConfig, maximum_threads_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlConfig, user_agent_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlConfig, user_agent_md5_dir_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlConfig, browser_type_),
+  };
+  CrawlConfig_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      CrawlConfig_descriptor_,
+      CrawlConfig::default_instance_,
+      CrawlConfig_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlConfig, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlConfig, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(CrawlConfig));
+  CrawlConfig_BrowserType_descriptor_ = CrawlConfig_descriptor_->enum_type(0);
+  CrawlLog_descriptor_ = file->message_type(18);
+  static const int CrawlLog_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlLog, result_),
+  };
+  CrawlLog_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      CrawlLog_descriptor_,
+      CrawlLog::default_instance_,
+      CrawlLog_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlLog, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlLog, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(CrawlLog));
+  CrawlResult_descriptor_ = file->message_type(19);
+  static const int CrawlResult_offsets_[7] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlResult, file_path_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlResult, landing_url_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlResult, landing_url_md5_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlResult, url_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlResult, url_md5_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlResult, timestamp_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlResult, success_),
+  };
+  CrawlResult_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      CrawlResult_descriptor_,
+      CrawlResult::default_instance_,
+      CrawlResult_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlResult, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CrawlResult, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(CrawlResult));
+  SimhashType_descriptor_ = file->enum_type(0);
+  ParaType_descriptor_ = file->enum_type(1);
 }
 
 namespace {
@@ -310,7 +488,13 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Pattern_descriptor_, &Pattern::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    Item_descriptor_, &Item::default_instance());
+    Percentile_descriptor_, &Percentile::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    CDF_descriptor_, &CDF::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Point_descriptor_, &Point::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SimhashItem_descriptor_, &SimhashItem::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ObservedSites_descriptor_, &ObservedSites::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
@@ -328,7 +512,17 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SimhashConfig_FeatureUsage_descriptor_, &SimhashConfig_FeatureUsage::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Algorithm_descriptor_, &Algorithm::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ClusterConfig_descriptor_, &ClusterConfig::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    DetectionConfig_descriptor_, &DetectionConfig::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    CrawlConfig_descriptor_, &CrawlConfig::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    CrawlLog_descriptor_, &CrawlLog::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    CrawlResult_descriptor_, &CrawlResult::default_instance());
 }
 
 }  // namespace
@@ -340,8 +534,14 @@ void protobuf_ShutdownFile_cloaking_5fdetection_2eproto() {
   delete SitePatterns_reflection_;
   delete Pattern::default_instance_;
   delete Pattern_reflection_;
-  delete Item::default_instance_;
-  delete Item_reflection_;
+  delete Percentile::default_instance_;
+  delete Percentile_reflection_;
+  delete CDF::default_instance_;
+  delete CDF_reflection_;
+  delete Point::default_instance_;
+  delete Point_reflection_;
+  delete SimhashItem::default_instance_;
+  delete SimhashItem_reflection_;
   delete ObservedSites::default_instance_;
   delete ObservedSites_reflection_;
   delete SiteObservations::default_instance_;
@@ -358,8 +558,18 @@ void protobuf_ShutdownFile_cloaking_5fdetection_2eproto() {
   delete SimhashConfig_reflection_;
   delete SimhashConfig_FeatureUsage::default_instance_;
   delete SimhashConfig_FeatureUsage_reflection_;
+  delete Algorithm::default_instance_;
+  delete Algorithm_reflection_;
   delete ClusterConfig::default_instance_;
   delete ClusterConfig_reflection_;
+  delete DetectionConfig::default_instance_;
+  delete DetectionConfig_reflection_;
+  delete CrawlConfig::default_instance_;
+  delete CrawlConfig_reflection_;
+  delete CrawlLog::default_instance_;
+  delete CrawlLog_reflection_;
+  delete CrawlResult::default_instance_;
+  delete CrawlResult_reflection_;
 }
 
 void protobuf_AddDesc_cloaking_5fdetection_2eproto() {
@@ -374,46 +584,81 @@ void protobuf_AddDesc_cloaking_5fdetection_2eproto() {
     "loaking_detection.SitePatterns\022\021\n\ttimest"
     "amp\030\002 \001(\t\"J\n\014SitePatterns\022\014\n\004name\030\001 \002(\t\022"
     ",\n\007pattern\030\002 \003(\0132\033.cloaking_detection.Pa"
-    "ttern\"L\n\007Pattern\022\014\n\004mean\030\001 \002(\001\022\013\n\003std\030\002 "
-    "\002(\001\022&\n\004item\030\003 \003(\0132\030.cloaking_detection.I"
-    "tem\")\n\004Item\022\017\n\007simhash\030\001 \002(\004\022\020\n\005count\030\002 "
-    "\001(\004:\0011\"C\n\rObservedSites\0222\n\004site\030\001 \003(\0132$."
-    "cloaking_detection.SiteObservations\"V\n\020S"
-    "iteObservations\022\014\n\004name\030\001 \002(\t\0224\n\013observa"
-    "tion\030\002 \003(\0132\037.cloaking_detection.Observat"
-    "ion\"s\n\013Observation\022\023\n\013landing_url\030\001 \002(\t\022"
-    "\021\n\tfile_path\030\002 \002(\t\022\021\n\ttimestamp\030\003 \001(\t\022\024\n"
-    "\014text_simhash\030\004 \001(\004\022\023\n\013dom_simhash\030\005 \001(\004"
-    "\"\222\001\n\010HtmlText\022)\n\004word\030\001 \003(\0132\033.cloaking_d"
-    "etection.Feature\022,\n\007bi_gram\030\002 \003(\0132\033.cloa"
-    "king_detection.Feature\022-\n\010tri_gram\030\003 \003(\013"
-    "2\033.cloaking_detection.Feature\"\221\001\n\007HtmlDo"
-    "m\022)\n\004node\030\001 \003(\0132\033.cloaking_detection.Fea"
-    "ture\022,\n\007bi_node\030\002 \003(\0132\033.cloaking_detecti"
-    "on.Feature\022-\n\010tri_node\030\003 \003(\0132\033.cloaking_"
-    "detection.Feature\"Y\n\007Feature\022\014\n\004name\030\001 \002"
-    "(\t\022\024\n\tint_value\030\002 \001(\005:\0011\022\024\n\014double_value"
-    "\030\003 \001(\001\022\024\n\014string_value\030\004 \001(\t\"\264\002\n\rSimhash"
-    "Config\022C\n\014simhash_type\030\001 \002(\0162-.cloaking_"
-    "detection.SimhashConfig.SimhashType\022=\n\005u"
-    "sage\030\002 \001(\0132..cloaking_detection.SimhashC"
-    "onfig.FeatureUsage\022\033\n\017maximum_threads\030\003 "
-    "\001(\005:\00210\032R\n\014FeatureUsage\022\022\n\004gram\030\001 \001(\010:\004t"
-    "rue\022\025\n\007bi_gram\030\002 \001(\010:\004true\022\027\n\010tri_gram\030\003"
-    " \001(\010:\005false\".\n\013SimhashType\022\010\n\004TEXT\020\000\022\007\n\003"
-    "DOM\020\001\022\014\n\010TEXT_DOM\020\002\"\353\001\n\rClusterConfig\022>\n"
-    "\talgorithm\030\001 \002(\0162+.cloaking_detection.Cl"
-    "usterConfig.Algorithm\022\026\n\016cluster_number\030"
-    "\002 \001(\005\022\033\n\017maximum_threads\030\003 \001(\005:\00210\"e\n\tAl"
-    "gorithm\022\025\n\021HAMMING_THRESHOLD\020\000\022\013\n\007K_MEAN"
-    "S\020\001\022\027\n\023SPECTRAL_CLUSTERING\020\002\022\033\n\027HIERARCH"
-    "ICAL_CLUSTERING\020\003", 1537);
+    "ttern\"\350\001\n\007Pattern\022\014\n\004mean\030\001 \002(\001\022\013\n\003std\030\002"
+    " \002(\001\0221\n\004item\030\003 \003(\0132\037.cloaking_detection."
+    "SimhashItemB\002\030\001\022\024\n\010centroid\030\004 \003(\004B\002\020\001\022\014\n"
+    "\004size\030\005 \001(\004\022\021\n\tthreshold\030\006 \001(\001\022$\n\003cdf\030\007 "
+    "\001(\0132\027.cloaking_detection.CDF\0222\n\npercenti"
+    "le\030\010 \001(\0132\036.cloaking_detection.Percentile"
+    "\"Z\n\nPercentile\022\013\n\003p99\030\001 \001(\r\022\013\n\003p97\030\002 \001(\r"
+    "\022\013\n\003p95\030\003 \001(\r\022\013\n\003p90\030\004 \001(\r\022\013\n\003p75\030\005 \001(\r\022"
+    "\013\n\003p50\030\006 \001(\r\"/\n\003CDF\022(\n\005point\030\001 \003(\0132\031.clo"
+    "aking_detection.Point\"!\n\005Point\022\t\n\001x\030\001 \002("
+    "\r\022\r\n\005count\030\002 \002(\004\"0\n\013SimhashItem\022\017\n\007simha"
+    "sh\030\001 \002(\004\022\020\n\005count\030\002 \001(\004:\0011\"v\n\rObservedSi"
+    "tes\0222\n\004site\030\001 \003(\0132$.cloaking_detection.S"
+    "iteObservations\0221\n\006config\030\002 \001(\0132!.cloaki"
+    "ng_detection.SimhashConfig\"V\n\020SiteObserv"
+    "ations\022\014\n\004name\030\001 \002(\t\0224\n\013observation\030\002 \003("
+    "\0132\037.cloaking_detection.Observation\"s\n\013Ob"
+    "servation\022\023\n\013landing_url\030\001 \002(\t\022\021\n\tfile_p"
+    "ath\030\002 \002(\t\022\021\n\ttimestamp\030\003 \001(\t\022\024\n\014text_sim"
+    "hash\030\004 \001(\004\022\023\n\013dom_simhash\030\005 \001(\004\"\222\001\n\010Html"
+    "Text\022)\n\004word\030\001 \003(\0132\033.cloaking_detection."
+    "Feature\022,\n\007bi_gram\030\002 \003(\0132\033.cloaking_dete"
+    "ction.Feature\022-\n\010tri_gram\030\003 \003(\0132\033.cloaki"
+    "ng_detection.Feature\"\221\001\n\007HtmlDom\022)\n\004node"
+    "\030\001 \003(\0132\033.cloaking_detection.Feature\022,\n\007b"
+    "i_node\030\002 \003(\0132\033.cloaking_detection.Featur"
+    "e\022-\n\010tri_node\030\003 \003(\0132\033.cloaking_detection"
+    ".Feature\"Y\n\007Feature\022\014\n\004name\030\001 \002(\t\022\024\n\tint"
+    "_value\030\002 \001(\005:\0011\022\024\n\014double_value\030\003 \001(\001\022\024\n"
+    "\014string_value\030\004 \001(\t\"\366\001\n\rSimhashConfig\0225\n"
+    "\014simhash_type\030\001 \002(\0162\037.cloaking_detection"
+    ".SimhashType\022=\n\005usage\030\002 \001(\0132..cloaking_d"
+    "etection.SimhashConfig.FeatureUsage\022\033\n\017m"
+    "aximum_threads\030\003 \001(\005:\00210\032R\n\014FeatureUsage"
+    "\022\022\n\004gram\030\001 \001(\010:\004true\022\025\n\007bi_gram\030\002 \001(\010:\004t"
+    "rue\022\027\n\010tri_gram\030\003 \001(\010:\005false\"\331\001\n\tAlgorit"
+    "hm\0224\n\004name\030\001 \002(\0162&.cloaking_detection.Al"
+    "gorithm.AlgoName\022\r\n\005thres\030\002 \001(\005\022\t\n\001k\030\003 \001"
+    "(\005\022\026\n\016left_out_ratio\030\004 \001(\005\"d\n\010AlgoName\022\025"
+    "\n\021HAMMING_THRESHOLD\020\000\022\013\n\007K_MEANS\020\001\022\027\n\023SP"
+    "ECTRAL_CLUSTERING\020\002\022\033\n\027HIERARCHICAL_CLUS"
+    "TERING\020\003\"\274\001\n\rClusterConfig\0220\n\talgorithm\030"
+    "\001 \002(\0132\035.cloaking_detection.Algorithm\022\037\n\024"
+    "minimum_cluster_size\030\002 \001(\005:\0012\022\033\n\017maximum"
+    "_threads\030\003 \001(\005:\00210\022;\n\014simhash_type\030\004 \001(\016"
+    "2\037.cloaking_detection.SimhashType:\004TEXT\""
+    "\231\002\n\017DetectionConfig\022@\n\talgorithm\030\001 \002(\0162-"
+    ".cloaking_detection.DetectionConfig.Algo"
+    "rithm\022\024\n\014std_constant\030\002 \001(\005\022;\n\014simhash_t"
+    "ype\030\003 \001(\0162\037.cloaking_detection.SimhashTy"
+    "pe:\004TEXT\022\r\n\001p\030\004 \001(\005:\00297\"b\n\tAlgorithm\022\027\n\023"
+    "NORMAL_DISTRIBUTION\020\000\022\024\n\020GRADIENT_DESCEN"
+    "T\020\001\022\026\n\022JOINT_DISTRIBUTION\020\002\022\016\n\nPERCENTIL"
+    "E\020\003\"\301\001\n\013CrawlConfig\022\027\n\017maximum_threads\030\001"
+    " \001(\005\022\022\n\nuser_agent\030\002 \001(\t\022\032\n\022user_agent_m"
+    "d5_dir\030\003 \001(\t\022A\n\014browser_type\030\004 \001(\0162+.clo"
+    "aking_detection.CrawlConfig.BrowserType\""
+    "&\n\013BrowserType\022\n\n\006CHROME\020\000\022\013\n\007FIREFOX\020\001\""
+    ";\n\010CrawlLog\022/\n\006result\030\001 \003(\0132\037.cloaking_d"
+    "etection.CrawlResult\"\220\001\n\013CrawlResult\022\021\n\t"
+    "file_path\030\001 \001(\t\022\023\n\013landing_url\030\002 \001(\t\022\027\n\017"
+    "landing_url_md5\030\003 \001(\t\022\013\n\003url\030\004 \001(\t\022\017\n\007ur"
+    "l_md5\030\005 \001(\t\022\021\n\ttimestamp\030\006 \001(\t\022\017\n\007succes"
+    "s\030\007 \001(\010*.\n\013SimhashType\022\010\n\004TEXT\020\000\022\007\n\003DOM\020"
+    "\001\022\014\n\010TEXT_DOM\020\002*%\n\010ParaType\022\n\n\006NORMAL\020\000\022"
+    "\r\n\tFILE_PATH\020\001", 2814);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "cloaking_detection.proto", &protobuf_RegisterTypes);
   LearnedSites::default_instance_ = new LearnedSites();
   SitePatterns::default_instance_ = new SitePatterns();
   Pattern::default_instance_ = new Pattern();
-  Item::default_instance_ = new Item();
+  Percentile::default_instance_ = new Percentile();
+  CDF::default_instance_ = new CDF();
+  Point::default_instance_ = new Point();
+  SimhashItem::default_instance_ = new SimhashItem();
   ObservedSites::default_instance_ = new ObservedSites();
   SiteObservations::default_instance_ = new SiteObservations();
   Observation::default_instance_ = new Observation();
@@ -422,11 +667,19 @@ void protobuf_AddDesc_cloaking_5fdetection_2eproto() {
   Feature::default_instance_ = new Feature();
   SimhashConfig::default_instance_ = new SimhashConfig();
   SimhashConfig_FeatureUsage::default_instance_ = new SimhashConfig_FeatureUsage();
+  Algorithm::default_instance_ = new Algorithm();
   ClusterConfig::default_instance_ = new ClusterConfig();
+  DetectionConfig::default_instance_ = new DetectionConfig();
+  CrawlConfig::default_instance_ = new CrawlConfig();
+  CrawlLog::default_instance_ = new CrawlLog();
+  CrawlResult::default_instance_ = new CrawlResult();
   LearnedSites::default_instance_->InitAsDefaultInstance();
   SitePatterns::default_instance_->InitAsDefaultInstance();
   Pattern::default_instance_->InitAsDefaultInstance();
-  Item::default_instance_->InitAsDefaultInstance();
+  Percentile::default_instance_->InitAsDefaultInstance();
+  CDF::default_instance_->InitAsDefaultInstance();
+  Point::default_instance_->InitAsDefaultInstance();
+  SimhashItem::default_instance_->InitAsDefaultInstance();
   ObservedSites::default_instance_->InitAsDefaultInstance();
   SiteObservations::default_instance_->InitAsDefaultInstance();
   Observation::default_instance_->InitAsDefaultInstance();
@@ -435,7 +688,12 @@ void protobuf_AddDesc_cloaking_5fdetection_2eproto() {
   Feature::default_instance_->InitAsDefaultInstance();
   SimhashConfig::default_instance_->InitAsDefaultInstance();
   SimhashConfig_FeatureUsage::default_instance_->InitAsDefaultInstance();
+  Algorithm::default_instance_->InitAsDefaultInstance();
   ClusterConfig::default_instance_->InitAsDefaultInstance();
+  DetectionConfig::default_instance_->InitAsDefaultInstance();
+  CrawlConfig::default_instance_->InitAsDefaultInstance();
+  CrawlLog::default_instance_->InitAsDefaultInstance();
+  CrawlResult::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_cloaking_5fdetection_2eproto);
 }
 
@@ -445,6 +703,35 @@ struct StaticDescriptorInitializer_cloaking_5fdetection_2eproto {
     protobuf_AddDesc_cloaking_5fdetection_2eproto();
   }
 } static_descriptor_initializer_cloaking_5fdetection_2eproto_;
+const ::google::protobuf::EnumDescriptor* SimhashType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SimhashType_descriptor_;
+}
+bool SimhashType_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+    case 2:
+      return true;
+    default:
+      return false;
+  }
+}
+
+const ::google::protobuf::EnumDescriptor* ParaType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ParaType_descriptor_;
+}
+bool ParaType_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+      return true;
+    default:
+      return false;
+  }
+}
+
 
 // ===================================================================
 
@@ -1020,6 +1307,11 @@ void SitePatterns::Swap(SitePatterns* other) {
 const int Pattern::kMeanFieldNumber;
 const int Pattern::kStdFieldNumber;
 const int Pattern::kItemFieldNumber;
+const int Pattern::kCentroidFieldNumber;
+const int Pattern::kSizeFieldNumber;
+const int Pattern::kThresholdFieldNumber;
+const int Pattern::kCdfFieldNumber;
+const int Pattern::kPercentileFieldNumber;
 #endif  // !_MSC_VER
 
 Pattern::Pattern()
@@ -1029,6 +1321,8 @@ Pattern::Pattern()
 }
 
 void Pattern::InitAsDefaultInstance() {
+  cdf_ = const_cast< ::cloaking_detection::CDF*>(&::cloaking_detection::CDF::default_instance());
+  percentile_ = const_cast< ::cloaking_detection::Percentile*>(&::cloaking_detection::Percentile::default_instance());
 }
 
 Pattern::Pattern(const Pattern& from)
@@ -1042,6 +1336,10 @@ void Pattern::SharedCtor() {
   _cached_size_ = 0;
   mean_ = 0;
   std_ = 0;
+  size_ = GOOGLE_ULONGLONG(0);
+  threshold_ = 0;
+  cdf_ = NULL;
+  percentile_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1052,6 +1350,8 @@ Pattern::~Pattern() {
 
 void Pattern::SharedDtor() {
   if (this != default_instance_) {
+    delete cdf_;
+    delete percentile_;
   }
 }
 
@@ -1087,12 +1387,22 @@ void Pattern::Clear() {
     ::memset(&first, 0, n);                                \
   } while (0)
 
-  ZR_(mean_, std_);
+  if (_has_bits_[0 / 32] & 243) {
+    ZR_(mean_, std_);
+    ZR_(size_, threshold_);
+    if (has_cdf()) {
+      if (cdf_ != NULL) cdf_->::cloaking_detection::CDF::Clear();
+    }
+    if (has_percentile()) {
+      if (percentile_ != NULL) percentile_->::cloaking_detection::Percentile::Clear();
+    }
+  }
 
 #undef OFFSET_OF_FIELD_
 #undef ZR_
 
   item_.Clear();
+  centroid_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -1136,7 +1446,7 @@ bool Pattern::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .cloaking_detection.Item item = 3;
+      // repeated .cloaking_detection.SimhashItem item = 3 [deprecated = true];
       case 3: {
         if (tag == 26) {
          parse_item:
@@ -1146,6 +1456,80 @@ bool Pattern::MergePartialFromCodedStream(
           goto handle_unusual;
         }
         if (input->ExpectTag(26)) goto parse_item;
+        if (input->ExpectTag(34)) goto parse_centroid;
+        break;
+      }
+
+      // repeated uint64 centroid = 4 [packed = true];
+      case 4: {
+        if (tag == 34) {
+         parse_centroid:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, this->mutable_centroid())));
+        } else if (tag == 32) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 1, 34, input, this->mutable_centroid())));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(40)) goto parse_size;
+        break;
+      }
+
+      // optional uint64 size = 5;
+      case 5: {
+        if (tag == 40) {
+         parse_size:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &size_)));
+          set_has_size();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(49)) goto parse_threshold;
+        break;
+      }
+
+      // optional double threshold = 6;
+      case 6: {
+        if (tag == 49) {
+         parse_threshold:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &threshold_)));
+          set_has_threshold();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(58)) goto parse_cdf;
+        break;
+      }
+
+      // optional .cloaking_detection.CDF cdf = 7;
+      case 7: {
+        if (tag == 58) {
+         parse_cdf:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_cdf()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(66)) goto parse_percentile;
+        break;
+      }
+
+      // optional .cloaking_detection.Percentile percentile = 8;
+      case 8: {
+        if (tag == 66) {
+         parse_percentile:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_percentile()));
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -1185,10 +1569,42 @@ void Pattern::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteDouble(2, this->std(), output);
   }
 
-  // repeated .cloaking_detection.Item item = 3;
+  // repeated .cloaking_detection.SimhashItem item = 3 [deprecated = true];
   for (int i = 0; i < this->item_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->item(i), output);
+  }
+
+  // repeated uint64 centroid = 4 [packed = true];
+  if (this->centroid_size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteTag(4, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
+    output->WriteVarint32(_centroid_cached_byte_size_);
+  }
+  for (int i = 0; i < this->centroid_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64NoTag(
+      this->centroid(i), output);
+  }
+
+  // optional uint64 size = 5;
+  if (has_size()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(5, this->size(), output);
+  }
+
+  // optional double threshold = 6;
+  if (has_threshold()) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(6, this->threshold(), output);
+  }
+
+  // optional .cloaking_detection.CDF cdf = 7;
+  if (has_cdf()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      7, this->cdf(), output);
+  }
+
+  // optional .cloaking_detection.Percentile percentile = 8;
+  if (has_percentile()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      8, this->percentile(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1211,11 +1627,49 @@ void Pattern::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(2, this->std(), target);
   }
 
-  // repeated .cloaking_detection.Item item = 3;
+  // repeated .cloaking_detection.SimhashItem item = 3 [deprecated = true];
   for (int i = 0; i < this->item_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         3, this->item(i), target);
+  }
+
+  // repeated uint64 centroid = 4 [packed = true];
+  if (this->centroid_size() > 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
+      4,
+      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
+      target);
+    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
+      _centroid_cached_byte_size_, target);
+  }
+  for (int i = 0; i < this->centroid_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteUInt64NoTagToArray(this->centroid(i), target);
+  }
+
+  // optional uint64 size = 5;
+  if (has_size()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(5, this->size(), target);
+  }
+
+  // optional double threshold = 6;
+  if (has_threshold()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(6, this->threshold(), target);
+  }
+
+  // optional .cloaking_detection.CDF cdf = 7;
+  if (has_cdf()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        7, this->cdf(), target);
+  }
+
+  // optional .cloaking_detection.Percentile percentile = 8;
+  if (has_percentile()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        8, this->percentile(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1240,13 +1694,56 @@ int Pattern::ByteSize() const {
       total_size += 1 + 8;
     }
 
+    // optional uint64 size = 5;
+    if (has_size()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->size());
+    }
+
+    // optional double threshold = 6;
+    if (has_threshold()) {
+      total_size += 1 + 8;
+    }
+
+    // optional .cloaking_detection.CDF cdf = 7;
+    if (has_cdf()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->cdf());
+    }
+
+    // optional .cloaking_detection.Percentile percentile = 8;
+    if (has_percentile()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->percentile());
+    }
+
   }
-  // repeated .cloaking_detection.Item item = 3;
+  // repeated .cloaking_detection.SimhashItem item = 3 [deprecated = true];
   total_size += 1 * this->item_size();
   for (int i = 0; i < this->item_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         this->item(i));
+  }
+
+  // repeated uint64 centroid = 4 [packed = true];
+  {
+    int data_size = 0;
+    for (int i = 0; i < this->centroid_size(); i++) {
+      data_size += ::google::protobuf::internal::WireFormatLite::
+        UInt64Size(this->centroid(i));
+    }
+    if (data_size > 0) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(data_size);
+    }
+    GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+    _centroid_cached_byte_size_ = data_size;
+    GOOGLE_SAFE_CONCURRENT_WRITES_END();
+    total_size += data_size;
   }
 
   if (!unknown_fields().empty()) {
@@ -1275,12 +1772,25 @@ void Pattern::MergeFrom(const ::google::protobuf::Message& from) {
 void Pattern::MergeFrom(const Pattern& from) {
   GOOGLE_CHECK_NE(&from, this);
   item_.MergeFrom(from.item_);
+  centroid_.MergeFrom(from.centroid_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_mean()) {
       set_mean(from.mean());
     }
     if (from.has_std()) {
       set_std(from.std());
+    }
+    if (from.has_size()) {
+      set_size(from.size());
+    }
+    if (from.has_threshold()) {
+      set_threshold(from.threshold());
+    }
+    if (from.has_cdf()) {
+      mutable_cdf()->::cloaking_detection::CDF::MergeFrom(from.cdf());
+    }
+    if (from.has_percentile()) {
+      mutable_percentile()->::cloaking_detection::Percentile::MergeFrom(from.percentile());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1302,6 +1812,9 @@ bool Pattern::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   if (!::google::protobuf::internal::AllAreInitialized(this->item())) return false;
+  if (has_cdf()) {
+    if (!this->cdf().IsInitialized()) return false;
+  }
   return true;
 }
 
@@ -1310,6 +1823,11 @@ void Pattern::Swap(Pattern* other) {
     std::swap(mean_, other->mean_);
     std::swap(std_, other->std_);
     item_.Swap(&other->item_);
+    centroid_.Swap(&other->centroid_);
+    std::swap(size_, other->size_);
+    std::swap(threshold_, other->threshold_);
+    std::swap(cdf_, other->cdf_);
+    std::swap(percentile_, other->percentile_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -1328,65 +1846,988 @@ void Pattern::Swap(Pattern* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Item::kSimhashFieldNumber;
-const int Item::kCountFieldNumber;
+const int Percentile::kP99FieldNumber;
+const int Percentile::kP97FieldNumber;
+const int Percentile::kP95FieldNumber;
+const int Percentile::kP90FieldNumber;
+const int Percentile::kP75FieldNumber;
+const int Percentile::kP50FieldNumber;
 #endif  // !_MSC_VER
 
-Item::Item()
+Percentile::Percentile()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:cloaking_detection.Item)
+  // @@protoc_insertion_point(constructor:cloaking_detection.Percentile)
 }
 
-void Item::InitAsDefaultInstance() {
+void Percentile::InitAsDefaultInstance() {
 }
 
-Item::Item(const Item& from)
+Percentile::Percentile(const Percentile& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:cloaking_detection.Item)
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.Percentile)
 }
 
-void Item::SharedCtor() {
+void Percentile::SharedCtor() {
+  _cached_size_ = 0;
+  p99_ = 0u;
+  p97_ = 0u;
+  p95_ = 0u;
+  p90_ = 0u;
+  p75_ = 0u;
+  p50_ = 0u;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Percentile::~Percentile() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.Percentile)
+  SharedDtor();
+}
+
+void Percentile::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void Percentile::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Percentile::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Percentile_descriptor_;
+}
+
+const Percentile& Percentile::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+Percentile* Percentile::default_instance_ = NULL;
+
+Percentile* Percentile::New() const {
+  return new Percentile;
+}
+
+void Percentile::Clear() {
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<Percentile*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 63) {
+    ZR_(p99_, p50_);
+  }
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Percentile::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.Percentile)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional uint32 p99 = 1;
+      case 1: {
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &p99_)));
+          set_has_p99();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_p97;
+        break;
+      }
+
+      // optional uint32 p97 = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_p97:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &p97_)));
+          set_has_p97();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_p95;
+        break;
+      }
+
+      // optional uint32 p95 = 3;
+      case 3: {
+        if (tag == 24) {
+         parse_p95:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &p95_)));
+          set_has_p95();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(32)) goto parse_p90;
+        break;
+      }
+
+      // optional uint32 p90 = 4;
+      case 4: {
+        if (tag == 32) {
+         parse_p90:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &p90_)));
+          set_has_p90();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(40)) goto parse_p75;
+        break;
+      }
+
+      // optional uint32 p75 = 5;
+      case 5: {
+        if (tag == 40) {
+         parse_p75:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &p75_)));
+          set_has_p75();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(48)) goto parse_p50;
+        break;
+      }
+
+      // optional uint32 p50 = 6;
+      case 6: {
+        if (tag == 48) {
+         parse_p50:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &p50_)));
+          set_has_p50();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.Percentile)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.Percentile)
+  return false;
+#undef DO_
+}
+
+void Percentile::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.Percentile)
+  // optional uint32 p99 = 1;
+  if (has_p99()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->p99(), output);
+  }
+
+  // optional uint32 p97 = 2;
+  if (has_p97()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->p97(), output);
+  }
+
+  // optional uint32 p95 = 3;
+  if (has_p95()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->p95(), output);
+  }
+
+  // optional uint32 p90 = 4;
+  if (has_p90()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->p90(), output);
+  }
+
+  // optional uint32 p75 = 5;
+  if (has_p75()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->p75(), output);
+  }
+
+  // optional uint32 p50 = 6;
+  if (has_p50()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(6, this->p50(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.Percentile)
+}
+
+::google::protobuf::uint8* Percentile::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.Percentile)
+  // optional uint32 p99 = 1;
+  if (has_p99()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->p99(), target);
+  }
+
+  // optional uint32 p97 = 2;
+  if (has_p97()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->p97(), target);
+  }
+
+  // optional uint32 p95 = 3;
+  if (has_p95()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->p95(), target);
+  }
+
+  // optional uint32 p90 = 4;
+  if (has_p90()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->p90(), target);
+  }
+
+  // optional uint32 p75 = 5;
+  if (has_p75()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->p75(), target);
+  }
+
+  // optional uint32 p50 = 6;
+  if (has_p50()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(6, this->p50(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.Percentile)
+  return target;
+}
+
+int Percentile::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional uint32 p99 = 1;
+    if (has_p99()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->p99());
+    }
+
+    // optional uint32 p97 = 2;
+    if (has_p97()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->p97());
+    }
+
+    // optional uint32 p95 = 3;
+    if (has_p95()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->p95());
+    }
+
+    // optional uint32 p90 = 4;
+    if (has_p90()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->p90());
+    }
+
+    // optional uint32 p75 = 5;
+    if (has_p75()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->p75());
+    }
+
+    // optional uint32 p50 = 6;
+    if (has_p50()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->p50());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Percentile::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Percentile* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Percentile*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Percentile::MergeFrom(const Percentile& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_p99()) {
+      set_p99(from.p99());
+    }
+    if (from.has_p97()) {
+      set_p97(from.p97());
+    }
+    if (from.has_p95()) {
+      set_p95(from.p95());
+    }
+    if (from.has_p90()) {
+      set_p90(from.p90());
+    }
+    if (from.has_p75()) {
+      set_p75(from.p75());
+    }
+    if (from.has_p50()) {
+      set_p50(from.p50());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Percentile::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Percentile::CopyFrom(const Percentile& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Percentile::IsInitialized() const {
+
+  return true;
+}
+
+void Percentile::Swap(Percentile* other) {
+  if (other != this) {
+    std::swap(p99_, other->p99_);
+    std::swap(p97_, other->p97_);
+    std::swap(p95_, other->p95_);
+    std::swap(p90_, other->p90_);
+    std::swap(p75_, other->p75_);
+    std::swap(p50_, other->p50_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Percentile::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Percentile_descriptor_;
+  metadata.reflection = Percentile_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int CDF::kPointFieldNumber;
+#endif  // !_MSC_VER
+
+CDF::CDF()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.CDF)
+}
+
+void CDF::InitAsDefaultInstance() {
+}
+
+CDF::CDF(const CDF& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.CDF)
+}
+
+void CDF::SharedCtor() {
+  _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+CDF::~CDF() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.CDF)
+  SharedDtor();
+}
+
+void CDF::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void CDF::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* CDF::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return CDF_descriptor_;
+}
+
+const CDF& CDF::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+CDF* CDF::default_instance_ = NULL;
+
+CDF* CDF::New() const {
+  return new CDF;
+}
+
+void CDF::Clear() {
+  point_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool CDF::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.CDF)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .cloaking_detection.Point point = 1;
+      case 1: {
+        if (tag == 10) {
+         parse_point:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_point()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(10)) goto parse_point;
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.CDF)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.CDF)
+  return false;
+#undef DO_
+}
+
+void CDF::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.CDF)
+  // repeated .cloaking_detection.Point point = 1;
+  for (int i = 0; i < this->point_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->point(i), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.CDF)
+}
+
+::google::protobuf::uint8* CDF::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.CDF)
+  // repeated .cloaking_detection.Point point = 1;
+  for (int i = 0; i < this->point_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->point(i), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.CDF)
+  return target;
+}
+
+int CDF::ByteSize() const {
+  int total_size = 0;
+
+  // repeated .cloaking_detection.Point point = 1;
+  total_size += 1 * this->point_size();
+  for (int i = 0; i < this->point_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->point(i));
+  }
+
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void CDF::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const CDF* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const CDF*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void CDF::MergeFrom(const CDF& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  point_.MergeFrom(from.point_);
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void CDF::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void CDF::CopyFrom(const CDF& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool CDF::IsInitialized() const {
+
+  if (!::google::protobuf::internal::AllAreInitialized(this->point())) return false;
+  return true;
+}
+
+void CDF::Swap(CDF* other) {
+  if (other != this) {
+    point_.Swap(&other->point_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata CDF::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = CDF_descriptor_;
+  metadata.reflection = CDF_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int Point::kXFieldNumber;
+const int Point::kCountFieldNumber;
+#endif  // !_MSC_VER
+
+Point::Point()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.Point)
+}
+
+void Point::InitAsDefaultInstance() {
+}
+
+Point::Point(const Point& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.Point)
+}
+
+void Point::SharedCtor() {
+  _cached_size_ = 0;
+  x_ = 0u;
+  count_ = GOOGLE_ULONGLONG(0);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Point::~Point() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.Point)
+  SharedDtor();
+}
+
+void Point::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void Point::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Point::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Point_descriptor_;
+}
+
+const Point& Point::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+Point* Point::default_instance_ = NULL;
+
+Point* Point::New() const {
+  return new Point;
+}
+
+void Point::Clear() {
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<Point*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  ZR_(count_, x_);
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Point::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.Point)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required uint32 x = 1;
+      case 1: {
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &x_)));
+          set_has_x();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_count;
+        break;
+      }
+
+      // required uint64 count = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_count:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &count_)));
+          set_has_count();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.Point)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.Point)
+  return false;
+#undef DO_
+}
+
+void Point::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.Point)
+  // required uint32 x = 1;
+  if (has_x()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->x(), output);
+  }
+
+  // required uint64 count = 2;
+  if (has_count()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(2, this->count(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.Point)
+}
+
+::google::protobuf::uint8* Point::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.Point)
+  // required uint32 x = 1;
+  if (has_x()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->x(), target);
+  }
+
+  // required uint64 count = 2;
+  if (has_count()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(2, this->count(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.Point)
+  return target;
+}
+
+int Point::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required uint32 x = 1;
+    if (has_x()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->x());
+    }
+
+    // required uint64 count = 2;
+    if (has_count()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
+          this->count());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Point::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Point* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Point*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Point::MergeFrom(const Point& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_x()) {
+      set_x(from.x());
+    }
+    if (from.has_count()) {
+      set_count(from.count());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Point::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Point::CopyFrom(const Point& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Point::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+
+  return true;
+}
+
+void Point::Swap(Point* other) {
+  if (other != this) {
+    std::swap(x_, other->x_);
+    std::swap(count_, other->count_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Point::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Point_descriptor_;
+  metadata.reflection = Point_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int SimhashItem::kSimhashFieldNumber;
+const int SimhashItem::kCountFieldNumber;
+#endif  // !_MSC_VER
+
+SimhashItem::SimhashItem()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.SimhashItem)
+}
+
+void SimhashItem::InitAsDefaultInstance() {
+}
+
+SimhashItem::SimhashItem(const SimhashItem& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.SimhashItem)
+}
+
+void SimhashItem::SharedCtor() {
   _cached_size_ = 0;
   simhash_ = GOOGLE_ULONGLONG(0);
   count_ = GOOGLE_ULONGLONG(1);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-Item::~Item() {
-  // @@protoc_insertion_point(destructor:cloaking_detection.Item)
+SimhashItem::~SimhashItem() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.SimhashItem)
   SharedDtor();
 }
 
-void Item::SharedDtor() {
+void SimhashItem::SharedDtor() {
   if (this != default_instance_) {
   }
 }
 
-void Item::SetCachedSize(int size) const {
+void SimhashItem::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* Item::descriptor() {
+const ::google::protobuf::Descriptor* SimhashItem::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return Item_descriptor_;
+  return SimhashItem_descriptor_;
 }
 
-const Item& Item::default_instance() {
+const SimhashItem& SimhashItem::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
   return *default_instance_;
 }
 
-Item* Item::default_instance_ = NULL;
+SimhashItem* SimhashItem::default_instance_ = NULL;
 
-Item* Item::New() const {
-  return new Item;
+SimhashItem* SimhashItem::New() const {
+  return new SimhashItem;
 }
 
-void Item::Clear() {
+void SimhashItem::Clear() {
   if (_has_bits_[0 / 32] & 3) {
     simhash_ = GOOGLE_ULONGLONG(0);
     count_ = GOOGLE_ULONGLONG(1);
@@ -1395,11 +2836,11 @@ void Item::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool Item::MergePartialFromCodedStream(
+bool SimhashItem::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:cloaking_detection.Item)
+  // @@protoc_insertion_point(parse_start:cloaking_detection.SimhashItem)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -1448,17 +2889,17 @@ bool Item::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:cloaking_detection.Item)
+  // @@protoc_insertion_point(parse_success:cloaking_detection.SimhashItem)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:cloaking_detection.Item)
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.SimhashItem)
   return false;
 #undef DO_
 }
 
-void Item::SerializeWithCachedSizes(
+void SimhashItem::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:cloaking_detection.Item)
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.SimhashItem)
   // required uint64 simhash = 1;
   if (has_simhash()) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->simhash(), output);
@@ -1473,12 +2914,12 @@ void Item::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:cloaking_detection.Item)
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.SimhashItem)
 }
 
-::google::protobuf::uint8* Item::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* SimhashItem::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.Item)
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.SimhashItem)
   // required uint64 simhash = 1;
   if (has_simhash()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->simhash(), target);
@@ -1493,11 +2934,11 @@ void Item::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.Item)
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.SimhashItem)
   return target;
 }
 
-int Item::ByteSize() const {
+int SimhashItem::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -1527,10 +2968,10 @@ int Item::ByteSize() const {
   return total_size;
 }
 
-void Item::MergeFrom(const ::google::protobuf::Message& from) {
+void SimhashItem::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const Item* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const Item*>(
+  const SimhashItem* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SimhashItem*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -1539,7 +2980,7 @@ void Item::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void Item::MergeFrom(const Item& from) {
+void SimhashItem::MergeFrom(const SimhashItem& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_simhash()) {
@@ -1552,25 +2993,25 @@ void Item::MergeFrom(const Item& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void Item::CopyFrom(const ::google::protobuf::Message& from) {
+void SimhashItem::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void Item::CopyFrom(const Item& from) {
+void SimhashItem::CopyFrom(const SimhashItem& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool Item::IsInitialized() const {
+bool SimhashItem::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   return true;
 }
 
-void Item::Swap(Item* other) {
+void SimhashItem::Swap(SimhashItem* other) {
   if (other != this) {
     std::swap(simhash_, other->simhash_);
     std::swap(count_, other->count_);
@@ -1580,11 +3021,11 @@ void Item::Swap(Item* other) {
   }
 }
 
-::google::protobuf::Metadata Item::GetMetadata() const {
+::google::protobuf::Metadata SimhashItem::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = Item_descriptor_;
-  metadata.reflection = Item_reflection_;
+  metadata.descriptor = SimhashItem_descriptor_;
+  metadata.reflection = SimhashItem_reflection_;
   return metadata;
 }
 
@@ -1593,6 +3034,7 @@ void Item::Swap(Item* other) {
 
 #ifndef _MSC_VER
 const int ObservedSites::kSiteFieldNumber;
+const int ObservedSites::kConfigFieldNumber;
 #endif  // !_MSC_VER
 
 ObservedSites::ObservedSites()
@@ -1602,6 +3044,7 @@ ObservedSites::ObservedSites()
 }
 
 void ObservedSites::InitAsDefaultInstance() {
+  config_ = const_cast< ::cloaking_detection::SimhashConfig*>(&::cloaking_detection::SimhashConfig::default_instance());
 }
 
 ObservedSites::ObservedSites(const ObservedSites& from)
@@ -1613,6 +3056,7 @@ ObservedSites::ObservedSites(const ObservedSites& from)
 
 void ObservedSites::SharedCtor() {
   _cached_size_ = 0;
+  config_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1623,6 +3067,7 @@ ObservedSites::~ObservedSites() {
 
 void ObservedSites::SharedDtor() {
   if (this != default_instance_) {
+    delete config_;
   }
 }
 
@@ -1648,6 +3093,9 @@ ObservedSites* ObservedSites::New() const {
 }
 
 void ObservedSites::Clear() {
+  if (has_config()) {
+    if (config_ != NULL) config_->::cloaking_detection::SimhashConfig::Clear();
+  }
   site_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1673,6 +3121,19 @@ bool ObservedSites::MergePartialFromCodedStream(
           goto handle_unusual;
         }
         if (input->ExpectTag(10)) goto parse_site;
+        if (input->ExpectTag(18)) goto parse_config;
+        break;
+      }
+
+      // optional .cloaking_detection.SimhashConfig config = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_config:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_config()));
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -1708,6 +3169,12 @@ void ObservedSites::SerializeWithCachedSizes(
       1, this->site(i), output);
   }
 
+  // optional .cloaking_detection.SimhashConfig config = 2;
+  if (has_config()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->config(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1725,6 +3192,13 @@ void ObservedSites::SerializeWithCachedSizes(
         1, this->site(i), target);
   }
 
+  // optional .cloaking_detection.SimhashConfig config = 2;
+  if (has_config()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->config(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1736,6 +3210,15 @@ void ObservedSites::SerializeWithCachedSizes(
 int ObservedSites::ByteSize() const {
   int total_size = 0;
 
+  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+    // optional .cloaking_detection.SimhashConfig config = 2;
+    if (has_config()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->config());
+    }
+
+  }
   // repeated .cloaking_detection.SiteObservations site = 1;
   total_size += 1 * this->site_size();
   for (int i = 0; i < this->site_size(); i++) {
@@ -1770,6 +3253,11 @@ void ObservedSites::MergeFrom(const ::google::protobuf::Message& from) {
 void ObservedSites::MergeFrom(const ObservedSites& from) {
   GOOGLE_CHECK_NE(&from, this);
   site_.MergeFrom(from.site_);
+  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+    if (from.has_config()) {
+      mutable_config()->::cloaking_detection::SimhashConfig::MergeFrom(from.config());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -1788,12 +3276,16 @@ void ObservedSites::CopyFrom(const ObservedSites& from) {
 bool ObservedSites::IsInitialized() const {
 
   if (!::google::protobuf::internal::AllAreInitialized(this->site())) return false;
+  if (has_config()) {
+    if (!this->config().IsInitialized()) return false;
+  }
   return true;
 }
 
 void ObservedSites::Swap(ObservedSites* other) {
   if (other != this) {
     site_.Swap(&other->site_);
+    std::swap(config_, other->config_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -3531,29 +5023,6 @@ void Feature::Swap(Feature* other) {
 
 // ===================================================================
 
-const ::google::protobuf::EnumDescriptor* SimhashConfig_SimhashType_descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return SimhashConfig_SimhashType_descriptor_;
-}
-bool SimhashConfig_SimhashType_IsValid(int value) {
-  switch(value) {
-    case 0:
-    case 1:
-    case 2:
-      return true;
-    default:
-      return false;
-  }
-}
-
-#ifndef _MSC_VER
-const SimhashConfig_SimhashType SimhashConfig::TEXT;
-const SimhashConfig_SimhashType SimhashConfig::DOM;
-const SimhashConfig_SimhashType SimhashConfig::TEXT_DOM;
-const SimhashConfig_SimhashType SimhashConfig::SimhashType_MIN;
-const SimhashConfig_SimhashType SimhashConfig::SimhashType_MAX;
-const int SimhashConfig::SimhashType_ARRAYSIZE;
-#endif  // _MSC_VER
 #ifndef _MSC_VER
 const int SimhashConfig_FeatureUsage::kGramFieldNumber;
 const int SimhashConfig_FeatureUsage::kBiGramFieldNumber;
@@ -3935,15 +5404,15 @@ bool SimhashConfig::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .cloaking_detection.SimhashConfig.SimhashType simhash_type = 1;
+      // required .cloaking_detection.SimhashType simhash_type = 1;
       case 1: {
         if (tag == 8) {
           int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::cloaking_detection::SimhashConfig_SimhashType_IsValid(value)) {
-            set_simhash_type(static_cast< ::cloaking_detection::SimhashConfig_SimhashType >(value));
+          if (::cloaking_detection::SimhashType_IsValid(value)) {
+            set_simhash_type(static_cast< ::cloaking_detection::SimhashType >(value));
           } else {
             mutable_unknown_fields()->AddVarint(1, value);
           }
@@ -4007,7 +5476,7 @@ failure:
 void SimhashConfig::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:cloaking_detection.SimhashConfig)
-  // required .cloaking_detection.SimhashConfig.SimhashType simhash_type = 1;
+  // required .cloaking_detection.SimhashType simhash_type = 1;
   if (has_simhash_type()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       1, this->simhash_type(), output);
@@ -4034,7 +5503,7 @@ void SimhashConfig::SerializeWithCachedSizes(
 ::google::protobuf::uint8* SimhashConfig::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.SimhashConfig)
-  // required .cloaking_detection.SimhashConfig.SimhashType simhash_type = 1;
+  // required .cloaking_detection.SimhashType simhash_type = 1;
   if (has_simhash_type()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->simhash_type(), target);
@@ -4064,7 +5533,7 @@ int SimhashConfig::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required .cloaking_detection.SimhashConfig.SimhashType simhash_type = 1;
+    // required .cloaking_detection.SimhashType simhash_type = 1;
     if (has_simhash_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->simhash_type());
@@ -4164,11 +5633,11 @@ void SimhashConfig::Swap(SimhashConfig* other) {
 
 // ===================================================================
 
-const ::google::protobuf::EnumDescriptor* ClusterConfig_Algorithm_descriptor() {
+const ::google::protobuf::EnumDescriptor* Algorithm_AlgoName_descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return ClusterConfig_Algorithm_descriptor_;
+  return Algorithm_AlgoName_descriptor_;
 }
-bool ClusterConfig_Algorithm_IsValid(int value) {
+bool Algorithm_AlgoName_IsValid(int value) {
   switch(value) {
     case 0:
     case 1:
@@ -4181,18 +5650,376 @@ bool ClusterConfig_Algorithm_IsValid(int value) {
 }
 
 #ifndef _MSC_VER
-const ClusterConfig_Algorithm ClusterConfig::HAMMING_THRESHOLD;
-const ClusterConfig_Algorithm ClusterConfig::K_MEANS;
-const ClusterConfig_Algorithm ClusterConfig::SPECTRAL_CLUSTERING;
-const ClusterConfig_Algorithm ClusterConfig::HIERARCHICAL_CLUSTERING;
-const ClusterConfig_Algorithm ClusterConfig::Algorithm_MIN;
-const ClusterConfig_Algorithm ClusterConfig::Algorithm_MAX;
-const int ClusterConfig::Algorithm_ARRAYSIZE;
+const Algorithm_AlgoName Algorithm::HAMMING_THRESHOLD;
+const Algorithm_AlgoName Algorithm::K_MEANS;
+const Algorithm_AlgoName Algorithm::SPECTRAL_CLUSTERING;
+const Algorithm_AlgoName Algorithm::HIERARCHICAL_CLUSTERING;
+const Algorithm_AlgoName Algorithm::AlgoName_MIN;
+const Algorithm_AlgoName Algorithm::AlgoName_MAX;
+const int Algorithm::AlgoName_ARRAYSIZE;
 #endif  // _MSC_VER
 #ifndef _MSC_VER
+const int Algorithm::kNameFieldNumber;
+const int Algorithm::kThresFieldNumber;
+const int Algorithm::kKFieldNumber;
+const int Algorithm::kLeftOutRatioFieldNumber;
+#endif  // !_MSC_VER
+
+Algorithm::Algorithm()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.Algorithm)
+}
+
+void Algorithm::InitAsDefaultInstance() {
+}
+
+Algorithm::Algorithm(const Algorithm& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.Algorithm)
+}
+
+void Algorithm::SharedCtor() {
+  _cached_size_ = 0;
+  name_ = 0;
+  thres_ = 0;
+  k_ = 0;
+  left_out_ratio_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Algorithm::~Algorithm() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.Algorithm)
+  SharedDtor();
+}
+
+void Algorithm::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void Algorithm::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Algorithm::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Algorithm_descriptor_;
+}
+
+const Algorithm& Algorithm::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+Algorithm* Algorithm::default_instance_ = NULL;
+
+Algorithm* Algorithm::New() const {
+  return new Algorithm;
+}
+
+void Algorithm::Clear() {
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<Algorithm*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  ZR_(name_, left_out_ratio_);
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Algorithm::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.Algorithm)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required .cloaking_detection.Algorithm.AlgoName name = 1;
+      case 1: {
+        if (tag == 8) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::cloaking_detection::Algorithm_AlgoName_IsValid(value)) {
+            set_name(static_cast< ::cloaking_detection::Algorithm_AlgoName >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_thres;
+        break;
+      }
+
+      // optional int32 thres = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_thres:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &thres_)));
+          set_has_thres();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_k;
+        break;
+      }
+
+      // optional int32 k = 3;
+      case 3: {
+        if (tag == 24) {
+         parse_k:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &k_)));
+          set_has_k();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(32)) goto parse_left_out_ratio;
+        break;
+      }
+
+      // optional int32 left_out_ratio = 4;
+      case 4: {
+        if (tag == 32) {
+         parse_left_out_ratio:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &left_out_ratio_)));
+          set_has_left_out_ratio();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.Algorithm)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.Algorithm)
+  return false;
+#undef DO_
+}
+
+void Algorithm::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.Algorithm)
+  // required .cloaking_detection.Algorithm.AlgoName name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->name(), output);
+  }
+
+  // optional int32 thres = 2;
+  if (has_thres()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->thres(), output);
+  }
+
+  // optional int32 k = 3;
+  if (has_k()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->k(), output);
+  }
+
+  // optional int32 left_out_ratio = 4;
+  if (has_left_out_ratio()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->left_out_ratio(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.Algorithm)
+}
+
+::google::protobuf::uint8* Algorithm::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.Algorithm)
+  // required .cloaking_detection.Algorithm.AlgoName name = 1;
+  if (has_name()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->name(), target);
+  }
+
+  // optional int32 thres = 2;
+  if (has_thres()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->thres(), target);
+  }
+
+  // optional int32 k = 3;
+  if (has_k()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->k(), target);
+  }
+
+  // optional int32 left_out_ratio = 4;
+  if (has_left_out_ratio()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->left_out_ratio(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.Algorithm)
+  return target;
+}
+
+int Algorithm::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required .cloaking_detection.Algorithm.AlgoName name = 1;
+    if (has_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->name());
+    }
+
+    // optional int32 thres = 2;
+    if (has_thres()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->thres());
+    }
+
+    // optional int32 k = 3;
+    if (has_k()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->k());
+    }
+
+    // optional int32 left_out_ratio = 4;
+    if (has_left_out_ratio()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->left_out_ratio());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Algorithm::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Algorithm* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Algorithm*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Algorithm::MergeFrom(const Algorithm& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_name()) {
+      set_name(from.name());
+    }
+    if (from.has_thres()) {
+      set_thres(from.thres());
+    }
+    if (from.has_k()) {
+      set_k(from.k());
+    }
+    if (from.has_left_out_ratio()) {
+      set_left_out_ratio(from.left_out_ratio());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Algorithm::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Algorithm::CopyFrom(const Algorithm& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Algorithm::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  return true;
+}
+
+void Algorithm::Swap(Algorithm* other) {
+  if (other != this) {
+    std::swap(name_, other->name_);
+    std::swap(thres_, other->thres_);
+    std::swap(k_, other->k_);
+    std::swap(left_out_ratio_, other->left_out_ratio_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Algorithm::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Algorithm_descriptor_;
+  metadata.reflection = Algorithm_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
 const int ClusterConfig::kAlgorithmFieldNumber;
-const int ClusterConfig::kClusterNumberFieldNumber;
+const int ClusterConfig::kMinimumClusterSizeFieldNumber;
 const int ClusterConfig::kMaximumThreadsFieldNumber;
+const int ClusterConfig::kSimhashTypeFieldNumber;
 #endif  // !_MSC_VER
 
 ClusterConfig::ClusterConfig()
@@ -4202,6 +6029,7 @@ ClusterConfig::ClusterConfig()
 }
 
 void ClusterConfig::InitAsDefaultInstance() {
+  algorithm_ = const_cast< ::cloaking_detection::Algorithm*>(&::cloaking_detection::Algorithm::default_instance());
 }
 
 ClusterConfig::ClusterConfig(const ClusterConfig& from)
@@ -4213,9 +6041,10 @@ ClusterConfig::ClusterConfig(const ClusterConfig& from)
 
 void ClusterConfig::SharedCtor() {
   _cached_size_ = 0;
-  algorithm_ = 0;
-  cluster_number_ = 0;
+  algorithm_ = NULL;
+  minimum_cluster_size_ = 2;
   maximum_threads_ = 10;
+  simhash_type_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4226,6 +6055,7 @@ ClusterConfig::~ClusterConfig() {
 
 void ClusterConfig::SharedDtor() {
   if (this != default_instance_) {
+    delete algorithm_;
   }
 }
 
@@ -4251,24 +6081,14 @@ ClusterConfig* ClusterConfig::New() const {
 }
 
 void ClusterConfig::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<ClusterConfig*>(16)->f) - \
-   reinterpret_cast<char*>(16))
-
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
-
-  if (_has_bits_[0 / 32] & 7) {
-    ZR_(algorithm_, cluster_number_);
+  if (_has_bits_[0 / 32] & 15) {
+    if (has_algorithm()) {
+      if (algorithm_ != NULL) algorithm_->::cloaking_detection::Algorithm::Clear();
+    }
+    minimum_cluster_size_ = 2;
     maximum_threads_ = 10;
+    simhash_type_ = 0;
   }
-
-#undef OFFSET_OF_FIELD_
-#undef ZR_
-
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -4283,33 +6103,26 @@ bool ClusterConfig::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .cloaking_detection.ClusterConfig.Algorithm algorithm = 1;
+      // required .cloaking_detection.Algorithm algorithm = 1;
       case 1: {
-        if (tag == 8) {
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          if (::cloaking_detection::ClusterConfig_Algorithm_IsValid(value)) {
-            set_algorithm(static_cast< ::cloaking_detection::ClusterConfig_Algorithm >(value));
-          } else {
-            mutable_unknown_fields()->AddVarint(1, value);
-          }
+        if (tag == 10) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_algorithm()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(16)) goto parse_cluster_number;
+        if (input->ExpectTag(16)) goto parse_minimum_cluster_size;
         break;
       }
 
-      // optional int32 cluster_number = 2;
+      // optional int32 minimum_cluster_size = 2 [default = 2];
       case 2: {
         if (tag == 16) {
-         parse_cluster_number:
+         parse_minimum_cluster_size:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &cluster_number_)));
-          set_has_cluster_number();
+                 input, &minimum_cluster_size_)));
+          set_has_minimum_cluster_size();
         } else {
           goto handle_unusual;
         }
@@ -4325,6 +6138,26 @@ bool ClusterConfig::MergePartialFromCodedStream(
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &maximum_threads_)));
           set_has_maximum_threads();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(32)) goto parse_simhash_type;
+        break;
+      }
+
+      // optional .cloaking_detection.SimhashType simhash_type = 4 [default = TEXT];
+      case 4: {
+        if (tag == 32) {
+         parse_simhash_type:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::cloaking_detection::SimhashType_IsValid(value)) {
+            set_simhash_type(static_cast< ::cloaking_detection::SimhashType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(4, value);
+          }
         } else {
           goto handle_unusual;
         }
@@ -4357,20 +6190,26 @@ failure:
 void ClusterConfig::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:cloaking_detection.ClusterConfig)
-  // required .cloaking_detection.ClusterConfig.Algorithm algorithm = 1;
+  // required .cloaking_detection.Algorithm algorithm = 1;
   if (has_algorithm()) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->algorithm(), output);
   }
 
-  // optional int32 cluster_number = 2;
-  if (has_cluster_number()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->cluster_number(), output);
+  // optional int32 minimum_cluster_size = 2 [default = 2];
+  if (has_minimum_cluster_size()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->minimum_cluster_size(), output);
   }
 
   // optional int32 maximum_threads = 3 [default = 10];
   if (has_maximum_threads()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->maximum_threads(), output);
+  }
+
+  // optional .cloaking_detection.SimhashType simhash_type = 4 [default = TEXT];
+  if (has_simhash_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      4, this->simhash_type(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -4383,20 +6222,27 @@ void ClusterConfig::SerializeWithCachedSizes(
 ::google::protobuf::uint8* ClusterConfig::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.ClusterConfig)
-  // required .cloaking_detection.ClusterConfig.Algorithm algorithm = 1;
+  // required .cloaking_detection.Algorithm algorithm = 1;
   if (has_algorithm()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      1, this->algorithm(), target);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->algorithm(), target);
   }
 
-  // optional int32 cluster_number = 2;
-  if (has_cluster_number()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->cluster_number(), target);
+  // optional int32 minimum_cluster_size = 2 [default = 2];
+  if (has_minimum_cluster_size()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->minimum_cluster_size(), target);
   }
 
   // optional int32 maximum_threads = 3 [default = 10];
   if (has_maximum_threads()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->maximum_threads(), target);
+  }
+
+  // optional .cloaking_detection.SimhashType simhash_type = 4 [default = TEXT];
+  if (has_simhash_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      4, this->simhash_type(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -4411,17 +6257,18 @@ int ClusterConfig::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required .cloaking_detection.ClusterConfig.Algorithm algorithm = 1;
+    // required .cloaking_detection.Algorithm algorithm = 1;
     if (has_algorithm()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->algorithm());
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->algorithm());
     }
 
-    // optional int32 cluster_number = 2;
-    if (has_cluster_number()) {
+    // optional int32 minimum_cluster_size = 2 [default = 2];
+    if (has_minimum_cluster_size()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->cluster_number());
+          this->minimum_cluster_size());
     }
 
     // optional int32 maximum_threads = 3 [default = 10];
@@ -4429,6 +6276,12 @@ int ClusterConfig::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->maximum_threads());
+    }
+
+    // optional .cloaking_detection.SimhashType simhash_type = 4 [default = TEXT];
+    if (has_simhash_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->simhash_type());
     }
 
   }
@@ -4459,13 +6312,16 @@ void ClusterConfig::MergeFrom(const ClusterConfig& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_algorithm()) {
-      set_algorithm(from.algorithm());
+      mutable_algorithm()->::cloaking_detection::Algorithm::MergeFrom(from.algorithm());
     }
-    if (from.has_cluster_number()) {
-      set_cluster_number(from.cluster_number());
+    if (from.has_minimum_cluster_size()) {
+      set_minimum_cluster_size(from.minimum_cluster_size());
     }
     if (from.has_maximum_threads()) {
       set_maximum_threads(from.maximum_threads());
+    }
+    if (from.has_simhash_type()) {
+      set_simhash_type(from.simhash_type());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -4486,14 +6342,18 @@ void ClusterConfig::CopyFrom(const ClusterConfig& from) {
 bool ClusterConfig::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
+  if (has_algorithm()) {
+    if (!this->algorithm().IsInitialized()) return false;
+  }
   return true;
 }
 
 void ClusterConfig::Swap(ClusterConfig* other) {
   if (other != this) {
     std::swap(algorithm_, other->algorithm_);
-    std::swap(cluster_number_, other->cluster_number_);
+    std::swap(minimum_cluster_size_, other->minimum_cluster_size_);
     std::swap(maximum_threads_, other->maximum_threads_);
+    std::swap(simhash_type_, other->simhash_type_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -4505,6 +6365,1615 @@ void ClusterConfig::Swap(ClusterConfig* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = ClusterConfig_descriptor_;
   metadata.reflection = ClusterConfig_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+const ::google::protobuf::EnumDescriptor* DetectionConfig_Algorithm_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return DetectionConfig_Algorithm_descriptor_;
+}
+bool DetectionConfig_Algorithm_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const DetectionConfig_Algorithm DetectionConfig::NORMAL_DISTRIBUTION;
+const DetectionConfig_Algorithm DetectionConfig::GRADIENT_DESCENT;
+const DetectionConfig_Algorithm DetectionConfig::JOINT_DISTRIBUTION;
+const DetectionConfig_Algorithm DetectionConfig::PERCENTILE;
+const DetectionConfig_Algorithm DetectionConfig::Algorithm_MIN;
+const DetectionConfig_Algorithm DetectionConfig::Algorithm_MAX;
+const int DetectionConfig::Algorithm_ARRAYSIZE;
+#endif  // _MSC_VER
+#ifndef _MSC_VER
+const int DetectionConfig::kAlgorithmFieldNumber;
+const int DetectionConfig::kStdConstantFieldNumber;
+const int DetectionConfig::kSimhashTypeFieldNumber;
+const int DetectionConfig::kPFieldNumber;
+#endif  // !_MSC_VER
+
+DetectionConfig::DetectionConfig()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.DetectionConfig)
+}
+
+void DetectionConfig::InitAsDefaultInstance() {
+}
+
+DetectionConfig::DetectionConfig(const DetectionConfig& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.DetectionConfig)
+}
+
+void DetectionConfig::SharedCtor() {
+  _cached_size_ = 0;
+  algorithm_ = 0;
+  std_constant_ = 0;
+  simhash_type_ = 0;
+  p_ = 97;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+DetectionConfig::~DetectionConfig() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.DetectionConfig)
+  SharedDtor();
+}
+
+void DetectionConfig::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void DetectionConfig::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* DetectionConfig::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return DetectionConfig_descriptor_;
+}
+
+const DetectionConfig& DetectionConfig::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+DetectionConfig* DetectionConfig::default_instance_ = NULL;
+
+DetectionConfig* DetectionConfig::New() const {
+  return new DetectionConfig;
+}
+
+void DetectionConfig::Clear() {
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<DetectionConfig*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 15) {
+    ZR_(algorithm_, simhash_type_);
+    p_ = 97;
+  }
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool DetectionConfig::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.DetectionConfig)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required .cloaking_detection.DetectionConfig.Algorithm algorithm = 1;
+      case 1: {
+        if (tag == 8) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::cloaking_detection::DetectionConfig_Algorithm_IsValid(value)) {
+            set_algorithm(static_cast< ::cloaking_detection::DetectionConfig_Algorithm >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_std_constant;
+        break;
+      }
+
+      // optional int32 std_constant = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_std_constant:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &std_constant_)));
+          set_has_std_constant();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_simhash_type;
+        break;
+      }
+
+      // optional .cloaking_detection.SimhashType simhash_type = 3 [default = TEXT];
+      case 3: {
+        if (tag == 24) {
+         parse_simhash_type:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::cloaking_detection::SimhashType_IsValid(value)) {
+            set_simhash_type(static_cast< ::cloaking_detection::SimhashType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(3, value);
+          }
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(32)) goto parse_p;
+        break;
+      }
+
+      // optional int32 p = 4 [default = 97];
+      case 4: {
+        if (tag == 32) {
+         parse_p:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &p_)));
+          set_has_p();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.DetectionConfig)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.DetectionConfig)
+  return false;
+#undef DO_
+}
+
+void DetectionConfig::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.DetectionConfig)
+  // required .cloaking_detection.DetectionConfig.Algorithm algorithm = 1;
+  if (has_algorithm()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->algorithm(), output);
+  }
+
+  // optional int32 std_constant = 2;
+  if (has_std_constant()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->std_constant(), output);
+  }
+
+  // optional .cloaking_detection.SimhashType simhash_type = 3 [default = TEXT];
+  if (has_simhash_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      3, this->simhash_type(), output);
+  }
+
+  // optional int32 p = 4 [default = 97];
+  if (has_p()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->p(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.DetectionConfig)
+}
+
+::google::protobuf::uint8* DetectionConfig::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.DetectionConfig)
+  // required .cloaking_detection.DetectionConfig.Algorithm algorithm = 1;
+  if (has_algorithm()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->algorithm(), target);
+  }
+
+  // optional int32 std_constant = 2;
+  if (has_std_constant()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->std_constant(), target);
+  }
+
+  // optional .cloaking_detection.SimhashType simhash_type = 3 [default = TEXT];
+  if (has_simhash_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      3, this->simhash_type(), target);
+  }
+
+  // optional int32 p = 4 [default = 97];
+  if (has_p()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->p(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.DetectionConfig)
+  return target;
+}
+
+int DetectionConfig::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required .cloaking_detection.DetectionConfig.Algorithm algorithm = 1;
+    if (has_algorithm()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->algorithm());
+    }
+
+    // optional int32 std_constant = 2;
+    if (has_std_constant()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->std_constant());
+    }
+
+    // optional .cloaking_detection.SimhashType simhash_type = 3 [default = TEXT];
+    if (has_simhash_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->simhash_type());
+    }
+
+    // optional int32 p = 4 [default = 97];
+    if (has_p()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->p());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void DetectionConfig::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const DetectionConfig* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const DetectionConfig*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void DetectionConfig::MergeFrom(const DetectionConfig& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_algorithm()) {
+      set_algorithm(from.algorithm());
+    }
+    if (from.has_std_constant()) {
+      set_std_constant(from.std_constant());
+    }
+    if (from.has_simhash_type()) {
+      set_simhash_type(from.simhash_type());
+    }
+    if (from.has_p()) {
+      set_p(from.p());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void DetectionConfig::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void DetectionConfig::CopyFrom(const DetectionConfig& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool DetectionConfig::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  return true;
+}
+
+void DetectionConfig::Swap(DetectionConfig* other) {
+  if (other != this) {
+    std::swap(algorithm_, other->algorithm_);
+    std::swap(std_constant_, other->std_constant_);
+    std::swap(simhash_type_, other->simhash_type_);
+    std::swap(p_, other->p_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata DetectionConfig::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = DetectionConfig_descriptor_;
+  metadata.reflection = DetectionConfig_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+const ::google::protobuf::EnumDescriptor* CrawlConfig_BrowserType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return CrawlConfig_BrowserType_descriptor_;
+}
+bool CrawlConfig_BrowserType_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const CrawlConfig_BrowserType CrawlConfig::CHROME;
+const CrawlConfig_BrowserType CrawlConfig::FIREFOX;
+const CrawlConfig_BrowserType CrawlConfig::BrowserType_MIN;
+const CrawlConfig_BrowserType CrawlConfig::BrowserType_MAX;
+const int CrawlConfig::BrowserType_ARRAYSIZE;
+#endif  // _MSC_VER
+#ifndef _MSC_VER
+const int CrawlConfig::kMaximumThreadsFieldNumber;
+const int CrawlConfig::kUserAgentFieldNumber;
+const int CrawlConfig::kUserAgentMd5DirFieldNumber;
+const int CrawlConfig::kBrowserTypeFieldNumber;
+#endif  // !_MSC_VER
+
+CrawlConfig::CrawlConfig()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.CrawlConfig)
+}
+
+void CrawlConfig::InitAsDefaultInstance() {
+}
+
+CrawlConfig::CrawlConfig(const CrawlConfig& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.CrawlConfig)
+}
+
+void CrawlConfig::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  maximum_threads_ = 0;
+  user_agent_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  user_agent_md5_dir_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  browser_type_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+CrawlConfig::~CrawlConfig() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.CrawlConfig)
+  SharedDtor();
+}
+
+void CrawlConfig::SharedDtor() {
+  if (user_agent_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete user_agent_;
+  }
+  if (user_agent_md5_dir_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete user_agent_md5_dir_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void CrawlConfig::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* CrawlConfig::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return CrawlConfig_descriptor_;
+}
+
+const CrawlConfig& CrawlConfig::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+CrawlConfig* CrawlConfig::default_instance_ = NULL;
+
+CrawlConfig* CrawlConfig::New() const {
+  return new CrawlConfig;
+}
+
+void CrawlConfig::Clear() {
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<CrawlConfig*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 15) {
+    ZR_(maximum_threads_, browser_type_);
+    if (has_user_agent()) {
+      if (user_agent_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        user_agent_->clear();
+      }
+    }
+    if (has_user_agent_md5_dir()) {
+      if (user_agent_md5_dir_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        user_agent_md5_dir_->clear();
+      }
+    }
+  }
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool CrawlConfig::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.CrawlConfig)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional int32 maximum_threads = 1;
+      case 1: {
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &maximum_threads_)));
+          set_has_maximum_threads();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_user_agent;
+        break;
+      }
+
+      // optional string user_agent = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_user_agent:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_user_agent()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->user_agent().data(), this->user_agent().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "user_agent");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(26)) goto parse_user_agent_md5_dir;
+        break;
+      }
+
+      // optional string user_agent_md5_dir = 3;
+      case 3: {
+        if (tag == 26) {
+         parse_user_agent_md5_dir:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_user_agent_md5_dir()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->user_agent_md5_dir().data(), this->user_agent_md5_dir().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "user_agent_md5_dir");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(32)) goto parse_browser_type;
+        break;
+      }
+
+      // optional .cloaking_detection.CrawlConfig.BrowserType browser_type = 4;
+      case 4: {
+        if (tag == 32) {
+         parse_browser_type:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::cloaking_detection::CrawlConfig_BrowserType_IsValid(value)) {
+            set_browser_type(static_cast< ::cloaking_detection::CrawlConfig_BrowserType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(4, value);
+          }
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.CrawlConfig)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.CrawlConfig)
+  return false;
+#undef DO_
+}
+
+void CrawlConfig::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.CrawlConfig)
+  // optional int32 maximum_threads = 1;
+  if (has_maximum_threads()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->maximum_threads(), output);
+  }
+
+  // optional string user_agent = 2;
+  if (has_user_agent()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->user_agent().data(), this->user_agent().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "user_agent");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      2, this->user_agent(), output);
+  }
+
+  // optional string user_agent_md5_dir = 3;
+  if (has_user_agent_md5_dir()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->user_agent_md5_dir().data(), this->user_agent_md5_dir().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "user_agent_md5_dir");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      3, this->user_agent_md5_dir(), output);
+  }
+
+  // optional .cloaking_detection.CrawlConfig.BrowserType browser_type = 4;
+  if (has_browser_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      4, this->browser_type(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.CrawlConfig)
+}
+
+::google::protobuf::uint8* CrawlConfig::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.CrawlConfig)
+  // optional int32 maximum_threads = 1;
+  if (has_maximum_threads()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->maximum_threads(), target);
+  }
+
+  // optional string user_agent = 2;
+  if (has_user_agent()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->user_agent().data(), this->user_agent().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "user_agent");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->user_agent(), target);
+  }
+
+  // optional string user_agent_md5_dir = 3;
+  if (has_user_agent_md5_dir()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->user_agent_md5_dir().data(), this->user_agent_md5_dir().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "user_agent_md5_dir");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        3, this->user_agent_md5_dir(), target);
+  }
+
+  // optional .cloaking_detection.CrawlConfig.BrowserType browser_type = 4;
+  if (has_browser_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      4, this->browser_type(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.CrawlConfig)
+  return target;
+}
+
+int CrawlConfig::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional int32 maximum_threads = 1;
+    if (has_maximum_threads()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->maximum_threads());
+    }
+
+    // optional string user_agent = 2;
+    if (has_user_agent()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->user_agent());
+    }
+
+    // optional string user_agent_md5_dir = 3;
+    if (has_user_agent_md5_dir()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->user_agent_md5_dir());
+    }
+
+    // optional .cloaking_detection.CrawlConfig.BrowserType browser_type = 4;
+    if (has_browser_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->browser_type());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void CrawlConfig::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const CrawlConfig* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const CrawlConfig*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void CrawlConfig::MergeFrom(const CrawlConfig& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_maximum_threads()) {
+      set_maximum_threads(from.maximum_threads());
+    }
+    if (from.has_user_agent()) {
+      set_user_agent(from.user_agent());
+    }
+    if (from.has_user_agent_md5_dir()) {
+      set_user_agent_md5_dir(from.user_agent_md5_dir());
+    }
+    if (from.has_browser_type()) {
+      set_browser_type(from.browser_type());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void CrawlConfig::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void CrawlConfig::CopyFrom(const CrawlConfig& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool CrawlConfig::IsInitialized() const {
+
+  return true;
+}
+
+void CrawlConfig::Swap(CrawlConfig* other) {
+  if (other != this) {
+    std::swap(maximum_threads_, other->maximum_threads_);
+    std::swap(user_agent_, other->user_agent_);
+    std::swap(user_agent_md5_dir_, other->user_agent_md5_dir_);
+    std::swap(browser_type_, other->browser_type_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata CrawlConfig::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = CrawlConfig_descriptor_;
+  metadata.reflection = CrawlConfig_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int CrawlLog::kResultFieldNumber;
+#endif  // !_MSC_VER
+
+CrawlLog::CrawlLog()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.CrawlLog)
+}
+
+void CrawlLog::InitAsDefaultInstance() {
+}
+
+CrawlLog::CrawlLog(const CrawlLog& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.CrawlLog)
+}
+
+void CrawlLog::SharedCtor() {
+  _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+CrawlLog::~CrawlLog() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.CrawlLog)
+  SharedDtor();
+}
+
+void CrawlLog::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void CrawlLog::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* CrawlLog::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return CrawlLog_descriptor_;
+}
+
+const CrawlLog& CrawlLog::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+CrawlLog* CrawlLog::default_instance_ = NULL;
+
+CrawlLog* CrawlLog::New() const {
+  return new CrawlLog;
+}
+
+void CrawlLog::Clear() {
+  result_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool CrawlLog::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.CrawlLog)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .cloaking_detection.CrawlResult result = 1;
+      case 1: {
+        if (tag == 10) {
+         parse_result:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_result()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(10)) goto parse_result;
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.CrawlLog)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.CrawlLog)
+  return false;
+#undef DO_
+}
+
+void CrawlLog::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.CrawlLog)
+  // repeated .cloaking_detection.CrawlResult result = 1;
+  for (int i = 0; i < this->result_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->result(i), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.CrawlLog)
+}
+
+::google::protobuf::uint8* CrawlLog::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.CrawlLog)
+  // repeated .cloaking_detection.CrawlResult result = 1;
+  for (int i = 0; i < this->result_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->result(i), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.CrawlLog)
+  return target;
+}
+
+int CrawlLog::ByteSize() const {
+  int total_size = 0;
+
+  // repeated .cloaking_detection.CrawlResult result = 1;
+  total_size += 1 * this->result_size();
+  for (int i = 0; i < this->result_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->result(i));
+  }
+
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void CrawlLog::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const CrawlLog* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const CrawlLog*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void CrawlLog::MergeFrom(const CrawlLog& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  result_.MergeFrom(from.result_);
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void CrawlLog::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void CrawlLog::CopyFrom(const CrawlLog& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool CrawlLog::IsInitialized() const {
+
+  return true;
+}
+
+void CrawlLog::Swap(CrawlLog* other) {
+  if (other != this) {
+    result_.Swap(&other->result_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata CrawlLog::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = CrawlLog_descriptor_;
+  metadata.reflection = CrawlLog_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int CrawlResult::kFilePathFieldNumber;
+const int CrawlResult::kLandingUrlFieldNumber;
+const int CrawlResult::kLandingUrlMd5FieldNumber;
+const int CrawlResult::kUrlFieldNumber;
+const int CrawlResult::kUrlMd5FieldNumber;
+const int CrawlResult::kTimestampFieldNumber;
+const int CrawlResult::kSuccessFieldNumber;
+#endif  // !_MSC_VER
+
+CrawlResult::CrawlResult()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:cloaking_detection.CrawlResult)
+}
+
+void CrawlResult::InitAsDefaultInstance() {
+}
+
+CrawlResult::CrawlResult(const CrawlResult& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:cloaking_detection.CrawlResult)
+}
+
+void CrawlResult::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  landing_url_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  landing_url_md5_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  url_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  url_md5_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  timestamp_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  success_ = false;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+CrawlResult::~CrawlResult() {
+  // @@protoc_insertion_point(destructor:cloaking_detection.CrawlResult)
+  SharedDtor();
+}
+
+void CrawlResult::SharedDtor() {
+  if (file_path_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete file_path_;
+  }
+  if (landing_url_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete landing_url_;
+  }
+  if (landing_url_md5_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete landing_url_md5_;
+  }
+  if (url_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete url_;
+  }
+  if (url_md5_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete url_md5_;
+  }
+  if (timestamp_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete timestamp_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void CrawlResult::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* CrawlResult::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return CrawlResult_descriptor_;
+}
+
+const CrawlResult& CrawlResult::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  return *default_instance_;
+}
+
+CrawlResult* CrawlResult::default_instance_ = NULL;
+
+CrawlResult* CrawlResult::New() const {
+  return new CrawlResult;
+}
+
+void CrawlResult::Clear() {
+  if (_has_bits_[0 / 32] & 127) {
+    if (has_file_path()) {
+      if (file_path_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        file_path_->clear();
+      }
+    }
+    if (has_landing_url()) {
+      if (landing_url_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        landing_url_->clear();
+      }
+    }
+    if (has_landing_url_md5()) {
+      if (landing_url_md5_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        landing_url_md5_->clear();
+      }
+    }
+    if (has_url()) {
+      if (url_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        url_->clear();
+      }
+    }
+    if (has_url_md5()) {
+      if (url_md5_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        url_md5_->clear();
+      }
+    }
+    if (has_timestamp()) {
+      if (timestamp_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        timestamp_->clear();
+      }
+    }
+    success_ = false;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool CrawlResult::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:cloaking_detection.CrawlResult)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string file_path = 1;
+      case 1: {
+        if (tag == 10) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_file_path()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->file_path().data(), this->file_path().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "file_path");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_landing_url;
+        break;
+      }
+
+      // optional string landing_url = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_landing_url:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_landing_url()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->landing_url().data(), this->landing_url().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "landing_url");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(26)) goto parse_landing_url_md5;
+        break;
+      }
+
+      // optional string landing_url_md5 = 3;
+      case 3: {
+        if (tag == 26) {
+         parse_landing_url_md5:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_landing_url_md5()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->landing_url_md5().data(), this->landing_url_md5().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "landing_url_md5");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(34)) goto parse_url;
+        break;
+      }
+
+      // optional string url = 4;
+      case 4: {
+        if (tag == 34) {
+         parse_url:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_url()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->url().data(), this->url().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "url");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(42)) goto parse_url_md5;
+        break;
+      }
+
+      // optional string url_md5 = 5;
+      case 5: {
+        if (tag == 42) {
+         parse_url_md5:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_url_md5()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->url_md5().data(), this->url_md5().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "url_md5");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(50)) goto parse_timestamp;
+        break;
+      }
+
+      // optional string timestamp = 6;
+      case 6: {
+        if (tag == 50) {
+         parse_timestamp:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_timestamp()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->timestamp().data(), this->timestamp().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "timestamp");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(56)) goto parse_success;
+        break;
+      }
+
+      // optional bool success = 7;
+      case 7: {
+        if (tag == 56) {
+         parse_success:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &success_)));
+          set_has_success();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:cloaking_detection.CrawlResult)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:cloaking_detection.CrawlResult)
+  return false;
+#undef DO_
+}
+
+void CrawlResult::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:cloaking_detection.CrawlResult)
+  // optional string file_path = 1;
+  if (has_file_path()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->file_path().data(), this->file_path().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "file_path");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->file_path(), output);
+  }
+
+  // optional string landing_url = 2;
+  if (has_landing_url()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->landing_url().data(), this->landing_url().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "landing_url");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      2, this->landing_url(), output);
+  }
+
+  // optional string landing_url_md5 = 3;
+  if (has_landing_url_md5()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->landing_url_md5().data(), this->landing_url_md5().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "landing_url_md5");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      3, this->landing_url_md5(), output);
+  }
+
+  // optional string url = 4;
+  if (has_url()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->url().data(), this->url().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "url");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      4, this->url(), output);
+  }
+
+  // optional string url_md5 = 5;
+  if (has_url_md5()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->url_md5().data(), this->url_md5().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "url_md5");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      5, this->url_md5(), output);
+  }
+
+  // optional string timestamp = 6;
+  if (has_timestamp()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->timestamp().data(), this->timestamp().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "timestamp");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      6, this->timestamp(), output);
+  }
+
+  // optional bool success = 7;
+  if (has_success()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(7, this->success(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:cloaking_detection.CrawlResult)
+}
+
+::google::protobuf::uint8* CrawlResult::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:cloaking_detection.CrawlResult)
+  // optional string file_path = 1;
+  if (has_file_path()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->file_path().data(), this->file_path().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "file_path");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->file_path(), target);
+  }
+
+  // optional string landing_url = 2;
+  if (has_landing_url()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->landing_url().data(), this->landing_url().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "landing_url");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->landing_url(), target);
+  }
+
+  // optional string landing_url_md5 = 3;
+  if (has_landing_url_md5()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->landing_url_md5().data(), this->landing_url_md5().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "landing_url_md5");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        3, this->landing_url_md5(), target);
+  }
+
+  // optional string url = 4;
+  if (has_url()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->url().data(), this->url().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "url");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->url(), target);
+  }
+
+  // optional string url_md5 = 5;
+  if (has_url_md5()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->url_md5().data(), this->url_md5().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "url_md5");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        5, this->url_md5(), target);
+  }
+
+  // optional string timestamp = 6;
+  if (has_timestamp()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->timestamp().data(), this->timestamp().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "timestamp");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        6, this->timestamp(), target);
+  }
+
+  // optional bool success = 7;
+  if (has_success()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(7, this->success(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:cloaking_detection.CrawlResult)
+  return target;
+}
+
+int CrawlResult::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string file_path = 1;
+    if (has_file_path()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->file_path());
+    }
+
+    // optional string landing_url = 2;
+    if (has_landing_url()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->landing_url());
+    }
+
+    // optional string landing_url_md5 = 3;
+    if (has_landing_url_md5()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->landing_url_md5());
+    }
+
+    // optional string url = 4;
+    if (has_url()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->url());
+    }
+
+    // optional string url_md5 = 5;
+    if (has_url_md5()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->url_md5());
+    }
+
+    // optional string timestamp = 6;
+    if (has_timestamp()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->timestamp());
+    }
+
+    // optional bool success = 7;
+    if (has_success()) {
+      total_size += 1 + 1;
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void CrawlResult::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const CrawlResult* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const CrawlResult*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void CrawlResult::MergeFrom(const CrawlResult& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_file_path()) {
+      set_file_path(from.file_path());
+    }
+    if (from.has_landing_url()) {
+      set_landing_url(from.landing_url());
+    }
+    if (from.has_landing_url_md5()) {
+      set_landing_url_md5(from.landing_url_md5());
+    }
+    if (from.has_url()) {
+      set_url(from.url());
+    }
+    if (from.has_url_md5()) {
+      set_url_md5(from.url_md5());
+    }
+    if (from.has_timestamp()) {
+      set_timestamp(from.timestamp());
+    }
+    if (from.has_success()) {
+      set_success(from.success());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void CrawlResult::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void CrawlResult::CopyFrom(const CrawlResult& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool CrawlResult::IsInitialized() const {
+
+  return true;
+}
+
+void CrawlResult::Swap(CrawlResult* other) {
+  if (other != this) {
+    std::swap(file_path_, other->file_path_);
+    std::swap(landing_url_, other->landing_url_);
+    std::swap(landing_url_md5_, other->landing_url_md5_);
+    std::swap(url_, other->url_);
+    std::swap(url_md5_, other->url_md5_);
+    std::swap(timestamp_, other->timestamp_);
+    std::swap(success_, other->success_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata CrawlResult::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = CrawlResult_descriptor_;
+  metadata.reflection = CrawlResult_reflection_;
   return metadata;
 }
 

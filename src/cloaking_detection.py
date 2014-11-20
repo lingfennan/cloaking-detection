@@ -6,7 +6,7 @@ python cloaking_detection.py -f evaluate -i <inputfile> -l <learnedfile> -e <exp
 
 """
 
-import sys, getopt
+import sys, getopt, math
 import simhash
 from threading import Thread
 from html_simhash_computer import HtmlSimhashComputer
@@ -60,16 +60,35 @@ class CloakingDetection(object):
 		prob = 1
 		for pattern in self.learned_sites_map[site_name]:
 			dist = centroid_distance(pattern, ob_simhash)
+			""" dist==0 is the centroid"""
+			if dist==0:
+				return True
 			for point in pattern.cdf.point:
-				if(int(math.ceil(dist)) == point.x): 
+				if(int(math.ceil(dist-1)) == point.x): 
+					"""point.count == 0 is the centroid"""
+					if pattern.size-point.count>0:
+						return True
+
+		return False
+		"""
+					print 'dist: '
+					print dist
+					print 'point.count'
+					print point.count
+					print 'pattern.size'
+					print pattern.size
+					print 'current estimation: '
+					print (pattern.size-point.count)/ float(pattern.size)
 					#the prob is not belong to this pattern
-					prob = prob * (1-(pattern.size-point.count)/pattern.size)
-					break
-		threshold = 0.8
+					prob = prob * (1-(pattern.size-point.count)/ float(pattern.size))
+		print 'prob: '
+		print prob
+		threshold = 0.5
 		prob_positive = 1 - prob	
 		if(prob_positive > threshold):
 			return True
-		return False
+		print 'false'
+		"""
 
 	def _percentile_detection(self, site_name, ob_simhash):
 		p = 'p' + str(self.detection_config.p)
@@ -138,7 +157,8 @@ class CloakingDetection(object):
 
 def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type):
 	detection_config = CD.DetectionConfig()
-	detection_config.algorithm = CD.DetectionConfig.NORMAL_DISTRIBUTION
+	detection_config.algorithm = CD.DetectionConfig.JOINT_DISTRIBUTION
+	# detection_config.algorithm = CD.DetectionConfig.NORMAL_DISTRIBUTION
 	# detection_config.algorithm = CD.DetectionConfig.PERCENTILE
 	detection_config.p = 99
 	detection_config.std_constant = 3

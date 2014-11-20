@@ -1,5 +1,5 @@
 import numpy as np
-from learning_detection_util import hierarchical_clustering, load_observed_sites, _strip_parameter, average_distance
+from learning_detection_util import hierarchical_clustering, load_observed_sites, _strip_parameter, average_distance, read_proto_from_file
 import proto.cloaking_detection_pb2 as CD
 
 def assert_equal(actual_value, expected_value):
@@ -9,11 +9,35 @@ def assert_equal(actual_value, expected_value):
 		print "but actual value is: "
 		print actual_value
 
+def check_equal(first_file, second_file):
+	first_observed_sites = CD.ObservedSites()
+	read_proto_from_file(first_observed_sites, first_file)
+	second_observed_sites = CD.ObservedSites()
+	read_proto_from_file(second_observed_sites, second_file)
+	first_observed_sites_map = dict()
+	for observed_site in first_observed_sites.site:
+		first_observed_sites_map[observed_site.name] = observed_site
+	for observed_site in second_observed_sites.site:
+		if not observed_site.name in first_observed_sites_map:
+			return False
+		if not observed_site == first_observed_sites_map[observed_site.name]:
+			return False
+	return True
+
 def test_load_observed_sites():
 	site_list_filenames = ['data/US_list_10.20141109-180617.selenium.crawl/crawl_log']
 	s, p = load_observed_sites(site_list_filenames)
 	print s
 	print p
+
+def test_check_equal():
+	first_file = "data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.text.learned"
+	second_file = "data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/old_crawl_log.text.learned"
+	third_file = "data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.dom.learned"
+	fourth_file = "data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/old_crawl_log.dom.learned"
+	assert_equal(check_equal(first_file, second_file), True)
+	assert_equal(check_equal(first_file, third_file), False)
+	assert_equal(check_equal(third_file, fourth_file), True)
 
 def test__strip_parameter():
 	link = 'http://www.walmart.com/search/search-ng.do?search_query=Bicycles&adid=22222222220202379358&wmlspartner=wmtlabs&wl0=e&wl1=g&wl2=c&wl3=30633615476&wl4=&veh=sem'
@@ -101,3 +125,4 @@ if __name__=="__main__":
 	test_load_observed_sites()
 	test_hierarchical_clustering()
 	test_average_distance()
+	test_check_equal()

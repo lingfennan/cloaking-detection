@@ -37,7 +37,10 @@ void protobuf_ShutdownFile_cloaking_5fdetection_2eproto();
 class LearnedSites;
 class SitePatterns;
 class Pattern;
-class Item;
+class Percentile;
+class CDF;
+class Point;
+class SimhashItem;
 class ObservedSites;
 class SiteObservations;
 class Observation;
@@ -46,48 +49,112 @@ class HtmlDom;
 class Feature;
 class SimhashConfig;
 class SimhashConfig_FeatureUsage;
+class Algorithm;
 class ClusterConfig;
+class DetectionConfig;
+class CrawlConfig;
+class CrawlLog;
+class CrawlResult;
 
-enum SimhashConfig_SimhashType {
-  SimhashConfig_SimhashType_TEXT = 0,
-  SimhashConfig_SimhashType_DOM = 1,
-  SimhashConfig_SimhashType_TEXT_DOM = 2
+enum Algorithm_AlgoName {
+  Algorithm_AlgoName_HAMMING_THRESHOLD = 0,
+  Algorithm_AlgoName_K_MEANS = 1,
+  Algorithm_AlgoName_SPECTRAL_CLUSTERING = 2,
+  Algorithm_AlgoName_HIERARCHICAL_CLUSTERING = 3
 };
-bool SimhashConfig_SimhashType_IsValid(int value);
-const SimhashConfig_SimhashType SimhashConfig_SimhashType_SimhashType_MIN = SimhashConfig_SimhashType_TEXT;
-const SimhashConfig_SimhashType SimhashConfig_SimhashType_SimhashType_MAX = SimhashConfig_SimhashType_TEXT_DOM;
-const int SimhashConfig_SimhashType_SimhashType_ARRAYSIZE = SimhashConfig_SimhashType_SimhashType_MAX + 1;
+bool Algorithm_AlgoName_IsValid(int value);
+const Algorithm_AlgoName Algorithm_AlgoName_AlgoName_MIN = Algorithm_AlgoName_HAMMING_THRESHOLD;
+const Algorithm_AlgoName Algorithm_AlgoName_AlgoName_MAX = Algorithm_AlgoName_HIERARCHICAL_CLUSTERING;
+const int Algorithm_AlgoName_AlgoName_ARRAYSIZE = Algorithm_AlgoName_AlgoName_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* SimhashConfig_SimhashType_descriptor();
-inline const ::std::string& SimhashConfig_SimhashType_Name(SimhashConfig_SimhashType value) {
+const ::google::protobuf::EnumDescriptor* Algorithm_AlgoName_descriptor();
+inline const ::std::string& Algorithm_AlgoName_Name(Algorithm_AlgoName value) {
   return ::google::protobuf::internal::NameOfEnum(
-    SimhashConfig_SimhashType_descriptor(), value);
+    Algorithm_AlgoName_descriptor(), value);
 }
-inline bool SimhashConfig_SimhashType_Parse(
-    const ::std::string& name, SimhashConfig_SimhashType* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<SimhashConfig_SimhashType>(
-    SimhashConfig_SimhashType_descriptor(), name, value);
+inline bool Algorithm_AlgoName_Parse(
+    const ::std::string& name, Algorithm_AlgoName* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<Algorithm_AlgoName>(
+    Algorithm_AlgoName_descriptor(), name, value);
 }
-enum ClusterConfig_Algorithm {
-  ClusterConfig_Algorithm_HAMMING_THRESHOLD = 0,
-  ClusterConfig_Algorithm_K_MEANS = 1,
-  ClusterConfig_Algorithm_SPECTRAL_CLUSTERING = 2,
-  ClusterConfig_Algorithm_HIERARCHICAL_CLUSTERING = 3
+enum DetectionConfig_Algorithm {
+  DetectionConfig_Algorithm_NORMAL_DISTRIBUTION = 0,
+  DetectionConfig_Algorithm_GRADIENT_DESCENT = 1,
+  DetectionConfig_Algorithm_JOINT_DISTRIBUTION = 2,
+  DetectionConfig_Algorithm_PERCENTILE = 3
 };
-bool ClusterConfig_Algorithm_IsValid(int value);
-const ClusterConfig_Algorithm ClusterConfig_Algorithm_Algorithm_MIN = ClusterConfig_Algorithm_HAMMING_THRESHOLD;
-const ClusterConfig_Algorithm ClusterConfig_Algorithm_Algorithm_MAX = ClusterConfig_Algorithm_HIERARCHICAL_CLUSTERING;
-const int ClusterConfig_Algorithm_Algorithm_ARRAYSIZE = ClusterConfig_Algorithm_Algorithm_MAX + 1;
+bool DetectionConfig_Algorithm_IsValid(int value);
+const DetectionConfig_Algorithm DetectionConfig_Algorithm_Algorithm_MIN = DetectionConfig_Algorithm_NORMAL_DISTRIBUTION;
+const DetectionConfig_Algorithm DetectionConfig_Algorithm_Algorithm_MAX = DetectionConfig_Algorithm_PERCENTILE;
+const int DetectionConfig_Algorithm_Algorithm_ARRAYSIZE = DetectionConfig_Algorithm_Algorithm_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* ClusterConfig_Algorithm_descriptor();
-inline const ::std::string& ClusterConfig_Algorithm_Name(ClusterConfig_Algorithm value) {
+const ::google::protobuf::EnumDescriptor* DetectionConfig_Algorithm_descriptor();
+inline const ::std::string& DetectionConfig_Algorithm_Name(DetectionConfig_Algorithm value) {
   return ::google::protobuf::internal::NameOfEnum(
-    ClusterConfig_Algorithm_descriptor(), value);
+    DetectionConfig_Algorithm_descriptor(), value);
 }
-inline bool ClusterConfig_Algorithm_Parse(
-    const ::std::string& name, ClusterConfig_Algorithm* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<ClusterConfig_Algorithm>(
-    ClusterConfig_Algorithm_descriptor(), name, value);
+inline bool DetectionConfig_Algorithm_Parse(
+    const ::std::string& name, DetectionConfig_Algorithm* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<DetectionConfig_Algorithm>(
+    DetectionConfig_Algorithm_descriptor(), name, value);
+}
+enum CrawlConfig_BrowserType {
+  CrawlConfig_BrowserType_CHROME = 0,
+  CrawlConfig_BrowserType_FIREFOX = 1
+};
+bool CrawlConfig_BrowserType_IsValid(int value);
+const CrawlConfig_BrowserType CrawlConfig_BrowserType_BrowserType_MIN = CrawlConfig_BrowserType_CHROME;
+const CrawlConfig_BrowserType CrawlConfig_BrowserType_BrowserType_MAX = CrawlConfig_BrowserType_FIREFOX;
+const int CrawlConfig_BrowserType_BrowserType_ARRAYSIZE = CrawlConfig_BrowserType_BrowserType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* CrawlConfig_BrowserType_descriptor();
+inline const ::std::string& CrawlConfig_BrowserType_Name(CrawlConfig_BrowserType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    CrawlConfig_BrowserType_descriptor(), value);
+}
+inline bool CrawlConfig_BrowserType_Parse(
+    const ::std::string& name, CrawlConfig_BrowserType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<CrawlConfig_BrowserType>(
+    CrawlConfig_BrowserType_descriptor(), name, value);
+}
+enum SimhashType {
+  TEXT = 0,
+  DOM = 1,
+  TEXT_DOM = 2
+};
+bool SimhashType_IsValid(int value);
+const SimhashType SimhashType_MIN = TEXT;
+const SimhashType SimhashType_MAX = TEXT_DOM;
+const int SimhashType_ARRAYSIZE = SimhashType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* SimhashType_descriptor();
+inline const ::std::string& SimhashType_Name(SimhashType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    SimhashType_descriptor(), value);
+}
+inline bool SimhashType_Parse(
+    const ::std::string& name, SimhashType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<SimhashType>(
+    SimhashType_descriptor(), name, value);
+}
+enum ParaType {
+  NORMAL = 0,
+  FILE_PATH = 1
+};
+bool ParaType_IsValid(int value);
+const ParaType ParaType_MIN = NORMAL;
+const ParaType ParaType_MAX = FILE_PATH;
+const int ParaType_ARRAYSIZE = ParaType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* ParaType_descriptor();
+inline const ::std::string& ParaType_Name(ParaType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    ParaType_descriptor(), value);
+}
+inline bool ParaType_Parse(
+    const ::std::string& name, ParaType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ParaType>(
+    ParaType_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -352,17 +419,61 @@ class Pattern : public ::google::protobuf::Message {
   inline double std() const;
   inline void set_std(double value);
 
-  // repeated .cloaking_detection.Item item = 3;
-  inline int item_size() const;
-  inline void clear_item();
+  // repeated .cloaking_detection.SimhashItem item = 3 [deprecated = true];
+  inline int item_size() const PROTOBUF_DEPRECATED;
+  inline void clear_item() PROTOBUF_DEPRECATED;
   static const int kItemFieldNumber = 3;
-  inline const ::cloaking_detection::Item& item(int index) const;
-  inline ::cloaking_detection::Item* mutable_item(int index);
-  inline ::cloaking_detection::Item* add_item();
-  inline const ::google::protobuf::RepeatedPtrField< ::cloaking_detection::Item >&
-      item() const;
-  inline ::google::protobuf::RepeatedPtrField< ::cloaking_detection::Item >*
-      mutable_item();
+  inline const ::cloaking_detection::SimhashItem& item(int index) const PROTOBUF_DEPRECATED;
+  inline ::cloaking_detection::SimhashItem* mutable_item(int index) PROTOBUF_DEPRECATED;
+  inline ::cloaking_detection::SimhashItem* add_item() PROTOBUF_DEPRECATED;
+  inline const ::google::protobuf::RepeatedPtrField< ::cloaking_detection::SimhashItem >&
+      item() const PROTOBUF_DEPRECATED;
+  inline ::google::protobuf::RepeatedPtrField< ::cloaking_detection::SimhashItem >*
+      mutable_item() PROTOBUF_DEPRECATED;
+
+  // repeated uint64 centroid = 4 [packed = true];
+  inline int centroid_size() const;
+  inline void clear_centroid();
+  static const int kCentroidFieldNumber = 4;
+  inline ::google::protobuf::uint64 centroid(int index) const;
+  inline void set_centroid(int index, ::google::protobuf::uint64 value);
+  inline void add_centroid(::google::protobuf::uint64 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+      centroid() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+      mutable_centroid();
+
+  // optional uint64 size = 5;
+  inline bool has_size() const;
+  inline void clear_size();
+  static const int kSizeFieldNumber = 5;
+  inline ::google::protobuf::uint64 size() const;
+  inline void set_size(::google::protobuf::uint64 value);
+
+  // optional double threshold = 6;
+  inline bool has_threshold() const;
+  inline void clear_threshold();
+  static const int kThresholdFieldNumber = 6;
+  inline double threshold() const;
+  inline void set_threshold(double value);
+
+  // optional .cloaking_detection.CDF cdf = 7;
+  inline bool has_cdf() const;
+  inline void clear_cdf();
+  static const int kCdfFieldNumber = 7;
+  inline const ::cloaking_detection::CDF& cdf() const;
+  inline ::cloaking_detection::CDF* mutable_cdf();
+  inline ::cloaking_detection::CDF* release_cdf();
+  inline void set_allocated_cdf(::cloaking_detection::CDF* cdf);
+
+  // optional .cloaking_detection.Percentile percentile = 8;
+  inline bool has_percentile() const;
+  inline void clear_percentile();
+  static const int kPercentileFieldNumber = 8;
+  inline const ::cloaking_detection::Percentile& percentile() const;
+  inline ::cloaking_detection::Percentile* mutable_percentile();
+  inline ::cloaking_detection::Percentile* release_percentile();
+  inline void set_allocated_percentile(::cloaking_detection::Percentile* percentile);
 
   // @@protoc_insertion_point(class_scope:cloaking_detection.Pattern)
  private:
@@ -370,6 +481,14 @@ class Pattern : public ::google::protobuf::Message {
   inline void clear_has_mean();
   inline void set_has_std();
   inline void clear_has_std();
+  inline void set_has_size();
+  inline void clear_has_size();
+  inline void set_has_threshold();
+  inline void clear_has_threshold();
+  inline void set_has_cdf();
+  inline void clear_has_cdf();
+  inline void set_has_percentile();
+  inline void clear_has_percentile();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -377,7 +496,13 @@ class Pattern : public ::google::protobuf::Message {
   mutable int _cached_size_;
   double mean_;
   double std_;
-  ::google::protobuf::RepeatedPtrField< ::cloaking_detection::Item > item_;
+  ::google::protobuf::RepeatedPtrField< ::cloaking_detection::SimhashItem > item_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > centroid_;
+  mutable int _centroid_cached_byte_size_;
+  ::google::protobuf::uint64 size_;
+  double threshold_;
+  ::cloaking_detection::CDF* cdf_;
+  ::cloaking_detection::Percentile* percentile_;
   friend void  protobuf_AddDesc_cloaking_5fdetection_2eproto();
   friend void protobuf_AssignDesc_cloaking_5fdetection_2eproto();
   friend void protobuf_ShutdownFile_cloaking_5fdetection_2eproto();
@@ -387,14 +512,14 @@ class Pattern : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class Item : public ::google::protobuf::Message {
+class Percentile : public ::google::protobuf::Message {
  public:
-  Item();
-  virtual ~Item();
+  Percentile();
+  virtual ~Percentile();
 
-  Item(const Item& from);
+  Percentile(const Percentile& from);
 
-  inline Item& operator=(const Item& from) {
+  inline Percentile& operator=(const Percentile& from) {
     CopyFrom(from);
     return *this;
   }
@@ -408,17 +533,317 @@ class Item : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Item& default_instance();
+  static const Percentile& default_instance();
 
-  void Swap(Item* other);
+  void Swap(Percentile* other);
 
   // implements Message ----------------------------------------------
 
-  Item* New() const;
+  Percentile* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Item& from);
-  void MergeFrom(const Item& from);
+  void CopyFrom(const Percentile& from);
+  void MergeFrom(const Percentile& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint32 p99 = 1;
+  inline bool has_p99() const;
+  inline void clear_p99();
+  static const int kP99FieldNumber = 1;
+  inline ::google::protobuf::uint32 p99() const;
+  inline void set_p99(::google::protobuf::uint32 value);
+
+  // optional uint32 p97 = 2;
+  inline bool has_p97() const;
+  inline void clear_p97();
+  static const int kP97FieldNumber = 2;
+  inline ::google::protobuf::uint32 p97() const;
+  inline void set_p97(::google::protobuf::uint32 value);
+
+  // optional uint32 p95 = 3;
+  inline bool has_p95() const;
+  inline void clear_p95();
+  static const int kP95FieldNumber = 3;
+  inline ::google::protobuf::uint32 p95() const;
+  inline void set_p95(::google::protobuf::uint32 value);
+
+  // optional uint32 p90 = 4;
+  inline bool has_p90() const;
+  inline void clear_p90();
+  static const int kP90FieldNumber = 4;
+  inline ::google::protobuf::uint32 p90() const;
+  inline void set_p90(::google::protobuf::uint32 value);
+
+  // optional uint32 p75 = 5;
+  inline bool has_p75() const;
+  inline void clear_p75();
+  static const int kP75FieldNumber = 5;
+  inline ::google::protobuf::uint32 p75() const;
+  inline void set_p75(::google::protobuf::uint32 value);
+
+  // optional uint32 p50 = 6;
+  inline bool has_p50() const;
+  inline void clear_p50();
+  static const int kP50FieldNumber = 6;
+  inline ::google::protobuf::uint32 p50() const;
+  inline void set_p50(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:cloaking_detection.Percentile)
+ private:
+  inline void set_has_p99();
+  inline void clear_has_p99();
+  inline void set_has_p97();
+  inline void clear_has_p97();
+  inline void set_has_p95();
+  inline void clear_has_p95();
+  inline void set_has_p90();
+  inline void clear_has_p90();
+  inline void set_has_p75();
+  inline void clear_has_p75();
+  inline void set_has_p50();
+  inline void clear_has_p50();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 p99_;
+  ::google::protobuf::uint32 p97_;
+  ::google::protobuf::uint32 p95_;
+  ::google::protobuf::uint32 p90_;
+  ::google::protobuf::uint32 p75_;
+  ::google::protobuf::uint32 p50_;
+  friend void  protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_AssignDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_ShutdownFile_cloaking_5fdetection_2eproto();
+
+  void InitAsDefaultInstance();
+  static Percentile* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class CDF : public ::google::protobuf::Message {
+ public:
+  CDF();
+  virtual ~CDF();
+
+  CDF(const CDF& from);
+
+  inline CDF& operator=(const CDF& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CDF& default_instance();
+
+  void Swap(CDF* other);
+
+  // implements Message ----------------------------------------------
+
+  CDF* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CDF& from);
+  void MergeFrom(const CDF& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .cloaking_detection.Point point = 1;
+  inline int point_size() const;
+  inline void clear_point();
+  static const int kPointFieldNumber = 1;
+  inline const ::cloaking_detection::Point& point(int index) const;
+  inline ::cloaking_detection::Point* mutable_point(int index);
+  inline ::cloaking_detection::Point* add_point();
+  inline const ::google::protobuf::RepeatedPtrField< ::cloaking_detection::Point >&
+      point() const;
+  inline ::google::protobuf::RepeatedPtrField< ::cloaking_detection::Point >*
+      mutable_point();
+
+  // @@protoc_insertion_point(class_scope:cloaking_detection.CDF)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::cloaking_detection::Point > point_;
+  friend void  protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_AssignDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_ShutdownFile_cloaking_5fdetection_2eproto();
+
+  void InitAsDefaultInstance();
+  static CDF* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Point : public ::google::protobuf::Message {
+ public:
+  Point();
+  virtual ~Point();
+
+  Point(const Point& from);
+
+  inline Point& operator=(const Point& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Point& default_instance();
+
+  void Swap(Point* other);
+
+  // implements Message ----------------------------------------------
+
+  Point* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Point& from);
+  void MergeFrom(const Point& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required uint32 x = 1;
+  inline bool has_x() const;
+  inline void clear_x();
+  static const int kXFieldNumber = 1;
+  inline ::google::protobuf::uint32 x() const;
+  inline void set_x(::google::protobuf::uint32 value);
+
+  // required uint64 count = 2;
+  inline bool has_count() const;
+  inline void clear_count();
+  static const int kCountFieldNumber = 2;
+  inline ::google::protobuf::uint64 count() const;
+  inline void set_count(::google::protobuf::uint64 value);
+
+  // @@protoc_insertion_point(class_scope:cloaking_detection.Point)
+ private:
+  inline void set_has_x();
+  inline void clear_has_x();
+  inline void set_has_count();
+  inline void clear_has_count();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::uint64 count_;
+  ::google::protobuf::uint32 x_;
+  friend void  protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_AssignDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_ShutdownFile_cloaking_5fdetection_2eproto();
+
+  void InitAsDefaultInstance();
+  static Point* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SimhashItem : public ::google::protobuf::Message {
+ public:
+  SimhashItem();
+  virtual ~SimhashItem();
+
+  SimhashItem(const SimhashItem& from);
+
+  inline SimhashItem& operator=(const SimhashItem& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SimhashItem& default_instance();
+
+  void Swap(SimhashItem* other);
+
+  // implements Message ----------------------------------------------
+
+  SimhashItem* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SimhashItem& from);
+  void MergeFrom(const SimhashItem& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -454,7 +879,7 @@ class Item : public ::google::protobuf::Message {
   inline ::google::protobuf::uint64 count() const;
   inline void set_count(::google::protobuf::uint64 value);
 
-  // @@protoc_insertion_point(class_scope:cloaking_detection.Item)
+  // @@protoc_insertion_point(class_scope:cloaking_detection.SimhashItem)
  private:
   inline void set_has_simhash();
   inline void clear_has_simhash();
@@ -472,7 +897,7 @@ class Item : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_cloaking_5fdetection_2eproto();
 
   void InitAsDefaultInstance();
-  static Item* default_instance_;
+  static SimhashItem* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -541,14 +966,26 @@ class ObservedSites : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::cloaking_detection::SiteObservations >*
       mutable_site();
 
+  // optional .cloaking_detection.SimhashConfig config = 2;
+  inline bool has_config() const;
+  inline void clear_config();
+  static const int kConfigFieldNumber = 2;
+  inline const ::cloaking_detection::SimhashConfig& config() const;
+  inline ::cloaking_detection::SimhashConfig* mutable_config();
+  inline ::cloaking_detection::SimhashConfig* release_config();
+  inline void set_allocated_config(::cloaking_detection::SimhashConfig* config);
+
   // @@protoc_insertion_point(class_scope:cloaking_detection.ObservedSites)
  private:
+  inline void set_has_config();
+  inline void clear_has_config();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::cloaking_detection::SiteObservations > site_;
+  ::cloaking_detection::SimhashConfig* config_;
   friend void  protobuf_AddDesc_cloaking_5fdetection_2eproto();
   friend void protobuf_AssignDesc_cloaking_5fdetection_2eproto();
   friend void protobuf_ShutdownFile_cloaking_5fdetection_2eproto();
@@ -1276,39 +1713,14 @@ class SimhashConfig : public ::google::protobuf::Message {
 
   typedef SimhashConfig_FeatureUsage FeatureUsage;
 
-  typedef SimhashConfig_SimhashType SimhashType;
-  static const SimhashType TEXT = SimhashConfig_SimhashType_TEXT;
-  static const SimhashType DOM = SimhashConfig_SimhashType_DOM;
-  static const SimhashType TEXT_DOM = SimhashConfig_SimhashType_TEXT_DOM;
-  static inline bool SimhashType_IsValid(int value) {
-    return SimhashConfig_SimhashType_IsValid(value);
-  }
-  static const SimhashType SimhashType_MIN =
-    SimhashConfig_SimhashType_SimhashType_MIN;
-  static const SimhashType SimhashType_MAX =
-    SimhashConfig_SimhashType_SimhashType_MAX;
-  static const int SimhashType_ARRAYSIZE =
-    SimhashConfig_SimhashType_SimhashType_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  SimhashType_descriptor() {
-    return SimhashConfig_SimhashType_descriptor();
-  }
-  static inline const ::std::string& SimhashType_Name(SimhashType value) {
-    return SimhashConfig_SimhashType_Name(value);
-  }
-  static inline bool SimhashType_Parse(const ::std::string& name,
-      SimhashType* value) {
-    return SimhashConfig_SimhashType_Parse(name, value);
-  }
-
   // accessors -------------------------------------------------------
 
-  // required .cloaking_detection.SimhashConfig.SimhashType simhash_type = 1;
+  // required .cloaking_detection.SimhashType simhash_type = 1;
   inline bool has_simhash_type() const;
   inline void clear_simhash_type();
   static const int kSimhashTypeFieldNumber = 1;
-  inline ::cloaking_detection::SimhashConfig_SimhashType simhash_type() const;
-  inline void set_simhash_type(::cloaking_detection::SimhashConfig_SimhashType value);
+  inline ::cloaking_detection::SimhashType simhash_type() const;
+  inline void set_simhash_type(::cloaking_detection::SimhashType value);
 
   // optional .cloaking_detection.SimhashConfig.FeatureUsage usage = 2;
   inline bool has_usage() const;
@@ -1348,6 +1760,141 @@ class SimhashConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static SimhashConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Algorithm : public ::google::protobuf::Message {
+ public:
+  Algorithm();
+  virtual ~Algorithm();
+
+  Algorithm(const Algorithm& from);
+
+  inline Algorithm& operator=(const Algorithm& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Algorithm& default_instance();
+
+  void Swap(Algorithm* other);
+
+  // implements Message ----------------------------------------------
+
+  Algorithm* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Algorithm& from);
+  void MergeFrom(const Algorithm& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef Algorithm_AlgoName AlgoName;
+  static const AlgoName HAMMING_THRESHOLD = Algorithm_AlgoName_HAMMING_THRESHOLD;
+  static const AlgoName K_MEANS = Algorithm_AlgoName_K_MEANS;
+  static const AlgoName SPECTRAL_CLUSTERING = Algorithm_AlgoName_SPECTRAL_CLUSTERING;
+  static const AlgoName HIERARCHICAL_CLUSTERING = Algorithm_AlgoName_HIERARCHICAL_CLUSTERING;
+  static inline bool AlgoName_IsValid(int value) {
+    return Algorithm_AlgoName_IsValid(value);
+  }
+  static const AlgoName AlgoName_MIN =
+    Algorithm_AlgoName_AlgoName_MIN;
+  static const AlgoName AlgoName_MAX =
+    Algorithm_AlgoName_AlgoName_MAX;
+  static const int AlgoName_ARRAYSIZE =
+    Algorithm_AlgoName_AlgoName_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  AlgoName_descriptor() {
+    return Algorithm_AlgoName_descriptor();
+  }
+  static inline const ::std::string& AlgoName_Name(AlgoName value) {
+    return Algorithm_AlgoName_Name(value);
+  }
+  static inline bool AlgoName_Parse(const ::std::string& name,
+      AlgoName* value) {
+    return Algorithm_AlgoName_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // required .cloaking_detection.Algorithm.AlgoName name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline ::cloaking_detection::Algorithm_AlgoName name() const;
+  inline void set_name(::cloaking_detection::Algorithm_AlgoName value);
+
+  // optional int32 thres = 2;
+  inline bool has_thres() const;
+  inline void clear_thres();
+  static const int kThresFieldNumber = 2;
+  inline ::google::protobuf::int32 thres() const;
+  inline void set_thres(::google::protobuf::int32 value);
+
+  // optional int32 k = 3;
+  inline bool has_k() const;
+  inline void clear_k();
+  static const int kKFieldNumber = 3;
+  inline ::google::protobuf::int32 k() const;
+  inline void set_k(::google::protobuf::int32 value);
+
+  // optional int32 left_out_ratio = 4;
+  inline bool has_left_out_ratio() const;
+  inline void clear_left_out_ratio();
+  static const int kLeftOutRatioFieldNumber = 4;
+  inline ::google::protobuf::int32 left_out_ratio() const;
+  inline void set_left_out_ratio(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:cloaking_detection.Algorithm)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_thres();
+  inline void clear_has_thres();
+  inline void set_has_k();
+  inline void clear_has_k();
+  inline void set_has_left_out_ratio();
+  inline void clear_has_left_out_ratio();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  int name_;
+  ::google::protobuf::int32 thres_;
+  ::google::protobuf::int32 k_;
+  ::google::protobuf::int32 left_out_ratio_;
+  friend void  protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_AssignDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_ShutdownFile_cloaking_5fdetection_2eproto();
+
+  void InitAsDefaultInstance();
+  static Algorithm* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1402,47 +1949,23 @@ class ClusterConfig : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef ClusterConfig_Algorithm Algorithm;
-  static const Algorithm HAMMING_THRESHOLD = ClusterConfig_Algorithm_HAMMING_THRESHOLD;
-  static const Algorithm K_MEANS = ClusterConfig_Algorithm_K_MEANS;
-  static const Algorithm SPECTRAL_CLUSTERING = ClusterConfig_Algorithm_SPECTRAL_CLUSTERING;
-  static const Algorithm HIERARCHICAL_CLUSTERING = ClusterConfig_Algorithm_HIERARCHICAL_CLUSTERING;
-  static inline bool Algorithm_IsValid(int value) {
-    return ClusterConfig_Algorithm_IsValid(value);
-  }
-  static const Algorithm Algorithm_MIN =
-    ClusterConfig_Algorithm_Algorithm_MIN;
-  static const Algorithm Algorithm_MAX =
-    ClusterConfig_Algorithm_Algorithm_MAX;
-  static const int Algorithm_ARRAYSIZE =
-    ClusterConfig_Algorithm_Algorithm_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  Algorithm_descriptor() {
-    return ClusterConfig_Algorithm_descriptor();
-  }
-  static inline const ::std::string& Algorithm_Name(Algorithm value) {
-    return ClusterConfig_Algorithm_Name(value);
-  }
-  static inline bool Algorithm_Parse(const ::std::string& name,
-      Algorithm* value) {
-    return ClusterConfig_Algorithm_Parse(name, value);
-  }
-
   // accessors -------------------------------------------------------
 
-  // required .cloaking_detection.ClusterConfig.Algorithm algorithm = 1;
+  // required .cloaking_detection.Algorithm algorithm = 1;
   inline bool has_algorithm() const;
   inline void clear_algorithm();
   static const int kAlgorithmFieldNumber = 1;
-  inline ::cloaking_detection::ClusterConfig_Algorithm algorithm() const;
-  inline void set_algorithm(::cloaking_detection::ClusterConfig_Algorithm value);
+  inline const ::cloaking_detection::Algorithm& algorithm() const;
+  inline ::cloaking_detection::Algorithm* mutable_algorithm();
+  inline ::cloaking_detection::Algorithm* release_algorithm();
+  inline void set_allocated_algorithm(::cloaking_detection::Algorithm* algorithm);
 
-  // optional int32 cluster_number = 2;
-  inline bool has_cluster_number() const;
-  inline void clear_cluster_number();
-  static const int kClusterNumberFieldNumber = 2;
-  inline ::google::protobuf::int32 cluster_number() const;
-  inline void set_cluster_number(::google::protobuf::int32 value);
+  // optional int32 minimum_cluster_size = 2 [default = 2];
+  inline bool has_minimum_cluster_size() const;
+  inline void clear_minimum_cluster_size();
+  static const int kMinimumClusterSizeFieldNumber = 2;
+  inline ::google::protobuf::int32 minimum_cluster_size() const;
+  inline void set_minimum_cluster_size(::google::protobuf::int32 value);
 
   // optional int32 maximum_threads = 3 [default = 10];
   inline bool has_maximum_threads() const;
@@ -1451,28 +1974,567 @@ class ClusterConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 maximum_threads() const;
   inline void set_maximum_threads(::google::protobuf::int32 value);
 
+  // optional .cloaking_detection.SimhashType simhash_type = 4 [default = TEXT];
+  inline bool has_simhash_type() const;
+  inline void clear_simhash_type();
+  static const int kSimhashTypeFieldNumber = 4;
+  inline ::cloaking_detection::SimhashType simhash_type() const;
+  inline void set_simhash_type(::cloaking_detection::SimhashType value);
+
   // @@protoc_insertion_point(class_scope:cloaking_detection.ClusterConfig)
  private:
   inline void set_has_algorithm();
   inline void clear_has_algorithm();
-  inline void set_has_cluster_number();
-  inline void clear_has_cluster_number();
+  inline void set_has_minimum_cluster_size();
+  inline void clear_has_minimum_cluster_size();
   inline void set_has_maximum_threads();
   inline void clear_has_maximum_threads();
+  inline void set_has_simhash_type();
+  inline void clear_has_simhash_type();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  int algorithm_;
-  ::google::protobuf::int32 cluster_number_;
+  ::cloaking_detection::Algorithm* algorithm_;
+  ::google::protobuf::int32 minimum_cluster_size_;
   ::google::protobuf::int32 maximum_threads_;
+  int simhash_type_;
   friend void  protobuf_AddDesc_cloaking_5fdetection_2eproto();
   friend void protobuf_AssignDesc_cloaking_5fdetection_2eproto();
   friend void protobuf_ShutdownFile_cloaking_5fdetection_2eproto();
 
   void InitAsDefaultInstance();
   static ClusterConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DetectionConfig : public ::google::protobuf::Message {
+ public:
+  DetectionConfig();
+  virtual ~DetectionConfig();
+
+  DetectionConfig(const DetectionConfig& from);
+
+  inline DetectionConfig& operator=(const DetectionConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DetectionConfig& default_instance();
+
+  void Swap(DetectionConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  DetectionConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DetectionConfig& from);
+  void MergeFrom(const DetectionConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef DetectionConfig_Algorithm Algorithm;
+  static const Algorithm NORMAL_DISTRIBUTION = DetectionConfig_Algorithm_NORMAL_DISTRIBUTION;
+  static const Algorithm GRADIENT_DESCENT = DetectionConfig_Algorithm_GRADIENT_DESCENT;
+  static const Algorithm JOINT_DISTRIBUTION = DetectionConfig_Algorithm_JOINT_DISTRIBUTION;
+  static const Algorithm PERCENTILE = DetectionConfig_Algorithm_PERCENTILE;
+  static inline bool Algorithm_IsValid(int value) {
+    return DetectionConfig_Algorithm_IsValid(value);
+  }
+  static const Algorithm Algorithm_MIN =
+    DetectionConfig_Algorithm_Algorithm_MIN;
+  static const Algorithm Algorithm_MAX =
+    DetectionConfig_Algorithm_Algorithm_MAX;
+  static const int Algorithm_ARRAYSIZE =
+    DetectionConfig_Algorithm_Algorithm_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Algorithm_descriptor() {
+    return DetectionConfig_Algorithm_descriptor();
+  }
+  static inline const ::std::string& Algorithm_Name(Algorithm value) {
+    return DetectionConfig_Algorithm_Name(value);
+  }
+  static inline bool Algorithm_Parse(const ::std::string& name,
+      Algorithm* value) {
+    return DetectionConfig_Algorithm_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // required .cloaking_detection.DetectionConfig.Algorithm algorithm = 1;
+  inline bool has_algorithm() const;
+  inline void clear_algorithm();
+  static const int kAlgorithmFieldNumber = 1;
+  inline ::cloaking_detection::DetectionConfig_Algorithm algorithm() const;
+  inline void set_algorithm(::cloaking_detection::DetectionConfig_Algorithm value);
+
+  // optional int32 std_constant = 2;
+  inline bool has_std_constant() const;
+  inline void clear_std_constant();
+  static const int kStdConstantFieldNumber = 2;
+  inline ::google::protobuf::int32 std_constant() const;
+  inline void set_std_constant(::google::protobuf::int32 value);
+
+  // optional .cloaking_detection.SimhashType simhash_type = 3 [default = TEXT];
+  inline bool has_simhash_type() const;
+  inline void clear_simhash_type();
+  static const int kSimhashTypeFieldNumber = 3;
+  inline ::cloaking_detection::SimhashType simhash_type() const;
+  inline void set_simhash_type(::cloaking_detection::SimhashType value);
+
+  // optional int32 p = 4 [default = 97];
+  inline bool has_p() const;
+  inline void clear_p();
+  static const int kPFieldNumber = 4;
+  inline ::google::protobuf::int32 p() const;
+  inline void set_p(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:cloaking_detection.DetectionConfig)
+ private:
+  inline void set_has_algorithm();
+  inline void clear_has_algorithm();
+  inline void set_has_std_constant();
+  inline void clear_has_std_constant();
+  inline void set_has_simhash_type();
+  inline void clear_has_simhash_type();
+  inline void set_has_p();
+  inline void clear_has_p();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  int algorithm_;
+  ::google::protobuf::int32 std_constant_;
+  int simhash_type_;
+  ::google::protobuf::int32 p_;
+  friend void  protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_AssignDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_ShutdownFile_cloaking_5fdetection_2eproto();
+
+  void InitAsDefaultInstance();
+  static DetectionConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class CrawlConfig : public ::google::protobuf::Message {
+ public:
+  CrawlConfig();
+  virtual ~CrawlConfig();
+
+  CrawlConfig(const CrawlConfig& from);
+
+  inline CrawlConfig& operator=(const CrawlConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CrawlConfig& default_instance();
+
+  void Swap(CrawlConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  CrawlConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CrawlConfig& from);
+  void MergeFrom(const CrawlConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef CrawlConfig_BrowserType BrowserType;
+  static const BrowserType CHROME = CrawlConfig_BrowserType_CHROME;
+  static const BrowserType FIREFOX = CrawlConfig_BrowserType_FIREFOX;
+  static inline bool BrowserType_IsValid(int value) {
+    return CrawlConfig_BrowserType_IsValid(value);
+  }
+  static const BrowserType BrowserType_MIN =
+    CrawlConfig_BrowserType_BrowserType_MIN;
+  static const BrowserType BrowserType_MAX =
+    CrawlConfig_BrowserType_BrowserType_MAX;
+  static const int BrowserType_ARRAYSIZE =
+    CrawlConfig_BrowserType_BrowserType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  BrowserType_descriptor() {
+    return CrawlConfig_BrowserType_descriptor();
+  }
+  static inline const ::std::string& BrowserType_Name(BrowserType value) {
+    return CrawlConfig_BrowserType_Name(value);
+  }
+  static inline bool BrowserType_Parse(const ::std::string& name,
+      BrowserType* value) {
+    return CrawlConfig_BrowserType_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 maximum_threads = 1;
+  inline bool has_maximum_threads() const;
+  inline void clear_maximum_threads();
+  static const int kMaximumThreadsFieldNumber = 1;
+  inline ::google::protobuf::int32 maximum_threads() const;
+  inline void set_maximum_threads(::google::protobuf::int32 value);
+
+  // optional string user_agent = 2;
+  inline bool has_user_agent() const;
+  inline void clear_user_agent();
+  static const int kUserAgentFieldNumber = 2;
+  inline const ::std::string& user_agent() const;
+  inline void set_user_agent(const ::std::string& value);
+  inline void set_user_agent(const char* value);
+  inline void set_user_agent(const char* value, size_t size);
+  inline ::std::string* mutable_user_agent();
+  inline ::std::string* release_user_agent();
+  inline void set_allocated_user_agent(::std::string* user_agent);
+
+  // optional string user_agent_md5_dir = 3;
+  inline bool has_user_agent_md5_dir() const;
+  inline void clear_user_agent_md5_dir();
+  static const int kUserAgentMd5DirFieldNumber = 3;
+  inline const ::std::string& user_agent_md5_dir() const;
+  inline void set_user_agent_md5_dir(const ::std::string& value);
+  inline void set_user_agent_md5_dir(const char* value);
+  inline void set_user_agent_md5_dir(const char* value, size_t size);
+  inline ::std::string* mutable_user_agent_md5_dir();
+  inline ::std::string* release_user_agent_md5_dir();
+  inline void set_allocated_user_agent_md5_dir(::std::string* user_agent_md5_dir);
+
+  // optional .cloaking_detection.CrawlConfig.BrowserType browser_type = 4;
+  inline bool has_browser_type() const;
+  inline void clear_browser_type();
+  static const int kBrowserTypeFieldNumber = 4;
+  inline ::cloaking_detection::CrawlConfig_BrowserType browser_type() const;
+  inline void set_browser_type(::cloaking_detection::CrawlConfig_BrowserType value);
+
+  // @@protoc_insertion_point(class_scope:cloaking_detection.CrawlConfig)
+ private:
+  inline void set_has_maximum_threads();
+  inline void clear_has_maximum_threads();
+  inline void set_has_user_agent();
+  inline void clear_has_user_agent();
+  inline void set_has_user_agent_md5_dir();
+  inline void clear_has_user_agent_md5_dir();
+  inline void set_has_browser_type();
+  inline void clear_has_browser_type();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* user_agent_;
+  ::google::protobuf::int32 maximum_threads_;
+  int browser_type_;
+  ::std::string* user_agent_md5_dir_;
+  friend void  protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_AssignDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_ShutdownFile_cloaking_5fdetection_2eproto();
+
+  void InitAsDefaultInstance();
+  static CrawlConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class CrawlLog : public ::google::protobuf::Message {
+ public:
+  CrawlLog();
+  virtual ~CrawlLog();
+
+  CrawlLog(const CrawlLog& from);
+
+  inline CrawlLog& operator=(const CrawlLog& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CrawlLog& default_instance();
+
+  void Swap(CrawlLog* other);
+
+  // implements Message ----------------------------------------------
+
+  CrawlLog* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CrawlLog& from);
+  void MergeFrom(const CrawlLog& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .cloaking_detection.CrawlResult result = 1;
+  inline int result_size() const;
+  inline void clear_result();
+  static const int kResultFieldNumber = 1;
+  inline const ::cloaking_detection::CrawlResult& result(int index) const;
+  inline ::cloaking_detection::CrawlResult* mutable_result(int index);
+  inline ::cloaking_detection::CrawlResult* add_result();
+  inline const ::google::protobuf::RepeatedPtrField< ::cloaking_detection::CrawlResult >&
+      result() const;
+  inline ::google::protobuf::RepeatedPtrField< ::cloaking_detection::CrawlResult >*
+      mutable_result();
+
+  // @@protoc_insertion_point(class_scope:cloaking_detection.CrawlLog)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::cloaking_detection::CrawlResult > result_;
+  friend void  protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_AssignDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_ShutdownFile_cloaking_5fdetection_2eproto();
+
+  void InitAsDefaultInstance();
+  static CrawlLog* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class CrawlResult : public ::google::protobuf::Message {
+ public:
+  CrawlResult();
+  virtual ~CrawlResult();
+
+  CrawlResult(const CrawlResult& from);
+
+  inline CrawlResult& operator=(const CrawlResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CrawlResult& default_instance();
+
+  void Swap(CrawlResult* other);
+
+  // implements Message ----------------------------------------------
+
+  CrawlResult* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CrawlResult& from);
+  void MergeFrom(const CrawlResult& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string file_path = 1;
+  inline bool has_file_path() const;
+  inline void clear_file_path();
+  static const int kFilePathFieldNumber = 1;
+  inline const ::std::string& file_path() const;
+  inline void set_file_path(const ::std::string& value);
+  inline void set_file_path(const char* value);
+  inline void set_file_path(const char* value, size_t size);
+  inline ::std::string* mutable_file_path();
+  inline ::std::string* release_file_path();
+  inline void set_allocated_file_path(::std::string* file_path);
+
+  // optional string landing_url = 2;
+  inline bool has_landing_url() const;
+  inline void clear_landing_url();
+  static const int kLandingUrlFieldNumber = 2;
+  inline const ::std::string& landing_url() const;
+  inline void set_landing_url(const ::std::string& value);
+  inline void set_landing_url(const char* value);
+  inline void set_landing_url(const char* value, size_t size);
+  inline ::std::string* mutable_landing_url();
+  inline ::std::string* release_landing_url();
+  inline void set_allocated_landing_url(::std::string* landing_url);
+
+  // optional string landing_url_md5 = 3;
+  inline bool has_landing_url_md5() const;
+  inline void clear_landing_url_md5();
+  static const int kLandingUrlMd5FieldNumber = 3;
+  inline const ::std::string& landing_url_md5() const;
+  inline void set_landing_url_md5(const ::std::string& value);
+  inline void set_landing_url_md5(const char* value);
+  inline void set_landing_url_md5(const char* value, size_t size);
+  inline ::std::string* mutable_landing_url_md5();
+  inline ::std::string* release_landing_url_md5();
+  inline void set_allocated_landing_url_md5(::std::string* landing_url_md5);
+
+  // optional string url = 4;
+  inline bool has_url() const;
+  inline void clear_url();
+  static const int kUrlFieldNumber = 4;
+  inline const ::std::string& url() const;
+  inline void set_url(const ::std::string& value);
+  inline void set_url(const char* value);
+  inline void set_url(const char* value, size_t size);
+  inline ::std::string* mutable_url();
+  inline ::std::string* release_url();
+  inline void set_allocated_url(::std::string* url);
+
+  // optional string url_md5 = 5;
+  inline bool has_url_md5() const;
+  inline void clear_url_md5();
+  static const int kUrlMd5FieldNumber = 5;
+  inline const ::std::string& url_md5() const;
+  inline void set_url_md5(const ::std::string& value);
+  inline void set_url_md5(const char* value);
+  inline void set_url_md5(const char* value, size_t size);
+  inline ::std::string* mutable_url_md5();
+  inline ::std::string* release_url_md5();
+  inline void set_allocated_url_md5(::std::string* url_md5);
+
+  // optional string timestamp = 6;
+  inline bool has_timestamp() const;
+  inline void clear_timestamp();
+  static const int kTimestampFieldNumber = 6;
+  inline const ::std::string& timestamp() const;
+  inline void set_timestamp(const ::std::string& value);
+  inline void set_timestamp(const char* value);
+  inline void set_timestamp(const char* value, size_t size);
+  inline ::std::string* mutable_timestamp();
+  inline ::std::string* release_timestamp();
+  inline void set_allocated_timestamp(::std::string* timestamp);
+
+  // optional bool success = 7;
+  inline bool has_success() const;
+  inline void clear_success();
+  static const int kSuccessFieldNumber = 7;
+  inline bool success() const;
+  inline void set_success(bool value);
+
+  // @@protoc_insertion_point(class_scope:cloaking_detection.CrawlResult)
+ private:
+  inline void set_has_file_path();
+  inline void clear_has_file_path();
+  inline void set_has_landing_url();
+  inline void clear_has_landing_url();
+  inline void set_has_landing_url_md5();
+  inline void clear_has_landing_url_md5();
+  inline void set_has_url();
+  inline void clear_has_url();
+  inline void set_has_url_md5();
+  inline void clear_has_url_md5();
+  inline void set_has_timestamp();
+  inline void clear_has_timestamp();
+  inline void set_has_success();
+  inline void clear_has_success();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* file_path_;
+  ::std::string* landing_url_;
+  ::std::string* landing_url_md5_;
+  ::std::string* url_;
+  ::std::string* url_md5_;
+  ::std::string* timestamp_;
+  bool success_;
+  friend void  protobuf_AddDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_AssignDesc_cloaking_5fdetection_2eproto();
+  friend void protobuf_ShutdownFile_cloaking_5fdetection_2eproto();
+
+  void InitAsDefaultInstance();
+  static CrawlResult* default_instance_;
 };
 // ===================================================================
 
@@ -1749,86 +2811,480 @@ inline void Pattern::set_std(double value) {
   // @@protoc_insertion_point(field_set:cloaking_detection.Pattern.std)
 }
 
-// repeated .cloaking_detection.Item item = 3;
+// repeated .cloaking_detection.SimhashItem item = 3 [deprecated = true];
 inline int Pattern::item_size() const {
   return item_.size();
 }
 inline void Pattern::clear_item() {
   item_.Clear();
 }
-inline const ::cloaking_detection::Item& Pattern::item(int index) const {
+inline const ::cloaking_detection::SimhashItem& Pattern::item(int index) const {
   // @@protoc_insertion_point(field_get:cloaking_detection.Pattern.item)
   return item_.Get(index);
 }
-inline ::cloaking_detection::Item* Pattern::mutable_item(int index) {
+inline ::cloaking_detection::SimhashItem* Pattern::mutable_item(int index) {
   // @@protoc_insertion_point(field_mutable:cloaking_detection.Pattern.item)
   return item_.Mutable(index);
 }
-inline ::cloaking_detection::Item* Pattern::add_item() {
+inline ::cloaking_detection::SimhashItem* Pattern::add_item() {
   // @@protoc_insertion_point(field_add:cloaking_detection.Pattern.item)
   return item_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::cloaking_detection::Item >&
+inline const ::google::protobuf::RepeatedPtrField< ::cloaking_detection::SimhashItem >&
 Pattern::item() const {
   // @@protoc_insertion_point(field_list:cloaking_detection.Pattern.item)
   return item_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::cloaking_detection::Item >*
+inline ::google::protobuf::RepeatedPtrField< ::cloaking_detection::SimhashItem >*
 Pattern::mutable_item() {
   // @@protoc_insertion_point(field_mutable_list:cloaking_detection.Pattern.item)
   return &item_;
 }
 
+// repeated uint64 centroid = 4 [packed = true];
+inline int Pattern::centroid_size() const {
+  return centroid_.size();
+}
+inline void Pattern::clear_centroid() {
+  centroid_.Clear();
+}
+inline ::google::protobuf::uint64 Pattern::centroid(int index) const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Pattern.centroid)
+  return centroid_.Get(index);
+}
+inline void Pattern::set_centroid(int index, ::google::protobuf::uint64 value) {
+  centroid_.Set(index, value);
+  // @@protoc_insertion_point(field_set:cloaking_detection.Pattern.centroid)
+}
+inline void Pattern::add_centroid(::google::protobuf::uint64 value) {
+  centroid_.Add(value);
+  // @@protoc_insertion_point(field_add:cloaking_detection.Pattern.centroid)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
+Pattern::centroid() const {
+  // @@protoc_insertion_point(field_list:cloaking_detection.Pattern.centroid)
+  return centroid_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
+Pattern::mutable_centroid() {
+  // @@protoc_insertion_point(field_mutable_list:cloaking_detection.Pattern.centroid)
+  return &centroid_;
+}
+
+// optional uint64 size = 5;
+inline bool Pattern::has_size() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Pattern::set_has_size() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Pattern::clear_has_size() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Pattern::clear_size() {
+  size_ = GOOGLE_ULONGLONG(0);
+  clear_has_size();
+}
+inline ::google::protobuf::uint64 Pattern::size() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Pattern.size)
+  return size_;
+}
+inline void Pattern::set_size(::google::protobuf::uint64 value) {
+  set_has_size();
+  size_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Pattern.size)
+}
+
+// optional double threshold = 6;
+inline bool Pattern::has_threshold() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Pattern::set_has_threshold() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Pattern::clear_has_threshold() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Pattern::clear_threshold() {
+  threshold_ = 0;
+  clear_has_threshold();
+}
+inline double Pattern::threshold() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Pattern.threshold)
+  return threshold_;
+}
+inline void Pattern::set_threshold(double value) {
+  set_has_threshold();
+  threshold_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Pattern.threshold)
+}
+
+// optional .cloaking_detection.CDF cdf = 7;
+inline bool Pattern::has_cdf() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Pattern::set_has_cdf() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Pattern::clear_has_cdf() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void Pattern::clear_cdf() {
+  if (cdf_ != NULL) cdf_->::cloaking_detection::CDF::Clear();
+  clear_has_cdf();
+}
+inline const ::cloaking_detection::CDF& Pattern::cdf() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Pattern.cdf)
+  return cdf_ != NULL ? *cdf_ : *default_instance_->cdf_;
+}
+inline ::cloaking_detection::CDF* Pattern::mutable_cdf() {
+  set_has_cdf();
+  if (cdf_ == NULL) cdf_ = new ::cloaking_detection::CDF;
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.Pattern.cdf)
+  return cdf_;
+}
+inline ::cloaking_detection::CDF* Pattern::release_cdf() {
+  clear_has_cdf();
+  ::cloaking_detection::CDF* temp = cdf_;
+  cdf_ = NULL;
+  return temp;
+}
+inline void Pattern::set_allocated_cdf(::cloaking_detection::CDF* cdf) {
+  delete cdf_;
+  cdf_ = cdf;
+  if (cdf) {
+    set_has_cdf();
+  } else {
+    clear_has_cdf();
+  }
+  // @@protoc_insertion_point(field_set_allocated:cloaking_detection.Pattern.cdf)
+}
+
+// optional .cloaking_detection.Percentile percentile = 8;
+inline bool Pattern::has_percentile() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void Pattern::set_has_percentile() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void Pattern::clear_has_percentile() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void Pattern::clear_percentile() {
+  if (percentile_ != NULL) percentile_->::cloaking_detection::Percentile::Clear();
+  clear_has_percentile();
+}
+inline const ::cloaking_detection::Percentile& Pattern::percentile() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Pattern.percentile)
+  return percentile_ != NULL ? *percentile_ : *default_instance_->percentile_;
+}
+inline ::cloaking_detection::Percentile* Pattern::mutable_percentile() {
+  set_has_percentile();
+  if (percentile_ == NULL) percentile_ = new ::cloaking_detection::Percentile;
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.Pattern.percentile)
+  return percentile_;
+}
+inline ::cloaking_detection::Percentile* Pattern::release_percentile() {
+  clear_has_percentile();
+  ::cloaking_detection::Percentile* temp = percentile_;
+  percentile_ = NULL;
+  return temp;
+}
+inline void Pattern::set_allocated_percentile(::cloaking_detection::Percentile* percentile) {
+  delete percentile_;
+  percentile_ = percentile;
+  if (percentile) {
+    set_has_percentile();
+  } else {
+    clear_has_percentile();
+  }
+  // @@protoc_insertion_point(field_set_allocated:cloaking_detection.Pattern.percentile)
+}
+
 // -------------------------------------------------------------------
 
-// Item
+// Percentile
 
-// required uint64 simhash = 1;
-inline bool Item::has_simhash() const {
+// optional uint32 p99 = 1;
+inline bool Percentile::has_p99() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Item::set_has_simhash() {
+inline void Percentile::set_has_p99() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Item::clear_has_simhash() {
+inline void Percentile::clear_has_p99() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Item::clear_simhash() {
+inline void Percentile::clear_p99() {
+  p99_ = 0u;
+  clear_has_p99();
+}
+inline ::google::protobuf::uint32 Percentile::p99() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Percentile.p99)
+  return p99_;
+}
+inline void Percentile::set_p99(::google::protobuf::uint32 value) {
+  set_has_p99();
+  p99_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Percentile.p99)
+}
+
+// optional uint32 p97 = 2;
+inline bool Percentile::has_p97() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Percentile::set_has_p97() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Percentile::clear_has_p97() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Percentile::clear_p97() {
+  p97_ = 0u;
+  clear_has_p97();
+}
+inline ::google::protobuf::uint32 Percentile::p97() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Percentile.p97)
+  return p97_;
+}
+inline void Percentile::set_p97(::google::protobuf::uint32 value) {
+  set_has_p97();
+  p97_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Percentile.p97)
+}
+
+// optional uint32 p95 = 3;
+inline bool Percentile::has_p95() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Percentile::set_has_p95() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Percentile::clear_has_p95() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Percentile::clear_p95() {
+  p95_ = 0u;
+  clear_has_p95();
+}
+inline ::google::protobuf::uint32 Percentile::p95() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Percentile.p95)
+  return p95_;
+}
+inline void Percentile::set_p95(::google::protobuf::uint32 value) {
+  set_has_p95();
+  p95_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Percentile.p95)
+}
+
+// optional uint32 p90 = 4;
+inline bool Percentile::has_p90() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Percentile::set_has_p90() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Percentile::clear_has_p90() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Percentile::clear_p90() {
+  p90_ = 0u;
+  clear_has_p90();
+}
+inline ::google::protobuf::uint32 Percentile::p90() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Percentile.p90)
+  return p90_;
+}
+inline void Percentile::set_p90(::google::protobuf::uint32 value) {
+  set_has_p90();
+  p90_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Percentile.p90)
+}
+
+// optional uint32 p75 = 5;
+inline bool Percentile::has_p75() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Percentile::set_has_p75() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Percentile::clear_has_p75() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Percentile::clear_p75() {
+  p75_ = 0u;
+  clear_has_p75();
+}
+inline ::google::protobuf::uint32 Percentile::p75() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Percentile.p75)
+  return p75_;
+}
+inline void Percentile::set_p75(::google::protobuf::uint32 value) {
+  set_has_p75();
+  p75_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Percentile.p75)
+}
+
+// optional uint32 p50 = 6;
+inline bool Percentile::has_p50() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Percentile::set_has_p50() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Percentile::clear_has_p50() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Percentile::clear_p50() {
+  p50_ = 0u;
+  clear_has_p50();
+}
+inline ::google::protobuf::uint32 Percentile::p50() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Percentile.p50)
+  return p50_;
+}
+inline void Percentile::set_p50(::google::protobuf::uint32 value) {
+  set_has_p50();
+  p50_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Percentile.p50)
+}
+
+// -------------------------------------------------------------------
+
+// CDF
+
+// repeated .cloaking_detection.Point point = 1;
+inline int CDF::point_size() const {
+  return point_.size();
+}
+inline void CDF::clear_point() {
+  point_.Clear();
+}
+inline const ::cloaking_detection::Point& CDF::point(int index) const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.CDF.point)
+  return point_.Get(index);
+}
+inline ::cloaking_detection::Point* CDF::mutable_point(int index) {
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.CDF.point)
+  return point_.Mutable(index);
+}
+inline ::cloaking_detection::Point* CDF::add_point() {
+  // @@protoc_insertion_point(field_add:cloaking_detection.CDF.point)
+  return point_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::cloaking_detection::Point >&
+CDF::point() const {
+  // @@protoc_insertion_point(field_list:cloaking_detection.CDF.point)
+  return point_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::cloaking_detection::Point >*
+CDF::mutable_point() {
+  // @@protoc_insertion_point(field_mutable_list:cloaking_detection.CDF.point)
+  return &point_;
+}
+
+// -------------------------------------------------------------------
+
+// Point
+
+// required uint32 x = 1;
+inline bool Point::has_x() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Point::set_has_x() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Point::clear_has_x() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Point::clear_x() {
+  x_ = 0u;
+  clear_has_x();
+}
+inline ::google::protobuf::uint32 Point::x() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Point.x)
+  return x_;
+}
+inline void Point::set_x(::google::protobuf::uint32 value) {
+  set_has_x();
+  x_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Point.x)
+}
+
+// required uint64 count = 2;
+inline bool Point::has_count() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Point::set_has_count() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Point::clear_has_count() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Point::clear_count() {
+  count_ = GOOGLE_ULONGLONG(0);
+  clear_has_count();
+}
+inline ::google::protobuf::uint64 Point::count() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Point.count)
+  return count_;
+}
+inline void Point::set_count(::google::protobuf::uint64 value) {
+  set_has_count();
+  count_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Point.count)
+}
+
+// -------------------------------------------------------------------
+
+// SimhashItem
+
+// required uint64 simhash = 1;
+inline bool SimhashItem::has_simhash() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SimhashItem::set_has_simhash() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SimhashItem::clear_has_simhash() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SimhashItem::clear_simhash() {
   simhash_ = GOOGLE_ULONGLONG(0);
   clear_has_simhash();
 }
-inline ::google::protobuf::uint64 Item::simhash() const {
-  // @@protoc_insertion_point(field_get:cloaking_detection.Item.simhash)
+inline ::google::protobuf::uint64 SimhashItem::simhash() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.SimhashItem.simhash)
   return simhash_;
 }
-inline void Item::set_simhash(::google::protobuf::uint64 value) {
+inline void SimhashItem::set_simhash(::google::protobuf::uint64 value) {
   set_has_simhash();
   simhash_ = value;
-  // @@protoc_insertion_point(field_set:cloaking_detection.Item.simhash)
+  // @@protoc_insertion_point(field_set:cloaking_detection.SimhashItem.simhash)
 }
 
 // optional uint64 count = 2 [default = 1];
-inline bool Item::has_count() const {
+inline bool SimhashItem::has_count() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Item::set_has_count() {
+inline void SimhashItem::set_has_count() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void Item::clear_has_count() {
+inline void SimhashItem::clear_has_count() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void Item::clear_count() {
+inline void SimhashItem::clear_count() {
   count_ = GOOGLE_ULONGLONG(1);
   clear_has_count();
 }
-inline ::google::protobuf::uint64 Item::count() const {
-  // @@protoc_insertion_point(field_get:cloaking_detection.Item.count)
+inline ::google::protobuf::uint64 SimhashItem::count() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.SimhashItem.count)
   return count_;
 }
-inline void Item::set_count(::google::protobuf::uint64 value) {
+inline void SimhashItem::set_count(::google::protobuf::uint64 value) {
   set_has_count();
   count_ = value;
-  // @@protoc_insertion_point(field_set:cloaking_detection.Item.count)
+  // @@protoc_insertion_point(field_set:cloaking_detection.SimhashItem.count)
 }
 
 // -------------------------------------------------------------------
@@ -1863,6 +3319,47 @@ inline ::google::protobuf::RepeatedPtrField< ::cloaking_detection::SiteObservati
 ObservedSites::mutable_site() {
   // @@protoc_insertion_point(field_mutable_list:cloaking_detection.ObservedSites.site)
   return &site_;
+}
+
+// optional .cloaking_detection.SimhashConfig config = 2;
+inline bool ObservedSites::has_config() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ObservedSites::set_has_config() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ObservedSites::clear_has_config() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ObservedSites::clear_config() {
+  if (config_ != NULL) config_->::cloaking_detection::SimhashConfig::Clear();
+  clear_has_config();
+}
+inline const ::cloaking_detection::SimhashConfig& ObservedSites::config() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.ObservedSites.config)
+  return config_ != NULL ? *config_ : *default_instance_->config_;
+}
+inline ::cloaking_detection::SimhashConfig* ObservedSites::mutable_config() {
+  set_has_config();
+  if (config_ == NULL) config_ = new ::cloaking_detection::SimhashConfig;
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.ObservedSites.config)
+  return config_;
+}
+inline ::cloaking_detection::SimhashConfig* ObservedSites::release_config() {
+  clear_has_config();
+  ::cloaking_detection::SimhashConfig* temp = config_;
+  config_ = NULL;
+  return temp;
+}
+inline void ObservedSites::set_allocated_config(::cloaking_detection::SimhashConfig* config) {
+  delete config_;
+  config_ = config;
+  if (config) {
+    set_has_config();
+  } else {
+    clear_has_config();
+  }
+  // @@protoc_insertion_point(field_set_allocated:cloaking_detection.ObservedSites.config)
 }
 
 // -------------------------------------------------------------------
@@ -2727,7 +4224,7 @@ inline void SimhashConfig_FeatureUsage::set_tri_gram(bool value) {
 
 // SimhashConfig
 
-// required .cloaking_detection.SimhashConfig.SimhashType simhash_type = 1;
+// required .cloaking_detection.SimhashType simhash_type = 1;
 inline bool SimhashConfig::has_simhash_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -2741,12 +4238,12 @@ inline void SimhashConfig::clear_simhash_type() {
   simhash_type_ = 0;
   clear_has_simhash_type();
 }
-inline ::cloaking_detection::SimhashConfig_SimhashType SimhashConfig::simhash_type() const {
+inline ::cloaking_detection::SimhashType SimhashConfig::simhash_type() const {
   // @@protoc_insertion_point(field_get:cloaking_detection.SimhashConfig.simhash_type)
-  return static_cast< ::cloaking_detection::SimhashConfig_SimhashType >(simhash_type_);
+  return static_cast< ::cloaking_detection::SimhashType >(simhash_type_);
 }
-inline void SimhashConfig::set_simhash_type(::cloaking_detection::SimhashConfig_SimhashType value) {
-  assert(::cloaking_detection::SimhashConfig_SimhashType_IsValid(value));
+inline void SimhashConfig::set_simhash_type(::cloaking_detection::SimhashType value) {
+  assert(::cloaking_detection::SimhashType_IsValid(value));
   set_has_simhash_type();
   simhash_type_ = value;
   // @@protoc_insertion_point(field_set:cloaking_detection.SimhashConfig.simhash_type)
@@ -2819,9 +4316,110 @@ inline void SimhashConfig::set_maximum_threads(::google::protobuf::int32 value) 
 
 // -------------------------------------------------------------------
 
+// Algorithm
+
+// required .cloaking_detection.Algorithm.AlgoName name = 1;
+inline bool Algorithm::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Algorithm::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Algorithm::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Algorithm::clear_name() {
+  name_ = 0;
+  clear_has_name();
+}
+inline ::cloaking_detection::Algorithm_AlgoName Algorithm::name() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Algorithm.name)
+  return static_cast< ::cloaking_detection::Algorithm_AlgoName >(name_);
+}
+inline void Algorithm::set_name(::cloaking_detection::Algorithm_AlgoName value) {
+  assert(::cloaking_detection::Algorithm_AlgoName_IsValid(value));
+  set_has_name();
+  name_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Algorithm.name)
+}
+
+// optional int32 thres = 2;
+inline bool Algorithm::has_thres() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Algorithm::set_has_thres() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Algorithm::clear_has_thres() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Algorithm::clear_thres() {
+  thres_ = 0;
+  clear_has_thres();
+}
+inline ::google::protobuf::int32 Algorithm::thres() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Algorithm.thres)
+  return thres_;
+}
+inline void Algorithm::set_thres(::google::protobuf::int32 value) {
+  set_has_thres();
+  thres_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Algorithm.thres)
+}
+
+// optional int32 k = 3;
+inline bool Algorithm::has_k() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Algorithm::set_has_k() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Algorithm::clear_has_k() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Algorithm::clear_k() {
+  k_ = 0;
+  clear_has_k();
+}
+inline ::google::protobuf::int32 Algorithm::k() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Algorithm.k)
+  return k_;
+}
+inline void Algorithm::set_k(::google::protobuf::int32 value) {
+  set_has_k();
+  k_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Algorithm.k)
+}
+
+// optional int32 left_out_ratio = 4;
+inline bool Algorithm::has_left_out_ratio() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Algorithm::set_has_left_out_ratio() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Algorithm::clear_has_left_out_ratio() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Algorithm::clear_left_out_ratio() {
+  left_out_ratio_ = 0;
+  clear_has_left_out_ratio();
+}
+inline ::google::protobuf::int32 Algorithm::left_out_ratio() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.Algorithm.left_out_ratio)
+  return left_out_ratio_;
+}
+inline void Algorithm::set_left_out_ratio(::google::protobuf::int32 value) {
+  set_has_left_out_ratio();
+  left_out_ratio_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.Algorithm.left_out_ratio)
+}
+
+// -------------------------------------------------------------------
+
 // ClusterConfig
 
-// required .cloaking_detection.ClusterConfig.Algorithm algorithm = 1;
+// required .cloaking_detection.Algorithm algorithm = 1;
 inline bool ClusterConfig::has_algorithm() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -2832,42 +4430,58 @@ inline void ClusterConfig::clear_has_algorithm() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void ClusterConfig::clear_algorithm() {
-  algorithm_ = 0;
+  if (algorithm_ != NULL) algorithm_->::cloaking_detection::Algorithm::Clear();
   clear_has_algorithm();
 }
-inline ::cloaking_detection::ClusterConfig_Algorithm ClusterConfig::algorithm() const {
+inline const ::cloaking_detection::Algorithm& ClusterConfig::algorithm() const {
   // @@protoc_insertion_point(field_get:cloaking_detection.ClusterConfig.algorithm)
-  return static_cast< ::cloaking_detection::ClusterConfig_Algorithm >(algorithm_);
+  return algorithm_ != NULL ? *algorithm_ : *default_instance_->algorithm_;
 }
-inline void ClusterConfig::set_algorithm(::cloaking_detection::ClusterConfig_Algorithm value) {
-  assert(::cloaking_detection::ClusterConfig_Algorithm_IsValid(value));
+inline ::cloaking_detection::Algorithm* ClusterConfig::mutable_algorithm() {
   set_has_algorithm();
-  algorithm_ = value;
-  // @@protoc_insertion_point(field_set:cloaking_detection.ClusterConfig.algorithm)
+  if (algorithm_ == NULL) algorithm_ = new ::cloaking_detection::Algorithm;
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.ClusterConfig.algorithm)
+  return algorithm_;
+}
+inline ::cloaking_detection::Algorithm* ClusterConfig::release_algorithm() {
+  clear_has_algorithm();
+  ::cloaking_detection::Algorithm* temp = algorithm_;
+  algorithm_ = NULL;
+  return temp;
+}
+inline void ClusterConfig::set_allocated_algorithm(::cloaking_detection::Algorithm* algorithm) {
+  delete algorithm_;
+  algorithm_ = algorithm;
+  if (algorithm) {
+    set_has_algorithm();
+  } else {
+    clear_has_algorithm();
+  }
+  // @@protoc_insertion_point(field_set_allocated:cloaking_detection.ClusterConfig.algorithm)
 }
 
-// optional int32 cluster_number = 2;
-inline bool ClusterConfig::has_cluster_number() const {
+// optional int32 minimum_cluster_size = 2 [default = 2];
+inline bool ClusterConfig::has_minimum_cluster_size() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void ClusterConfig::set_has_cluster_number() {
+inline void ClusterConfig::set_has_minimum_cluster_size() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void ClusterConfig::clear_has_cluster_number() {
+inline void ClusterConfig::clear_has_minimum_cluster_size() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void ClusterConfig::clear_cluster_number() {
-  cluster_number_ = 0;
-  clear_has_cluster_number();
+inline void ClusterConfig::clear_minimum_cluster_size() {
+  minimum_cluster_size_ = 2;
+  clear_has_minimum_cluster_size();
 }
-inline ::google::protobuf::int32 ClusterConfig::cluster_number() const {
-  // @@protoc_insertion_point(field_get:cloaking_detection.ClusterConfig.cluster_number)
-  return cluster_number_;
+inline ::google::protobuf::int32 ClusterConfig::minimum_cluster_size() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.ClusterConfig.minimum_cluster_size)
+  return minimum_cluster_size_;
 }
-inline void ClusterConfig::set_cluster_number(::google::protobuf::int32 value) {
-  set_has_cluster_number();
-  cluster_number_ = value;
-  // @@protoc_insertion_point(field_set:cloaking_detection.ClusterConfig.cluster_number)
+inline void ClusterConfig::set_minimum_cluster_size(::google::protobuf::int32 value) {
+  set_has_minimum_cluster_size();
+  minimum_cluster_size_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.ClusterConfig.minimum_cluster_size)
 }
 
 // optional int32 maximum_threads = 3 [default = 10];
@@ -2894,6 +4508,856 @@ inline void ClusterConfig::set_maximum_threads(::google::protobuf::int32 value) 
   // @@protoc_insertion_point(field_set:cloaking_detection.ClusterConfig.maximum_threads)
 }
 
+// optional .cloaking_detection.SimhashType simhash_type = 4 [default = TEXT];
+inline bool ClusterConfig::has_simhash_type() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ClusterConfig::set_has_simhash_type() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ClusterConfig::clear_has_simhash_type() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ClusterConfig::clear_simhash_type() {
+  simhash_type_ = 0;
+  clear_has_simhash_type();
+}
+inline ::cloaking_detection::SimhashType ClusterConfig::simhash_type() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.ClusterConfig.simhash_type)
+  return static_cast< ::cloaking_detection::SimhashType >(simhash_type_);
+}
+inline void ClusterConfig::set_simhash_type(::cloaking_detection::SimhashType value) {
+  assert(::cloaking_detection::SimhashType_IsValid(value));
+  set_has_simhash_type();
+  simhash_type_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.ClusterConfig.simhash_type)
+}
+
+// -------------------------------------------------------------------
+
+// DetectionConfig
+
+// required .cloaking_detection.DetectionConfig.Algorithm algorithm = 1;
+inline bool DetectionConfig::has_algorithm() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DetectionConfig::set_has_algorithm() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DetectionConfig::clear_has_algorithm() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DetectionConfig::clear_algorithm() {
+  algorithm_ = 0;
+  clear_has_algorithm();
+}
+inline ::cloaking_detection::DetectionConfig_Algorithm DetectionConfig::algorithm() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.DetectionConfig.algorithm)
+  return static_cast< ::cloaking_detection::DetectionConfig_Algorithm >(algorithm_);
+}
+inline void DetectionConfig::set_algorithm(::cloaking_detection::DetectionConfig_Algorithm value) {
+  assert(::cloaking_detection::DetectionConfig_Algorithm_IsValid(value));
+  set_has_algorithm();
+  algorithm_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.DetectionConfig.algorithm)
+}
+
+// optional int32 std_constant = 2;
+inline bool DetectionConfig::has_std_constant() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DetectionConfig::set_has_std_constant() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DetectionConfig::clear_has_std_constant() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DetectionConfig::clear_std_constant() {
+  std_constant_ = 0;
+  clear_has_std_constant();
+}
+inline ::google::protobuf::int32 DetectionConfig::std_constant() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.DetectionConfig.std_constant)
+  return std_constant_;
+}
+inline void DetectionConfig::set_std_constant(::google::protobuf::int32 value) {
+  set_has_std_constant();
+  std_constant_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.DetectionConfig.std_constant)
+}
+
+// optional .cloaking_detection.SimhashType simhash_type = 3 [default = TEXT];
+inline bool DetectionConfig::has_simhash_type() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void DetectionConfig::set_has_simhash_type() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void DetectionConfig::clear_has_simhash_type() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void DetectionConfig::clear_simhash_type() {
+  simhash_type_ = 0;
+  clear_has_simhash_type();
+}
+inline ::cloaking_detection::SimhashType DetectionConfig::simhash_type() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.DetectionConfig.simhash_type)
+  return static_cast< ::cloaking_detection::SimhashType >(simhash_type_);
+}
+inline void DetectionConfig::set_simhash_type(::cloaking_detection::SimhashType value) {
+  assert(::cloaking_detection::SimhashType_IsValid(value));
+  set_has_simhash_type();
+  simhash_type_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.DetectionConfig.simhash_type)
+}
+
+// optional int32 p = 4 [default = 97];
+inline bool DetectionConfig::has_p() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void DetectionConfig::set_has_p() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void DetectionConfig::clear_has_p() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void DetectionConfig::clear_p() {
+  p_ = 97;
+  clear_has_p();
+}
+inline ::google::protobuf::int32 DetectionConfig::p() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.DetectionConfig.p)
+  return p_;
+}
+inline void DetectionConfig::set_p(::google::protobuf::int32 value) {
+  set_has_p();
+  p_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.DetectionConfig.p)
+}
+
+// -------------------------------------------------------------------
+
+// CrawlConfig
+
+// optional int32 maximum_threads = 1;
+inline bool CrawlConfig::has_maximum_threads() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void CrawlConfig::set_has_maximum_threads() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void CrawlConfig::clear_has_maximum_threads() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void CrawlConfig::clear_maximum_threads() {
+  maximum_threads_ = 0;
+  clear_has_maximum_threads();
+}
+inline ::google::protobuf::int32 CrawlConfig::maximum_threads() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.CrawlConfig.maximum_threads)
+  return maximum_threads_;
+}
+inline void CrawlConfig::set_maximum_threads(::google::protobuf::int32 value) {
+  set_has_maximum_threads();
+  maximum_threads_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.CrawlConfig.maximum_threads)
+}
+
+// optional string user_agent = 2;
+inline bool CrawlConfig::has_user_agent() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void CrawlConfig::set_has_user_agent() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void CrawlConfig::clear_has_user_agent() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void CrawlConfig::clear_user_agent() {
+  if (user_agent_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    user_agent_->clear();
+  }
+  clear_has_user_agent();
+}
+inline const ::std::string& CrawlConfig::user_agent() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.CrawlConfig.user_agent)
+  return *user_agent_;
+}
+inline void CrawlConfig::set_user_agent(const ::std::string& value) {
+  set_has_user_agent();
+  if (user_agent_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    user_agent_ = new ::std::string;
+  }
+  user_agent_->assign(value);
+  // @@protoc_insertion_point(field_set:cloaking_detection.CrawlConfig.user_agent)
+}
+inline void CrawlConfig::set_user_agent(const char* value) {
+  set_has_user_agent();
+  if (user_agent_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    user_agent_ = new ::std::string;
+  }
+  user_agent_->assign(value);
+  // @@protoc_insertion_point(field_set_char:cloaking_detection.CrawlConfig.user_agent)
+}
+inline void CrawlConfig::set_user_agent(const char* value, size_t size) {
+  set_has_user_agent();
+  if (user_agent_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    user_agent_ = new ::std::string;
+  }
+  user_agent_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:cloaking_detection.CrawlConfig.user_agent)
+}
+inline ::std::string* CrawlConfig::mutable_user_agent() {
+  set_has_user_agent();
+  if (user_agent_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    user_agent_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.CrawlConfig.user_agent)
+  return user_agent_;
+}
+inline ::std::string* CrawlConfig::release_user_agent() {
+  clear_has_user_agent();
+  if (user_agent_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = user_agent_;
+    user_agent_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void CrawlConfig::set_allocated_user_agent(::std::string* user_agent) {
+  if (user_agent_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete user_agent_;
+  }
+  if (user_agent) {
+    set_has_user_agent();
+    user_agent_ = user_agent;
+  } else {
+    clear_has_user_agent();
+    user_agent_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:cloaking_detection.CrawlConfig.user_agent)
+}
+
+// optional string user_agent_md5_dir = 3;
+inline bool CrawlConfig::has_user_agent_md5_dir() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void CrawlConfig::set_has_user_agent_md5_dir() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void CrawlConfig::clear_has_user_agent_md5_dir() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void CrawlConfig::clear_user_agent_md5_dir() {
+  if (user_agent_md5_dir_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    user_agent_md5_dir_->clear();
+  }
+  clear_has_user_agent_md5_dir();
+}
+inline const ::std::string& CrawlConfig::user_agent_md5_dir() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.CrawlConfig.user_agent_md5_dir)
+  return *user_agent_md5_dir_;
+}
+inline void CrawlConfig::set_user_agent_md5_dir(const ::std::string& value) {
+  set_has_user_agent_md5_dir();
+  if (user_agent_md5_dir_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    user_agent_md5_dir_ = new ::std::string;
+  }
+  user_agent_md5_dir_->assign(value);
+  // @@protoc_insertion_point(field_set:cloaking_detection.CrawlConfig.user_agent_md5_dir)
+}
+inline void CrawlConfig::set_user_agent_md5_dir(const char* value) {
+  set_has_user_agent_md5_dir();
+  if (user_agent_md5_dir_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    user_agent_md5_dir_ = new ::std::string;
+  }
+  user_agent_md5_dir_->assign(value);
+  // @@protoc_insertion_point(field_set_char:cloaking_detection.CrawlConfig.user_agent_md5_dir)
+}
+inline void CrawlConfig::set_user_agent_md5_dir(const char* value, size_t size) {
+  set_has_user_agent_md5_dir();
+  if (user_agent_md5_dir_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    user_agent_md5_dir_ = new ::std::string;
+  }
+  user_agent_md5_dir_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:cloaking_detection.CrawlConfig.user_agent_md5_dir)
+}
+inline ::std::string* CrawlConfig::mutable_user_agent_md5_dir() {
+  set_has_user_agent_md5_dir();
+  if (user_agent_md5_dir_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    user_agent_md5_dir_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.CrawlConfig.user_agent_md5_dir)
+  return user_agent_md5_dir_;
+}
+inline ::std::string* CrawlConfig::release_user_agent_md5_dir() {
+  clear_has_user_agent_md5_dir();
+  if (user_agent_md5_dir_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = user_agent_md5_dir_;
+    user_agent_md5_dir_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void CrawlConfig::set_allocated_user_agent_md5_dir(::std::string* user_agent_md5_dir) {
+  if (user_agent_md5_dir_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete user_agent_md5_dir_;
+  }
+  if (user_agent_md5_dir) {
+    set_has_user_agent_md5_dir();
+    user_agent_md5_dir_ = user_agent_md5_dir;
+  } else {
+    clear_has_user_agent_md5_dir();
+    user_agent_md5_dir_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:cloaking_detection.CrawlConfig.user_agent_md5_dir)
+}
+
+// optional .cloaking_detection.CrawlConfig.BrowserType browser_type = 4;
+inline bool CrawlConfig::has_browser_type() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void CrawlConfig::set_has_browser_type() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void CrawlConfig::clear_has_browser_type() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void CrawlConfig::clear_browser_type() {
+  browser_type_ = 0;
+  clear_has_browser_type();
+}
+inline ::cloaking_detection::CrawlConfig_BrowserType CrawlConfig::browser_type() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.CrawlConfig.browser_type)
+  return static_cast< ::cloaking_detection::CrawlConfig_BrowserType >(browser_type_);
+}
+inline void CrawlConfig::set_browser_type(::cloaking_detection::CrawlConfig_BrowserType value) {
+  assert(::cloaking_detection::CrawlConfig_BrowserType_IsValid(value));
+  set_has_browser_type();
+  browser_type_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.CrawlConfig.browser_type)
+}
+
+// -------------------------------------------------------------------
+
+// CrawlLog
+
+// repeated .cloaking_detection.CrawlResult result = 1;
+inline int CrawlLog::result_size() const {
+  return result_.size();
+}
+inline void CrawlLog::clear_result() {
+  result_.Clear();
+}
+inline const ::cloaking_detection::CrawlResult& CrawlLog::result(int index) const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.CrawlLog.result)
+  return result_.Get(index);
+}
+inline ::cloaking_detection::CrawlResult* CrawlLog::mutable_result(int index) {
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.CrawlLog.result)
+  return result_.Mutable(index);
+}
+inline ::cloaking_detection::CrawlResult* CrawlLog::add_result() {
+  // @@protoc_insertion_point(field_add:cloaking_detection.CrawlLog.result)
+  return result_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::cloaking_detection::CrawlResult >&
+CrawlLog::result() const {
+  // @@protoc_insertion_point(field_list:cloaking_detection.CrawlLog.result)
+  return result_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::cloaking_detection::CrawlResult >*
+CrawlLog::mutable_result() {
+  // @@protoc_insertion_point(field_mutable_list:cloaking_detection.CrawlLog.result)
+  return &result_;
+}
+
+// -------------------------------------------------------------------
+
+// CrawlResult
+
+// optional string file_path = 1;
+inline bool CrawlResult::has_file_path() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void CrawlResult::set_has_file_path() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void CrawlResult::clear_has_file_path() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void CrawlResult::clear_file_path() {
+  if (file_path_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    file_path_->clear();
+  }
+  clear_has_file_path();
+}
+inline const ::std::string& CrawlResult::file_path() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.CrawlResult.file_path)
+  return *file_path_;
+}
+inline void CrawlResult::set_file_path(const ::std::string& value) {
+  set_has_file_path();
+  if (file_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    file_path_ = new ::std::string;
+  }
+  file_path_->assign(value);
+  // @@protoc_insertion_point(field_set:cloaking_detection.CrawlResult.file_path)
+}
+inline void CrawlResult::set_file_path(const char* value) {
+  set_has_file_path();
+  if (file_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    file_path_ = new ::std::string;
+  }
+  file_path_->assign(value);
+  // @@protoc_insertion_point(field_set_char:cloaking_detection.CrawlResult.file_path)
+}
+inline void CrawlResult::set_file_path(const char* value, size_t size) {
+  set_has_file_path();
+  if (file_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    file_path_ = new ::std::string;
+  }
+  file_path_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:cloaking_detection.CrawlResult.file_path)
+}
+inline ::std::string* CrawlResult::mutable_file_path() {
+  set_has_file_path();
+  if (file_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    file_path_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.CrawlResult.file_path)
+  return file_path_;
+}
+inline ::std::string* CrawlResult::release_file_path() {
+  clear_has_file_path();
+  if (file_path_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = file_path_;
+    file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void CrawlResult::set_allocated_file_path(::std::string* file_path) {
+  if (file_path_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete file_path_;
+  }
+  if (file_path) {
+    set_has_file_path();
+    file_path_ = file_path;
+  } else {
+    clear_has_file_path();
+    file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:cloaking_detection.CrawlResult.file_path)
+}
+
+// optional string landing_url = 2;
+inline bool CrawlResult::has_landing_url() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void CrawlResult::set_has_landing_url() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void CrawlResult::clear_has_landing_url() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void CrawlResult::clear_landing_url() {
+  if (landing_url_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    landing_url_->clear();
+  }
+  clear_has_landing_url();
+}
+inline const ::std::string& CrawlResult::landing_url() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.CrawlResult.landing_url)
+  return *landing_url_;
+}
+inline void CrawlResult::set_landing_url(const ::std::string& value) {
+  set_has_landing_url();
+  if (landing_url_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    landing_url_ = new ::std::string;
+  }
+  landing_url_->assign(value);
+  // @@protoc_insertion_point(field_set:cloaking_detection.CrawlResult.landing_url)
+}
+inline void CrawlResult::set_landing_url(const char* value) {
+  set_has_landing_url();
+  if (landing_url_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    landing_url_ = new ::std::string;
+  }
+  landing_url_->assign(value);
+  // @@protoc_insertion_point(field_set_char:cloaking_detection.CrawlResult.landing_url)
+}
+inline void CrawlResult::set_landing_url(const char* value, size_t size) {
+  set_has_landing_url();
+  if (landing_url_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    landing_url_ = new ::std::string;
+  }
+  landing_url_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:cloaking_detection.CrawlResult.landing_url)
+}
+inline ::std::string* CrawlResult::mutable_landing_url() {
+  set_has_landing_url();
+  if (landing_url_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    landing_url_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.CrawlResult.landing_url)
+  return landing_url_;
+}
+inline ::std::string* CrawlResult::release_landing_url() {
+  clear_has_landing_url();
+  if (landing_url_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = landing_url_;
+    landing_url_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void CrawlResult::set_allocated_landing_url(::std::string* landing_url) {
+  if (landing_url_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete landing_url_;
+  }
+  if (landing_url) {
+    set_has_landing_url();
+    landing_url_ = landing_url;
+  } else {
+    clear_has_landing_url();
+    landing_url_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:cloaking_detection.CrawlResult.landing_url)
+}
+
+// optional string landing_url_md5 = 3;
+inline bool CrawlResult::has_landing_url_md5() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void CrawlResult::set_has_landing_url_md5() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void CrawlResult::clear_has_landing_url_md5() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void CrawlResult::clear_landing_url_md5() {
+  if (landing_url_md5_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    landing_url_md5_->clear();
+  }
+  clear_has_landing_url_md5();
+}
+inline const ::std::string& CrawlResult::landing_url_md5() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.CrawlResult.landing_url_md5)
+  return *landing_url_md5_;
+}
+inline void CrawlResult::set_landing_url_md5(const ::std::string& value) {
+  set_has_landing_url_md5();
+  if (landing_url_md5_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    landing_url_md5_ = new ::std::string;
+  }
+  landing_url_md5_->assign(value);
+  // @@protoc_insertion_point(field_set:cloaking_detection.CrawlResult.landing_url_md5)
+}
+inline void CrawlResult::set_landing_url_md5(const char* value) {
+  set_has_landing_url_md5();
+  if (landing_url_md5_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    landing_url_md5_ = new ::std::string;
+  }
+  landing_url_md5_->assign(value);
+  // @@protoc_insertion_point(field_set_char:cloaking_detection.CrawlResult.landing_url_md5)
+}
+inline void CrawlResult::set_landing_url_md5(const char* value, size_t size) {
+  set_has_landing_url_md5();
+  if (landing_url_md5_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    landing_url_md5_ = new ::std::string;
+  }
+  landing_url_md5_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:cloaking_detection.CrawlResult.landing_url_md5)
+}
+inline ::std::string* CrawlResult::mutable_landing_url_md5() {
+  set_has_landing_url_md5();
+  if (landing_url_md5_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    landing_url_md5_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.CrawlResult.landing_url_md5)
+  return landing_url_md5_;
+}
+inline ::std::string* CrawlResult::release_landing_url_md5() {
+  clear_has_landing_url_md5();
+  if (landing_url_md5_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = landing_url_md5_;
+    landing_url_md5_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void CrawlResult::set_allocated_landing_url_md5(::std::string* landing_url_md5) {
+  if (landing_url_md5_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete landing_url_md5_;
+  }
+  if (landing_url_md5) {
+    set_has_landing_url_md5();
+    landing_url_md5_ = landing_url_md5;
+  } else {
+    clear_has_landing_url_md5();
+    landing_url_md5_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:cloaking_detection.CrawlResult.landing_url_md5)
+}
+
+// optional string url = 4;
+inline bool CrawlResult::has_url() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void CrawlResult::set_has_url() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void CrawlResult::clear_has_url() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void CrawlResult::clear_url() {
+  if (url_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    url_->clear();
+  }
+  clear_has_url();
+}
+inline const ::std::string& CrawlResult::url() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.CrawlResult.url)
+  return *url_;
+}
+inline void CrawlResult::set_url(const ::std::string& value) {
+  set_has_url();
+  if (url_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    url_ = new ::std::string;
+  }
+  url_->assign(value);
+  // @@protoc_insertion_point(field_set:cloaking_detection.CrawlResult.url)
+}
+inline void CrawlResult::set_url(const char* value) {
+  set_has_url();
+  if (url_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    url_ = new ::std::string;
+  }
+  url_->assign(value);
+  // @@protoc_insertion_point(field_set_char:cloaking_detection.CrawlResult.url)
+}
+inline void CrawlResult::set_url(const char* value, size_t size) {
+  set_has_url();
+  if (url_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    url_ = new ::std::string;
+  }
+  url_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:cloaking_detection.CrawlResult.url)
+}
+inline ::std::string* CrawlResult::mutable_url() {
+  set_has_url();
+  if (url_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    url_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.CrawlResult.url)
+  return url_;
+}
+inline ::std::string* CrawlResult::release_url() {
+  clear_has_url();
+  if (url_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = url_;
+    url_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void CrawlResult::set_allocated_url(::std::string* url) {
+  if (url_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete url_;
+  }
+  if (url) {
+    set_has_url();
+    url_ = url;
+  } else {
+    clear_has_url();
+    url_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:cloaking_detection.CrawlResult.url)
+}
+
+// optional string url_md5 = 5;
+inline bool CrawlResult::has_url_md5() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void CrawlResult::set_has_url_md5() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void CrawlResult::clear_has_url_md5() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void CrawlResult::clear_url_md5() {
+  if (url_md5_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    url_md5_->clear();
+  }
+  clear_has_url_md5();
+}
+inline const ::std::string& CrawlResult::url_md5() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.CrawlResult.url_md5)
+  return *url_md5_;
+}
+inline void CrawlResult::set_url_md5(const ::std::string& value) {
+  set_has_url_md5();
+  if (url_md5_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    url_md5_ = new ::std::string;
+  }
+  url_md5_->assign(value);
+  // @@protoc_insertion_point(field_set:cloaking_detection.CrawlResult.url_md5)
+}
+inline void CrawlResult::set_url_md5(const char* value) {
+  set_has_url_md5();
+  if (url_md5_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    url_md5_ = new ::std::string;
+  }
+  url_md5_->assign(value);
+  // @@protoc_insertion_point(field_set_char:cloaking_detection.CrawlResult.url_md5)
+}
+inline void CrawlResult::set_url_md5(const char* value, size_t size) {
+  set_has_url_md5();
+  if (url_md5_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    url_md5_ = new ::std::string;
+  }
+  url_md5_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:cloaking_detection.CrawlResult.url_md5)
+}
+inline ::std::string* CrawlResult::mutable_url_md5() {
+  set_has_url_md5();
+  if (url_md5_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    url_md5_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.CrawlResult.url_md5)
+  return url_md5_;
+}
+inline ::std::string* CrawlResult::release_url_md5() {
+  clear_has_url_md5();
+  if (url_md5_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = url_md5_;
+    url_md5_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void CrawlResult::set_allocated_url_md5(::std::string* url_md5) {
+  if (url_md5_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete url_md5_;
+  }
+  if (url_md5) {
+    set_has_url_md5();
+    url_md5_ = url_md5;
+  } else {
+    clear_has_url_md5();
+    url_md5_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:cloaking_detection.CrawlResult.url_md5)
+}
+
+// optional string timestamp = 6;
+inline bool CrawlResult::has_timestamp() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void CrawlResult::set_has_timestamp() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void CrawlResult::clear_has_timestamp() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void CrawlResult::clear_timestamp() {
+  if (timestamp_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    timestamp_->clear();
+  }
+  clear_has_timestamp();
+}
+inline const ::std::string& CrawlResult::timestamp() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.CrawlResult.timestamp)
+  return *timestamp_;
+}
+inline void CrawlResult::set_timestamp(const ::std::string& value) {
+  set_has_timestamp();
+  if (timestamp_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    timestamp_ = new ::std::string;
+  }
+  timestamp_->assign(value);
+  // @@protoc_insertion_point(field_set:cloaking_detection.CrawlResult.timestamp)
+}
+inline void CrawlResult::set_timestamp(const char* value) {
+  set_has_timestamp();
+  if (timestamp_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    timestamp_ = new ::std::string;
+  }
+  timestamp_->assign(value);
+  // @@protoc_insertion_point(field_set_char:cloaking_detection.CrawlResult.timestamp)
+}
+inline void CrawlResult::set_timestamp(const char* value, size_t size) {
+  set_has_timestamp();
+  if (timestamp_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    timestamp_ = new ::std::string;
+  }
+  timestamp_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:cloaking_detection.CrawlResult.timestamp)
+}
+inline ::std::string* CrawlResult::mutable_timestamp() {
+  set_has_timestamp();
+  if (timestamp_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    timestamp_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:cloaking_detection.CrawlResult.timestamp)
+  return timestamp_;
+}
+inline ::std::string* CrawlResult::release_timestamp() {
+  clear_has_timestamp();
+  if (timestamp_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = timestamp_;
+    timestamp_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void CrawlResult::set_allocated_timestamp(::std::string* timestamp) {
+  if (timestamp_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete timestamp_;
+  }
+  if (timestamp) {
+    set_has_timestamp();
+    timestamp_ = timestamp;
+  } else {
+    clear_has_timestamp();
+    timestamp_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:cloaking_detection.CrawlResult.timestamp)
+}
+
+// optional bool success = 7;
+inline bool CrawlResult::has_success() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void CrawlResult::set_has_success() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void CrawlResult::clear_has_success() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void CrawlResult::clear_success() {
+  success_ = false;
+  clear_has_success();
+}
+inline bool CrawlResult::success() const {
+  // @@protoc_insertion_point(field_get:cloaking_detection.CrawlResult.success)
+  return success_;
+}
+inline void CrawlResult::set_success(bool value) {
+  set_has_success();
+  success_ = value;
+  // @@protoc_insertion_point(field_set:cloaking_detection.CrawlResult.success)
+}
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -2903,15 +5367,30 @@ inline void ClusterConfig::set_maximum_threads(::google::protobuf::int32 value) 
 namespace google {
 namespace protobuf {
 
-template <> struct is_proto_enum< ::cloaking_detection::SimhashConfig_SimhashType> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::cloaking_detection::Algorithm_AlgoName> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::cloaking_detection::SimhashConfig_SimhashType>() {
-  return ::cloaking_detection::SimhashConfig_SimhashType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::cloaking_detection::Algorithm_AlgoName>() {
+  return ::cloaking_detection::Algorithm_AlgoName_descriptor();
 }
-template <> struct is_proto_enum< ::cloaking_detection::ClusterConfig_Algorithm> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::cloaking_detection::DetectionConfig_Algorithm> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::cloaking_detection::ClusterConfig_Algorithm>() {
-  return ::cloaking_detection::ClusterConfig_Algorithm_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::cloaking_detection::DetectionConfig_Algorithm>() {
+  return ::cloaking_detection::DetectionConfig_Algorithm_descriptor();
+}
+template <> struct is_proto_enum< ::cloaking_detection::CrawlConfig_BrowserType> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::cloaking_detection::CrawlConfig_BrowserType>() {
+  return ::cloaking_detection::CrawlConfig_BrowserType_descriptor();
+}
+template <> struct is_proto_enum< ::cloaking_detection::SimhashType> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::cloaking_detection::SimhashType>() {
+  return ::cloaking_detection::SimhashType_descriptor();
+}
+template <> struct is_proto_enum< ::cloaking_detection::ParaType> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::cloaking_detection::ParaType>() {
+  return ::cloaking_detection::ParaType_descriptor();
 }
 
 }  // namespace google
