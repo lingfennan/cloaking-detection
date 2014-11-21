@@ -1,7 +1,7 @@
 """
 How to use:
-python cluster_learning.py -f compute -i <inputfile>
-python cluster_learning.py -f learn -i <inputfile>
+python cluster_learning.py -f compute -i <inputfiles> [If there are multiple inputfiles, split them by comma]
+python cluster_learning.py -f learn -i <inputfiles> [If there are multiple inputfiles, split them by comma]
 """
 
 import sys, getopt
@@ -167,11 +167,11 @@ def main(argv):
 		test_learner()
 		sys.exit()
 	if function == 'compute':
-		site_list_filenames = [inputfile]
+		site_list_filenames = inputfile.split(',')
 		compute(site_list_filenames)
 	elif function == 'learn':
-		observed_sites_filename = inputfile
-		learn(observed_sites_filename)
+		observed_sites_filenames = inputfile.split(',')
+		learn(observed_sites_filenames)
 	else:
 		print help_msg
 		sys.exit(2)
