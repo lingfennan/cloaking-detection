@@ -43,10 +43,10 @@ LEVEL = 2
 
 # hot_search_words, ad_list
 if platform.system() == 'Darwin':
-	CHROMEDRIVER_PATH = 'trend/mac_chromedriver'
+	CHROMEDRIVER_PATH = '../../data/trend/mac_chromedriver'
 	DOWNLOAD_PATH = '/Users/ruian/Downloads/'
 elif platform.system() == 'Linux':
-	CHROMEDRIVER_PATH = 'trend/linux_chromedriver'
+	CHROMEDRIVER_PATH = '../../data/trend/linux_chromedriver'
 	DOWNLOAD_PATH = '/home/ruian/Downloads/'
 else:
 	print 'System {0} not supported'.format(platform.system())

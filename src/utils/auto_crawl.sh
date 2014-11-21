@@ -1,6 +1,6 @@
 # start from today 10:00 o'clock
 googlehour="10:00"
-nongooglehour="12:36"
+nongooglehour="14:01"
 gap="1 days"
 nextdate=$(date +%Y-%m-%d)
 while true;
