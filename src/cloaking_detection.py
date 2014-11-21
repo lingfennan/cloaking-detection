@@ -53,42 +53,39 @@ class CloakingDetection(object):
 		site_name: site name of observation
 		ob_simhash: simhash of observation
 		@return
-		True if the site is learned and this observation is not seen False
+		True if the site is learned and this observation is not seen ow False
 		"""
 		if not site_name in self.learned_sites_map:
 			return False
-		prob = 1
+		prob_array = []
 		for pattern in self.learned_sites_map[site_name]:
 			dist = centroid_distance(pattern, ob_simhash)
 			""" dist==0 is the centroid"""
 			if dist==0:
-				return True
+				return False
 			for point in pattern.cdf.point:
 				if(int(math.ceil(dist-1)) == point.x): 
 					"""point.count == 0 is the centroid"""
-					if pattern.size-point.count>0:
-						return True
+	#				if pattern.size-point.count>0:
+	#					return False
 
-		return False
-		"""
-					print 'dist: '
-					print dist
-					print 'point.count'
-					print point.count
-					print 'pattern.size'
-					print pattern.size
-					print 'current estimation: '
-					print (pattern.size-point.count)/ float(pattern.size)
+#		return True
 					#the prob is not belong to this pattern
-					prob = prob * (1-(pattern.size-point.count)/ float(pattern.size))
-		print 'prob: '
-		print prob
-		threshold = 0.5
-		prob_positive = 1 - prob	
-		if(prob_positive > threshold):
+					prob_array.append((pattern.size-point.count)/ float(pattern.size))
+
+		prob_result = 0.0
+		for p1 in prob_array:
+			prob_tmp = p1
+			for p2 in prob_array:
+				if prob_array.index(p1)==prob_array.index(p2):
+					continue
+				prob_tmp = prob_tmp*(1.0-p2)
+			prob_result += prob_tmp
+		print prob_result
+		if prob_result <=0.4:
 			return True
-		print 'false'
-		"""
+		return False
+
 
 	def _percentile_detection(self, site_name, ob_simhash):
 		p = 'p' + str(self.detection_config.p)
@@ -158,7 +155,7 @@ class CloakingDetection(object):
 def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type):
 	detection_config = CD.DetectionConfig()
 	detection_config.algorithm = CD.DetectionConfig.JOINT_DISTRIBUTION
-	# detection_config.algorithm = CD.DetectionConfig.NORMAL_DISTRIBUTION
+	#detection_config.algorithm = CD.DetectionConfig.NORMAL_DISTRIBUTION
 	# detection_config.algorithm = CD.DetectionConfig.PERCENTILE
 	detection_config.p = 99
 	detection_config.std_constant = 3
