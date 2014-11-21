@@ -27,7 +27,10 @@ message Pattern {
   // mean and std is used for NORMAL_DISTRIBUTION
   required double mean = 1;
   required double std = 2;
-  repeated SimhashItem item = 3 [deprecated=true];
+  // Used in model computation.
+  // Used in data labeling where one pattern requires one representative (file_path).
+  // Not used in detection (can be removed in this case).
+  repeated SimhashItem item = 3;
   // centroid is used to represent the center. This reduces computation cost.
   // centroid / size is the actual center
   repeated uint64 centroid = 4 [packed=true];
@@ -64,6 +67,7 @@ message Point {
 message SimhashItem {
   required uint64 simhash = 1;
   optional uint64 count = 2 [default = 1];
+  optional string sample_file_path = 3;  // A sample file path
 }
 
 // Sites to classify. This is used in learning and detection phase.

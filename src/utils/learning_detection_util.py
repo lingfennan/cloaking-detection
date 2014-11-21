@@ -112,6 +112,7 @@ def aggregate_simhash(observed_site, simhash_type):
 	"""
 	simhash_item_vector = list()
 	simhash_dict = dict()
+	simhash_sample_file_path = dict()
 	for observation in observed_site.observation:
 		if simhash_type == CD.TEXT:
 			simhash_value = observation.text_simhash
@@ -123,10 +124,12 @@ def aggregate_simhash(observed_site, simhash_type):
 			simhash_dict[simhash_value] += 1
 		else:
 			simhash_dict[simhash_value] = 1
+			simhash_sample_file_path[simhash_value] = observation.file_path
 	for key in simhash_dict:
 		simhash_item = CD.SimhashItem()
 		simhash_item.simhash = key
 		simhash_item.count = simhash_dict[key]
+		simhash_item.sample_file_path = simhash_sample_file_path[key]
 		simhash_item_vector.append(simhash_item)
 	return simhash_item_vector
 
