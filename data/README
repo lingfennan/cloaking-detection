@@ -1,0 +1,15 @@
+README	: Current file. Listing functionalities of each data file.
+
+trend/	: google trend data, including google hot search words etc.
+credentials	: accounts used for Google data collecting.
+google_bot_list	: user agents used by Google.
+non_google_bot_list	: user agents used by browser (user).
+non_google_bot_list_1	: user agent selected to crawl observations as user.
+old_data/	: old formatted data and Google related data.
+referer_list	: old referrer list used while interning at Google.
+url_list	: old advertisement list used while interning at Google.
+US_list[_10]	: google advertisement list. Relatively small, used to debug program.
+US_web_search_list.Chrome[1]	: google ad list collected through Chrome, using hot word list for web search. [csv.20140929-211720/*Web Search*]
+US_web_search_list.Firefox[2]	: google ad list collected through Firefox, using hot word list for web search. [csv.20140929-211720/*Web Search*]
+US_web_search_list.Chrome.201411(10 + 2N)*	: ad list [1] crawled data using google_bot_list (even dates)
+US_web_search_list.Chrome.201411(11 + 2N)*	: ad list [2] crawled data using nong_google_bot_list_1 (odd dates)
