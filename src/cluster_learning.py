@@ -1,7 +1,7 @@
 """
 How to use:
-python cluster_learning.py -f compute -i <inputfiles> [If there are multiple inputfiles, split them by comma]
-python cluster_learning.py -f learn -i <inputfiles> [If there are multiple inputfiles, split them by comma]
+python cluster_learning.py -f compute -i <inputfiles> [-o <outputfile>] (If there are multiple inputfiles, split them by comma)
+python cluster_learning.py -f learn -i <inputfiles> [-o <outputfile>] (If there are multiple inputfiles, split them by comma)
 """
 
 import sys, getopt
@@ -62,8 +62,8 @@ class ClusterLearning(object):
 				learned_site.CopyFrom(result)
 		return learned_sites
 
-def compute(site_list_filenames):
-	text_out_filename = site_list_filenames[0] + '.text'
+def compute(site_list_filenames, outfile = None):
+	text_out_filename = outfile + ".text" if outfile else site_list_filenames[0] + ".text"
 	cluster_learner = ClusterLearning()
 	simhash_config = CD.SimhashConfig()
 	simhash_config.simhash_type = CD.TEXT
@@ -71,7 +71,7 @@ def compute(site_list_filenames):
 	res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
 	write_proto_to_file(res, text_out_filename)
 
-	dom_out_filename = site_list_filenames[0] + '.dom'
+	dom_out_filename = outfile + ".dom" if outfile else site_list_filenames[0] + ".dom"
 	cluster_learner = ClusterLearning()
 	simhash_config = CD.SimhashConfig()
 	simhash_config.simhash_type = CD.DOM
@@ -79,8 +79,8 @@ def compute(site_list_filenames):
 	res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
 	write_proto_to_file(res, dom_out_filename)
 
-def learn(observed_sites_filenames):
-	out_filename = observed_sites_filenames[0] + '.learned'
+def learn(observed_sites_filenames, outfile = None):
+	out_filename = outfile + ".learned" if outfile else observed_sites_filenames[0] + ".learned"
 	cluster_learner = ClusterLearning()
 	cluster_config = CD.ClusterConfig()
 	cluster_config.algorithm.name = CD.Algorithm.HIERARCHICAL_CLUSTERING
@@ -143,8 +143,9 @@ def test_computer():
 def main(argv):
 	has_function = False
 	help_msg = 'cluster_learning.py -f <function> [-i <inputfile>], valid functions are compute, learn'
+	outputfile = None
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:", ["function=", "ifile="])
+		opts, args = getopt.getopt(argv, "hf:i:o:", ["function=", "ifile=", "ofile="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
@@ -157,6 +158,8 @@ def main(argv):
 			has_function = True
 		elif opt in ("-i", "--ifile"):
 			inputfile = arg
+		elif opt in ("-o", "--ofile"):
+			outputfile = arg
 		else:
 			print help_msg
 			sys.exit(2)
@@ -168,10 +171,10 @@ def main(argv):
 		sys.exit()
 	if function == 'compute':
 		site_list_filenames = inputfile.split(',')
-		compute(site_list_filenames)
+		compute(site_list_filenames, outputfile)
 	elif function == 'learn':
 		observed_sites_filenames = inputfile.split(',')
-		learn(observed_sites_filenames)
+		learn(observed_sites_filenames, outputfile)
 	else:
 		print help_msg
 		sys.exit(2)

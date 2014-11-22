@@ -23,7 +23,7 @@ Example Usage:
 	# format click strings into url list. Specifically, append http://www.google.com to each click string.
 	python util.py -f format_links -i click_string -o url_list [-a]
 
-	# generate test_list and test_list.mismatch
+	# generate test_list.test and test_list.mismatch
 	python util.py -f generate_test -i computed_observed_sites -n test_list_size -m mismatch_list_size
 
 	# aggregate average distance distribution for each URL patterns, the result is used to show distance distribution within patterns.
@@ -34,7 +34,10 @@ Example Usage:
 	python util.py -f hot_search_words -b Chrome -i credentials -o trend/
 
 	# get hot search words list from downloaded csv, visit and get ad clickstrings.
-	ls trend/*2013*Web\ Search.csv | python util.py -f ad_list -o data/US_2013_WS_list
+	ls ../../data/trend/*2013*Web\ Search.csv | python util.py -f ad_list -o ../../data/US_2013_WS_list
+
+	# read learned_sites or observed_sites, output URL/file_path pair for automated evaluation.
+	python util.py -f evaluation_form -i sites_filename -o out_filename -p proto_buffer
 """
 
 # hot_search_words 
@@ -52,6 +55,26 @@ else:
 	print 'System {0} not supported'.format(platform.system())
 	sys.exit(1)
 
+
+####################################################################################
+def evaluation_form(sites_filename, out_filename, proto):
+	sites = getattr(CD, proto)()
+	read_proto_from_file(sites, sites_filename)
+	out_f = open(out_filename, "w")
+	if proto == "LearnedSites":
+		for site in sites.site:
+			for pattern in site.pattern:
+				out_f.write(site.name + "\n" + \
+						pattern.item[0].sample_file_path + "\n")
+		out_f.close()
+	elif proto == "ObservedSites":
+		for site in sites.site:
+			for observation in site.observation:
+				out_f.write(site.name + "\n" + observation.file_path + "\n")
+	else:
+		raise Exception("Wrong proto! Only LearnedSites and ObservedSites can be used!")
+
+####################################################################################
 def mkdir_if_not_exist(directory):
 	if not os.path.exists(directory):
 		os.makedirs(directory)
@@ -117,6 +140,7 @@ def ad_list(report_list, outputfile, browser_type):
 	clickstring_set = get_clickstring(word_file, browser_type)
 	open(outputfile, 'w').write('\n'.join(clickstring_set))
 
+####################################################################################
 def trend_query_url(trend_url, params):
 	params_str_list = list()
 	for k,v in params.items():
@@ -396,6 +420,7 @@ def hot_search_words(credentials, output_dir, browser_type='Firefox'):
 			print 'Unknown error:', sys.exc_info()[0]
 			raise
 
+####################################################################################
 def pattern_distance_distribution(inputfile, outputfile):
 	lines = [line for line in open(inputfile, 'r').read().split('\n') if (line and line[0] == '[')]
 	distance_distribution = dict()
@@ -418,6 +443,7 @@ def pattern_distance_distribution(inputfile, outputfile):
 	print percentage
 	open(outputfile, 'w').write('\n'.join(percentage))
 
+####################################################################################
 def top_domain(URL):
 	return URL.split('://')[-1].split('?')[0].split('/')[0]
 
@@ -535,6 +561,7 @@ def generate_test(inputfile, output_dir, test_number):
 	open(test_list_mismatch_filename, 'w').write('\n'.join(test_mismatch_content))
 """
 
+####################################################################################
 def format_links(inputfile, outputfile, all_info):
 	prefix = 'http://www.google.com'
 	urls = open(inputfile, 'r').read()
@@ -546,6 +573,7 @@ def format_links(inputfile, outputfile, all_info):
 	print 'Parsed {0} click string into urls'.format(len(urls))
 	open(outputfile, 'w').write('\n'.join(urls) + '\n')
 
+####################################################################################
 def merge_logs(merge_list, outputfile, config):
 	# for the output filename, program will append suffix generated from config
 	content = list()
@@ -654,9 +682,9 @@ def merge_logs(merge_list, outputfile, config):
 
 def main(argv):
 	has_function = False
-	help_msg = 'util.py -f <function>  [-o <outputfile> -c <config>] [-i <click_string> -o <url_list>] [-i <inputfile> -n <test_number> -m <mismatch_number>] [-i <file.dist> -o <stats_file>] [-b <browser_type> -i <credentials> -o <output_dir>] [-b <browser_type> -o <ad_list>], valid functions are merge_logs, format_links, generate_test, pattern_distance_distribution, hot_search_words, ad_list'
+	help_msg = 'util.py -f <function>  [-o <outputfile> -c <config>] [-i <click_string> -o <url_list>] [-i <inputfile> -n <test_number> -m <mismatch_number>] [-i <file.dist> -o <stats_file>] [-b <browser_type> -i <credentials> -o <output_dir>] [-b <browser_type> -o <ad_list>] [-i <inputfile> -o <outputfile> -p <proto>], valid functions are merge_logs, format_links, generate_test, pattern_distance_distribution, hot_search_words, ad_list, evaluation_form'
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:o:c:n:b:m:a", ["function=", "ifile=", "ofile=", "config=", "test_number=", "browser_type=", "mismatch_number="])
+		opts, args = getopt.getopt(argv, "hf:i:o:c:n:b:m:p:a", ["function=", "ifile=", "ofile=", "config=", "test_number=", "browser_type=", "mismatch_number=", "proto="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
@@ -683,6 +711,8 @@ def main(argv):
 			mismatch_number = int(arg)
 		elif opt in ("-b", "--browser_type"):
 			browser_type = arg
+		elif opt in ("-p", "--proto"):
+			proto = arg
 		else:
 			print help_msg
 			sys.exit(2)
@@ -711,11 +741,12 @@ def main(argv):
 		print 'function is', function
 		report_list = [line[:-1] for line in sys.stdin]
 		ad_list(report_list, outputfile, browser_type)
+	elif function == "evaluation_form":
+		print 'function is', function
+		evaluation_form(inputfile, outputfile, proto)
 	else:
 		print help_msg
 		sys.exit(2)
 
 if __name__ == "__main__":
-	generate_test("data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log")
-	# main(sys.argv[1:])
-
+	main(sys.argv[1:])
