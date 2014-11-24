@@ -33,12 +33,9 @@ def test_load_observed_sites():
 def test_check_equal():
 	first_file = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.text.learned"
 	second_file = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/old_crawl_log.text.learned"
-	third_file = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.dom.learned"
-	fourth_file = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/old_crawl_log.dom.learned"
-	assert_equal(check_equal(first_file, second_file), True)
+	third_file = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/20141110_crawl_log.dom.learned"
+	assert_equal(check_equal(first_file, second_file), False)
 	assert_equal(check_equal(first_file, third_file), False)
-	assert_equal(check_equal(third_file, fourth_file), True)
-	assert_equal(check_equal(second_file, fourth_file), False)
 
 def test__split_path_by_data():
 	path = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.dom.learned"
