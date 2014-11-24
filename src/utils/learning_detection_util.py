@@ -20,6 +20,26 @@ def _strip_parameter(link):
 	parsed_link = parsed_link._replace(query=urlencode(query, True))
 	return urlunparse(parsed_link)
 
+
+def _split_path_by_data(path, index):
+	"""
+	Assumes the path follows pattern $PREFIX/data/$DETAIL_PATH
+	Split by data and get $PREFIX or $DETAIL_PATH
+	This is used to maintain consistence between paths of different programs (craw.py and cluster_learning.py).
+	@parameter
+	path: file path following format $PREFIX/data/$DETAIL_PATH
+	index: index of elements to return
+	@return
+	either $PREFIX or $DETAIL_PATH
+	"""
+	if index > 1 or index < 0:
+		raise Exception("Index out of range")
+	parts = path.split('data')
+	if len(parts) == 2:
+		return parts[index]
+	else:
+		raise Exception("More than one 'data' or no 'data'.")
+
 def load_observed_sites(site_list_filenames):
 	"""
 	@parameter
@@ -36,21 +56,10 @@ def load_observed_sites(site_list_filenames):
 		read_proto_from_file(crawl_log, site_list_filename)
 		site_list = [[result.file_path, result.landing_url] for result in crawl_log.result \
 				if result.success == True]
-		site_list_path = site_list_filename.split('/')
-		prefix = ''
-		"""
-		Assumes the path follows pattern $PREFIX/data/$DETAIL_PATH
-		iterate until we see "data", break and take the previous part as $PREFIX.
-		In site_list_filename, only data/$DETAIL_PATH are recorded, therefore append prefix to it.
-		"""
-		for part in site_list_path:
-			if not part == "data":
-				prefix += part + "/"
-			else:
-				break
-		print site_list_filename
+		prefix = _split_path_by_data(site_list_filename, 0)
 		for path, link in site_list:
-			path = prefix + path
+			# $prefix/data/$detail_path
+			path = prefix + 'data' + _split_path_by_data(path, 1)
 			key = _strip_parameter(link)
 			if key not in site_observations_map:
 				site_observations_map[key] = list()

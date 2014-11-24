@@ -1,5 +1,5 @@
 import numpy as np
-from learning_detection_util import hierarchical_clustering, load_observed_sites, _strip_parameter, average_distance, read_proto_from_file
+from learning_detection_util import hierarchical_clustering, load_observed_sites, _strip_parameter, average_distance, read_proto_from_file, _split_path_by_data
 import proto.cloaking_detection_pb2 as CD
 
 def assert_equal(actual_value, expected_value):
@@ -40,6 +40,12 @@ def test_check_equal():
 	assert_equal(check_equal(third_file, fourth_file), True)
 	assert_equal(check_equal(second_file, fourth_file), False)
 
+def test__split_path_by_data():
+	path = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.dom.learned"
+	first = _split_path_by_data(path, 0)
+	second = _split_path_by_data(path, 1)
+	assert_equal(first, "../../")
+	assert_equal(second, "/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.dom.learned")
 
 def test__strip_parameter():
 	link = 'http://www.walmart.com/search/search-ng.do?search_query=Bicycles&adid=22222222220202379358&wmlspartner=wmtlabs&wl0=e&wl1=g&wl2=c&wl3=30633615476&wl4=&veh=sem'
@@ -124,6 +130,7 @@ def test_average_distance():
 
 if __name__=="__main__":
 	test__strip_parameter()
+	test__split_path_by_data()
 	test_load_observed_sites()
 	test_hierarchical_clustering()
 	test_average_distance()
