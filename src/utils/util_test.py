@@ -4,7 +4,7 @@ from util import generate_test
 import proto.cloaking_detection_pb2 as CD
 
 def test_generate_test():
-	filename = "data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log"
+	filename = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log"
 	generate_test(filename)
 	text_test = filename + ".text.test"
 	text_mismatch = filename + ".text.mismatch"

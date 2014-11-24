@@ -25,16 +25,16 @@ def check_equal(first_file, second_file):
 	return True
 
 def test_load_observed_sites():
-	site_list_filenames = ['data/US_list_10.20141109-180617.selenium.crawl/crawl_log']
+	site_list_filenames = ['../../data/US_list_10.20141109-180617.selenium.crawl/crawl_log']
 	s, p = load_observed_sites(site_list_filenames)
 	print s
 	print p
 
 def test_check_equal():
-	first_file = "data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.text.learned"
-	second_file = "data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/old_crawl_log.text.learned"
-	third_file = "data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.dom.learned"
-	fourth_file = "data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/old_crawl_log.dom.learned"
+	first_file = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.text.learned"
+	second_file = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/old_crawl_log.text.learned"
+	third_file = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.dom.learned"
+	fourth_file = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/old_crawl_log.dom.learned"
 	assert_equal(check_equal(first_file, second_file), True)
 	assert_equal(check_equal(first_file, third_file), False)
 	assert_equal(check_equal(third_file, fourth_file), True)
