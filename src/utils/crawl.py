@@ -101,15 +101,21 @@ class Crawler:
 	# 1. Because we are working on visiting URLs or ad clickstrings (from Google ads), assume we don't need the referer file.
 	# 2. If we really need referer, one way is to directly do crawling from hot search words.
 	def __init__(self, url_file, user_agent_file, crawl_config):
-		# Prepare the output directory
-		now = datetime.now().strftime("%Y%m%d-%H%M%S")
-		self.base_dir = url_file + '.' + now + '.selenium.crawl/'
-		mkdir_if_not_exist(self.base_dir)
 		# Prepare the input
 		self.urls = filter(bool, open(url_file, 'r').read().split('\n'))
 		self.user_agents = filter(bool, open(user_agent_file, 'r').read().split('\n'))
 		# self.referers = filter(bool, open(referer_file, 'r').read().split('\n'))
 		self.crawl_config = crawl_config
+
+		# Prepare the output directory
+		for user_agent in self.user_agents:
+			if "bot" in user_agent:
+				crawl_type = "bot"
+				break
+		crawl_type = "user"
+		now = datetime.now().strftime("%Y%m%d-%H%M%S")
+		self.base_dir = url_file + '.' + crawl_type + '.' + now + '.selenium.crawl/'
+		mkdir_if_not_exist(self.base_dir)
 
 		# Prepare log files
 		# self.htmls_f = open(self.base_dir + 'html_path_list', 'a')
