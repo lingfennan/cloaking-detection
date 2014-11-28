@@ -1,10 +1,10 @@
 # start from today 10:00 o'clock
-googlehour="10:00"
-nongooglehour="14:01"
+googlehour="16:00"
+nongooglehour="16:00"
 gap="1 days"
-nextdate=$(date +%Y-%m-%d)
 while true;
 do
+	nextdate=$(date +%Y-%m-%d)
 	# sleep until specific time
 	difference=$(($(date -d "$nextdate $nongooglehour" +%s) - $(date +%s)))
 	echo "Next run is on $nextdate $nongooglehour"
@@ -18,13 +18,8 @@ do
 	fi
 	echo "Crawling webpages......................"
 	python crawl.py ../../data/US_web_search_list.Chrome ../../data/non_google_bot_list_1 8
-	previousdate=$nextdate
-	nextdate=$(date -d "$previousdate $gap" +%Y-%m-%d)
-	echo "previous"
-	echo $previousdate
-	echo "next"
-	echo $nextdate
 
+	nextdate=$(date +%Y-%m-%d)
 	# sleep until specific time
 	difference=$(($(date -d "$nextdate $googlehour" +%s) - $(date +%s)))
 	echo "Next run is on $nextdate $googlehour"
@@ -38,12 +33,4 @@ do
 	fi
 	echo "Crawling webpages......................"
 	python crawl.py ../../data/US_web_search_list.Chrome ../../data/google_bot_list 8
-	# update parameters
-	previousdate=$nextdate
-	nextdate=$(date -d "$previousdate $gap" +%Y-%m-%d)
-	echo "previous"
-	echo $previousdate
-	echo "next"
-	echo $nextdate
-	sleep 2
 done
