@@ -108,11 +108,13 @@ class Crawler:
 		self.crawl_config = crawl_config
 
 		# Prepare the output directory
+		crawl_type = None
 		for user_agent in self.user_agents:
 			if "bot" in user_agent:
 				crawl_type = "bot"
 				break
-		crawl_type = "user"
+		if not crawl_type:
+			crawl_type = "user"
 		now = datetime.now().strftime("%Y%m%d-%H%M%S")
 		self.base_dir = url_file + '.' + crawl_type + '.' + now + '.selenium.crawl/'
 		mkdir_if_not_exist(self.base_dir)
