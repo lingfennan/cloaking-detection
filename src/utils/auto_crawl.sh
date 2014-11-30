@@ -21,6 +21,9 @@ do
 	outdir=$(echo ../../data/US_web_search_list.Chrome*$nextdate*.crawl)
 	tgzfile=$outdir'.tgz'
 	tar -zcf $tgzfile $outdir
+	# save space
+	mv $tgzfile /data/urlcrawl/cloaking-data/
+	rm -r $outdir
 
 	nextdate=$(date +%Y%m%d)
 	# sleep until specific time
@@ -39,4 +42,7 @@ do
 	outdir=$(echo ../../data/US_web_search_list.Chrome*$nextdate*.crawl)
 	tgzfile=$outdir".tgz"
 	tar -zcf $tgzfile $outdir
+	# save space
+	mv $tgzfile /data/urlcrawl/cloaking-data/
+	rm -r $outdir
 done
