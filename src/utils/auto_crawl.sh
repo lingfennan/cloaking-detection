@@ -11,7 +11,7 @@ do
 	if [ $difference -lt 0 ]
 	then
 		echo "Sleeping $((86400 + difference)) seconds"
-		# sleep $((86400 + difference))
+		sleep $((86400 + difference))
 	else
 		echo "Sleeping $difference seconds"
 		sleep $difference
