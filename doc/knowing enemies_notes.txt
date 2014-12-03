@@ -1,0 +1,34 @@
+1. what's the problem?
+Malware find its way through advertising campaign.
+
+As online advertising reaches a large user population today, attackers have
+started exploiting ad networks, including DoubleClick and Zedo, to launch attacks in
+different ways. For example, drive-by downloads, scams, and phishing typically
+exploit malicious advertisers or ad networks to reach victims, whereas
+click frauds often go through malicious or compromised publishers.
+
+2. why should we care?
+Our study reveals the rampancy of malvertising: hundreds of top ranking
+Web sites fell victims and leading ad networks such as DoubleClick were infiltrated.
+
+3. what's the key idea to solve this problem?
+
+
+Visit all top alexa websites and record network requests, responses, browser events, and the code retrieved. Build 
+
+4. how can we believe their solution?
+
+5. anything surprising?
+
+6. what can we get from their approach?
+
+
+
+1. Focus on display ads
+2. Record all network 
+
+
+
+2.Firefox. Clear cookies after visit a website
+
+

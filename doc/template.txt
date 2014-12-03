@@ -1,0 +1,15 @@
+# name: Ruian Duan
+# date: 12/02/2014
+
+1. what's the problem?
+
+2. why should we care?
+
+3. what's the key idea to solve this problem?
+
+4. how can we believe their solution?
+
+5. anything surprising?
+
+6. what can we get from their approach?
+
