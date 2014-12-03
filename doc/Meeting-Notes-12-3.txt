@@ -1,0 +1,29 @@
+Curretnly, We found that the website will track the users cookie and history. Based the cookie and histoty, the website will send diffrent content.
+1. User
+clear->search->click->url
+Firstly, clear the data, after that, we search the key words "essay writing". Click the ads and store the url. In this way, the website(everlastwriting) give an illegate content.
+
+It might be possible that the user input the URL directly after the first visit, the URL might be legal, might ne illegal.
+Reason from Ruian: Some websties only try to reach the user only at first time. 
+Reason from Weiren: When the URL is going to send the information to the user, the website is computing a possiblity to send legal or illegal content based on features like cookie, history, time and others.
+
+2. Google
+In google view, if google input the URL directly, the website is legal.
+
+Cloaking Classification
+1.Repeat Cloaking
+2.User agent Cloaking
+3.Refereer Cloaking
+
+Cloaking Classification
+1.Cookie
+2.History
+3.IP
+4.user profile/preference
+5.others
+
+Human compuatation
+Replace the sensive information with word "xxxxx"
+Cut the page into 100 pieces and select five of them
+Do human compuatation to compare
+
