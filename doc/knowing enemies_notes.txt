@@ -12,23 +12,23 @@ Our study reveals the rampancy of malvertising: hundreds of top ranking
 Web sites fell victims and leading ad networks such as DoubleClick were infiltrated.
 
 3. what's the key idea to solve this problem?
+Visit all top 90,000 alexa websites and record network requests, responses, browser events, and the code retrieved.
+Identify malicious URLs and paths. Explore features and design a detection algorithm.
 
-
-Visit all top alexa websites and record network requests, responses, browser events, and the code retrieved. Build 
+For each segment, we annotate every node with a set of attributes, including node popularity,
+the role in ad delivery, the do- main registration information, and URL properties
 
 4. how can we believe their solution?
+Their solution is based on known malicious nodes. If the website is not known, they may not catch.
 
 5. anything surprising?
+21,944,174 unique URLs
+286 infected pages
+Ratio not high
 
 6. what can we get from their approach?
-
-
-
-1. Focus on display ads
-2. Record all network 
-
-
-
-2.Firefox. Clear cookies after visit a website
-
+a. They focus on Focus on display ads, but we want to click ad and visit landing url.
+b. Virtual machines + different IP solution is useful for us.
+c. The way to label data is useful.
+d. They use Firefox. Clear cookies after visit a website. We should care about cookies in our experiment as well.
 
