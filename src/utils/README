@@ -1,0 +1,3 @@
+Scripts:
+extract_cookies.sh	script used to read firefox cookies.
+BinaryCookieReader.py	script used to read safari cookies.
