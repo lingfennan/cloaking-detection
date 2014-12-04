@@ -1,0 +1,30 @@
+Design cloaking feature/factor combinations to figure out logic employed by cloakers / workflow of cloaking.
+Use the workflow of cloaking to improve the crawler efficiency.
+1. cloaking feature / factors include: cookie, referer, user agent, IP, repeat cloaking.
+2. experiments should be designed to figure out which of the above factors are functioning and the order of checking on them.
+
+Baseline:
+safari + search + click = x
+googlebot + visit = o
+
+user agent first?
+safari + cookie + visit = x
+googlebot + cookie + visit = NA
+
+referer?
+safari + search + click = x
+safari + visit = o
+safari + referer + visit = o
+
+cookie?
+safari + search + click = x, safari + visit = x, safari + clear cookie + visit = o
+safari + visit = o, safari + search + visit = o
+safari + cookie + visit = x
+
+IP?
+safari + non-google + search + click = x
+safari + google + search + click = o
+
+repeat cloaking?
+safari + search + click = x
+safari + search + click = o
