@@ -1,0 +1,29 @@
+# name: Ruian Duan
+# date: 12/02/2014
+
+1. what's the problem?
+syntactic cloaking is all the cloaking. semantic cloaking is a subset of syntactic cloaking.
+detect semantic cloaking, which aims at gaming the search engine.
+
+2. why should we care?
+search engine should rank the relevant pages at the top, however, semantic cloaking is gaming
+search engine, failing its purpose.
+
+3. what's the key idea to solve this problem?
+two step. first filter the pages that are potentially doing cloaking (huristics are used, a dictionary is proposed,
+but they actually use 3-term difference in evaluation), then use classifier to detect semantic cloaking in
+the filtered result.
+
+4. how can we believe their solution?
+they can detect user agent cloaking.
+they cannot detect IP cloaking.
+they cannot detect cookie/referer based cloaking (bad content is shown only when user visit the website
+through search engine.
+
+5. anything surprising?
+more than 1% semantic cloaking. in our case, are we supposed to see more in advertisements?
+
+6. what can we get from their approach?
+Open Directory Project -- what is this?
+The URL sets to test. In our next project (current one aims at advertisement cloaking)), which aims at search engine
+cloaking detection, we could employ this dataset.
