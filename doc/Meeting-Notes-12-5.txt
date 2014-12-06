@@ -1,0 +1,66 @@
+Meeting with Xinyu
+1. Proxies
+   Google IP (proxy will be useful) & Google Adsbot
+   Google IP & User agent
+   Use commercial IP to reach a variety of ads (reveal cloaking)
+
+2. Compile a list of illegal search words (with cloaking potential)
+Including guns, cheat, drugs, fraud, et al.
+passport sale
+
+3. The logic employed by the attacker seems not intersting. But the types of
+cloaking that they are using. If we could identify new types of cloaking,
+then the measurement itself is a good study.
+
+4. Query known lists.?! URLvoid? WOT (web of trust)?
+Websites will lower rank tend to do cloaking.
+
+5. Useful links
+Adwords Policies
+https://support.google.com/adwordspolicy/topic/1626336?hl=en&ref_topic=2996750
+Advertising policies
+AdWords policies
+Abuse of the ad network
+Adult-oriented content
+Alcoholic beverages
+Copyrighted content
+Counterfeit goods
+Dangerous products or services
+Editorial & professional requirements
+Gambling-related content
+Healthcare and medicines
+Irresponsible data collection & use
+Legal requirements & serving limitations
+Misrepresentation of self, product, or service
+Offensive or inappropriate content
+Political content
+Products or services that enable dishonest behavior
+Technical requirements
+AdWords Trademark Policy
+Trade sanctions and restricted parties
+
+Adsense Helpcenter
+https://support.google.com/adsense/#topic=1250104
+
+Editorial & professional requirements
+https://support.google.com/adwordspolicy/answer/6021546?hl=en
+
+AdSense program policies
+https://support.google.com/adsense/answer/48182?hl=en
+
+Prohibited content on Adsense
+https://support.google.com/adsense/answer/1348688?hl=en
+Adult content
+Content that advocates against an individual, group, or organization
+Copyrighted material
+Drug, alcohol, and tobacco-related content
+Hacking and cracking content
+Sites that offer compensation programs ("pay-to" sites)
+Sites that use Google Brand features
+Violent content
+Weapon-related content
+Other illegal content
+
+How Google uses advertising cookies
+http://www.google.com/policies/technologies/ads/
+
