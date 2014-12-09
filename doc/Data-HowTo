@@ -1,0 +1,9 @@
+1. Crawl pages with Google IP
+Assume we are detecting cloaking for search in English.
+Use Google translate, set original language French and set target language to
+English. Paste the link to the search bar. They will retrieve the website on
+Google's behalf.
+
+2. Crawl pages with custom IP
+PlanetLab.
+
