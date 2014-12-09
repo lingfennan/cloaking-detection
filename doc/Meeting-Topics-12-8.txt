@@ -1,0 +1,25 @@
+Meeting With Long Lu
+
+Progress ==========================================================================
+1. Learning and Detection System implemented.
+2. Manually review and result recording system
+
+Questions to answer ==========================================================================
+1. How to collect groundtruth? What should we collect?
+benign words: google trend, alexa, twitter, google suggest, 
+illegal words: best selling product, drugs, seo
+2. How to label (manually)? How to filter?
+use algorithm. pre-filtering.
+3. Is it necessary to use different IP and Google IP? How to deploy different IP?
+4. Cookie cloaking found. Is it interesting? Do we need to separately detect them?
+
+Next Steps ==========================================================================
+1. Collect illegal/against policy items related words
+2. Monitor hot search words
+
+
+Two suggestions
+1. Threat model / where are the limitation
+robust or not
+2. Generalize the problem
+more than ads cloaking, this can be used to tell whether a given observation follows a specific pattern.

@@ -1,0 +1,12 @@
+Samantha:
+1. Install and run scripts on planetlab.
+2. Request account approval and slice from Prof.Nick Feaster.
+3. Build website, provide abstract for my research.
+
+planetlab
+https://www.planet-lab.org
+emulab
+http://www.emulab.net
+seatle
+https://seattle.poly.edu/html/
+
