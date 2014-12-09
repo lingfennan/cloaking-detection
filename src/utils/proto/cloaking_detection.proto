@@ -191,6 +191,7 @@ message CrawlResult {
   optional string url_md5 = 5;
   optional string timestamp = 6;
   optional bool success = 7;
+  optional string search_term = 8;
 }
 
 // Parameter Type. Used for thread computer.

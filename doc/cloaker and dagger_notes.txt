@@ -1,0 +1,35 @@
+# Ruian Duan
+# date: 12/08/2014
+
+1. what's the problem?
+Measure and detect cloaking over time (near real time). The life time of cloaking pages,
+responsiveness of search engine.
+
+2. why should we care?
+Because search engine and cloakers are adversarial parties. We need to understand their roles
+and responsiveness to each other.
+
+3. what's the key idea to solve this problem?
+The detection method is not new. They are just combining previous works.
+a. collecting search terms. get two list of words, trendy words and pharmaceutical words.
+b. querying search results. Search these words and get top result. record snippet. filter out known benign sites here.
+c. crawling search results. web crawler to fetch the linked page.
+d. detect cloaking. use text shingling to remove duplicate, use snippet of website shown by search engine
+to remove similar pages, use dom similarity to further narrow down the pages doing cloaking.
+Their contribution actually lies in measuring cloaking over time, search engine response and cloaking duration etc.
+
+4. how can we believe their solution?
+The effectiveness of their detection algorithm is not shown correctly. Their classification of cloaking pages
+are pure manually. Not convincing.
+The measurement of search cloaking actually make sense. But seldom insights can be drawn.
+
+5. anything surprising?
+a. They measure their method by FPR, missing TPR/FNR.
+b. This paper tries to answer IP cloaking. But they don't have Google IP.
+c. They don't have any new way to detect cloaking. Just repeating previous work.
+Except for the snippet of search engine used in filtering.
+
+6. what can we get from their approach?
+a. Pages revisit and comparison to measure something.
+b. Google translate to visit. How do they achieve this? Maybe we can do the same.
+c. Whitelist, first text, then dom, combination can be referenced by us.
