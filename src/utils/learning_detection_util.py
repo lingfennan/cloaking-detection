@@ -13,11 +13,17 @@ import proto.cloaking_detection_pb2 as CD
 Below are util functions.
 """
 def _strip_parameter(link):
+	"""
+	Strip parameter values and set protocol to null for URLs, e.g.
+	http://pan.baidu.com/share/link?shareid=3788206378&uk=2050235229 ->
+	pan.baidu.com/share/link?sharedid=&uk=
+	"""
 	parsed_link = urlparse(link)
 	query = parse_qs(parsed_link.query)
 	for key in query:
 		query[key] = ''
 	parsed_link = parsed_link._replace(query=urlencode(query, True))
+	parsed_link.scheme = ''
 	return urlunparse(parsed_link)
 
 

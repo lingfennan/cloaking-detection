@@ -46,8 +46,11 @@ def test__split_path_by_data():
 
 def test__strip_parameter():
 	link = 'http://www.walmart.com/search/search-ng.do?search_query=Bicycles&adid=22222222220202379358&wmlspartner=wmtlabs&wl0=e&wl1=g&wl2=c&wl3=30633615476&wl4=&veh=sem'
+	parsed_link = \
+		'www.walmart.com/search/search-ng.do?search_query=&adid=&wmlspartner=&wl0=&wl1=&wl2=&wl3=&wl4=&veh='
 	print link
 	print _strip_parameter(link)
+	assert_equal(check_equal(_strip_parameter(link), parsed_link))
 
 def _prepare_observed_site():
 	observed_site = CD.SiteObservations()
