@@ -27,7 +27,7 @@ class Search:
 					# print clickstring
 					break
 		except:
-			continue
+			None
 		return clickstring_set
 
 	def search_results(self, browser):
@@ -47,7 +47,7 @@ class Search:
 				result_link = link_elem.get_attribute('data-href')
 				clickstring_set.add(clickstring)
 		except:
-			continue
+			None	
 		return clickstring_set
 
 	def search(self, browser, search_term, search_config):
@@ -61,7 +61,7 @@ class Search:
 		@return
 		result_set: the set of results
 		"""
-		valid_instance(search_config, CD.SearchConfig):
+		valid_instance(search_config, CD.SearchConfig)
 		start = 0
 		result_set = set()
 		while start < search_config.count:
@@ -95,7 +95,6 @@ class WordSet:
 		None
 	def google_suggest():
 		None
-
 
 # for each word, start a browser session to do google search on it,
 # click and visit the landing page. directly visit the advertisement link
@@ -131,4 +130,14 @@ class Visit:
 			result = crawl_log.result.add()
 			result.CopyFrom(s)
 		write_proto_to_file(crawl_log, self.crawl_log_filename)
+
+def main(argv):
+	user_UA = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/" \
+			"537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36"
+	google_UA = "AdsBot-Google (+http://www.google.com/adsbot.html)"
+	crawl_config = CD.CrawlConfig()
+	crawl_config.maximum_threads = 6
+	crawl_config.user_agent = user_UA
+	print crawl_config.user_agent
+	print google_UA
 
