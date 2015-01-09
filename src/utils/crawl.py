@@ -22,6 +22,16 @@ def hex_md5(string):
 	m.update(string.encode('utf-8'))
 	return m.hexdigest()
 
+def set_browser_type(self, crawl_config):
+	if 'Chrome' in crawl_config.user_agent:
+		crawl_config.browser_type = CD.CrawlConfig.CHROME
+	elif 'Firefox' in crawl_config.user_agent:
+		crawl_config.browser_type = CD.CrawlConfig.FIREFOX
+	elif 'bot' in crawl_config.user_agent:
+		crawl_config.browser_type = CD.CrawlConfig.CHROME
+	else:
+		crawl_config.browser_type = CD.CrawlConfig.CHROME
+
 class UrlFetcher(object):
 	def __init__(self, crawl_config):
 		valid_instance(crawl_config, CD.CrawlConfig)
@@ -124,16 +134,6 @@ class Crawler:
 		self.md5_UA_filename = self.base_dir + 'md5_UA.log'
 		self.crawl_log_filename = self.base_dir + 'crawl_log'
 	
-	def _set_browser_type(self, crawl_config):
-		if 'Chrome' in crawl_config.user_agent:
-			crawl_config.browser_type = CD.CrawlConfig.CHROME
-		elif 'Firefox' in crawl_config.user_agent:
-			crawl_config.browser_type = CD.CrawlConfig.FIREFOX
-		elif 'bot' in crawl_config.user_agent:
-			crawl_config.browser_type = CD.CrawlConfig.CHROME
-		else:
-			crawl_config.browser_type = CD.CrawlConfig.CHROME
-
 	def crawl(self):
 		has_written = False
 		for user_agent in self.user_agents:
@@ -141,7 +141,7 @@ class Crawler:
 			self.crawl_config.user_agent = user_agent
 			self.crawl_config.user_agent_md5_dir = self.base_dir + user_agent_md5 + '/'
 			# specify which type of browser to use
-			self._set_browser_type(self.crawl_config)
+			set_browser_type(self.crawl_config)
 			mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
 			# md5 - user agent mapping logs
 			md5_UA_f = open(self.md5_UA_filename, 'a')  # user agent

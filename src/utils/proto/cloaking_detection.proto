@@ -19,9 +19,11 @@ message Pattern {
   // Currently there are three ways to represent (model) a pattern,
   // NORMAL_DISTRIBUTION, GRADIENT_DESCENT, JOINT_DISTRIBUTION
   // centroid, size: the center of a pattern
-  // mean, std: mean and standard deviation of point to centroid distance, for NORMAL_DISTRIBUTION
+  // mean, std: mean and standard deviation of point to centroid distance,
+  // for NORMAL_DISTRIBUTION
   // percentile: an alternative for NORMAL_DISTRIBUTION
-  // threshold: for GRADIENT_DESCENT
+  // mce_threshold: minimum classification error based threshold for
+  // GRADIENT_DESCENT.
   // distribution: for JOINT_DISTRIBUTION
   //
   // mean and std is used for NORMAL_DISTRIBUTION
@@ -35,8 +37,8 @@ message Pattern {
   // centroid / size is the actual center
   repeated uint64 centroid = 4 [packed=true];
   optional uint64 size = 5;
-  // threshold is used for GRADIENT_DESCENT
-  optional double threshold = 6;
+  // mce_threshold is used for GRADIENT_DESCENT
+  optional double mce_threshold = 6;
   // distribution is used for JOINT_DISTRIBUTION
   // the complement of CDF is the extreme upper tail probabilities and is used in detection.
   // P(x) = (size - count) / size
@@ -154,7 +156,8 @@ message DetectionConfig {
     // Use (mean + std_constant * std) as threshold
     NORMAL_DISTRIBUTION = 0;  
     // Assume threshold to be k_i, for cluster i. 
-    // Object function = sum(Type I error) + sum(Type II error), compute to get k_i.
+    // Objective function = sum(Type I error) + sum(Type II error),
+    // Compute minimum classification error to get k_i.
     GRADIENT_DESCENT = 1;  
     // Histogram the centroid_distances and compute distribution.
     JOINT_DISTRIBUTION = 2;
@@ -194,8 +197,25 @@ message CrawlResult {
   optional string search_term = 8;
 }
 
+message SearchConfig {
+  enum ResultType {
+    AD = 0;
+    SEARCH = 1;
+  }
+  // Type of result to retrieve.
+  optional ResultType result_type = 1 [default = AD];
+  // Number of top search results to be inspected.
+  optional int32 count = 2 [default = 200];
+}
+
+message SearchResult {
+  optional string search_term = 1;
+  repeated string links = 2;
+}
+
 // Parameter Type. Used for thread computer.
 enum ParaType {
   NORMAL = 0;  // Call runnable_object.function(para)
   FILE_PATH = 1;  // Call runnable_object.function(open(para, 'r').read())
 }
+

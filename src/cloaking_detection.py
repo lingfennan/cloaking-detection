@@ -48,7 +48,6 @@ class CloakingDetection(object):
 
 	def _joint_distribution_detection(self, site_name, ob_simhash):
 		"""
-
 		@parameter
 		site_name: site name of observation
 		ob_simhash: simhash of observation
@@ -85,7 +84,6 @@ class CloakingDetection(object):
 		if prob_result <=0.4:
 			return True
 		return False
-
 
 	def _percentile_detection(self, site_name, ob_simhash):
 		p = 'p' + str(self.detection_config.p)

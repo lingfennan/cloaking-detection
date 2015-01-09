@@ -16,7 +16,7 @@ def _strip_parameter(link):
 	"""
 	Strip parameter values and set protocol to null for URLs, e.g.
 	http://pan.baidu.com/share/link?shareid=3788206378&uk=2050235229 ->
-	pan.baidu.com/share/link?sharedid=&uk=
+	//pan.baidu.com/share/link?sharedid=&uk=
 
 	Blank values are kept.
 	"""
@@ -348,6 +348,21 @@ def distance_matrix(simhash_item_vector):
 			index += 1
 	return dist_mat, weight_list
 
+def compute_mce_threshold(learned_site):
+	"""
+	Compute minimum classification error threshold for each pattern.
+	@parameter
+	learned_site: patterns for learned_site.name, mce_threshold is not set.
+	@return 
+	learned_site: mce_threshold is set. Performs in-place operation.
+	"""
+	# set threshold (TODO)
+	for pattern in learned_site.pattern:
+		for item in pattern.item:
+			item_dist_list = [centroid_distance(p, item) for p \
+					in learned_site.pattern]
+	return learned_site
+
 def compute_model(learned_site):
 	"""
 	Compute centroid, mean and std for each pattern.
@@ -385,8 +400,6 @@ def compute_model(learned_site):
 		dist_array = np.array(dist_list)
 		pattern.mean = np.mean(dist_array)
 		pattern.std = np.std(dist_array)
-		# set threshold (TODO)
-
 		# set percentile
 		[p50, p75, p90, p95, p97, p99] = np.percentile(dist_array, [50,75,90,95,97,99])
 		pattern.percentile.p99 = int(p99)
@@ -406,6 +419,8 @@ def compute_model(learned_site):
 			p = pattern.cdf.point.add()
 			p.x = int(x)
 			p.count = int(count)
+	# compute minimum classification error based threshold
+	compute_mce_threshold(learned_site)
 	return learned_site
 
 # This method is deprecated because the comptation cost is high.
