@@ -135,7 +135,7 @@ class Search:
 				elem = wait_find_element(self.browser, 'id', 'ires')
 				if elem is None:
 					raise Exception("Page load failed.")
-				time.sleep(random.randint(1, 10))
+				time.sleep(random.randint(3, 10))
 				ad_set = ad_set | self.ad_links()
 				search_set = search_set | self.search_results()
 			except:
