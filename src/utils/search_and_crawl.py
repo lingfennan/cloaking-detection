@@ -1,10 +1,7 @@
-# Usage:
-# python search_and_craw.py
-#
-#
-#
-# search 
-#
+"""
+Usage:
+python search_and_craw.py
+"""
 
 # from util import ad_list, hot_search_words
 import sys
