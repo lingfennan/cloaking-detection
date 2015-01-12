@@ -74,7 +74,7 @@ class UrlFetcher(object):
 			# This line is used to handle alert: <stay on this page> <leave this page>
 			browser.execute_script("window.onbeforeunload = function() {};")
 			browser.get(result.url)
-			time.sleep(1))
+			time.sleep(1)
 			if self.crawl_config.browser_type == CD.CrawlConfig.CHROME and \
 					(('404 Not Found' in browser.title) \
 					or ('not available' in browser.title) \
