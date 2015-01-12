@@ -351,7 +351,7 @@ def picker_popup(browser, picker_ids, popup_ids, output_dir):
 		current = progress.next(start, end)
 	
 def start_browser(browser_type, incognito=False, user_agent=None, use_tor=False):
-	if browser_type == 'Firefox' or browser_type == CD.CrawlConfig.FIREFOX:
+	if browser_type == CD.CrawlConfig.FIREFOX:
 		# configure firefox to download by default
 		fp = webdriver.FirefoxProfile()
 		if incognito:
@@ -368,7 +368,7 @@ def start_browser(browser_type, incognito=False, user_agent=None, use_tor=False)
 		fp.set_preference("browser.download.dir", DOWNLOAD_PATH)
 		fp.set_preference("browser.helperApps.neverAsk.saveToDisk","text/csv")
 		browser = webdriver.Firefox(firefox_profile=fp)
-	elif browser_type == 'Chrome' or browser_type == CD.CrawlConfig.CHROME:
+	elif browser_type == CD.CrawlConfig.CHROME:
 		# configure chrome to disable the warning 'ignore-certificate-errors'
 		options = webdriver.ChromeOptions()
 		if incognito:
@@ -401,6 +401,10 @@ def hot_search_words(credentials, output_dir, browser_type='Firefox'):
 			trend_url = "http://www.google.com/trends/explore#"
 			params = {'geo':'US', 'date':'today%2012-m', 'cat':'0-3', 'cmpt':'q'}
 			# start browser
+			if browser_type == 'Firefox':
+				browser_type = CD.CrawlConfig.FIREFOX
+			elif browser_type == 'Chrome':
+				browser_type = CD.CrawlConfig.CHROME
 			browser = start_browser(browser_type) #, use_tor=True)
 			# download csv requires sign-in
 			# sign_in_gmail(browser, 'lingfennan', 'lingfennan123')

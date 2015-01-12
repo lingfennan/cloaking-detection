@@ -22,7 +22,7 @@ def hex_md5(string):
 	m.update(string.encode('utf-8'))
 	return m.hexdigest()
 
-def set_browser_type(self, crawl_config):
+def set_browser_type(crawl_config):
 	if 'Chrome' in crawl_config.user_agent:
 		crawl_config.browser_type = CD.CrawlConfig.CHROME
 	elif 'Firefox' in crawl_config.user_agent:
@@ -74,15 +74,18 @@ class UrlFetcher(object):
 			# This line is used to handle alert: <stay on this page> <leave this page>
 			browser.execute_script("window.onbeforeunload = function() {};")
 			browser.get(result.url)
-			if self.crawl_config.browser_type == 'Chrome' and \
+			if self.crawl_config.browser_type == CD.CrawlConfig.CHROME and \
 					(('404 Not Found' in browser.title) \
 					or ('Error 404' in browser.title) \
-					or ('is not available' in browser.title)):
+					or ('is not available' in browser.title) \
+					or ('Access denied' in browser.title) \
+					or (browser.current_url == 'data:text/html,chromewebdata')):
 				result.success = False
-			elif self.crawl_config.browser_type == 'Firefox' and \
+			elif self.crawl_config.browser_type == CD.CrawlConfig.FIREFOX and \
 					(('404 Not Found' in browser.title) \
 					or ('Error 404' in browser.title) \
-					or ('Problem loading page' in browser.title)):
+					or ('Problem loading page' in browser.title) \
+					or ('Access denied' in browser.title)):
 				result.success = False
 			else:
 				#############
@@ -154,9 +157,12 @@ class Crawler:
 			# Write log for current user agent
 			current_log = CD.CrawlLog()
 			current_log_filename = self.crawl_config.user_agent_md5_dir + 'crawl_log'
+			current_search = CD.CrawlSearchTerm()
 			for p, s in thread_computer.result:
-				result = current_log.result.add()
+				result = current_search.result.add()
 				result.CopyFrom(s)
+				result_search = current_log.result_search.add()
+				result_search.CopyFrom(current_search)
 			write_proto_to_file(current_log, current_log_filename)
 			# Write global crawl_log
 			crawl_log = CD.CrawlLog()

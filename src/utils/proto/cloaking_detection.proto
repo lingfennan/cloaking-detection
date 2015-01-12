@@ -171,6 +171,11 @@ message DetectionConfig {
 }
 
 // Crawler data structures, used by crawler to store information.
+enum ResultType {
+  AD = 0;
+  SEARCH = 1;
+}
+
 message CrawlConfig {
   optional int32 maximum_threads = 1;
   optional string user_agent = 2;
@@ -180,10 +185,20 @@ message CrawlConfig {
     FIREFOX = 1;
   }
   optional BrowserType browser_type = 4;
+  // Type of result to retrieve.
+  optional ResultType result_type = 5 [default = AD];
+  // Number of top search results to be inspected.
+  optional int32 count = 6 [default = 200];
 }
 
 message CrawlLog {
-  repeated CrawlResult result = 1;
+  repeated CrawlSearchTerm result_search = 1;
+}
+
+message CrawlSearchTerm {
+  optional string search_term = 1;
+  optional ResultType result_type = 2 [default = AD];
+  repeated CrawlResult result = 3;
 }
 
 message CrawlResult {
@@ -194,23 +209,6 @@ message CrawlResult {
   optional string url_md5 = 5;
   optional string timestamp = 6;
   optional bool success = 7;
-  optional string search_term = 8;
-}
-
-message SearchConfig {
-  enum ResultType {
-    AD = 0;
-    SEARCH = 1;
-  }
-  // Type of result to retrieve.
-  optional ResultType result_type = 1 [default = AD];
-  // Number of top search results to be inspected.
-  optional int32 count = 2 [default = 200];
-}
-
-message SearchResult {
-  optional string search_term = 1;
-  repeated string links = 2;
 }
 
 // Parameter Type. Used for thread computer.
