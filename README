@@ -7,6 +7,7 @@ python
 pip install selenium
 pip install simhash
 pip install beautifulsoup4
+pip install xmltodict
 sudo apt-get install python-numpy python-scipy
 wget https://protobuf.googlecode.com/svn/rc/protobuf-2.6.0.tar.gz
 	Follow instruction to install c++ and python version of protobuf.
@@ -22,6 +23,8 @@ numpy, scipy
 	http://www.scipy.org/install.html
 protocol buffer
 	https://developers.google.com/protocol-buffers/docs/overview
+xmltodict
+	http://brunorocha.org/python/django/xmltodict-python-module-that-makes-working-with-xml-feel-like-you-are-working-with-json.html
 
 Note:
 doesn't use the following because not needed yet.

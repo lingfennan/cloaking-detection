@@ -74,17 +74,22 @@ class UrlFetcher(object):
 			# This line is used to handle alert: <stay on this page> <leave this page>
 			browser.execute_script("window.onbeforeunload = function() {};")
 			browser.get(result.url)
+			time.sleep(1))
 			if self.crawl_config.browser_type == CD.CrawlConfig.CHROME and \
 					(('404 Not Found' in browser.title) \
-					or ('Error 404' in browser.title) \
-					or ('is not available' in browser.title) \
+					or ('not available' in browser.title) \
+					or ('Problem loading page' in browser.title) \
+					or ('Page not found' in browser.title) \
+					or ('Error' in browser.title) \
 					or ('Access denied' in browser.title) \
 					or (browser.current_url == 'data:text/html,chromewebdata')):
 				result.success = False
 			elif self.crawl_config.browser_type == CD.CrawlConfig.FIREFOX and \
 					(('404 Not Found' in browser.title) \
-					or ('Error 404' in browser.title) \
+					or ('not available' in browser.title) \
 					or ('Problem loading page' in browser.title) \
+					or ('Page not found' in browser.title) \
+					or ('Error' in browser.title) \
 					or ('Access denied' in browser.title)):
 				result.success = False
 			else:

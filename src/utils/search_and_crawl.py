@@ -95,7 +95,6 @@ class Search:
 	def search_results(self):
 		clickstring_set = set()
 		try:
-			print '-1'
 			search_list = wait_find_elements(self.browser, 'classes', 'g')
 			for result in search_list:
 				title_elem = wait_find_element(result, 'tag', 'h3')
@@ -119,11 +118,9 @@ class Search:
 		Search search_term in browser. Return True if search succeeded.
 		@parmeter
 		search_term: the words to search
-		search_config: top_count, the number of top search results to be inspected
 		@return
 		result_set: the set of results
 		"""
-		valid_instance(search_config, CD.SearchConfig)
 		start = 0
 		ad_set = set()
 		search_set = set()
@@ -138,12 +135,9 @@ class Search:
 				elem = wait_find_element(self.browser, 'id', 'ires')
 				if elem is None:
 					raise Exception("Page load failed.")
-				time.sleep(random.randint(1,5))
+				time.sleep(random.randint(1, 10))
 				ad_set = ad_set | self.ad_links()
 				search_set = search_set | self.search_results()
-				else:
-					raise Exception("Unknown type of "
-							"SearchConfig.ResultType.")
 			except:
 				# For robustness, don't throw errors here.
 				print "error in search"
@@ -247,6 +241,7 @@ def main(argv):
 	print word_set
 	word_set = set()
 	word_set.add('Essay Writing')
+	word_set.add('Porn sale')
 	for word in word_set:
 	"""
 	for word in words.get_word_set():
