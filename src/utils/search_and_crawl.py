@@ -79,10 +79,13 @@ class Search:
 		self.browser = start_browser(self.crawl_config.browser_type, incognito=False,
 				user_agent=self.crawl_config.user_agent)
 		self.browser.set_page_load_timeout(15)
+		switch_vpn_state(True)
 		self.connected = False
 	
 	def __del__(self):
 		self.browser.quit()
+		if self.connected:
+			switch_vpn_state(self.connected)
 	
 	def ad_links(self):
 		clickstring_set = set()
@@ -208,6 +211,8 @@ class Visit:
 			self.write_crawl_log()
 
 	def visit(self, clickstring_set, search_term):
+		if len(clickstring_set) == 0:
+			return
 		# specify which type of browser to use
 		mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
 		# crawl web pages
