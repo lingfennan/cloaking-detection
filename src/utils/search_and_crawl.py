@@ -2,7 +2,7 @@
 Usage:
 python search_and_crawl.py $WORD_FILE
 """
-
+import os
 import random
 import sys
 import time
@@ -12,8 +12,14 @@ from selenium.webdriver.common.action_chains import ActionChains
 from crawl import UrlFetcher, set_browser_type, hex_md5
 from learning_detection_util import valid_instance, write_proto_to_file, read_proto_from_file
 from thread_computer import ThreadComputer
-from util import start_browser, mkdir_if_not_exist
+from util import start_browser, restart_browser, mkdir_if_not_exist
 import proto.cloaking_detection_pb2 as CD
+
+def switch_vpn_state(connected):
+	if connected:
+		os.system('/opt/cisco/anyconnect/bin/vpn disconnect')
+	else:
+		os.system('printf "0\nrduan9\nZettaikatu168\ny" | /opt/cisco/anyconnect/bin/vpn -s connect anyc.vpn.gatech.edu')
 
 def wait_get_attribute(elem, value):
 	counter = 0
@@ -73,6 +79,7 @@ class Search:
 		self.browser = start_browser(self.crawl_config.browser_type, incognito=False,
 				user_agent=self.crawl_config.user_agent)
 		self.browser.set_page_load_timeout(15)
+		self.connected = False
 	
 	def __del__(self):
 		self.browser.quit()
@@ -135,14 +142,24 @@ class Search:
 				elem = wait_find_element(self.browser, 'id', 'ires')
 				if elem is None:
 					raise Exception("Page load failed.")
-				time.sleep(random.randint(3, 10))
+				time.sleep(random.randint(1, 10))
 				ad_set = ad_set | self.ad_links()
 				search_set = search_set | self.search_results()
+				start = start + 10
 			except:
 				# For robustness, don't throw errors here.
 				print "error in search"
 				print sys.exc_info()[0]
-			start = start + 10
+				switch_vpn_state(self.connected)
+				# mark vpn state
+				self.connected = not self.connected
+				self.browser = restart_browser(self.crawl_config.browser_type,
+						incognito=False,
+						user_agent=self.crawl_config.user_agent,
+						browser=self.browser)
+		# restart browser
+		self.browser = restart_browser(self.crawl_config.browser_type, incognito=False,
+				user_agent=self.crawl_config.user_agent, browser=self.browser)
 		return ad_set, search_set 
 	
 # Iterate through all the popular words.
@@ -177,11 +194,18 @@ class WordSet:
 # click and visit the landing page. directly visit the advertisement link
 #
 class Visit:
-	def __init__(self, crawl_config):
+	def __init__(self, crawl_config, max_word_per_file=50):
 		# user_agent, user_agent_md5_dir should be set.
 		self.crawl_config = crawl_config
 		set_browser_type(self.crawl_config)
 		self.first_search = True 
+		self.max_word_per_file = max_word_per_file 
+		self.counter = 0
+		self.partition = 0
+	
+	def __del__(self):
+		if not self.first_search:
+			self.write_crawl_log()
 
 	def visit(self, clickstring_set, search_term):
 		# specify which type of browser to use
@@ -204,12 +228,19 @@ class Visit:
 			self.current_log = CD.CrawlLog()
 		result_search = self.current_log.result_search.add()
 		result_search.CopyFrom(current_search)
+		self.counter += 1
+		if self.counter % self.max_word_per_file == 0:
+			self.write_crawl_log()
 	
 	def write_crawl_log(self):
 		# Write log for current user agent
-		current_log_filename = self.crawl_config.user_agent_md5_dir + 'crawl_log'
+		current_log_filename = self.crawl_config.user_agent_md5_dir + \
+				'crawl_log_' + str(self.partition) 
+		self.partition += 1
 		# Write global crawl_log
 		write_proto_to_file(self.current_log, current_log_filename)
+		# After write, reset variables
+		self.first_search = True
 
 def main(argv):
 	# define constants 
@@ -249,8 +280,6 @@ def main(argv):
 		# print clickstring_set
 		ad_visit.visit(ad_set, word)
 		search_visit.visit(search_set, word)
-	ad_visit.write_crawl_log()
-	search_visit.write_crawl_log()
 
 if __name__ == "__main__":
 	main(sys.argv[1:])

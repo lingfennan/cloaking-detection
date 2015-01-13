@@ -349,6 +349,14 @@ def picker_popup(browser, picker_ids, popup_ids, output_dir):
 		end = get_end(browser, picker_ids, popup_ids, aria_level_2_size)
 		previous = [list(current), config_list, aria_level_2_size]
 		current = progress.next(start, end)
+
+def restart_browser(browser_type, incognito=False, user_agent=None, use_tor=False, browser=None, interval=0):
+	if browser:
+		browser.quit()
+	time.sleep(interval)
+	new_browser = start_browser(browser_type, incognito, user_agent, use_tor)
+	new_browser.set_page_load_timeout(15)
+	return new_browser
 	
 def start_browser(browser_type, incognito=False, user_agent=None, use_tor=False):
 	if browser_type == CD.CrawlConfig.FIREFOX:

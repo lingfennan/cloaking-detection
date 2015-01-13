@@ -11,7 +11,7 @@ import threading
 import os
 from datetime import datetime
 from selenium import webdriver
-from util import start_browser, mkdir_if_not_exist
+from util import start_browser, restart_browser, mkdir_if_not_exist
 from learning_detection_util import valid_instance, write_proto_to_file, read_proto_from_file
 from thread_computer import ThreadComputer
 import proto.cloaking_detection_pb2 as CD
@@ -108,10 +108,8 @@ class UrlFetcher(object):
 				f.close()
 		except:
 			result.success = False
-			browser.quit()
-			browser = start_browser(self.crawl_config.browser_type, incognito=False, \
-					user_agent=self.crawl_config.user_agent)
-			browser.set_page_load_timeout(15)
+			browser = restart_browser(self.crawl_config.browser_type, incognito=False,
+					user_agent=self.crawl_config.user_agent, browser=browser)
 		self.browser_queue.put(browser)
 		return result
 
