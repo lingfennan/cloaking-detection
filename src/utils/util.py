@@ -41,7 +41,6 @@ Example Usage:
 """
 
 # hot_search_words 
-TREND_PROGRESS = 'trend/.progress'
 LEVEL = 2
 
 # hot_search_words, ad_list
@@ -265,36 +264,41 @@ def get_end(browser, picker_ids, popup_ids, aria_level_2_size):
 	end[1] -= 1
 	# end[4] = 2
 	return end
-class Progress:
-	
-	current_file = TREND_PROGRESS
 
-	def __init__(self):
+class Progress:
+	def __init__(self, current_file='../../data/trend/.progress', start=None):
 		try:
+			self.current_file = current_file
 			values = filter(bool, open(self.current_file, 'r').read().split('\n'))
 			self.current = [int(value)  for value in values ]
-			if len(self.current) != 5:
+			if len(self.current) == 0:
 				raise Exception
 		except:
-			self.current = [8, 0, 0, 0, 0]
+			if start:
+				self.current = start
+			else:
+				self.current = None
 	
-	def next(self, start, end):
+	def next(self, low_bound, high_bound):
+		if not self.current:
+			self.current = low_bound
 		# [4] is the higher bit, [0] is the lower bit
-		# Find the lowest incrementable bit, increment it, and set the lower bits to start
-		width = len(start)
-		if width != len(end):
-			print 'Error: start and end should have same number of elements!'
+		# Find the lowest incrementable bit, increment it, 
+		# and set the lower bits to low_bound.
+		width = len(low_bound)
+		if width != len(high_bound):
+			print 'Error: low_bound and high_bound should have same number of elements!'
 			sys.exit(1)
 		has_next = False
 		for i in range(0, width):
-			if self.current[i] >= start[i] and self.current[i] < end[i]-1:
+			if self.current[i] >= low_bound[i] and self.current[i] < high_bound[i]-1:
 				has_next = True
 				self.current[i] += 1
 				for lower_bits in range(0, i):
-					self.current[lower_bits] = start[lower_bits]
+					self.current[lower_bits] = low_bound[lower_bits]
 				break
-			elif self.current[i] < start[i]:
-				print 'Error: progress value cannot be smaller than start value!'
+			elif self.current[i] < low_bound[i]:
+				print 'Error: progress value cannot be smaller than low_bound value!'
 		if has_next:
 			return self.current
 		else:

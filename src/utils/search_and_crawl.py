@@ -169,17 +169,15 @@ class Search:
 # For the word list.
 # start = [8, 1, 0, 0, 0], end = [8, 2, , , 1]
 # means [US, past 7 days, all categories, sub categories, web search]
-class WordSet:
+class SearchTerm:
 	def __init__(self, filename):
 		words = filter(bool, open(filename, 'r').read().split('\n'))
-		self.word_set = set()
-		for word in words:
-			self.word_set.add(word)
+		self.word_list = words
 	
-	def get_word_set(self):
-		return self.word_set
+	def get_word_list(self):
+		return self.word_list
 	
-	def expand_word_set(self, expand_type):
+	def expand_word_list(self, expand_type):
 		if expand_type == "suggest":
 			self.google_suggest()	
 		elif expand_type == "search":
@@ -197,7 +195,7 @@ class WordSet:
 # click and visit the landing page. directly visit the advertisement link
 #
 class Visit:
-	def __init__(self, crawl_config, max_word_per_file=50):
+	def __init__(self, crawl_config, max_word_per_file=5):
 		# user_agent, user_agent_md5_dir should be set.
 		self.crawl_config = crawl_config
 		set_browser_type(self.crawl_config)
@@ -207,7 +205,7 @@ class Visit:
 		self.partition = 0
 	
 	def __del__(self):
-		if not self.first_search:
+		if not self.counter % self.max_word_per_file == 0:
 			self.write_crawl_log()
 
 	def visit(self, clickstring_set, search_term):
@@ -245,7 +243,7 @@ class Visit:
 		# Write global crawl_log
 		write_proto_to_file(self.current_log, current_log_filename)
 		# After write, reset variables
-		self.first_search = True
+		self.current_log = CD.CrawlLog()
 
 	def visit_landing_url(self, crawl_log):
 		None
@@ -268,22 +266,22 @@ def main(argv):
 
 	# print crawl_config.user_agent
 	# print google_UA
-	words = WordSet(word_file)
+	words = SearchTerm(word_file)
 	search = Search(crawl_config)
 	crawl_config.result_type = CD.AD
-	ad_visit = Visit(crawl_config)
+	ad_visit = Visit(crawl_config, 1)
 	crawl_config.result_type = CD.SEARCH
-	search_visit = Visit(crawl_config)
+	search_visit = Visit(crawl_config, 1)
 	"""
-	word_set = words.get_word_set()
-	print 'word set size ', len(word_set)
-	print word_set
-	word_set = set()
-	word_set.add('Essay Writing')
-	word_set.add('Porn sale')
-	for word in word_set:
+	word_list = words.get_word_list()
+	print 'word list size ', len(word_list)
+	print word_list
+	word_list = list()
+	word_list.append('Essay Writing')
+	word_list.append('Porn sale')
+	for word in word_list:
 	"""
-	for word in words.get_word_set():
+	for word in words.get_word_list():
 		ad_set, search_set = search.search(word)
 		# print clickstring_set
 		ad_visit.visit(ad_set, word)
