@@ -12,7 +12,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from crawl import UrlFetcher, set_browser_type, hex_md5
 from learning_detection_util import valid_instance, write_proto_to_file, read_proto_from_file
 from thread_computer import ThreadComputer
-from util import start_browser, restart_browser, mkdir_if_not_exist
+from util import start_browser, restart_browser, mkdir_if_not_exist, Progress
 import proto.cloaking_detection_pb2 as CD
 
 def switch_vpn_state(connected):
@@ -166,13 +166,20 @@ class Search:
 		return ad_set, search_set 
 	
 # Iterate through all the popular words.
-# For the word list.
-# start = [8, 1, 0, 0, 0], end = [8, 2, , , 1]
+# For the word list.  # start = [8, 1, 0, 0, 0], end = [8, 2, , , 1]
 # means [US, past 7 days, all categories, sub categories, web search]
 class SearchTerm:
 	def __init__(self, filename):
 		words = filter(bool, open(filename, 'r').read().split('\n'))
-		self.word_list = words
+		# Record and store progress
+		progress_filename = filename + '.progress'
+		self.progress = Progress(current_file = progress_filename)
+		# Load progress
+		self.word_list = words[self.progress.current[0]:]
+	
+	def next(self):
+		self.progress.next([0], [len(self.word_list)])
+		self.progress.save()
 	
 	def get_word_list(self):
 		return self.word_list
@@ -207,9 +214,7 @@ class Visit:
 	def __del__(self):
 		if not self.counter % self.max_word_per_file == 0:
 			self.write_crawl_log()
-
-	def visit(self, clickstring_set, search_term):
-		if len(clickstring_set) == 0:
+def visit(self, clickstring_set, search_term): if len(clickstring_set) == 0:
 			return
 		# specify which type of browser to use
 		mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
@@ -282,6 +287,7 @@ def main(argv):
 	for word in word_list:
 	"""
 	for word in words.get_word_list():
+		words.next()
 		ad_set, search_set = search.search(word)
 		# print clickstring_set
 		ad_visit.visit(ad_set, word)
