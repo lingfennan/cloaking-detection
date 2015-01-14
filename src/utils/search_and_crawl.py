@@ -247,6 +247,9 @@ class Visit:
 		# After write, reset variables
 		self.first_search = True
 
+	def visit_landing_url(self, crawl_log):
+		None
+
 def main(argv):
 	# define constants 
 	user_UA = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/" \
