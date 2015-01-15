@@ -35,7 +35,8 @@ def set_browser_type(crawl_config):
 class UrlFetcher(object):
 	def __init__(self, crawl_config):
 		valid_instance(crawl_config, CD.CrawlConfig)
-		self.crawl_config = crawl_config
+		self.crawl_config = CD.CrawlConfig()
+		self.crawl_config.CopyFrom(crawl_config)
 		self.browser_queue = Queue.Queue()
 		for i in xrange(self.crawl_config.maximum_threads):
 			browser = start_browser(self.crawl_config.browser_type, incognito=False, \
@@ -117,11 +118,14 @@ class Crawler:
 	# 1. Because we are working on visiting URLs or ad clickstrings (from Google ads), assume we don't need the referer file.
 	# 2. If we really need referer, one way is to directly do crawling from hot search words.
 	def __init__(self, url_file, user_agent_file, crawl_config):
+		valid_instance(crawl_config, CD.CrawlConfig)
+		self.crawl_config = CD.CrawlConfig()
+		self.crawl_config.CopyFrom(crawl_config)
+
 		# Prepare the input
 		self.urls = filter(bool, open(url_file, 'r').read().split('\n'))
 		self.user_agents = filter(bool, open(user_agent_file, 'r').read().split('\n'))
 		# self.referers = filter(bool, open(referer_file, 'r').read().split('\n'))
-		self.crawl_config = crawl_config
 
 		# Prepare the output directory
 		crawl_type = None

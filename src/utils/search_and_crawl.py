@@ -83,7 +83,9 @@ def wait_find_elements(browser, find_by, value):
 class Search:
 	def __init__(self, crawl_config):
 		# user_agent should be set.
-		self.crawl_config = crawl_config
+		valid_instance(crawl_config, CD.CrawlConfig)
+		self.crawl_config = CD.CrawlConfig()
+		self.crawl_config.CopyFrom(crawl_config)
 		set_browser_type(self.crawl_config)
 		self.browser = start_browser(self.crawl_config.browser_type, incognito=False,
 				user_agent=self.crawl_config.user_agent)
@@ -215,7 +217,9 @@ class SearchTerm:
 class Visit:
 	def __init__(self, crawl_config, max_word_per_file=5):
 		# user_agent, user_agent_md5_dir should be set.
-		self.crawl_config = crawl_config
+		valid_instance(crawl_config, CD.CrawlConfig)
+		self.crawl_config = CD.CrawlConfig()
+		self.crawl_config.CopyFrom(crawl_config)
 		set_browser_type(self.crawl_config)
 		self.first_search = True 
 		self.max_word_per_file = max_word_per_file 
@@ -292,10 +296,10 @@ def main(argv):
 	search = Search(crawl_config)
 	crawl_config.result_type = CD.AD
 	crawl_config.log_filename = 'ad_crawl_log'
-	ad_visit = Visit(crawl_config, 1)
+	ad_visit = Visit(crawl_config, 50)
 	crawl_config.result_type = CD.SEARCH
 	crawl_config.log_filename = 'search_crawl_log'
-	search_visit = Visit(crawl_config, 1)
+	search_visit = Visit(crawl_config, 50)
 	"""
 	word_list = words.get_word_list()
 	print 'word list size ', len(word_list)
