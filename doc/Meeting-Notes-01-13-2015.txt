@@ -1,8 +1,96 @@
 Progress ==========================================================================
-1. Search result + Search ads
-user data:
-word list --> 200 results per word and corresponding ads --> search results
-train, test and get a model --> test ads cloaking
-google data:
-google data --> google bot user agent search result and ads landing page -->
-build model
+
+1. Search and click implemented as follows:
+
+User Data Collection
+Compile a list of cloaking oriented words from banned items according to adwords
+policy
+--> For each word, grab top 200 Google search results and corresponding ads
+--> Use search results to train, test and get a model
+--> Use the model to detect ads cloaking
+
+Google Data Collection
+In the User Data Collection phase, each Google search results and corresponding
+ads have landing urls.
+--> For each landing url, use Google bot to visit them multiple times
+--> For each url (parameter values discarded), model with simhash distribution
+
+For each observation User Data Collection, detect whether they are doing
+cloaking or not.
+
+
+2. Workflow is like this:
+Training phase (search results)
+User visit one URL   -----------------> Compare observed simhash with the model
+        |                                            ^                   | 
+        |                                            |                   | 
+        |                                            |                   v
+        |                                            |      cloaking or benign
+        |                                            |                   | 
+        v                                            |     hand labeling |
+Google repeatedly visit this URL ----> Model distribution of this URL    |
+                                                     ^                   |
+                                                     |                   v
+                                                     |------------- TPR and FPR
+                                                      ajust parameters
+
+Detection phase (advertisements)
+User visit one URL   -----------------> Compare observed simhash with the model
+        |                                            ^                   | 
+        |                                            |                   | 
+        |                                            |                   | 
+        |                                            |                   | 
+        |                                            |                   | 
+        v                                            |                   | 
+Google repeatedly visit this URL ----> Model distribution of this URL    |
+                                                                         v
+                                                            cloaking or benign 
+
+
+Next Steps ==========================================================================
+
+Weiren Wang:
+1. Abusive word expansion and collection.
+Extend these words according to adwords policy. There are advertisements
+forbidden by adwords. Come up with those words from the word policies.
+
+Policies are available at link:
+https://support.google.com/adwordspolicy/topic/1626336?hl=en&ref_topic=2996750
+
+2. Domain reputation based cloaking filter
+Query URLVoid API and WOT api to build a filter. After filtering, we get a list
+of URL (domains) that have low reputation.
+
+Prototype implemented at src/utils/{wot.py, urlvoid.py}
+
+
+Ruian Duan:
+1. Abusive word expansion and collection
+Co-work on this with Weieren
+
+2. Evaluate the performance of the system
+Run the experiment
+
+3. Start writing the paper
+The paper writing can start parallelly with experiments
+
+
+
+Word collection workload assignment ================================================
+
+Abuse of the ad network					ruian
+Adult-oriented content					weiren
+Alcoholic beverages					weiren
+Copyrighted content					weiren
+Counterfeit goods					weiren
+Dangerous products or services				weiren
+Editorial & professional requirements			weiren
+Gambling-related content				weiren
+Healthcare and medicines				weiren
+Irresponsible data collection & use			weiren
+Legal requirements & serving limitations		ruian
+Misrepresentation of self, product, or service		ruian
+Offensive or inappropriate content			ruian
+Political content					ruian
+Products or services that enable dishonest behavior	ruian
+
