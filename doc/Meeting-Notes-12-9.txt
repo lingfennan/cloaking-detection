@@ -1,0 +1,4 @@
+query expansion tools
+
+query expansion stanford NLP
+http://nlp.stanford.edu/IR-book/html/htmledition/query-expansion-1.html

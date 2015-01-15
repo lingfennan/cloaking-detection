@@ -189,6 +189,7 @@ message CrawlConfig {
   optional ResultType result_type = 5 [default = AD];
   // Number of top search results to be inspected.
   optional int32 count = 6 [default = 200];
+  optional string log_filename = 7;
 }
 
 message CrawlLog {

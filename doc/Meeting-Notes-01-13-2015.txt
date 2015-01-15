@@ -1,0 +1,8 @@
+Progress ==========================================================================
+1. Search result + Search ads
+user data:
+word list --> 200 results per word and corresponding ads --> search results
+train, test and get a model --> test ads cloaking
+google data:
+google data --> google bot user agent search result and ads landing page -->
+build model

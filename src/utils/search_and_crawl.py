@@ -2,8 +2,9 @@
 Usage:
 python search_and_crawl.py $WORD_FILE
 """
-import os
+import logging
 import random
+import subprocess
 import sys
 import time
 from datetime import datetime
@@ -12,14 +13,22 @@ from selenium.webdriver.common.action_chains import ActionChains
 from crawl import UrlFetcher, set_browser_type, hex_md5
 from learning_detection_util import valid_instance, write_proto_to_file, read_proto_from_file
 from thread_computer import ThreadComputer
-from util import start_browser, restart_browser, mkdir_if_not_exist
+from util import start_browser, restart_browser, mkdir_if_not_exist, Progress
 import proto.cloaking_detection_pb2 as CD
 
 def switch_vpn_state(connected):
 	if connected:
-		os.system('/opt/cisco/anyconnect/bin/vpn disconnect')
+		p = subprocess.Popen(['/opt/cisco/anyconnect/bin/vpn', 'disconnect'], stdout=subprocess.PIPE)
 	else:
-		os.system('printf "0\nrduan9\nZettaikatu168\ny" | /opt/cisco/anyconnect/bin/vpn -s connect anyc.vpn.gatech.edu')
+		p1 = subprocess.Popen(['printf', '"0\nrduan9\nZettaikatu168\ny"'], stdout=subprocess.PIPE)
+		p = subprocess.Popen(['/opt/cisco/anyconnect/bin/vpn', '-s', 'connect', 'anyc.vpn.gatech.edu'],
+				stdin=p1.stdout, stdout=subprocess.PIPE)
+		p1.stdout.close()
+	output, error = p.communicate()
+	logging.info(output)
+	logging.error(error)
+	# whether switch was successful
+	return False if error else True
 
 def wait_get_attribute(elem, value):
 	counter = 0
@@ -84,6 +93,7 @@ class Search:
 	
 	def __del__(self):
 		self.browser.quit()
+		# disconnect if connected
 		if self.connected:
 			switch_vpn_state(self.connected)
 	
@@ -98,8 +108,8 @@ class Search:
 					clickstring_set.add(clickstring)
 					break
 		except:
-			print "error in ad_links"
-			print sys.exc_info()[0]
+			logging.error("error in ad_links")
+			logging.error(sys.exc_info()[0])
 		return clickstring_set
 
 	def search_results(self):
@@ -119,8 +129,8 @@ class Search:
 				result_link = wait_get_attribute(link_elem, 'data-href')
 				clickstring_set.add(clickstring)
 		except:
-			print "error in search_results"
-			print sys.exc_info()[0]
+			logging.error("error in search_results")
+			logging.error(sys.exc_info()[0])
 		return clickstring_set
 
 	def search(self, search_term):
@@ -151,11 +161,10 @@ class Search:
 				start = start + 10
 			except:
 				# For robustness, don't throw errors here.
-				print "error in search"
-				print sys.exc_info()[0]
-				switch_vpn_state(self.connected)
-				# mark vpn state
-				self.connected = not self.connected
+				logging.error("error in search")
+				logging.error(sys.exc_info()[0])
+				if switch_vpn_state(self.connected):
+					self.connected = not self.connected
 				self.browser = restart_browser(self.crawl_config.browser_type,
 						incognito=False,
 						user_agent=self.crawl_config.user_agent,
@@ -164,22 +173,29 @@ class Search:
 		self.browser = restart_browser(self.crawl_config.browser_type, incognito=False,
 				user_agent=self.crawl_config.user_agent, browser=self.browser)
 		return ad_set, search_set 
-	
-# Iterate through all the popular words.
-# For the word list.
-# start = [8, 1, 0, 0, 0], end = [8, 2, , , 1]
+	# Iterate through all the popular words.
+# For the word list.  # start = [8, 1, 0, 0, 0], end = [8, 2, , , 1]
 # means [US, past 7 days, all categories, sub categories, web search]
-class WordSet:
+class SearchTerm:
 	def __init__(self, filename):
 		words = filter(bool, open(filename, 'r').read().split('\n'))
-		self.word_set = set()
-		for word in words:
-			self.word_set.add(word)
+		# Record and store progress
+		progress_filename = filename + '.progress'
+		self.progress = Progress(current_file = progress_filename)
+		# Load progress
+		if self.progress.current:
+			self.word_list = words[self.progress.current[0]:]
+		else:
+			self.word_list = words
 	
-	def get_word_set(self):
-		return self.word_set
+	def next(self):
+		self.progress.next([0], [len(self.word_list)])
+		self.progress.save()
 	
-	def expand_word_set(self, expand_type):
+	def get_word_list(self):
+		return self.word_list
+	
+	def expand_word_list(self, expand_type):
 		if expand_type == "suggest":
 			self.google_suggest()	
 		elif expand_type == "search":
@@ -197,7 +213,7 @@ class WordSet:
 # click and visit the landing page. directly visit the advertisement link
 #
 class Visit:
-	def __init__(self, crawl_config, max_word_per_file=50):
+	def __init__(self, crawl_config, max_word_per_file=5):
 		# user_agent, user_agent_md5_dir should be set.
 		self.crawl_config = crawl_config
 		set_browser_type(self.crawl_config)
@@ -207,7 +223,7 @@ class Visit:
 		self.partition = 0
 	
 	def __del__(self):
-		if not self.first_search:
+		if not self.counter % self.max_word_per_file == 0:
 			self.write_crawl_log()
 
 	def visit(self, clickstring_set, search_term):
@@ -240,12 +256,12 @@ class Visit:
 	def write_crawl_log(self):
 		# Write log for current user agent
 		current_log_filename = self.crawl_config.user_agent_md5_dir + \
-				'crawl_log_' + str(self.partition) 
+				self.crawl_config.log_filename + "_" + str(self.partition) 
 		self.partition += 1
 		# Write global crawl_log
 		write_proto_to_file(self.current_log, current_log_filename)
 		# After write, reset variables
-		self.first_search = True
+		self.current_log = CD.CrawlLog()
 
 	def visit_landing_url(self, crawl_log):
 		None
@@ -258,9 +274,13 @@ def main(argv):
 	google_UA = "AdsBot-Google (+http://www.google.com/adsbot.html)"
 	word_file = argv[0]
 
+	# compute base_dir and start logging
 	now = datetime.now().strftime("%Y%m%d-%H%M%S")
 	base_dir = word_file + '.' + now + '.selenium.crawl/'
+	mkdir_if_not_exist(base_dir)
+	logging.basicConfig(filename=base_dir+'running_log', level=logging.DEBUG)
 
+	# set crawl_config
 	crawl_config = CD.CrawlConfig()
 	crawl_config.maximum_threads = 6
 	crawl_config.user_agent = user_UA
@@ -268,22 +288,25 @@ def main(argv):
 
 	# print crawl_config.user_agent
 	# print google_UA
-	words = WordSet(word_file)
+	words = SearchTerm(word_file)
 	search = Search(crawl_config)
 	crawl_config.result_type = CD.AD
-	ad_visit = Visit(crawl_config)
+	crawl_config.log_filename = 'ad_crawl_log'
+	ad_visit = Visit(crawl_config, 1)
 	crawl_config.result_type = CD.SEARCH
-	search_visit = Visit(crawl_config)
+	crawl_config.log_filename = 'search_crawl_log'
+	search_visit = Visit(crawl_config, 1)
 	"""
-	word_set = words.get_word_set()
-	print 'word set size ', len(word_set)
-	print word_set
-	word_set = set()
-	word_set.add('Essay Writing')
-	word_set.add('Porn sale')
-	for word in word_set:
+	word_list = words.get_word_list()
+	print 'word list size ', len(word_list)
+	print word_list
+	word_list = list()
+	word_list.append('Essay Writing')
+	word_list.append('Porn sale')
+	for word in word_list:
 	"""
-	for word in words.get_word_set():
+	for word in words.get_word_list():
+		words.next()
 		ad_set, search_set = search.search(word)
 		# print clickstring_set
 		ad_visit.visit(ad_set, word)

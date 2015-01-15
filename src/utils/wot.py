@@ -30,13 +30,13 @@ class WOT:
 		return data
 
 def main(argv):
-	domains = ['example.COM', 'www.EXAMPLE.NET']
+	domains = ['example.COM', 'www.EXAMPLE.NET', 'everlastinghelp.com']
 	# define constants 
 	reputation = WOT()
 	print reputation.process(domains)
 	
 if __name__ == "__main__":
-	print urllib2.urlopen('http://api.mywot.com/0.4/public_link_json?hosts=google.com/').read()
-	print urllib2.urlopen('https://api.mywot.com/0.4/public_link_json2?hosts=www.example.COM/&key=2527e6e5cca9451a605eea8171b5c89314c74a7a').read()
+	# print urllib2.urlopen('http://api.mywot.com/0.4/public_link_json?hosts=google.com/').read()
+	# print urllib2.urlopen('https://api.mywot.com/0.4/public_link_json2?hosts=www.example.COM/&key=2527e6e5cca9451a605eea8171b5c89314c74a7a').read()
 	main(sys.argv[1:])
 
