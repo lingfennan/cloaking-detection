@@ -1,6 +1,11 @@
 """
-Usage:
-python search_and_crawl.py $WORD_FILE
+Example Usage:
+	# search words from $WORD_FILE and crawl the search results and ads.
+	python search_and_crawl.py -f search -i word_file
+
+	# revisit the landing pages in search and crawl phase as Google bot.
+	ls ../../data/abusive_words.selenium.crawl/XXX/ad_crawl_log* | python search_and_crawl.py -f revisit -i word_file  -n number_of_visits
+
 """
 import logging
 import random
@@ -339,40 +344,39 @@ def search_and_crawl(word_file):
 		ad_visit.visit(ad_set, word)
 		search_visit.visit(search_set, word)
 
-def revisit(crawl_log_file, word_file, n):
+def revisit(crawl_log_file_list, word_file, n):
 	"""
 	visit landing urls in crawl_log_file n times
 	@parameter
-	crawl_log_file: the filename of crawl_log
+	crawl_log_file_list: list of filenames of crawl_log
 	word_file: file containing words in crawl_log_file, used for creating base_dir
 	n: number of times to visit
 	"""
+	# google_UA is not used in search and crawl. Used in later visit.
+	google_UA = "AdsBot-Google (+http://www.google.com/adsbot.html)"
+	google_suffix = 'google.crawl/'
 	for i in range(n):
-		# google_UA is not used in search and crawl. Used in later visit.
-		google_UA = "AdsBot-Google (+http://www.google.com/adsbot.html)"
-		google_suffix = 'google.crawl/'
+		# the time label is set for each iteration of visit
 		now_suffix = datetime.now().strftime(".%Y%m%d-%H%M%S")
-		# print google_UA
-		# compute base_dir and start logging
-		base_dir = '.'.join([word_file, google_suffix])
-		mkdir_if_not_exist(base_dir)
-		logging.basicConfig(filename=base_dir+'running_log'+now_suffix, level=logging.DEBUG)
+		for crawl_log_file in crawl_log_file_list:
+			# compute base_dir and start logging
+			base_dir = '.'.join([word_file, google_suffix])
+			mkdir_if_not_exist(base_dir)
+			logging.basicConfig(filename=base_dir+'running_log'+now_suffix, level=logging.DEBUG)
 
-		# set crawl_config
-		crawl_config = CD.CrawlConfig()
-		crawl_config.maximum_threads = 6
-		crawl_config.user_agent = google_UA
-		crawl_config.user_agent_md5_dir = base_dir + hex_md5(crawl_config.user_agent) + \
-				+ now_suffix + '/'
+			# set crawl_config
+			crawl_config = CD.CrawlConfig()
+			crawl_config.maximum_threads = 6
+			crawl_config.user_agent = google_UA
+			crawl_config.user_agent_md5_dir = base_dir + hex_md5(crawl_config.user_agent) + \
+					+ now_suffix + '/'
 
-		# print crawl_config.user_agent
-		google_crawl_log = crawl_log_file.split('/')[-1] + '.google'
-		crawl_config.log_filename = google_crawl_log + now_suffix
-		revisit = Visit(crawl_config)
-		crawl_log = CD.CrawlLog()
-		read_proto_from_file(crawl_log, crawl_log_file)
-		revisit.visit_landing_url(crawl_log)
-
+			google_crawl_log = crawl_log_file.split('/')[-1] + '.google'
+			crawl_config.log_filename = google_crawl_log + now_suffix
+			revisit = Visit(crawl_config)
+			crawl_log = CD.CrawlLog()
+			read_proto_from_file(crawl_log, crawl_log_file)
+			revisit.visit_landing_url(crawl_log)
 
 def main(argv):
 	has_function = False
@@ -402,7 +406,8 @@ def main(argv):
 	if function == "search":
 		search_and_crawl(inputfile)
 	elif function == "revisit":
-		revisit(inputfile, number)
+		crawl_log_file_list = [line[:-1] for line in sys.stdin]
+		revisit(crawl_log_file_list, inputfile, number)
 	else:
 		print help_msg
 		sys.exit(2)
