@@ -10,7 +10,7 @@ Example Usage:
 import logging
 import random
 import subprocess
-import sys
+import sys, getopt
 import time
 from datetime import datetime
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
@@ -277,7 +277,7 @@ class Visit:
 		landing_url_set = set()
 		for result_search in crawl_log.result_search:
 			for result in result_search.result:
-				landing_url_set.add(landing_url)
+				landing_url_set.add(result.landing_url)
 		mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
 		# crawl web pages
 		url_fetcher = UrlFetcher(self.crawl_config)
@@ -289,8 +289,8 @@ class Visit:
 		for p, s in thread_computer.result:
 			result = current_search.result.add()
 			result.CopyFrom(s)
-		crawl_log = CD.CrawlLog()
-		result_search = crawl_log.result_search.add()
+		self.current_log = CD.CrawlLog()
+		result_search = self.current_log.result_search.add()
 		result_search.CopyFrom(current_search)
 		self.write_crawl_log()
 
@@ -355,7 +355,7 @@ def revisit(crawl_log_file_list, word_file, n):
 	# google_UA is not used in search and crawl. Used in later visit.
 	google_UA = "AdsBot-Google (+http://www.google.com/adsbot.html)"
 	google_suffix = 'google.crawl/'
-	for i in range(n):
+	for i in range(int(n)):
 		# the time label is set for each iteration of visit
 		now_suffix = datetime.now().strftime(".%Y%m%d-%H%M%S")
 		for crawl_log_file in crawl_log_file_list:
@@ -368,7 +368,7 @@ def revisit(crawl_log_file_list, word_file, n):
 			crawl_config = CD.CrawlConfig()
 			crawl_config.maximum_threads = 6
 			crawl_config.user_agent = google_UA
-			crawl_config.user_agent_md5_dir = base_dir + hex_md5(crawl_config.user_agent) + \
+			crawl_config.user_agent_md5_dir = base_dir + hex_md5(crawl_config.user_agent) \
 					+ now_suffix + '/'
 
 			google_crawl_log = crawl_log_file.split('/')[-1] + '.google'
@@ -382,7 +382,7 @@ def main(argv):
 	has_function = False
 	help_msg = "search_and_crawl.py -f <function> [-i <inputfile>] [-i <inputfile> -n <number>], valid functions are search, revisit"
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:t:", ["function=", "ifile=", "number="])
+		opts, args = getopt.getopt(argv, "hf:i:n:", ["function=", "ifile=", "number="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
