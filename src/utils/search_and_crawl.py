@@ -277,7 +277,9 @@ class Visit:
 		landing_url_set = set()
 		for result_search in crawl_log.result_search:
 			for result in result_search.result:
-				landing_url_set.add(result.landing_url)
+				# landing_url exists only if crawl is successful
+				if result.success:
+					landing_url_set.add(result.landing_url)
 		mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
 		# crawl web pages
 		url_fetcher = UrlFetcher(self.crawl_config)
