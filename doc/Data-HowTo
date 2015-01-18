@@ -5,5 +5,16 @@ English. Paste the link to the search bar. They will retrieve the website on
 Google's behalf.
 
 2. Crawl pages with custom IP
-PlanetLab.
+PlanetLab. Not available.
+Try vpn or 100 midtown ip.
+
+3. Collect abusive words
+Money or action related words, think from the attacker point of view
+price
+sale
+download
+buy
+
+Collect basic words and then use Google suggest to expand them
+Experiment on one category of words first, see how it works
 
