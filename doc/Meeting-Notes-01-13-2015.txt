@@ -79,7 +79,7 @@ The paper writing can start parallelly with experiments
 Word collection workload assignment ================================================
 
 Abuse of the ad network					ruian
-Adult-oriented content					weiren
+Adult-oriented content					ruian
 Alcoholic beverages					weiren
 Copyrighted content					weiren
 Counterfeit goods					weiren
