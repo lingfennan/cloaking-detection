@@ -31,10 +31,13 @@ class ClusterLearning(object):
 		observed_sites.config.CopyFrom(simhash_config)
 		for site in observed_sites.site:
 			for observation in site.observation:
+				result = path_simhash_dict[observation.file_path]
 				if simhash_config.simhash_type in [CD.TEXT, CD.TEXT_DOM]:
-					observation.text_simhash = path_simhash_dict[observation.file_path][0].value
+					observation.text_simhash = result[0][0].value
+					observation.text_feature_count = result[0][1]
 				if simhash_config.simhash_type in [CD.DOM, CD.TEXT_DOM]:
-					observation.dom_simhash = path_simhash_dict[observation.file_path][-1].value
+					observation.dom_simhash = result[-1][0].value
+					observation.dom_feature_count = result[-1][1]
 		return observed_sites
 
 	def learn(self, observed_sites_filenames, cluster_config=None):
@@ -90,7 +93,7 @@ def learn(observed_sites_filenames, outfile = None):
 	write_proto_to_file(res, out_filename)
 
 def test_learner():
-	in_filenames = ['utils/data/US_list_10.20141109-180617.selenium.crawl/crawl_log.text']
+	in_filenames = ['../data/abusive_words.20150115-154913.selenium.crawl/91532f0a84878d909e2deed33e9932cf/ad_crawl_log_0.text']
 	out_filename = in_filenames[0] + '.learned'
 	cluster_learner = ClusterLearning()
 	cluster_config = CD.ClusterConfig()
@@ -111,8 +114,8 @@ def test_learner():
 
 
 def test_computer():
-	site_list_filenames = ['utils/data/US_list_10.20141109-180617.selenium.crawl/crawl_log']
-	out_filename = 'utils/data/US_list_10.20141109-180617.selenium.crawl/crawl_log.text'
+	site_list_filenames = ['../data/abusive_words.20150115-154913.selenium.crawl/91532f0a84878d909e2deed33e9932cf/ad_crawl_log_0']
+	out_filename = '../data/abusive_words.20150115-154913.selenium.crawl/91532f0a84878d909e2deed33e9932cf/ad_crawl_log_0.text'
 	cluster_learner = ClusterLearning()
 	simhash_config = CD.SimhashConfig()
 	simhash_config.simhash_type = CD.TEXT
@@ -121,7 +124,7 @@ def test_computer():
 	write_proto_to_file(res, out_filename)
 	print res
 
-	out_filename = 'utils/data/US_list_10.20141109-180617.selenium.crawl/crawl_log.dom'
+	out_filename = '../data/abusive_words.20150115-154913.selenium.crawl/91532f0a84878d909e2deed33e9932cf/ad_crawl_log_0.dom'
 	cluster_learner = ClusterLearning()
 	simhash_config = CD.SimhashConfig()
 	simhash_config.simhash_type = CD.DOM
@@ -131,7 +134,7 @@ def test_computer():
 	print res
 
 	# cluster_config = CD.ClusterConfig()
-	out_filename = 'utils/data/US_list_10.20141109-180617.selenium.crawl/crawl_log.text_dom'
+	out_filename = '../data/abusive_words.20150115-154913.selenium.crawl/91532f0a84878d909e2deed33e9932cf/ad_crawl_log_0.text_dom'
 	cluster_learner = ClusterLearning()
 	simhash_config = CD.SimhashConfig()
 	simhash_config.simhash_type = CD.TEXT_DOM

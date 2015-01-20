@@ -177,9 +177,14 @@ class Crawler:
 				read_proto_from_file(crawl_log, self.crawl_log_filename)
 			else:
 				has_written = True
+			for r_s in current_log.result_search:
+				result_search = crawl_log.result_search.add()
+				result_search.CopyFrom(r_s)
+			"""
 			for s in current_log.result:
 				result = crawl_log.result.add()
 				result.CopyFrom(s)
+			"""
 			write_proto_to_file(crawl_log, self.crawl_log_filename)
 
 def main(argv):

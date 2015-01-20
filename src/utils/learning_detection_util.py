@@ -62,8 +62,9 @@ def load_observed_sites(site_list_filenames):
 	for site_list_filename in site_list_filenames:
 		crawl_log = CD.CrawlLog()
 		read_proto_from_file(crawl_log, site_list_filename)
-		site_list = [[result.file_path, result.landing_url] for result in crawl_log.result \
-				if result.success == True]
+		site_list = [[result.file_path, result.landing_url] \
+				for result_search in crawl_log.result_search \
+				for result in result_search.result if result.success == True]
 		prefix = _split_path_by_data(site_list_filename, 0)
 		for path, link in site_list:
 			# $prefix/data/$detail_path
@@ -359,7 +360,7 @@ def compute_mce_threshold(learned_site):
 	# set threshold (TODO)
 	for pattern in learned_site.pattern:
 		for item in pattern.item:
-			item_dist_list = [centroid_distance(p, item) for p \
+			item_dist_list = [centroid_distance(p, item.simhash) for p \
 					in learned_site.pattern]
 	return learned_site
 
@@ -420,7 +421,7 @@ def compute_model(learned_site):
 			p.x = int(x)
 			p.count = int(count)
 	# compute minimum classification error based threshold
-	compute_mce_threshold(learned_site)
+	# compute_mce_threshold(learned_site)
 	return learned_site
 
 # This method is deprecated because the comptation cost is high.

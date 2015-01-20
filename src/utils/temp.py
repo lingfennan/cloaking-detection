@@ -6,17 +6,18 @@ in_filename = '../../data/weiren_words.Chrome.hw.20150111-133728.selenium.crawl/
 read_proto_from_file(crawl_log, in_filename)
 suc_counter = 0
 fail_counter = 0
-for result in crawl_log.result:
-	if result.landing_url == 'data:text/html,chromewebdata':
-		print result.url
-		print 'here'
-	if result.success:
-		suc_counter += 1
-	else:
-		fail_counter += 1
-		print result.landing_url
-		print result.url_md5
-		print result.url
+for result_search in crawl_log.result_search:
+	for result in result_search.result:
+		if result.landing_url == 'data:text/html,chromewebdata':
+			print result.url
+			print 'here'
+		if result.success:
+			suc_counter += 1
+		else:
+			fail_counter += 1
+			print result.landing_url
+			print result.url_md5
+			print result.url
 
 print suc_counter
 print fail_counter
@@ -28,13 +29,3 @@ in_filename = '../../data/US_web_search_list.Chrome.20141110-185317.selenium.cra
 read_proto_from_file(learned_sites, in_filename)
 print learned_sites
 """
-# suc_counter = 0
-# fail_counter = 0
-# for result in crawl_log.result:
-# 	if result.success:
-# 		suc_counter += 1
-# 	else:
-# 		fail_counter += 1
-# 
-# print suc_counter
-# print fail_counter

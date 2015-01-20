@@ -142,7 +142,7 @@ class HtmlSimhashComputer(object):
 			if self.simhash_config.usage.tri_gram:
 				for feature in html_text.tri_gram:
 					features.append(feature.name)
-			return self.build_by_features(features)
+			return [self.build_by_features(features), len(features)]
 	
 	def build_by_dom(self, html_dom):
 		if valid_instance(html_dom, CD.HtmlDom):
@@ -156,14 +156,15 @@ class HtmlSimhashComputer(object):
 			if self.simhash_config.usage.tri_gram:
 				for feature in html_dom.tri_node:
 					features.append(feature.name)
-			return self.build_by_features(features)
+			return [self.build_by_features(features), len(features)]
 	
 	def compute_simhash(self, data):
 		"""
 		@parameter
 		data: content of html file
 		@return
-		result: one of [text_simhash], [dom_simhash], [text_simhash, dom_simhash]
+		result: one of [[text_simhash, feature_count]], [[dom_simhash, feature_count]],
+		[[text_simhash, feature_count], [dom_simhash, feature_count]]
 		"""
 		result = list()
 		if self.simhash_config.simhash_type in [CD.TEXT, CD.TEXT_DOM]:
@@ -178,7 +179,8 @@ class HtmlSimhashComputer(object):
 
 if __name__ == "__main__":
 	# HtmlText, HtmlDom
-	filenames= ['utils/data/example.html', 'utils/data/US_list_10.20141010-180519.selenium.crawl/d8535ad6fd8ced25f6f25197a820deef/02b6345901e1142aca2d31f1f295d646/index.html']
+	filenames= ['../data/abusive_words.google.crawl/f94453065ca51301ffc1c1dde571858e.20150116-164635/c4cc49b52b5a03d4ef03d5d115d6d0e1/index.html',
+			'../data/abusive_words.google.crawl/f94453065ca51301ffc1c1dde571858e.20150118-183852/c9d56725a436d486b31b90b118ac9e69/index.html']
 	# text_simhash for second one: 9414395266106367332
 	# dom_simhash for second one: 4243381963081104893
 	for filename in filenames:
@@ -191,13 +193,15 @@ if __name__ == "__main__":
 		config.usage.tri_gram = True
 		res = HtmlSimhashComputer(config).compute_simhash(data)
 		# print '%x' % res[0].value
-		print res[0].value
+		print res[0][0].value
+		print res
 
 		data = open(filename, 'r').read()
 		config = CD.SimhashConfig()
 		config.simhash_type = CD.DOM
 		config.usage.tri_gram = False
 		res = HtmlSimhashComputer(config).compute_simhash(data)
-		print res[0].value
 		# print '%x' % res[0].value
+		print res[0][0].value
+		print res
 
