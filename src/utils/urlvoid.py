@@ -20,8 +20,8 @@ class URLVoid:
 		return data
 
 def main(argv):
-	domains = ['example.COM', 'www.EXAMPLE.NET', 'everlastinghelp.com', \
-			'www.13xa.com']
+	domains = ['everlastinghelp.com', \
+			'sina.com.cn']
 	# define constants 
 	reputation = URLVoid()
 	for domain in domains:
