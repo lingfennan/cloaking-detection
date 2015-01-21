@@ -78,19 +78,19 @@ The paper writing can start parallelly with experiments
 
 Word collection workload assignment ================================================
 
-Abuse of the ad network					ruian
-Adult-oriented content					ruian
-Alcoholic beverages					weiren
-Copyrighted content					weiren
-Counterfeit goods					weiren
-Dangerous products or services				weiren
-Editorial & professional requirements			weiren
-Gambling-related content				weiren
-Healthcare and medicines				weiren
-Irresponsible data collection & use			weiren
-Legal requirements & serving limitations		ruian
-Misrepresentation of self, product, or service		ruian
-Offensive or inappropriate content			ruian
-Political content					ruian
-Products or services that enable dishonest behavior	ruian
+Abuse of the ad network					ruian 	done
+Adult-oriented content					ruian 	done
+Alcoholic beverages					weiren	done
+Copyrighted content					weiren	done
+Counterfeit goods					weiren	done
+Dangerous products or services				weiren	done
+Editorial & professional requirements			weiren	done
+Gambling-related content				weiren	no need
+Healthcare and medicines				weiren	done
+Irresponsible data collection & use			weiren	?
+Legal requirements & serving limitations		ruian	todo
+Misrepresentation of self, product, or service		ruian	no need
+Offensive or inappropriate content			ruian	todo
+Political content					ruian	no need
+Products or services that enable dishonest behavior	ruian	done
 
