@@ -208,6 +208,17 @@ def main(argv):
 		sys.exit()
 	if function == 'compute':
 		site_list_filenames = inputfile.split(',')
+		if 'google' in site_list_filenames[0].lower() and not keep_failure:
+			print "Warning: Google observation failure are discarded!"
+			print "Do you want to continue?[Y/N]"
+			line = sys.stdin.readline()
+			if "y" in line.lower():
+				pass
+			elif "n" in line.lower():
+				sys.exit(0)
+			else:
+				print "Unrecognized option!"
+				sys.exit(1)
 		compute(site_list_filenames, outputfile, simhash_type, keep_failure)
 	elif function == 'learn':
 		observed_sites_filenames = inputfile.split(',')
