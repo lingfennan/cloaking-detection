@@ -10,6 +10,7 @@ from itertools import izip
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from learning_detection_util import read_proto_from_file, write_proto_to_file
+import selenium.webdriver.chrome.service as service
 import proto.cloaking_detection_pb2 as CD
 
 """
@@ -54,6 +55,9 @@ else:
 	print 'System {0} not supported'.format(platform.system())
 	sys.exit(1)
 
+# start chrome driver separately to save time and resources
+driver_service = service.Service(CHROMEDRIVER_PATH)
+driver_service.start()
 
 ####################################################################################
 def evaluation_form(sites_filename, out_filename, proto):
@@ -391,7 +395,8 @@ def start_browser(browser_type, incognito=False, user_agent=None, use_tor=False)
 			PROXY = "socks5://127.0.0.1:9050"
 			options.add_argument("--proxy-server=%s" % PROXY)
 		options.add_experimental_option("excludeSwitches", ["ignore-certificate-errors"])
-		browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
+		# browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
+		browser = webdriver.Remote(driver_service.service_url, desired_capabilities=options.to_capabilities())
 	else:
 		print 'Invalid browser type, or browser type not handled currently.'
 		sys.exit(2)
