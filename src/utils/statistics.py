@@ -12,9 +12,11 @@ import proto.cloaking_detection_pb2 as CD
 
 def feature_hist(filename, feature_type):
 	if feature_type == "TEXT":
-		attr_name = "text_feature_count"
+		count_attr_name = "text_feature_count"
+		simhash_attr_name = "text_simhash"
 	elif feature_type == "DOM":
-		attr_name = "dom_feature_count"
+		count_attr_name = "dom_feature_count"
+		simhash_attr_name = "dom_simhash"
 	else:
 		print "Wrong type of feature {0}".format(feature_type)
 		return
@@ -23,11 +25,10 @@ def feature_hist(filename, feature_type):
 	feature_count_list = list()
 	for site in observed_sites.site:
 		for observation in site.observation:
-			feature_count = getattr(observation, attr_name)
+			feature_count = getattr(observation, count_attr_name)
+			simhash_value = getattr(observation, simhash_attr_name)
 			if feature_count < 4:
-				print feature_count
-				print observation.landing_url
-				print observation.file_path
+				print observation
 			feature_count_list.append(feature_count)
 	feature_count_array = np.array(feature_count_list)
 	feature_count_array = np.log2(np.add(feature_count_array, 1))

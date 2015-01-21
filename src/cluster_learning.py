@@ -50,7 +50,7 @@ class ClusterLearning(object):
 					observation.dom_simhash = result[-1][0].value
 					observation.dom_feature_count = result[-1][1]
 		if not simhash_config.discard_failure:
-			add_failure(observed_sites, site_list_filenames)
+			observed_sites = add_failure(observed_sites, site_list_filenames)
 		return observed_sites
 
 	def learn(self, observed_sites_filenames, cluster_config=None):
