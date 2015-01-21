@@ -261,10 +261,12 @@ class Visit:
 		if self.counter % self.max_word_per_file == 0:
 			self.write_crawl_log()
 	
-	def write_crawl_log(self):
+	def write_crawl_log(self, partition_suffix=True):
 		# Write log for current user agent
 		current_log_filename = self.crawl_config.user_agent_md5_dir + \
-				self.crawl_config.log_filename + "_" + str(self.partition) 
+				self.crawl_config.log_filename
+		if partition_suffix:
+			current_log_filename += "_" + str(self.partition)
 		self.partition += 1
 		# Write global crawl_log
 		write_proto_to_file(self.current_log, current_log_filename)
@@ -294,7 +296,7 @@ class Visit:
 		self.current_log = CD.CrawlLog()
 		result_search = self.current_log.result_search.add()
 		result_search.CopyFrom(current_search)
-		self.write_crawl_log()
+		self.write_crawl_log(False)
 
 def search_and_crawl(word_file):
 	"""

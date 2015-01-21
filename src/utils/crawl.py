@@ -78,20 +78,28 @@ class UrlFetcher(object):
 			time.sleep(1)
 			if self.crawl_config.browser_type == CD.CrawlConfig.CHROME and \
 					(('404 Not Found' in browser.title) \
+					or ('403' in browser.title) \
+					or ('Forbidden' in browser.title) \
 					or ('not available' in browser.title) \
 					or ('Problem loading page' in browser.title) \
 					or ('Page not found' in browser.title) \
 					or ('Error' in browser.title) \
 					or ('Access denied' in browser.title) \
 					or (browser.current_url == 'data:text/html,chromewebdata')):
+				result.landing_url = browser.current_url
+				result.landing_url_md5 = hex_md5(result.landing_url)
 				result.success = False
 			elif self.crawl_config.browser_type == CD.CrawlConfig.FIREFOX and \
 					(('404 Not Found' in browser.title) \
+					or ('403' in browser.title) \
+					or ('Forbidden' in browser.title) \
 					or ('not available' in browser.title) \
 					or ('Problem loading page' in browser.title) \
 					or ('Page not found' in browser.title) \
 					or ('Error' in browser.title) \
 					or ('Access denied' in browser.title)):
+				result.landing_url = browser.current_url
+				result.landing_url_md5 = hex_md5(result.landing_url)
 				result.success = False
 			else:
 				#############

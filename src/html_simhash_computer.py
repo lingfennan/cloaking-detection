@@ -25,6 +25,9 @@ def strip_tags(html):
 	result = s.get_data()
 	return " ".join(result.split())
 '''
+# Increase the recursionlimit to get more features
+sys.setrecursionlimit(2000)
+
 
 def visible_text(html, twice=True):
 	texts = BeautifulSoup(html).findAll(text=True)
@@ -88,29 +91,30 @@ class HtmlSimhashComputer(object):
 		# current node is tag
 		try:
 			name = node.name
-		except:
+			if name is not None:
+				# process node
+				node_str = name
+				for attr_name in node.attrs.keys():
+					node_str += '_' + attr_name
+				html_dom_set.node.add(node_str)
+				if node.parent:
+					parent = node.parent
+					parent_str = parent.name
+					for attr_name in parent.attrs.keys():
+						parent_str += '_' + attr_name
+					html_dom_set.bi_node.add(parent_str + ',' + node_str)
+				if node.parent and node.parent.parent:
+					grand = node.parent.parent
+					grand_str = grand.name
+					for attr_name in grand.attrs.keys():
+						grand_str += '_' + attr_name
+					html_dom_set.tri_node.add(grand_str + ',' + parent_str + ',' + node_str)
+				for child in node.children:
+					# print str(child.name) + ":" + str(type(child))
+					self._extract_html_node(child, html_dom_set)
+		except RuntimeError:
+			print sys.exc_info()[0]
 			return
-		if name is not None:
-			# process node
-			node_str = name
-			for attr_name in node.attrs.keys():
-				node_str += '_' + attr_name
-			html_dom_set.node.add(node_str)
-			if node.parent:
-				parent = node.parent
-				parent_str = parent.name
-				for attr_name in parent.attrs.keys():
-					parent_str += '_' + attr_name
-				html_dom_set.bi_node.add(parent_str + ',' + node_str)
-			if node.parent and node.parent.parent:
-				grand = node.parent.parent
-				grand_str = grand.name
-				for attr_name in grand.attrs.keys():
-					grand_str += '_' + attr_name
-				html_dom_set.tri_node.add(grand_str + ',' + parent_str + ',' + node_str)
-			for child in node.children:
-				# print str(child.name) + ":" + str(type(child))
-				self._extract_html_node(child, html_dom_set)
 	
 	def _extract_html_dom(self, tree):
 		html_dom = CD.HtmlDom()
@@ -180,6 +184,7 @@ class HtmlSimhashComputer(object):
 if __name__ == "__main__":
 	# HtmlText, HtmlDom
 	filenames= ['../data/abusive_words.google.crawl/f94453065ca51301ffc1c1dde571858e.20150116-164635/c4cc49b52b5a03d4ef03d5d115d6d0e1/index.html',
+			'../data/abusive_words.google.crawl/f94453065ca51301ffc1c1dde571858e.20150118-050800/0a008f435c0972ad57ddf29343c93995/index.html',
 			'../data/abusive_words.google.crawl/f94453065ca51301ffc1c1dde571858e.20150118-183852/c9d56725a436d486b31b90b118ac9e69/index.html']
 	# text_simhash for second one: 9414395266106367332
 	# dom_simhash for second one: 4243381963081104893

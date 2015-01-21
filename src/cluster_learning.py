@@ -1,6 +1,6 @@
 """
 How to use:
-python cluster_learning.py -f compute -i <inputfiles> [-o <outputfile>] (If there are multiple inputfiles, split them by comma)
+python cluster_learning.py -f compute -i <inputfiles> [-o <outputfile> -t <simhash_type>] (If there are multiple inputfiles, split them by comma)
 python cluster_learning.py -f learn -i <inputfiles> [-o <outputfile>] (If there are multiple inputfiles, split them by comma)
 """
 
@@ -65,22 +65,25 @@ class ClusterLearning(object):
 				learned_site.CopyFrom(result)
 		return learned_sites
 
-def compute(site_list_filenames, outfile = None):
-	text_out_filename = outfile + ".text" if outfile else site_list_filenames[0] + ".text"
-	cluster_learner = ClusterLearning()
-	simhash_config = CD.SimhashConfig()
-	simhash_config.simhash_type = CD.TEXT
-	simhash_config.usage.tri_gram = True
-	res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
-	write_proto_to_file(res, text_out_filename)
-
-	dom_out_filename = outfile + ".dom" if outfile else site_list_filenames[0] + ".dom"
-	cluster_learner = ClusterLearning()
-	simhash_config = CD.SimhashConfig()
-	simhash_config.simhash_type = CD.DOM
-	simhash_config.usage.tri_gram = False
-	res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
-	write_proto_to_file(res, dom_out_filename)
+def compute(site_list_filenames, outfile = None, simhash_type = None):
+	# this branch simhash_type == None, TEXT, TEXT_DOM
+	if not simhash_type == "DOM":
+		text_out_filename = outfile + ".text" if outfile else site_list_filenames[0] + ".text"
+		cluster_learner = ClusterLearning()
+		simhash_config = CD.SimhashConfig()
+		simhash_config.simhash_type = CD.TEXT
+		simhash_config.usage.tri_gram = True
+		res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
+		write_proto_to_file(res, text_out_filename)
+	# this branch simhash_type == None, DOM, TEXT_DOM
+	if not simhash_type == "TEXT":
+		dom_out_filename = outfile + ".dom" if outfile else site_list_filenames[0] + ".dom"
+		cluster_learner = ClusterLearning()
+		simhash_config = CD.SimhashConfig()
+		simhash_config.simhash_type = CD.DOM
+		simhash_config.usage.tri_gram = False
+		res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
+		write_proto_to_file(res, dom_out_filename)
 
 def learn(observed_sites_filenames, outfile = None):
 	out_filename = outfile + ".learned" if outfile else observed_sites_filenames[0] + ".learned"
@@ -145,10 +148,11 @@ def test_computer():
 
 def main(argv):
 	has_function = False
-	help_msg = 'cluster_learning.py -f <function> [-i <inputfile>], valid functions are compute, learn'
+	help_msg = 'cluster_learning.py -f <function> [-i <inputfile> -t <simhash_type>] [-i <inputfile>], valid functions are compute, learn'
 	outputfile = None
+	simhash_type = None
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:o:", ["function=", "ifile=", "ofile="])
+		opts, args = getopt.getopt(argv, "hf:i:o:t:", ["function=", "ifile=", "ofile=", "type="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
@@ -163,6 +167,8 @@ def main(argv):
 			inputfile = arg
 		elif opt in ("-o", "--ofile"):
 			outputfile = arg
+		elif opt in ("-t", "--type"):
+			simhash_type = arg
 		else:
 			print help_msg
 			sys.exit(2)
@@ -174,7 +180,7 @@ def main(argv):
 		sys.exit()
 	if function == 'compute':
 		site_list_filenames = inputfile.split(',')
-		compute(site_list_filenames, outputfile)
+		compute(site_list_filenames, outputfile, simhash_type)
 	elif function == 'learn':
 		observed_sites_filenames = inputfile.split(',')
 		learn(observed_sites_filenames, outputfile)
