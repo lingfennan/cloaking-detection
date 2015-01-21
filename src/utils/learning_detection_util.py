@@ -48,6 +48,47 @@ def _split_path_by_data(path, index):
 	else:
 		raise Exception("More than one 'data' or no 'data'.")
 
+def add_failure(observed_sites, site_list_filenames):
+	"""
+	@parameter
+	observed_sites: the sites to add, this function performs in place add
+	site_list_filenames: list of site_list_filename, which is CrawlLog
+	@return
+	observed_sites: structure data that aggregate by site after adding failure
+	"""
+	site_observations_map = dict()
+	for site in observed_sites.site:
+		site_observations_map[site.name] = list()
+		for observation in site.observation:
+			site_observations_map[site.name].append(observation)
+	for site_list_filename in site_list_filenames:
+		crawl_log = CD.CrawlLog()
+		read_proto_from_file(crawl_log, site_list_filename)
+		# get failure sites list
+		site_list = [result.url for result_search in crawl_log.result_search \
+				for result in result_search.result if not result.success]
+		for link in site_list:
+			key = _strip_parameter(link)
+			if key not in site_observations_map:
+				site_observations_map[key] = list()
+			observation = CD.Observation()
+			observation.landing_url = link
+			if observed_sites.config.simhash_type in [CD.TEXT, CD.TEXT_DOM]:
+				observation.text_simhash = 0
+				observation.text_feature_count = 0
+			if observed_sites.config.simhash_type in [CD.DOM, CD.TEXT_DOM]:
+				observation.dom_simhash = 0
+				observation.dom_feature_count = 0
+			site_observations_map[key].append(observation)
+	observed_sites = CD.ObservedSites()
+	for site in site_observations_map:
+		observed_site = observed_sites.site.add()
+		observed_site.name = site
+		for ob in site_observations_map[site]:
+			observation = observed_site.observation.add()
+			observation.CopyFrom(ob)
+	return observed_sites
+
 def load_observed_sites(site_list_filenames):
 	"""
 	@parameter
@@ -64,7 +105,7 @@ def load_observed_sites(site_list_filenames):
 		read_proto_from_file(crawl_log, site_list_filename)
 		site_list = [[result.file_path, result.landing_url] \
 				for result_search in crawl_log.result_search \
-				for result in result_search.result if result.success == True]
+				for result in result_search.result if result.success]
 		prefix = _split_path_by_data(site_list_filename, 0)
 		for path, link in site_list:
 			# $prefix/data/$detail_path

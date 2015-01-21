@@ -85,7 +85,7 @@ message SiteObservations {
 
 message Observation {
   required string landing_url = 1;
-  required string file_path = 2;
+  optional string file_path = 2;  // failure observation may not have this field
   optional string timestamp = 3;
   optional uint64 text_simhash = 4;
   optional uint64 dom_simhash = 5;
@@ -129,6 +129,10 @@ message SimhashConfig {
   }
   optional FeatureUsage usage = 2;
   optional int32 maximum_threads = 3 [default = 10];
+  // When preparing ObservedSites from CrawlLog, failure can be considered
+  // either useless (in user view), or a hint of cloaking (in Google view).
+  // Decide whether to discard crawl failure accordingly.
+  optional bool discard_failure = 4 [default = true];
 }
 
 // Configuration for simhash clustering
