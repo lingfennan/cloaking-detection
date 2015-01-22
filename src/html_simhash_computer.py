@@ -3,6 +3,7 @@ import re
 import sys
 from simhash import Simhash
 from bs4 import BeautifulSoup
+from Queue import Queue
 from utils.learning_detection_util import valid_instance
 import utils.proto.cloaking_detection_pb2 as CD
 
@@ -87,7 +88,40 @@ class HtmlSimhashComputer(object):
 			tri_gram.name = w
 		return html_text
 
-	def _extract_html_node(self, node, html_dom_set):
+
+	def _extract_one_node(self, node, html_dom_set):
+		name = node.name
+		if name is not None:
+			node_str = name
+			for attr_name in node.attrs.keys():
+				node_str = name
+				for attr_name in node.attrs.keys():
+					node_str += '_' + attr_name
+				html_dom_set.node.add(node_str)
+				if node.parent:
+					parent = node.parent
+					parent_str = parent.name
+					for attr_name in parent.attrs.keys():
+						parent_str += '_' + attr_name
+					html_dom_set.bi_node.add(parent_str + ',' + node_str)
+				if node.parent and node.parent.parent:
+					grand = node.parent.parent
+					grand_str = grand.name
+					for attr_name in grand.attrs.keys():
+						grand_str += '_' + attr_name
+					html_dom_set.tri_node.add(grand_str + ',' + parent_str + ',' + node_str)
+
+	def _extract_html_node_iterative(self, node, html_dom_set):
+		q = Queue()
+		q.put(node)
+		while not q.empty():
+			current_node = q.get()
+			# extract info from current node
+			self._extract_one_node(current_node, html_dom_set)
+			for child in current_node.children:
+				q.put(child)
+
+	def _extract_html_node_recursive(self, node, html_dom_set):
 		# current node is tag
 		try:
 			name = node.name
@@ -111,17 +145,20 @@ class HtmlSimhashComputer(object):
 					html_dom_set.tri_node.add(grand_str + ',' + parent_str + ',' + node_str)
 				for child in node.children:
 					# print str(child.name) + ":" + str(type(child))
-					self._extract_html_node(child, html_dom_set)
+					self._extract_html_node_recursive(child, html_dom_set)
 		except RuntimeError:
 			print sys.exc_info()[0]
 			return
 	
-	def _extract_html_dom(self, tree):
+	def _extract_html_dom(self, tree, recursive=True):
 		html_dom = CD.HtmlDom()
 		html_dom_set = HtmlDomSet()
 		# Traverse the tree
 		# ROOT_TAG_NAME = u'[document]'
-		self._extract_html_node(tree, html_dom_set)
+		if recursive:
+			self._extract_html_node_recursive(tree, html_dom_set)
+		else:
+			self._extract_html_node_iterative(tree, html_dom_set)
 		for n in html_dom_set.node:
 			node = html_dom.node.add()
 			node.name = n
@@ -162,7 +199,7 @@ class HtmlSimhashComputer(object):
 					features.append(feature.name)
 			return [self.build_by_features(features), len(features)]
 	
-	def compute_simhash(self, data):
+	def compute_simhash(self, data, recursive=True):
 		"""
 		@parameter
 		data: content of html file
@@ -177,7 +214,7 @@ class HtmlSimhashComputer(object):
 			result.append(self.build_by_text(html_text))
 		if self.simhash_config.simhash_type in [CD.DOM, CD.TEXT_DOM]:
 			soup = BeautifulSoup(data)
-			html_dom = self._extract_html_dom(soup)
+			html_dom = self._extract_html_dom(soup, recursive)
 			result.append(self.build_by_dom(html_dom))
 		return result
 
@@ -207,6 +244,9 @@ if __name__ == "__main__":
 		config.usage.tri_gram = False
 		res = HtmlSimhashComputer(config).compute_simhash(data)
 		# print '%x' % res[0].value
+		print res[0][0].value
+		print res
+		res = HtmlSimhashComputer(config).compute_simhash(data, False)
 		print res[0][0].value
 		print res
 
