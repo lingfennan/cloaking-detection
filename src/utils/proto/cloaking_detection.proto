@@ -196,6 +196,7 @@ message CrawlConfig {
   // Number of top search results to be inspected.
   optional int32 count = 6 [default = 200];
   optional string log_filename = 7;
+  optional string crawl_log_dir = 8;
 }
 
 message CrawlLog {
