@@ -273,10 +273,15 @@ class Visit:
 
 		Note: some of the words might have empty advertisement
 		clickstring_set, these words are counted but not logged.
+		@parameter
+		clickstring_set: the links to visit
+		search_term: search term related to clickstring_set
+		@return
+		None or current_log_filename (from write_crawl_log())
 		"""
 		self.counter += 1
 		if len(clickstring_set) == 0:
-			return
+			return None
 		mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
 		# crawl web pages
 		url_fetcher = UrlFetcher(self.crawl_config)
@@ -520,7 +525,11 @@ def search_and_revisit(word_file, n):
 		search_crawl_log_filename = search_visit.visit(search_set, word)
 
 		# revisit
-		crawl_log_file_list = [ad_crawl_log_filename, search_crawl_log_filename]
+		crawl_log_file_list = list()
+		if ad_crawl_log_filename:
+			crawl_log_file_list.append(ad_crawl_log_filename)
+		if search_crawl_log_filename:
+			crawl_log_file_list.append(search_crawl_log_filename)
 		for crawl_log_file in crawl_log_file_list:
 			revisit_crawl_config.log_filename = crawl_log_file.split('/')[-1] + '.google'
 			revisit = Visit(revisit_crawl_config)
