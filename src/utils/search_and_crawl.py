@@ -254,7 +254,6 @@ class Visit:
 		self.first = True 
 		self.max_word_per_file = max_word_per_file 
 		self.counter = 0
-		self.partition = 0
 		self.url_fetcher = UrlFetcher(self.crawl_config)
 
 	def update_crawl_config(self, crawl_config):
@@ -305,14 +304,13 @@ class Visit:
 		if self.counter % self.max_word_per_file == 0:
 			return self.write_crawl_log()
 	
-	def write_crawl_log(self, partition_suffix=True):
+	def write_crawl_log(self, counter_suffix=True):
 		crawl_log_dir = self.crawl_config.crawl_log_dir
 		if (not crawl_log_dir) or crawl_log_dir == "":
 			crawl_log_dir = self.crawl_config.user_agent_md5_dir
 		current_log_filename = crawl_log_dir + self.crawl_config.log_filename
-		if partition_suffix:
-			current_log_filename += "_" + str(self.partition)
-		self.partition += 1
+		if counter_suffix:
+			current_log_filename += "_" + str(self.counter)
 		# Write global crawl_log
 		write_proto_to_file(self.current_log, current_log_filename)
 		# After write, reset variables
