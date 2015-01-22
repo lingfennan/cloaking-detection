@@ -213,7 +213,7 @@ class SearchTerm:
 		"""
 		return self.progress.current
 	
-	def counter(self):
+	def get_counter(self):
 		"""
 		times next() has been called, ie. progress of current session.
 		"""
@@ -537,7 +537,7 @@ def search_and_revisit(word_file, n):
 			revisit.write_crawl_log(False)
 		words.next()
 		# kill zombie process peridically
-		if words.counter() % 20 == 0:
+		if words.get_counter() % 20 == 0:
 			killall('chrome')
 
 def main(argv):
