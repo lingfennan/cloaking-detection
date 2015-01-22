@@ -49,6 +49,9 @@ class UrlFetcher(object):
 		while not self.browser_queue.empty():
 			browser = self.browser_queue.get()
 			browser.quit()
+	
+	def update_dir(self, new_dir):
+		self.crawl_config.user_agent_md5_dir = new_dir
 
 	def maximum_threads(self):
 		return self.crawl_config.maximum_threads

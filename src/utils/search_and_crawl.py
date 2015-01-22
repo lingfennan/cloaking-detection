@@ -255,14 +255,17 @@ class Visit:
 		self.max_word_per_file = max_word_per_file 
 		self.counter = 0
 		self.partition = 0
+		self.url_fetcher = UrlFetcher(self.crawl_config)
 
 	def update_crawl_config(self, crawl_config):
 		valid_instance(crawl_config, CD.CrawlConfig)
 		self.crawl_config = CD.CrawlConfig()
 		self.crawl_config.CopyFrom(crawl_config)
 		set_browser_type(self.crawl_config)
+		self.url_fetcher.update_dir(self.crawl_config.user_agent_md5_dir)
 	
 	def __del__(self):
+		self.url_fetcher.quit()
 		if not self.counter % self.max_word_per_file == 0:
 			self.write_crawl_log()
 
@@ -284,10 +287,8 @@ class Visit:
 			return None
 		mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
 		# crawl web pages
-		url_fetcher = UrlFetcher(self.crawl_config)
-		thread_computer = ThreadComputer(url_fetcher, 'fetch_url',
+		thread_computer = ThreadComputer(self.url_fetcher, 'fetch_url',
 				clickstring_set)
-		url_fetcher.quit()
 		# create and fill current_search, including urls, search_term etc.
 		current_search = CD.CrawlSearchTerm()
 		for p, s in thread_computer.result:
@@ -329,10 +330,8 @@ class Visit:
 					landing_url_set.add(result.landing_url)
 		mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
 		# crawl web pages
-		url_fetcher = UrlFetcher(self.crawl_config)
-		thread_computer = ThreadComputer(url_fetcher, 'fetch_url',
+		thread_computer = ThreadComputer(self.url_fetcher, 'fetch_url',
 				landing_url_set)
-		url_fetcher.quit()
 		# create and fill current_search, including urls, search_term etc.
 		current_search = CD.CrawlSearchTerm()
 		for p, s in thread_computer.result:
