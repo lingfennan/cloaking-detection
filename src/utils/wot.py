@@ -31,6 +31,7 @@ class WOT:
 		
 
 		result = dict()
+		resultUrl = []
 
 		for keysTier1,valuesTier1 in examples.items():
 			negativePoints = 0
@@ -57,10 +58,15 @@ class WOT:
 							positivePoints += int(score)
 				pointsList = []
 				pointsList.extend([negativePoints, questionablePoints, neutralPoints, positivePoints])
-				result[keysTier1] = pointsList
+				#if positivePoints > 66 we judge the websites are good
+				#result needed to know how much websites are filtered true positive/false positive
+				if(positivePoints > 66):
+					result[keysTier1] = pointsList
+					resultUrl.append(keysTier1)
 
 
-		return result
+		return resultUrl
+		#return result
 						
 					
 		
@@ -77,9 +83,8 @@ class WOT:
 		# content = urllib2.urlopen(url).read()
 		data = json.load(urllib2.urlopen(url))
 		return data
-
-def main(argv):
-	domains = ['example.net','everlastinghelp.com','13xa.com', 'google.com', 'sina.com.cn']
+def filt(domains):
+	domains = ['example.net','everlastinghelp.com','13xa.com', 'google.com', 'sina.com.cn', 'xpgraph.com']
 	# define constants 
 	reputation = WOT()
 	#print reputation.process(domains)
@@ -90,5 +95,5 @@ def main(argv):
 if __name__ == "__main__":
 	# print urllib2.urlopen('http://api.mywot.com/0.4/public_link_json?hosts=google.com/').read()
 	# print urllib2.urlopen('https://api.mywot.com/0.4/public_link_json2?hosts=www.example.COM/&key=2527e6e5cca9451a605eea8171b5c89314c74a7a').read()
-	main(sys.argv[1:])
+	filt(sys.argv[1:])
 
