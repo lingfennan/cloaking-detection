@@ -254,17 +254,14 @@ class Visit:
 		self.first = True 
 		self.max_word_per_file = max_word_per_file 
 		self.counter = 0
-		self.url_fetcher = UrlFetcher(self.crawl_config)
 
 	def update_crawl_config(self, crawl_config):
 		valid_instance(crawl_config, CD.CrawlConfig)
 		self.crawl_config = CD.CrawlConfig()
 		self.crawl_config.CopyFrom(crawl_config)
 		set_browser_type(self.crawl_config)
-		self.url_fetcher.update_dir(self.crawl_config.user_agent_md5_dir)
 	
 	def __del__(self):
-		self.url_fetcher.quit()
 		if not self.counter % self.max_word_per_file == 0:
 			self.write_crawl_log()
 
@@ -282,12 +279,20 @@ class Visit:
 		None or current_log_filename (from write_crawl_log())
 		"""
 		self.counter += 1
-		if len(clickstring_set) == 0:
+		clickstring_set_size = len(clickstring_set)
+		if clickstring_set_size == 0:
 			return None
 		mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
 		# crawl web pages
-		thread_computer = ThreadComputer(self.url_fetcher, 'fetch_url',
+		if clickstring_set_size < 8:
+			record_maximum_threads = self.crawl_config.maximum_threads
+			self.crawl_config.maximum_threads = 2
+		url_fetcher = UrlFetcher(self.crawl_config)
+		thread_computer = ThreadComputer(url_fetcher, 'fetch_url',
 				clickstring_set)
+		url_fetcher.quit()
+		if clickstring_set_size < 8:
+			self.crawl_config.maximum_threads = record_maximum_threads
 		# create and fill current_search, including urls, search_term etc.
 		current_search = CD.CrawlSearchTerm()
 		for p, s in thread_computer.result:
@@ -328,8 +333,16 @@ class Visit:
 					landing_url_set.add(result.landing_url)
 		mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
 		# crawl web pages
-		thread_computer = ThreadComputer(self.url_fetcher, 'fetch_url',
+		landing_url_set_size = len(landing_url_set)
+		if landing_url_set_size < 8:
+			record_maximum_threads = self.crawl_config.maximum_threads
+			self.crawl_config.maximum_threads = 2
+		url_fetcher = UrlFetcher(self.crawl_config)
+		thread_computer = ThreadComputer(url_fetcher, 'fetch_url',
 				landing_url_set)
+		url_fetcher.quit()
+		if landing_url_set_size < 8:
+			self.crawl_config.maximum_threads = record_maximum_threads
 		# create and fill current_search, including urls, search_term etc.
 		current_search = CD.CrawlSearchTerm()
 		for p, s in thread_computer.result:
@@ -542,8 +555,8 @@ def search_and_revisit(word_file, n):
 				revisit.visit_landing_url(crawl_log)
 			revisit.write_crawl_log(False)
 		words.next()
-		# kill zombie process peridically
-		if words.get_counter() % 20 == 0:
+		# kill zombie process periodically
+		if words.get_counter() % 5 == 0:
 			killall('chrome')
 
 def main(argv):
