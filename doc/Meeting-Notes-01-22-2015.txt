@@ -1,0 +1,12 @@
+1. Attack model
+User login some webpage. This web page is different if login or now.
+By seeing different simhash, the data collection side could know whether
+they are login or not.
+
+2. Attack model
+reconstruct the content
+not viable -- one-way hash
+
+3. Attack model
+have the hash and url,
+cannot do dictionary attack on a specific field of the pages
