@@ -1,3 +1,4 @@
+import sys, getopt
 from learning_detection_util import read_proto_from_file, show_proto
 import proto.cloaking_detection_pb2 as CD
 
