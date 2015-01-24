@@ -152,8 +152,8 @@ class CloakingDetection(object):
 
 def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type):
 	detection_config = CD.DetectionConfig()
-	detection_config.algorithm = CD.DetectionConfig.JOINT_DISTRIBUTION
-	#detection_config.algorithm = CD.DetectionConfig.NORMAL_DISTRIBUTION
+	# detection_config.algorithm = CD.DetectionConfig.JOINT_DISTRIBUTION
+	detection_config.algorithm = CD.DetectionConfig.NORMAL_DISTRIBUTION
 	# detection_config.algorithm = CD.DetectionConfig.PERCENTILE
 	detection_config.p = 99
 	detection_config.std_constant = 3

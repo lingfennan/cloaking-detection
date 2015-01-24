@@ -17,7 +17,7 @@ class WOT:
 		#self.params['callback']='process'
 		self.base_url = 'http://api.mywot.com/0.4/public_link_json2?'
 
-	def evaluate(self, examples):
+	def evaluate(self, examples, bar_points):
 		#input: the scores computed by WOT API
 		#output: the scores concluded
 		negative = []
@@ -31,6 +31,8 @@ class WOT:
 		
 
 		result = dict()
+		good_domain = []
+		resultUrl = []
 
 		for keysTier1,valuesTier1 in examples.items():
 			negativePoints = 0
@@ -57,10 +59,13 @@ class WOT:
 							positivePoints += int(score)
 				pointsList = []
 				pointsList.extend([negativePoints, questionablePoints, neutralPoints, positivePoints])
-				result[keysTier1] = pointsList
+				
+				if positivePoints > bar_points:
+					good_domain.append(keysTier1)
+					result[keysTier1] = pointsList
 
-
-		return result
+		bad_domain = list(set(examples) - set(good_domain));	
+		return bad_domain
 						
 					
 		
@@ -78,17 +83,16 @@ class WOT:
 		data = json.load(urllib2.urlopen(url))
 		return data
 
-def main(argv):
-	domains = ['example.net','everlastinghelp.com','13xa.com', 'google.com', 'sina.com.cn']
+def filt(argv,domains = ['example.net','everlastinghelp.com','13xa.com', 'google.com', 'sina.com.cn'], bar_points = 66):
 	# define constants 
 	reputation = WOT()
 	#print reputation.process(domains)
 	result =  reputation.process(domains)
-	evaluationRes = reputation.evaluate(result)
+	evaluationRes = reputation.evaluate(result, bar_points)
 	print evaluationRes
 	
 if __name__ == "__main__":
 	# print urllib2.urlopen('http://api.mywot.com/0.4/public_link_json?hosts=google.com/').read()
 	# print urllib2.urlopen('https://api.mywot.com/0.4/public_link_json2?hosts=www.example.COM/&key=2527e6e5cca9451a605eea8171b5c89314c74a7a').read()
-	main(sys.argv[1:])
+	filt(sys.argv[1:])
 
