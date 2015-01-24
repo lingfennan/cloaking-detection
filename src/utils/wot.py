@@ -83,13 +83,14 @@ class WOT:
 		data = json.load(urllib2.urlopen(url))
 		return data
 
-def filt(argv,domains = ['example.net','everlastinghelp.com','13xa.com', 'google.com', 'sina.com.cn'], bar_points = 66):
+def filt(domains = ['example.net','everlastinghelp.com','13xa.com', 'google.com', 'sina.com.cn'], bar_points = 66):
 	# define constants 
 	reputation = WOT()
 	#print reputation.process(domains)
 	result =  reputation.process(domains)
 	evaluationRes = reputation.evaluate(result, bar_points)
 	print evaluationRes
+	return evaluationRes
 	
 if __name__ == "__main__":
 	# print urllib2.urlopen('http://api.mywot.com/0.4/public_link_json?hosts=google.com/').read()
