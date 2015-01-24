@@ -31,11 +31,8 @@ class WOT:
 		
 
 		result = dict()
-<<<<<<< HEAD
 		good_domain = []
-=======
 		resultUrl = []
->>>>>>> 99c29c0ad36a855cf8b5909b3642af83864db211
 
 		for keysTier1,valuesTier1 in examples.items():
 			negativePoints = 0
@@ -62,7 +59,6 @@ class WOT:
 							positivePoints += int(score)
 				pointsList = []
 				pointsList.extend([negativePoints, questionablePoints, neutralPoints, positivePoints])
-<<<<<<< HEAD
 				
 				if positivePoints > bar_points:
 					good_domain.append(keysTier1)
@@ -70,17 +66,6 @@ class WOT:
 
 		bad_domain = list(set(examples) - set(good_domain));	
 		return bad_domain
-=======
-				#if positivePoints > 66 we judge the websites are good
-				#result needed to know how much websites are filtered true positive/false positive
-				if(positivePoints > 66):
-					result[keysTier1] = pointsList
-					resultUrl.append(keysTier1)
-
-
-		return resultUrl
-		#return result
->>>>>>> 99c29c0ad36a855cf8b5909b3642af83864db211
 						
 					
 		
@@ -97,13 +82,8 @@ class WOT:
 		# content = urllib2.urlopen(url).read()
 		data = json.load(urllib2.urlopen(url))
 		return data
-<<<<<<< HEAD
 
 def filt(argv,domains = ['example.net','everlastinghelp.com','13xa.com', 'google.com', 'sina.com.cn'], bar_points = 66):
-=======
-def filt(domains):
-	domains = ['example.net','everlastinghelp.com','13xa.com', 'google.com', 'sina.com.cn', 'xpgraph.com']
->>>>>>> 99c29c0ad36a855cf8b5909b3642af83864db211
 	# define constants 
 	reputation = WOT()
 	#print reputation.process(domains)
