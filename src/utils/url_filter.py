@@ -8,9 +8,9 @@ import wot
 
 
 def get_domain(landing_url):
-	return landing_url.url.split('://')[-1].split('/')[0]
+	return landing_url.split('://')[-1].split('/')[0]
 
-def getbad(argv,filename, outfilename):
+def getbad(filename, outfilename):
 	observed_sites = CD.ObservedSites()
 	read_proto_from_file(observed_sites, filename)
 	domain_set = set();
@@ -18,11 +18,12 @@ def getbad(argv,filename, outfilename):
 	for site in observed_sites.site:
 		for observation in site.observation:
 			url_domain = get_domain(observation.landing_url)
-			domainSet.add(url_domain)
+			domain_set.add(url_domain)
 
 	domain_list = list(domain_set)
 	bad_domains = wot.filt(domain_list)
 	bad_observed_sites = CD.ObservedSites()
+	print "here"
 
 	for site in observed_sites.site:
 		for observation in site.observation:
@@ -34,6 +35,6 @@ def getbad(argv,filename, outfilename):
 			
 
 if __name__=="__main__":
-	getbad(sys.argv[1:])
+	getbad(sys.argv[1],sys.argv[2])
 	
 
