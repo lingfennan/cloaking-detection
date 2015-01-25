@@ -28,6 +28,14 @@ def killall(name):
 	logging.error(error)
 	return False if error else True
 
+def dropcache():
+	p = subprocess.Popen('sudo sh -c "sync; echo 3 > /proc/sys/vm/drop_caches"',
+			shell=True, stdout=subprocess.PIPE)
+	output, error = p.communicate()
+	logging.info(output)
+	logging.error(error)
+	return False if error else True
+
 def switch_vpn_state(connected):
 	if connected:
 		p = subprocess.Popen(['/opt/cisco/anyconnect/bin/vpn', 'disconnect'], stdout=subprocess.PIPE)
@@ -558,6 +566,7 @@ def search_and_revisit(word_file, n):
 		# kill zombie process periodically
 		if words.get_counter() % 5 == 0:
 			killall('chrome')
+			dropcache()
 
 def main(argv):
 	has_function = False
