@@ -377,6 +377,7 @@ class Visit:
 			self.current_log = CD.CrawlLog()
 		result_search = self.current_log.result_search.add()
 		result_search.CopyFrom(current_search)
+		
 
 	def visit_landing_url_n_times(self, crawl_log, n_times, revisit_dir_prefix,
 			word_md5, word_md5_delimiter):
@@ -594,7 +595,7 @@ def search_and_revisit(word_file, n):
 					word_md5, word_md5_delimiter)
 		words.next()
 		# kill zombie process periodically
-		if words.get_counter() % 5 == 0:
+		if words.get_counter() % 3 == 0:
 			killall('chrome')
 			dropcache()
 

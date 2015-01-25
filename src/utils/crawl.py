@@ -119,10 +119,10 @@ class UrlFetcher(object):
 				f.write(response.encode('utf-8'))
 				f.close()
 			browser.delete_all_cookies()
-			if len(browser.windows_handles) > 1:
+			if len(browser.window_handles) > 1:
 				# close all the other windows
 				current_window_handle = browser.current_window_handle
-				for handle in browser.windows_handles:
+				for handle in browser.window_handles:
 					if handle != current_window_handle:
 						browser.switch_to_window(handle)
 						browser.close()
