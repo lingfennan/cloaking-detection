@@ -12,6 +12,12 @@ import proto.cloaking_detection_pb2 as CD
 """
 Below are util functions.
 """
+def show_proto(inputfile, proto_type):
+	proto = getattr(CD, proto_type)()
+	read_proto_from_file(proto, inputfile)
+	print proto
+
+
 def _strip_parameter(link):
 	"""
 	Strip parameter values and set protocol to null for URLs, e.g.

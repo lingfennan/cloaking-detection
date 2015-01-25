@@ -8,6 +8,7 @@ Example Usage:
 
 """
 import logging
+import platform
 import random
 import subprocess
 import sys, getopt
@@ -37,6 +38,8 @@ def dropcache():
 	return False if error else True
 
 def switch_vpn_state(connected):
+	if platform.node() == "moon":
+		return True
 	if connected:
 		p = subprocess.Popen(['/opt/cisco/anyconnect/bin/vpn', 'disconnect'], stdout=subprocess.PIPE)
 	else:
@@ -107,6 +110,8 @@ class Search:
 		self.crawl_config = CD.CrawlConfig()
 		self.crawl_config.CopyFrom(crawl_config)
 		set_browser_type(self.crawl_config)
+		switch_vpn_state(True)
+		self.connected = False
 	
 	def __del__(self):
 		# disconnect if connected
@@ -161,8 +166,6 @@ class Search:
 		self.browser = start_browser(self.crawl_config.browser_type, incognito=False,
 				user_agent=self.crawl_config.user_agent)
 		self.browser.set_page_load_timeout(15)
-		switch_vpn_state(True)
-		self.connected = False
 
 		# search 
 		start = 0
