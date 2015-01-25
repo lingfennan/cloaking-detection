@@ -126,6 +126,8 @@ class UrlFetcher(object):
 					if handle != current_window_handle:
 						browser.switch_to_window(handle)
 						browser.close()
+				# switch back to the current window
+				browser.switch_to_window(current_window_handle)
 		except:
 			result.success = False
 			browser = restart_browser(self.crawl_config.browser_type, incognito=False,
