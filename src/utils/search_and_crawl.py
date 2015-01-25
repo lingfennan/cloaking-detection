@@ -379,7 +379,7 @@ class Visit:
 		result_search.CopyFrom(current_search)
 
 	def visit_landing_url_n_times(self, crawl_log, n_times, revisit_dir_prefix,
-			word_md5_delimiter):
+			word_md5, word_md5_delimiter):
 		"""
 		@parameter
 		crawl_log: crawl log to visit
@@ -591,7 +591,7 @@ def search_and_revisit(word_file, n):
 			crawl_log = CD.CrawlLog()
 			read_proto_from_file(crawl_log, crawl_log_file)
 			revisit.visit_landing_url_n_times(crawl_log, int(n), revisit_dir_prefix,
-					word_md5_delimiter)
+					word_md5, word_md5_delimiter)
 		words.next()
 		# kill zombie process periodically
 		if words.get_counter() % 5 == 0:
