@@ -6,6 +6,9 @@ Example Usage:
 	# revisit the landing pages in search and crawl phase as Google bot.
 	ls ../../data/abusive_words.selenium.crawl/XXX/ad_crawl_log* | python search_and_crawl.py -f revisit -i word_file  -n number_of_visits
 
+	# search and revisit words from word_file for n times
+	python search_and_crawl.py -f search_and_revisit -i word_file -n n_times
+
 """
 import logging
 import platform
@@ -522,7 +525,7 @@ def search_and_revisit(word_file, n):
 
 	# set search and visit crawl_config
 	search_config = CD.CrawlConfig()
-	search_config.maximum_threads = 8
+	search_config.maximum_threads = 6
 	search_config.user_agent = user_UA
 	ad_crawl_config = CD.CrawlConfig()
 	ad_crawl_config.CopyFrom(search_config)
@@ -550,7 +553,7 @@ def search_and_revisit(word_file, n):
 
 	# set revisit crawl_config
 	revisit_crawl_config = CD.CrawlConfig()
-	revisit_crawl_config.maximum_threads = 8
+	revisit_crawl_config.maximum_threads = 6
 	revisit_crawl_config.user_agent = google_UA
 	# base directory uses search_now_suffix to correlate these two
 	revisit_dir_prefix = base_dir + word_md5_delimiter + "/" + \

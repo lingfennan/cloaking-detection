@@ -118,6 +118,14 @@ class UrlFetcher(object):
 				f = open(result.file_path, 'w')
 				f.write(response.encode('utf-8'))
 				f.close()
+			browser.delete_all_cookies()
+			if len(browser.windows_handles) > 1:
+				# close all the other windows
+				current_window_handle = browser.current_window_handle
+				for handle in browser.windows_handles:
+					if handle != current_window_handle:
+						browser.switch_to_window(handle)
+						browser.close()
 		except:
 			result.success = False
 			browser = restart_browser(self.crawl_config.browser_type, incognito=False,
