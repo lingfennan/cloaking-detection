@@ -397,6 +397,9 @@ def start_browser(browser_type, incognito=False, user_agent=None, use_tor=False)
 		options.add_experimental_option("excludeSwitches", ["ignore-certificate-errors"])
 		# browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
 		browser = webdriver.Remote(driver_service.service_url, desired_capabilities=options.to_capabilities())
+	elif browser_type == CD.CrawlConfig.HTMLUNIT:
+		desired_capabilities = webdriver.DesiredCapabilities.HTMLUNITWITHJS
+		browser = webdriver.Remote("http://localhost:4444/wd/hub", desired_capabilities)
 	else:
 		print 'Invalid browser type, or browser type not handled currently.'
 		sys.exit(2)

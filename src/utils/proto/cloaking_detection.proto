@@ -189,6 +189,7 @@ message CrawlConfig {
   enum BrowserType {
     CHROME = 0;
     FIREFOX = 1;
+    HTMLUNIT = 2;
   }
   optional BrowserType browser_type = 4;
   // Type of result to retrieve.

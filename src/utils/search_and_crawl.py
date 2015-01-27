@@ -6,6 +6,9 @@ Example Usage:
 	# revisit the landing pages in search and crawl phase as Google bot.
 	ls ../../data/abusive_words.selenium.crawl/XXX/ad_crawl_log* | python search_and_crawl.py -f revisit -i word_file  -n number_of_visits
 
+	# search and revisit words from word_file for n times
+	python search_and_crawl.py -f search_and_revisit -i word_file -n n_times
+
 """
 import logging
 import platform
@@ -24,6 +27,14 @@ import proto.cloaking_detection_pb2 as CD
 
 def killall(name):
 	p = subprocess.Popen(['killall', name], stdout=subprocess.PIPE)
+	output, error = p.communicate()
+	logging.info(output)
+	logging.error(error)
+	return False if error else True
+
+def dropcache():
+	p = subprocess.Popen('sudo sh -c "sync; echo 3 > /proc/sys/vm/drop_caches"',
+			shell=True, stdout=subprocess.PIPE)
 	output, error = p.communicate()
 	logging.info(output)
 	logging.error(error)
@@ -325,7 +336,12 @@ class Visit:
 		self.current_log = CD.CrawlLog()
 		return current_log_filename
 
-	def visit_landing_url(self, crawl_log):
+	def visit_landing_url(self, crawl_log, url_fetcher=None):
+		"""
+		@parameter
+		crawl_log: crawl log to visit
+		url_fetcher: selenium handles to use for crawl
+		"""
 		valid_instance(crawl_log, CD.CrawlLog)
 		# prepare landing_url_set
 		landing_url_set = set()
@@ -340,10 +356,14 @@ class Visit:
 		if landing_url_set_size < 8:
 			record_maximum_threads = self.crawl_config.maximum_threads
 			self.crawl_config.maximum_threads = 2
-		url_fetcher = UrlFetcher(self.crawl_config)
+		quit_fetcher_when_done = False
+		if not url_fetcher:
+			url_fetcher = UrlFetcher(self.crawl_config)
+			quit_fetcher_when_done = True
 		thread_computer = ThreadComputer(url_fetcher, 'fetch_url',
 				landing_url_set)
-		url_fetcher.quit()
+		if quit_fetcher_when_done:
+			url_fetcher.quit()
 		if landing_url_set_size < 8:
 			self.crawl_config.maximum_threads = record_maximum_threads
 		# create and fill current_search, including urls, search_term etc.
@@ -357,6 +377,29 @@ class Visit:
 			self.current_log = CD.CrawlLog()
 		result_search = self.current_log.result_search.add()
 		result_search.CopyFrom(current_search)
+		
+
+	def visit_landing_url_n_times(self, crawl_log, n_times, revisit_dir_prefix,
+			word_md5, word_md5_delimiter):
+		"""
+		@parameter
+		crawl_log: crawl log to visit
+		n_times: visit crawl_log for n_times
+		"""
+		valid_instance(crawl_log, CD.CrawlLog)
+		valid_instance(n_times, int)
+		url_fetcher = UrlFetcher(self.crawl_config)
+		for i in range(n_times):
+			# the time label is set for each iteration of visit
+			revisit_now_suffix = datetime.now().strftime(".%Y%m%d-%H%M%S")
+			self.crawl_config.user_agent_md5_dir = word_md5.join(
+					revisit_dir_prefix.split(word_md5_delimiter)) + \
+					'.revisit_time' + revisit_now_suffix + '/'
+			url_fetcher.update_dir(self.crawl_config.user_agent_md5_dir)
+			self.visit_landing_url(crawl_log, url_fetcher)
+		self.write_crawl_log(False)
+		url_fetcher.quit()
+
 
 def search_and_crawl(word_file, max_word_per_file=50):
 	"""
@@ -483,7 +526,7 @@ def search_and_revisit(word_file, n):
 
 	# set search and visit crawl_config
 	search_config = CD.CrawlConfig()
-	search_config.maximum_threads = 8
+	search_config.maximum_threads = 6
 	search_config.user_agent = user_UA
 	ad_crawl_config = CD.CrawlConfig()
 	ad_crawl_config.CopyFrom(search_config)
@@ -511,7 +554,7 @@ def search_and_revisit(word_file, n):
 
 	# set revisit crawl_config
 	revisit_crawl_config = CD.CrawlConfig()
-	revisit_crawl_config.maximum_threads = 8
+	revisit_crawl_config.maximum_threads = 6
 	revisit_crawl_config.user_agent = google_UA
 	# base directory uses search_now_suffix to correlate these two
 	revisit_dir_prefix = base_dir + word_md5_delimiter + "/" + \
@@ -546,21 +589,15 @@ def search_and_revisit(word_file, n):
 		for crawl_log_file in crawl_log_file_list:
 			revisit_crawl_config.log_filename = crawl_log_file.split('/')[-1] + '.google'
 			revisit = Visit(revisit_crawl_config)
-			for i in range(int(n)):
-				# the time label is set for each iteration of visit
-				revisit_now_suffix = datetime.now().strftime(".%Y%m%d-%H%M%S")
-				revisit_crawl_config.user_agent_md5_dir = word_md5.join(
-						revisit_dir_prefix.split(word_md5_delimiter)) + \
-						'.revisit_time' + revisit_now_suffix + '/'
-				revisit.update_crawl_config(revisit_crawl_config)
-				crawl_log = CD.CrawlLog()
-				read_proto_from_file(crawl_log, crawl_log_file)
-				revisit.visit_landing_url(crawl_log)
-			revisit.write_crawl_log(False)
+			crawl_log = CD.CrawlLog()
+			read_proto_from_file(crawl_log, crawl_log_file)
+			revisit.visit_landing_url_n_times(crawl_log, int(n), revisit_dir_prefix,
+					word_md5, word_md5_delimiter)
 		words.next()
 		# kill zombie process periodically
-		if words.get_counter() % 5 == 0:
+		if words.get_counter() % 3 == 0:
 			killall('chrome')
+			dropcache()
 
 def main(argv):
 	has_function = False
