@@ -12,6 +12,10 @@ sudo apt-get install python-numpy python-scipy
 wget https://protobuf.googlecode.com/svn/rc/protobuf-2.6.0.tar.gz
 	Follow instruction to install c++ and python version of protobuf.
 
+one of the following:
+chrome, firefox, htmlunit
+http://htmlunit.sourceforge.net/
+
 Reference:
 selenium
 	http://www.seleniumhq.org

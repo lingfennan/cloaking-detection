@@ -4,6 +4,7 @@
 #
 
 import hashlib
+import logging
 import Queue
 import sys
 import time
@@ -69,15 +70,14 @@ class UrlFetcher(object):
 				browser = self.browser_queue.get()
 				self.lock.release()
 				break
-		result = CD.CrawlResult()
-		# record whether url loading failed!
+		result = CD.CrawlResult() # record whether url loading failed!
 		result.url = url
 		result.url_md5 = hex_md5(url)
 		result.success = True
 		try:
 			# This line is used to handle alert: <stay on this page> <leave this page>
-			browser.execute_script("window.onbeforeunload = function() {};")
 			browser.get(result.url)
+			browser.execute_script("window.onbeforeunload = function() {};")
 			time.sleep(1)
 			if self.crawl_config.browser_type == CD.CrawlConfig.CHROME and \
 					(('404 Not Found' in browser.title) \
@@ -133,6 +133,9 @@ class UrlFetcher(object):
 			browser = restart_browser(self.crawl_config.browser_type, incognito=False,
 					user_agent=self.crawl_config.user_agent, browser=browser)
 		self.browser_queue.put(browser)
+		logger = logging.getLogger("global")
+		logger.info("the length of the browser_queue")
+		logger.info(self.browser_queue.qsize())
 		return result
 
 class Crawler:

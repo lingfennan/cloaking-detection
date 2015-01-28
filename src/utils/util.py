@@ -365,6 +365,16 @@ def restart_browser(browser_type, incognito=False, user_agent=None, use_tor=Fals
 	new_browser = start_browser(browser_type, incognito, user_agent, use_tor)
 	new_browser.set_page_load_timeout(15)
 	return new_browser
+
+# not really useful because this parameter is used to run
+def set_platform(user_agent, capabilities):
+	ua_lower = user_agent.lower()
+	if "windows" in ua_lower:
+		capabilities["platform"] = "WINDOWS"
+	elif "macintosh" in ua_lower:
+		capabilities["platform"] = "MAC"
+	elif "linux" in ua_lower:
+		capabilities["platform"] = "LINUX"
 	
 def start_browser(browser_type, incognito=False, user_agent=None, use_tor=False):
 	if browser_type == CD.CrawlConfig.FIREFOX:
@@ -395,11 +405,14 @@ def start_browser(browser_type, incognito=False, user_agent=None, use_tor=False)
 			PROXY = "socks5://127.0.0.1:9050"
 			options.add_argument("--proxy-server=%s" % PROXY)
 		options.add_experimental_option("excludeSwitches", ["ignore-certificate-errors"])
+		capabilities = options.to_capabilities()
 		# browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
-		browser = webdriver.Remote(driver_service.service_url, desired_capabilities=options.to_capabilities())
+		# browser = webdriver.Remote(driver_service.service_url, desired_capabilities=capabilities)
+		browser = webdriver.Remote("http://localhost:5555/wd/hub", capabilities)
 	elif browser_type == CD.CrawlConfig.HTMLUNIT:
-		desired_capabilities = webdriver.DesiredCapabilities.HTMLUNITWITHJS
-		browser = webdriver.Remote("http://localhost:4444/wd/hub", desired_capabilities)
+		capabilities = webdriver.DesiredCapabilities.HTMLUNITWITHJS.copy()
+		#capabilities["userAgent"] = '"{0}"'.format(user_agent)
+		browser = webdriver.Remote("http://localhost:4444/wd/hub", capabilities)
 	else:
 		print 'Invalid browser type, or browser type not handled currently.'
 		sys.exit(2)

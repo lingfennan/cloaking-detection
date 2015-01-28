@@ -19,25 +19,28 @@ import time
 from datetime import datetime
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
-from crawl import UrlFetcher, set_browser_type, hex_md5
+from crawl import UrlFetcher, hex_md5
 from learning_detection_util import valid_instance, write_proto_to_file, read_proto_from_file
 from thread_computer import ThreadComputer
 from util import start_browser, restart_browser, mkdir_if_not_exist, Progress
 import proto.cloaking_detection_pb2 as CD
 
+
 def killall(name):
 	p = subprocess.Popen(['killall', name], stdout=subprocess.PIPE)
 	output, error = p.communicate()
-	logging.info(output)
-	logging.error(error)
+	logger = logging.getLogger("global")
+	logger.info(output)
+	logger.error(error)
 	return False if error else True
 
 def dropcache():
 	p = subprocess.Popen('sudo sh -c "sync; echo 3 > /proc/sys/vm/drop_caches"',
 			shell=True, stdout=subprocess.PIPE)
 	output, error = p.communicate()
-	logging.info(output)
-	logging.error(error)
+	logger = logging.getLogger("global")
+	logger.info(output)
+	logger.error(error)
 	return False if error else True
 
 def switch_vpn_state(connected):
@@ -51,8 +54,9 @@ def switch_vpn_state(connected):
 				stdin=p1.stdout, stdout=subprocess.PIPE)
 		p1.stdout.close()
 	output, error = p.communicate()
-	logging.info(output)
-	logging.error(error)
+	logger = logging.getLogger("global")
+	logger.info(output)
+	logger.error(error)
 	# whether switch was successful
 	return False if error else True
 
@@ -112,7 +116,6 @@ class Search:
 		valid_instance(crawl_config, CD.CrawlConfig)
 		self.crawl_config = CD.CrawlConfig()
 		self.crawl_config.CopyFrom(crawl_config)
-		set_browser_type(self.crawl_config)
 		switch_vpn_state(True)
 		self.connected = False
 	
@@ -132,8 +135,9 @@ class Search:
 					clickstring_set.add(clickstring)
 					break
 		except:
-			logging.error("error in ad_links")
-			logging.error(sys.exc_info()[0])
+			logger = logging.getLogger("global")
+			logger.error("error in ad_links")
+			logger.error(sys.exc_info()[0])
 		return clickstring_set
 
 	def search_results(self):
@@ -153,8 +157,9 @@ class Search:
 				result_link = wait_get_attribute(link_elem, 'data-href')
 				clickstring_set.add(clickstring)
 		except:
-			logging.error("error in search_results")
-			logging.error(sys.exc_info()[0])
+			logger = logging.getLogger("global")
+			logger.error("error in search_results")
+			logger.error(sys.exc_info()[0])
 		return clickstring_set
 
 	def search(self, search_term):
@@ -194,8 +199,9 @@ class Search:
 			except:
 				# For robustness, don't throw errors here.
 				self.browser.quit()
-				logging.error("error in search")
-				logging.error(sys.exc_info()[0])
+				logger = logging.getLogger("global")
+				logger.error("error in search")
+				logger.error(sys.exc_info()[0])
 				if switch_vpn_state(self.connected):
 					self.connected = not self.connected
 				self.browser = restart_browser(self.crawl_config.browser_type,
@@ -264,7 +270,6 @@ class Visit:
 		valid_instance(crawl_config, CD.CrawlConfig)
 		self.crawl_config = CD.CrawlConfig()
 		self.crawl_config.CopyFrom(crawl_config)
-		set_browser_type(self.crawl_config)
 		self.first = True 
 		self.max_word_per_file = max_word_per_file 
 		self.counter = 0
@@ -273,7 +278,6 @@ class Visit:
 		valid_instance(crawl_config, CD.CrawlConfig)
 		self.crawl_config = CD.CrawlConfig()
 		self.crawl_config.CopyFrom(crawl_config)
-		set_browser_type(self.crawl_config)
 	
 	def __del__(self):
 		if not self.counter % self.max_word_per_file == 0:
@@ -419,6 +423,7 @@ def search_and_crawl(word_file, max_word_per_file=50):
 	base_dir = '.'.join([word_file, user_suffix])
 	mkdir_if_not_exist(base_dir)
 	logging.basicConfig(filename=base_dir+'running_log'+now_suffix, level=logging.DEBUG)
+	logging.getLogger("global")
 
 	# set crawl_config
 	crawl_config = CD.CrawlConfig()
@@ -426,6 +431,7 @@ def search_and_crawl(word_file, max_word_per_file=50):
 	crawl_config.user_agent = user_UA
 	crawl_config.user_agent_md5_dir = base_dir + hex_md5(crawl_config.user_agent) \
 			+ now_suffix + '/'
+	crawl_config.browser_type = CD.CrawlConfig.CHROME
 
 	# print crawl_config.user_agent
 	words = SearchTerm(word_file)
@@ -471,6 +477,7 @@ def revisit(crawl_log_file_list, word_file, n):
 			base_dir = '.'.join([word_file, google_suffix])
 			mkdir_if_not_exist(base_dir)
 			logging.basicConfig(filename=base_dir+'running_log'+now_suffix, level=logging.DEBUG)
+			logging.getLogger("global")
 
 			# set crawl_config
 			crawl_config = CD.CrawlConfig()
@@ -478,6 +485,7 @@ def revisit(crawl_log_file_list, word_file, n):
 			crawl_config.user_agent = google_UA
 			crawl_config.user_agent_md5_dir = base_dir + hex_md5(crawl_config.user_agent) \
 					+ now_suffix + '/'
+			crawl_config.browser_type = CD.CrawlConfig.CHROME
 
 			google_crawl_log = crawl_log_file.split('/')[-1] + '.google'
 			crawl_config.log_filename = google_crawl_log + now_suffix
@@ -523,11 +531,14 @@ def search_and_revisit(word_file, n):
 	base_dir = '.'.join([word_file, user_suffix])
 	mkdir_if_not_exist(base_dir)
 	logging.basicConfig(filename=base_dir+'running_log'+search_now_suffix, level=logging.DEBUG)
+	logging.getLogger("global")
 
 	# set search and visit crawl_config
 	search_config = CD.CrawlConfig()
-	search_config.maximum_threads = 6
+	search_config.maximum_threads = 10
 	search_config.user_agent = user_UA
+	search_config.browser_type = CD.CrawlConfig.CHROME
+
 	ad_crawl_config = CD.CrawlConfig()
 	ad_crawl_config.CopyFrom(search_config)
 	ad_crawl_config.result_type = CD.AD
@@ -554,8 +565,9 @@ def search_and_revisit(word_file, n):
 
 	# set revisit crawl_config
 	revisit_crawl_config = CD.CrawlConfig()
-	revisit_crawl_config.maximum_threads = 6
+	revisit_crawl_config.maximum_threads = 10
 	revisit_crawl_config.user_agent = google_UA
+	revisit_crawl_config.browser_type = CD.CrawlConfig.CHROME
 	# base directory uses search_now_suffix to correlate these two
 	revisit_dir_prefix = base_dir + word_md5_delimiter + "/" + \
 			hex_md5(revisit_crawl_config.user_agent) + search_now_suffix
