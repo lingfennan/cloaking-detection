@@ -45,7 +45,7 @@ def dropcache():
 	return False if error else True
 
 def switch_vpn_state(connected):
-	if platform.node() == "moon" || platform.node() == "ruian":
+	if platform.node() == "moon" or platform.node() == "ruian":
 		return True
 	if connected:
 		p = subprocess.Popen(['/opt/cisco/anyconnect/bin/vpn', 'disconnect'], stdout=subprocess.PIPE)
