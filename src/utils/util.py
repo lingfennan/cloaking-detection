@@ -56,8 +56,10 @@ else:
 	sys.exit(1)
 
 # start chrome driver separately to save time and resources
-driver_service = service.Service(CHROMEDRIVER_PATH)
-driver_service.start()
+# driver_service = service.Service(CHROMEDRIVER_PATH)
+# driver_service.start()
+# Remote Driver Address
+REMOTE_DRIVER="http://localhost:5555/wd/hub"
 
 ####################################################################################
 def evaluation_form(sites_filename, out_filename, proto):
@@ -408,11 +410,11 @@ def start_browser(browser_type, incognito=False, user_agent=None, use_tor=False)
 		capabilities = options.to_capabilities()
 		# browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
 		# browser = webdriver.Remote(driver_service.service_url, desired_capabilities=capabilities)
-		browser = webdriver.Remote("http://localhost:5555/wd/hub", capabilities)
+		browser = webdriver.Remote(REMOTE_DRIVER, capabilities)
 	elif browser_type == CD.CrawlConfig.HTMLUNIT:
 		capabilities = webdriver.DesiredCapabilities.HTMLUNITWITHJS.copy()
 		#capabilities["userAgent"] = '"{0}"'.format(user_agent)
-		browser = webdriver.Remote("http://localhost:4444/wd/hub", capabilities)
+		browser = webdriver.Remote(REMOTE_DRIVER, capabilities)
 	else:
 		print 'Invalid browser type, or browser type not handled currently.'
 		sys.exit(2)
