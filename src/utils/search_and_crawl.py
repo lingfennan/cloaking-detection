@@ -654,6 +654,8 @@ def main(argv):
 			util.REMOTE_DRIVER = link
 		if threads:
 			search_and_revisit(inputfile, number, int(threads))
+		else:
+			search_and_revisit(inputfile, number)
 	else:
 		print help_msg
 		sys.exit(2)
