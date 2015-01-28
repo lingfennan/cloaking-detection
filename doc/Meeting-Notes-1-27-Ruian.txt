@@ -1,0 +1,40 @@
+Result Evaluation Jan 27
+
+93/684
+search_result.dom.20150117
+search_result.text.20150117
+Break out of frames
+top.location=self.document.location
+data/abusive_words.google.crawl/f94453065ca51301ffc1c1dde571858e.20150118-002607/0a01411109819f4346134c8cab30e33f/index.html
+data/abusive_words.20150115-154913.selenium.crawl/91532f0a84878d909e2deed33e9932cf/2d0db0a8d269f7b2abf5bc6c77cc3934/index.html
+
+
+1. Website: features to add
+display URL
+go back button
+choose input files, and labels
+
+2. Algorithms
+Run experiment on close DOMs and TEXTs to see what kind of features are
+extracted and how many
+
+3. Strip URL problem
+check learning_detection_util_test.py
+
+4. URLs matching problems (!!!!!!!)
+most of the site failed because the URL doesn’t match
+
+5. Intersection of TEXT and DOM
+For performance
+
+6. Test distribution of each website separately
+For paper
+
+7. Process to inspect
+a. user compute
+b. google compute (fail as zero) / learn pattern 
+c. compare a, b and detect cloaking
+
+
+
+
