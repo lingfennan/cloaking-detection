@@ -18,13 +18,13 @@ import sys, getopt
 import time
 import util
 from datetime import datetime
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
-from crawl import UrlFetcher, hex_md5
+from crawl import UrlFetcher, hex_md5, safe_quit
 from learning_detection_util import valid_instance, write_proto_to_file, read_proto_from_file
 from thread_computer import ThreadComputer
 from util import start_browser, restart_browser, mkdir_if_not_exist, Progress
 import proto.cloaking_detection_pb2 as CD
+
 
 
 def killall(name):
@@ -45,7 +45,7 @@ def dropcache():
 	return False if error else True
 
 def switch_vpn_state(connected):
-	if platform.node() == "moon":
+	if platform.node() == "moon" || platform.node() == "ruian":
 		return True
 	if connected:
 		p = subprocess.Popen(['/opt/cisco/anyconnect/bin/vpn', 'disconnect'], stdout=subprocess.PIPE)
@@ -199,7 +199,7 @@ class Search:
 				start = start + 10
 			except:
 				# For robustness, don't throw errors here.
-				self.browser.quit()
+				safe_quit(self.browser)
 				logger = logging.getLogger("global")
 				logger.error("error in search")
 				logger.error(sys.exc_info()[0])
@@ -209,7 +209,7 @@ class Search:
 						incognito=False,
 						user_agent=self.crawl_config.user_agent,
 						browser=self.browser)
-		self.browser.quit()
+		safe_quit(self.browser)
 		return ad_set, search_set 
 
 # Iterate through all the popular words.

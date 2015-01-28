@@ -9,6 +9,7 @@ from datetime import datetime
 from itertools import izip
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from crawl import safe_quit
 from learning_detection_util import read_proto_from_file, write_proto_to_file
 import selenium.webdriver.chrome.service as service
 import proto.cloaking_detection_pb2 as CD
@@ -106,7 +107,7 @@ def get_clickstring(words_file, browser_type):
 					break
 		except:
 			continue
-	browser.quit()
+	safe_quit(browser)
 	return clickstring_set
 
 def ad_list(report_list, outputfile, browser_type):
@@ -350,7 +351,7 @@ def picker_popup(browser, picker_ids, popup_ids, output_dir):
 			counter += 1
 		# The daily quote limit has been reached.
 		if counter == max_tries:
-			browser.quit()
+			safe_quit(browser)
 			raise QuoteError
 
 		# a. save progress only when this one is finished
@@ -362,7 +363,7 @@ def picker_popup(browser, picker_ids, popup_ids, output_dir):
 
 def restart_browser(browser_type, incognito=False, user_agent=None, use_tor=False, browser=None, interval=0):
 	if browser:
-		browser.quit()
+		safe_quit(browser)
 	time.sleep(interval)
 	new_browser = start_browser(browser_type, incognito, user_agent, use_tor)
 	new_browser.set_page_load_timeout(15)
@@ -452,7 +453,7 @@ def hot_search_words(credentials, output_dir, browser_type='Firefox'):
 			picker_ids = ['resPckrgeo_anchor', 'resPckrdate_anchor', 'resPckrcat_anchor', 'resPckrgprop_anchor']
 			popup_ids = ['resPckrgeo_content', 'resPckrdate_content', 'resPckrcat_content', 'resPckrgprop_content']
 			picker_popup(browser, picker_ids, popup_ids, output_dir)
-			browser.quit()
+			safe_quit(browser)
 		except QuoteError as e:
 			print 'Current progress is', e.progress
 		except:
