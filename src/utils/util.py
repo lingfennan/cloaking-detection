@@ -1,5 +1,6 @@
 import sys, getopt
 import csv
+import logging
 import os
 import platform
 import re
