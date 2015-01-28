@@ -535,7 +535,7 @@ def search_and_revisit(word_file, n):
 
 	# set search and visit crawl_config
 	search_config = CD.CrawlConfig()
-	search_config.maximum_threads = 10
+	search_config.maximum_threads = 8
 	search_config.user_agent = user_UA
 	search_config.browser_type = CD.CrawlConfig.CHROME
 
@@ -565,7 +565,7 @@ def search_and_revisit(word_file, n):
 
 	# set revisit crawl_config
 	revisit_crawl_config = CD.CrawlConfig()
-	revisit_crawl_config.maximum_threads = 10
+	revisit_crawl_config.maximum_threads = 8
 	revisit_crawl_config.user_agent = google_UA
 	revisit_crawl_config.browser_type = CD.CrawlConfig.CHROME
 	# base directory uses search_now_suffix to correlate these two
