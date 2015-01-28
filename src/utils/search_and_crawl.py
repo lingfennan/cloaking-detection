@@ -609,10 +609,12 @@ def search_and_revisit(word_file, n, threads=6):
 			revisit.visit_landing_url_n_times(crawl_log, int(n), revisit_dir_prefix,
 					word_md5, word_md5_delimiter)
 		words.next()
+		"""
 		# kill zombie process periodically
 		if words.get_counter() % 3 == 0:
 			killall('chrome')
 			dropcache()
+		"""
 
 def main(argv):
 	has_function = False
