@@ -16,6 +16,7 @@ import random
 import subprocess
 import sys, getopt
 import time
+import util
 from datetime import datetime
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
@@ -495,7 +496,7 @@ def revisit(crawl_log_file_list, word_file, n):
 			revisit.visit_landing_url(crawl_log)
 			revisit.write_crawl_log(False)
 
-def search_and_revisit(word_file, n):
+def search_and_revisit(word_file, n, threads=6):
 	"""
 	This function does the following things.
 	1. Search each word in word file.
@@ -520,6 +521,7 @@ def search_and_revisit(word_file, n):
 	[WORD_FILE].selenium.crawl/search_crawl_log.[SEARCH_TIME].[WORD_MD5].google
 	[WORD_FILE].selenium.crawl/[WORD_MD5]/[UA_MD5].[SEARCH_TIME].revisit.[REVISIT_TIME]/[URL_MD5]/index.html
 	"""
+	valid_instance(threads, int)
 	# prepare search and visit
 	user_UA = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/" \
 			"537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36"
@@ -535,7 +537,7 @@ def search_and_revisit(word_file, n):
 
 	# set search and visit crawl_config
 	search_config = CD.CrawlConfig()
-	search_config.maximum_threads = 8
+	search_config.maximum_threads = threads
 	search_config.user_agent = user_UA
 	search_config.browser_type = CD.CrawlConfig.CHROME
 
@@ -565,7 +567,7 @@ def search_and_revisit(word_file, n):
 
 	# set revisit crawl_config
 	revisit_crawl_config = CD.CrawlConfig()
-	revisit_crawl_config.maximum_threads = 8
+	revisit_crawl_config.maximum_threads = threads
 	revisit_crawl_config.user_agent = google_UA
 	revisit_crawl_config.browser_type = CD.CrawlConfig.CHROME
 	# base directory uses search_now_suffix to correlate these two
@@ -613,12 +615,14 @@ def search_and_revisit(word_file, n):
 
 def main(argv):
 	has_function = False
-	help_msg = "search_and_crawl.py -f <function> [-i <inputfile>] [-i <inputfile> -n <number>] [-i <inputfile> -n <number>], valid functions are search, revisit, search_and_revisit"
+	help_msg = "search_and_crawl.py -f <function> [-i <inputfile>] [-i <inputfile> -n <number>] [-i <inputfile> -n <number> -l <linkaddress> -t <threads>], valid functions are search, revisit, search_and_revisit"
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:n:", ["function=", "ifile=", "number="])
+		opts, args = getopt.getopt(argv, "hf:i:n:l:t:", ["function=", "ifile=", "number=", "link=", "threads="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
+	link = None
+	threads = None
 	for opt, arg in opts:
 		if opt == "-h":
 			print help_msg
@@ -630,6 +634,10 @@ def main(argv):
 			inputfile = arg
 		elif opt in ("-n", "--number"):
 			number = arg
+		elif opt in ("-l", "--link"):
+			link = arg
+		elif opt in ("-t", "--threads"):
+			threads = arg
 		else:
 			print help_msg
 			sys.exit(2)
@@ -642,7 +650,10 @@ def main(argv):
 		crawl_log_file_list = [line[:-1] for line in sys.stdin]
 		revisit(crawl_log_file_list, inputfile, number)
 	elif function == "search_and_revisit":
-		search_and_revisit(inputfile, number)
+		if link:
+			util.REMOTE_DRIVER = link
+		if threads:
+			search_and_revisit(inputfile, number, int(threads))
 	else:
 		print help_msg
 		sys.exit(2)
