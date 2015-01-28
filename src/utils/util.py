@@ -8,8 +8,8 @@ import time
 from datetime import datetime
 from itertools import izip
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
-from crawl import safe_quit
 from learning_detection_util import read_proto_from_file, write_proto_to_file
 import selenium.webdriver.chrome.service as service
 import proto.cloaking_detection_pb2 as CD
@@ -81,6 +81,14 @@ def evaluation_form(sites_filename, out_filename, proto):
 		raise Exception("Wrong proto! Only LearnedSites and ObservedSites can be used!")
 
 ####################################################################################
+def safe_quit(browser):
+	try:
+		browser.quit()
+	except	WebDriverException:
+		logger = logging.getLogger("global")
+		logger.error("Error in safe_quit")
+		logger.error(sys.exc_info()[0])
+
 def mkdir_if_not_exist(directory):
 	if not os.path.exists(directory):
 		os.makedirs(directory)

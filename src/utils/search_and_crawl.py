@@ -16,13 +16,14 @@ import random
 import subprocess
 import sys, getopt
 import time
+# For REMOTE_DRIVER
 import util
 from datetime import datetime
 from selenium.webdriver.common.action_chains import ActionChains
-from crawl import UrlFetcher, hex_md5, safe_quit
+from crawl import UrlFetcher, hex_md5
 from learning_detection_util import valid_instance, write_proto_to_file, read_proto_from_file
 from thread_computer import ThreadComputer
-from util import start_browser, restart_browser, mkdir_if_not_exist, Progress
+from util import start_browser, restart_browser, mkdir_if_not_exist, Progress, safe_quit
 import proto.cloaking_detection_pb2 as CD
 
 

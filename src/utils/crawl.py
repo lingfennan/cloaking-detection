@@ -12,20 +12,12 @@ import threading
 import os
 from datetime import datetime
 from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
-from util import start_browser, restart_browser, mkdir_if_not_exist
+from util import start_browser, restart_browser, mkdir_if_not_exist, safe_quit
 from learning_detection_util import valid_instance, write_proto_to_file, read_proto_from_file
 from thread_computer import ThreadComputer
 import proto.cloaking_detection_pb2 as CD
 
 
-def safe_quit(browser):
-	try:
-		browser.quit()
-	except	WebDriverException:
-		logger = logging.getLogger("global")
-		logger.error("Error in safe_quit")
-		logger.error(sys.exc_info()[0])
 
 def hex_md5(string):
 	# util function to return md5 in hex of the input string.
