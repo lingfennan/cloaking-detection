@@ -18,6 +18,32 @@ from thread_computer import ThreadComputer
 import proto.cloaking_detection_pb2 as CD
 
 
+def collect_site_for_plot(site_list, mode="user"):
+	"""
+	Collect user and google observation for site in site_list.
+	This is scheduled by 7_14.py. In order to show how hash values of
+	websites change over time.
+	"""
+	user_UA = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/" \
+			"537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36"
+	google_UA = "AdsBot-Google (+http://www.google.com/adsbot.html)"
+	crawl_config = CD.CrawlConfig()
+	crawl_config.maximum_threads = 1
+	crawl_config.browser_type = CD.CrawlConfig.CHROME
+	if mode == "user":
+		UAs = [user_UA]
+	elif mode == "google":
+		UAs = [google_UA]
+	elif mode == "both":
+		UAs = [user_UA, google_UA]
+	else:
+		raise Exception("Unknown mode {0}".format(mode))
+
+	UAs = [user_UA, google_UA]
+	for ua in UAs:
+		crawl_config.user_agent = ua
+		url_fetcher = UrlFetcher()
+
 
 def hex_md5(string):
 	# util function to return md5 in hex of the input string.
