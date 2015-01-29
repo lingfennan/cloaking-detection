@@ -5,7 +5,7 @@ import sys
 import scipy.cluster.hierarchy as h
 from Queue import Queue
 from urllib import urlencode
-from urlparse import urlparse, urlunparse, parse_qs
+from urlparse import urlparse, urlunparse, parse_qs, urldefrag
 import proto.cloaking_detection_pb2 as CD
 
 
@@ -17,23 +17,32 @@ def show_proto(inputfile, proto_type):
 	read_proto_from_file(proto, inputfile)
 	print proto
 
-
 def _strip_parameter(link):
 	"""
-	Strip parameter values and set protocol to null for URLs, e.g.
+	For one URL
+	1.Strip parameter values 
+	2.Set protocol to null for URLs, e.g.
+	3.Order the parameter names
+	4.Keep multiple instances of same parameter
+	e.g.
 	http://pan.baidu.com/share/link?shareid=3788206378&uk=2050235229 ->
 	//pan.baidu.com/share/link?sharedid=&uk=
 
 	Blank values are kept.
 	"""
+	link, frag = urldefrag(link)
 	parsed_link = urlparse(link)
 	query = parse_qs(parsed_link.query, keep_blank_values=True)
 	for key in query:
-		query[key] = ''
+		if isinstance(query[key], collections.Iterable):
+			query[key] = ['' for i in range(len(query[key]))]
+		else:
+			query[key] = ''
+	# set urlendcode(,True) enables multiple values for the same parameter
+	query = collections.OrderedDict(sorted(query.items()))
 	parsed_link = parsed_link._replace(query=urlencode(query, True))
 	parsed_link = parsed_link._replace(scheme='')
 	return urlunparse(parsed_link)
-
 
 def _split_path_by_data(path, index):
 	"""
