@@ -12,6 +12,28 @@ import proto.cloaking_detection_pb2 as CD
 """
 Below are util functions.
 """
+def file_path_set(observed_sites):
+	"""
+	Get the file_path set from obsered_sites.
+	"""
+	valid_instance(observed_sites, CD.ObservedSites)
+	result = set()
+	for site in observed_sites.site:
+		for observation in site.observation:
+			result.add(observation.file_path)
+	return result
+
+def interact_query(out_str):
+	print out_str
+	line = sys.stdin.readline()
+	if "y" in line.lower():
+		return True
+	elif "n" in line.lower():
+		return False
+	else:
+		print "Unrecognized option!"
+		sys.exit(1)
+
 def show_proto(inputfile, proto_type):
 	proto = getattr(CD, proto_type)()
 	read_proto_from_file(proto, inputfile)
@@ -65,11 +87,15 @@ def _split_path_by_data(path, index):
 
 def add_failure(observed_sites, site_list_filenames):
 	"""
+	Add failure assign simhash as 0.
+	This provide a way to distinguish failure from
+	blank page. 0 (failure) vs. md5(0) (blank page).
+
 	@parameter
 	observed_sites: the sites to add, this function performs in place add
 	site_list_filenames: list of site_list_filename, which is CrawlLog
 	@return
-	observed_sites: structure data that aggregate by site after adding failure
+	more_observed_sites: structure data that aggregate by site after adding failure
 	"""
 	site_observations_map = dict()
 	for site in observed_sites.site:
@@ -95,16 +121,17 @@ def add_failure(observed_sites, site_list_filenames):
 				observation.dom_simhash = 0
 				observation.dom_feature_count = 0
 			site_observations_map[key].append(observation)
-	observed_sites = CD.ObservedSites()
+	more_observed_sites = CD.ObservedSites()
+	more_observed_sites.config.CopyFrom(observed_sites.config)
 	for site in site_observations_map:
-		observed_site = observed_sites.site.add()
+		observed_site = more_observed_sites.site.add()
 		observed_site.name = site
 		for ob in site_observations_map[site]:
 			observation = observed_site.observation.add()
 			observation.CopyFrom(ob)
-	return observed_sites
+	return more_observed_sites
 
-def load_observed_sites(site_list_filenames):
+def load_observed_sites(site_list_filenames, url_field="landing_url"):
 	"""
 	@parameter
 	site_list_filenames: load observed sites from list of site_list_filename.
@@ -118,7 +145,7 @@ def load_observed_sites(site_list_filenames):
 	for site_list_filename in site_list_filenames:
 		crawl_log = CD.CrawlLog()
 		read_proto_from_file(crawl_log, site_list_filename)
-		site_list = [[result.file_path, result.landing_url] \
+		site_list = [[result.file_path, getattr(result, url_field)] \
 				for result_search in crawl_log.result_search \
 				for result in result_search.result if result.success]
 		prefix = _split_path_by_data(site_list_filename, 0)

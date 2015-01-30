@@ -291,13 +291,13 @@ class Progress:
 				raise Exception
 		except:
 			if start:
-				self.current = start
+				self.current = list(start)
 			else:
 				self.current = None
 	
 	def next(self, low_bound, high_bound):
 		if not self.current:
-			self.current = low_bound
+			self.current = list(low_bound)
 		# [4] is the higher bit, [0] is the lower bit
 		# Find the lowest incrementable bit, increment it, 
 		# and set the lower bits to low_bound.

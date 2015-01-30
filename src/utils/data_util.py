@@ -1,0 +1,84 @@
+"""
+Example Usage:
+	# append path prefix to path in file, from file_list
+	# Note: prefix is the path prescending data/XXX, for example ../../data/XXX, "../../" should be the prefix
+	ls ../../data/abusive_words_9_category.computed/*.list | python data_util.py -f append_prefix -p prefix
+
+	# create the crawl_log file list for simhash_computer to compute
+	# Note: prefix is the path prescending data/XXX, for example ../../data/XXX, "../../" should be the prefix
+	ls ../../data/abusive_words_9_category.selenium.crawl/*.google | python data_util.py -f compute_list -p prefix -o outfile
+
+	# intersect observed sites
+	ls ../../data/abusive_words_9_category.selenium.crawl/*.cloaking | python data_util.py -f intersect_sites -o outfile
+"""
+
+import subprocess
+import sys, getopt
+import time
+from learning_detection_util import _split_path_by_data, show_proto, file_path_set, read_proto_from_file
+import proto.cloaking_detection_pb2 as CD
+
+
+def compute_list(crawl_log_list, outfile, prefix):
+	open(outfile, 'w').write("\n".join(crawl_log_list))
+	append_prefix([outfile], prefix)
+
+def append_prefix(inputfile_list, prefix):
+	for filename in inputfile_list:
+		path_list = filter(bool, open(filename, 'r').read().split('\n'))
+		path_list = [prefix + "data" + _split_path_by_data(path, 1) for path in path_list]
+		open(filename, 'w').write("\n".join(path_list))
+
+def main(argv):
+	has_function = False
+	help_msg = "data_util.py -f <function> [-p <prefix>][-p <prefix> -o <outfile>][-i <inputfile> -t <proto_type>][-o <outfile>], valid functions are append_prefix, compute_list, show_proto, intersect_sites"
+	try:
+		opts, args = getopt.getopt(argv, "hf:p:o:t:i:", ["function=", "prefix=", "outfile=", "type=", "ifile="])
+	except getopt.GetoptError:
+		print help_msg
+		sys.exit(2)
+	for opt, arg in opts:
+		if opt == "-h":
+			print help_msg
+			sys.exit()
+		elif opt in ("-f", "--function"):
+			function = arg
+			has_function = True
+		elif opt in ("-p", "--prefix"):
+			prefix = arg
+		elif opt in ("-o", "--outfile"):
+			outfile = arg
+		elif opt in ("-i", "--ifile"):
+			inputfile = arg
+		elif opt in ("-t", "--type"):
+			proto_type = arg
+		else:
+			print help_msg
+			sys.exit(2)
+	if not has_function:
+		print help_msg
+		sys.exit()
+	if function == "append_prefix":
+		inputfile_list = [line[:-1] for line in sys.stdin]
+		append_prefix(inputfile_list, prefix)
+	elif function == "compute_list":
+		crawl_log_list = [line[:-1] for line in sys.stdin]
+		compute_list(crawl_log_list, outfile, prefix)
+	elif function == "show_proto":
+		show_proto(inputfile, proto_type)
+	elif function == "intersect_sites":
+		observed_sites_list = [line[:-1] for line in sys.stdin]
+		result = None
+		for filename in observed_sites_list:
+			observed_sites = CD.ObservedSites()
+			read_proto_from_file(observed_sites, filename)
+			files = file_path_set(observed_sites)
+			result = result & files if result else files
+		open(outfile, 'w').write("\n".join(result))
+	else:
+		print help_msg
+		sys.exit(2)
+
+if __name__ == "__main__":
+	main(sys.argv[1:])
+

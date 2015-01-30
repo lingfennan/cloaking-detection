@@ -1,7 +1,7 @@
 """
 How to use:
-python cluster_learning.py -f compute -i <inputfiles> [-o <outputfile> -t <simhash_type>] (If there are multiple inputfiles, split them by comma)
-python cluster_learning.py -f learn -i <inputfiles> [-o <outputfile>] (If there are multiple inputfiles, split them by comma)
+python cluster_learning.py -f compute -i <inputfile_list> [-o <outputfile> -t <simhash_type> -g]
+python cluster_learning.py -f learn -i <inputfile_list> [-o <outputfile>]
 """
 
 import sys, getopt
@@ -9,7 +9,7 @@ import simhash
 from threading import Thread
 from html_simhash_computer import HtmlSimhashComputer
 from utils.learning_detection_util import add_failure, load_observed_sites, merge_observed_sites, write_proto_to_file, read_proto_from_file, valid_instance
-from utils.learning_detection_util import HammingTreshold, KMeans, SpectralClustering, HierarchicalClustering
+from utils.learning_detection_util import HammingTreshold, KMeans, SpectralClustering, HierarchicalClustering, interact_query
 from utils.thread_computer import ThreadComputer
 import utils.proto.cloaking_detection_pb2 as CD
 
@@ -33,7 +33,12 @@ class ClusterLearning(object):
 
 		# Input is a list of site_list_filename
 		valid_instance(simhash_config, CD.SimhashConfig)
-		observed_sites, path_list = load_observed_sites(site_list_filenames)  
+		if simhash_config.crawl_log_landing_url_as_observation_landing_url:
+			url_field = "landing_url"
+		else:
+			url_field = "url"
+		observed_sites, path_list = load_observed_sites(site_list_filenames,
+				url_field)  
 		simhash_computer = HtmlSimhashComputer(simhash_config)
 		thread_computer = ThreadComputer(simhash_computer, 'compute_simhash', path_list)
 		path_simhash_dict = dict()
@@ -87,14 +92,15 @@ class ClusterLearning(object):
 				learned_site.CopyFrom(result)
 		return learned_sites
 
-def compute(site_list_filenames, outfile = None, simhash_type = None, keep_failure = False):
+def compute(site_list_filenames, outfile = None, simhash_type = None, is_google = False):
 	# this branch simhash_type == None, TEXT, TEXT_DOM
 	if not simhash_type == "DOM":
 		text_out_filename = outfile + ".text" if outfile else site_list_filenames[0] + ".text"
 		cluster_learner = ClusterLearning()
 		simhash_config = CD.SimhashConfig()
 		simhash_config.simhash_type = CD.TEXT
-		simhash_config.discard_failure = not keep_failure
+		simhash_config.discard_failure = not is_google
+		simhash_config.crawl_log_landing_url_as_observation_landing_url = not is_google
 		simhash_config.usage.tri_gram = True
 		res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
 		write_proto_to_file(res, text_out_filename)
@@ -104,7 +110,8 @@ def compute(site_list_filenames, outfile = None, simhash_type = None, keep_failu
 		cluster_learner = ClusterLearning()
 		simhash_config = CD.SimhashConfig()
 		simhash_config.simhash_type = CD.DOM
-		simhash_config.discard_failure = not keep_failure
+		simhash_config.discard_failure = not is_google
+		simhash_config.crawl_log_landing_url_as_observation_landing_url = not is_google
 		simhash_config.usage.tri_gram = False
 		res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
 		write_proto_to_file(res, dom_out_filename)
@@ -115,70 +122,18 @@ def learn(observed_sites_filenames, outfile = None):
 	cluster_config = CD.ClusterConfig()
 	cluster_config.algorithm.name = CD.Algorithm.HIERARCHICAL_CLUSTERING
 	cluster_config.algorithm.left_out_ratio = 5 # left out ratio is 5%
-	cluster_config.minimum_cluster_size = 5
+	cluster_config.minimum_cluster_size = 2
 	res = cluster_learner.learn(observed_sites_filenames, cluster_config)
 	write_proto_to_file(res, out_filename)
 
-def test_learner():
-	in_filenames = ['../data/abusive_words.20150115-154913.selenium.crawl/91532f0a84878d909e2deed33e9932cf/ad_crawl_log_0.text']
-	out_filename = in_filenames[0] + '.learned'
-	cluster_learner = ClusterLearning()
-	cluster_config = CD.ClusterConfig()
-	cluster_config.algorithm.name = CD.Algorithm.HAMMING_THRESHOLD
-	cluster_config.algorithm.thres = 5
-	cluster_config.algorithm.left_out_ratio = 5  # left out ratio is 5%
-	res = cluster_learner.learn(in_filenames, cluster_config)
-	write_proto_to_file(res, out_filename)
-	print "result for hamming threhold clustering"
-	print res
-
-	cluster_config.algorithm.name = CD.Algorithm.HIERARCHICAL_CLUSTERING
-	cluster_config.algorithm.left_out_ratio = 5  # left out ratio is 5%
-	res = cluster_learner.learn(in_filenames, cluster_config)
-	write_proto_to_file(res, out_filename)
-	print "result for hierarchical clustering"
-	print res
-
-
-def test_computer():
-	site_list_filenames = ['../data/abusive_words.20150115-154913.selenium.crawl/91532f0a84878d909e2deed33e9932cf/ad_crawl_log_2']
-	out_filename = '../data/abusive_words.20150115-154913.selenium.crawl/91532f0a84878d909e2deed33e9932cf/ad_crawl_log_2.text'
-	cluster_learner = ClusterLearning()
-	simhash_config = CD.SimhashConfig()
-	simhash_config.simhash_type = CD.TEXT
-	simhash_config.discard_failure = False
-	simhash_config.usage.tri_gram = True
-	res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
-	write_proto_to_file(res, out_filename)
-	print res
-
-	out_filename = '../data/abusive_words.20150115-154913.selenium.crawl/91532f0a84878d909e2deed33e9932cf/ad_crawl_log_2.dom'
-	cluster_learner = ClusterLearning()
-	simhash_config = CD.SimhashConfig()
-	simhash_config.simhash_type = CD.DOM
-	simhash_config.usage.tri_gram = False
-	res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
-	write_proto_to_file(res, out_filename)
-	print res
-
-	# cluster_config = CD.ClusterConfig()
-	out_filename = '../data/abusive_words.20150115-154913.selenium.crawl/91532f0a84878d909e2deed33e9932cf/ad_crawl_log_2.text_dom'
-	cluster_learner = ClusterLearning()
-	simhash_config = CD.SimhashConfig()
-	simhash_config.simhash_type = CD.TEXT_DOM
-	simhash_config.usage.tri_gram = False
-	res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
-	write_proto_to_file(res, out_filename)
-	print res
-
 def main(argv):
 	has_function = False
-	help_msg = 'cluster_learning.py -f <function> [-i <inputfile> -t <simhash_type> -k] [-i <inputfile>], valid functions are compute, learn'
+	help_msg = 'cluster_learning.py -f <function> [-i <inputfile> -t <simhash_type> -o <outputfile> -g] [-i <inputfile> -o <outputfile>], valid functions are compute, learn'
 	outputfile = None
 	simhash_type = None
-	keep_failure = False
+	is_google = False
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:o:t:k", ["function=", "ifile=", "ofile=", "type=", "keepfailure"])
+		opts, args = getopt.getopt(argv, "hf:i:o:t:g", ["function=", "ifile=", "ofile=", "type=", "is_google"])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
@@ -195,33 +150,40 @@ def main(argv):
 			outputfile = arg
 		elif opt in ("-t", "--type"):
 			simhash_type = arg
-		elif opt in ("-k", "--keepfailure"):
-			keep_failure = True
+		elif opt in ("-g", "--is_google"):
+			is_google = True
 		else:
 			print help_msg
 			sys.exit(2)
 	if not has_function:
 		print help_msg
-		print 'Testing'
-		test_computer()
-		test_learner()
 		sys.exit()
 	if function == 'compute':
-		site_list_filenames = inputfile.split(',')
-		if 'google' in site_list_filenames[0].lower() and not keep_failure:
-			print "Warning: Google observation failure are discarded!"
-			print "Do you want to continue?[Y/N]"
-			line = sys.stdin.readline()
-			if "y" in line.lower():
-				pass
-			elif "n" in line.lower():
-				sys.exit(0)
-			else:
-				print "Unrecognized option!"
-				sys.exit(1)
-		compute(site_list_filenames, outputfile, simhash_type, keep_failure)
+		"""
+		Compute simhash for crawl log files in site_list_filenames.
+		If the files records google observation, ask whether to:
+		1. keep failure
+		2. aggregate by landing url
+		3. learn right after compute
+		"""
+		site_list_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
+		compute_and_learn = False
+		if 'google' in site_list_filenames[0].lower():
+			if not is_google:
+				out_str = "Warning: Google observation failure are discarded!\n" \
+						"Warning: Google observation aggregated by " \
+						"landing url!\n Do you want to continue?[Y/N]"
+				if not interact_query(out_str):
+					sys.exit(0)
+			# Whether to learn after compute
+			out_str = "Do you want to learn cluster after compute?[Y/N]"
+			compute_and_learn = interact_query(out_str)
+		compute(site_list_filenames, outputfile, simhash_type, is_google)
+		if compute_and_learn:
+			learn([outputfile + ".dom"], None)
+			learn([outputfile + ".text"], None)
 	elif function == 'learn':
-		observed_sites_filenames = inputfile.split(',')
+		observed_sites_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
 		learn(observed_sites_filenames, outputfile)
 	else:
 		print help_msg

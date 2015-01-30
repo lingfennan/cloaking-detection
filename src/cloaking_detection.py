@@ -1,6 +1,6 @@
 """
 How to use:
-python cloaking_detection.py -f detect -i <inputfile> -l <learnedfile> [-t <simhash_type>, default to TEXT]
+python cloaking_detection.py -f detect -i <inputfile> -l <learnedfile> [-r <min_radius> -n <std_constant>, -t <simhash_type> default to TEXT]
 
 python cloaking_detection.py -f evaluate -i <inputfile> -l <learnedfile> -e <expectedfile> [-t <simhash_type>]
 
@@ -10,7 +10,7 @@ import sys, getopt, math
 import simhash
 from threading import Thread
 from html_simhash_computer import HtmlSimhashComputer
-from utils.learning_detection_util import write_proto_to_file, read_proto_from_file, valid_instance, average_distance, centroid_distance
+from utils.learning_detection_util import write_proto_to_file, read_proto_from_file, valid_instance, average_distance, centroid_distance, file_path_set
 from utils.thread_computer import ThreadComputer
 import utils.proto.cloaking_detection_pb2 as CD
 
@@ -39,7 +39,9 @@ class CloakingDetection(object):
 			# dist = average_distance(pattern, ob_simhash), deprecated
 			dist = centroid_distance(pattern, ob_simhash)
 			# less or equal, have equal because std may be zero.
-			if dist <= pattern.mean + self.detection_config.std_constant * pattern.std:
+			# if dist <= pattern.mean + self.detection_config.std_constant * pattern.std:
+			thres = pattern.mean + self.detection_config.std_constant * pattern.std
+			if dist <= max(thres, self.detection_config.min_radius):
 				return False 
 		return True 
 
@@ -146,17 +148,23 @@ class CloakingDetection(object):
 				cloaking_site = cloaking_sites.site.add()
 				cloaking_site.CopyFrom(result)
 				size += len(cloaking_site.observation)
+		print "total site {0}".format(len(observed_sites.site))
+		print "cloaking site {0}".format(len(cloaking_sites.site))
 		print "cloaking count"
 		print size
 		return cloaking_sites
 
-def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type):
+def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type,
+		min_radius = 0, std_constant = 3):
+	valid_instance(min_radius, int)
+	valid_instance(std_constant, int)
 	detection_config = CD.DetectionConfig()
 	# detection_config.algorithm = CD.DetectionConfig.JOINT_DISTRIBUTION
 	detection_config.algorithm = CD.DetectionConfig.NORMAL_DISTRIBUTION
 	# detection_config.algorithm = CD.DetectionConfig.PERCENTILE
 	detection_config.p = 99
-	detection_config.std_constant = 3
+	detection_config.min_radius = min_radius
+	detection_config.std_constant = std_constant
 	if simhash_type:
 		if simhash_type == "DOM":
 			detection_config.simhash_type = CD.DOM
@@ -180,13 +188,6 @@ def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_
 	# print cloaking_sites
 	return cloaking_sites
 
-def file_path_set(observed_sites):
-	valid_instance(observed_sites, CD.ObservedSites)
-	result = set()
-	for site in observed_sites.site:
-		for observation in site.observation:
-			result.add(observation.file_path)
-	return result
 
 def compute_metrics(detected, expected, total):
 	"""
@@ -236,13 +237,15 @@ def evaluate(learned_sites_filename, observed_sites_filename, simhash_type, expe
 
 def main(argv):
 	has_function = False
-	help_msg = "cloaking_detection.py -f <function> [-i <inputfile> -l <learnedfile> -t <simhash_type>][-i <testfile> -l <learnedfile> -e <expectedfile> -t <simhash_type>], valid functions are detect, evaluate"
+	help_msg = "cloaking_detection.py -f <function> [-i <inputfile> -l <learnedfile> -t <simhash_type> -r <min_radius> -n <std_constant>][-i <testfile> -l <learnedfile> -e <expectedfile> -t <simhash_type>], valid functions are detect, evaluate"
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:l:e:t:", ["function=", "ifile=", "lfile=", "efile=", "type="])
+		opts, args = getopt.getopt(argv, "hf:i:l:e:t:r:n:", ["function=", "ifile=", "lfile=", "efile=", "type=", "radius=", "constant="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
 	simhash_type = None
+	min_radius = 0
+	std_constant = 3
 	for opt, arg in opts:
 		if opt == "-h":
 			print help_msg
@@ -258,15 +261,18 @@ def main(argv):
 			expectedfile = arg
 		elif opt in ("-t", "--type"):
 			simhash_type = arg
+		elif opt in ("-r", "--radius"):
+			min_radius = arg
+		elif opt in ("-n", "--constant"):
+			std_constant = arg
 		else:
 			print help_msg
 			sys.exit(2)
 	if not has_function:
 		print help_msg
-		print "Testing"
 		sys.exit()
 	if function == "detect":
-		cloaking_detection(learnedfile, inputfile, simhash_type)
+		cloaking_detection(learnedfile, inputfile, simhash_type, int(min_radius), int(std_constant))
 	elif function == "evaluate":
 		evaluate(learnedfile, inputfile, simhash_type, expectedfile)
 	else:

@@ -133,6 +133,16 @@ message SimhashConfig {
   // either useless (in user view), or a hint of cloaking (in Google view).
   // Decide whether to discard crawl failure accordingly.
   optional bool discard_failure = 4 [default = true];
+  // In short, set True for user, set False for Google.
+  // Here is the reason:
+  // When preparing ObservedSites from CrawlLog, landing_url used in 
+  // ObservedSites are important because eventually, we are comparing user
+  // landing url with Google visited URLs.
+  // However, Google visit one URL (landing url user sees), but may be 
+  // redirected to another URL. This is bad for comparison. Therefore,
+  // when loading Google crawl log, we aggregate the observed_sites by
+  // the visited url, not the landing url.
+  optional bool crawl_log_landing_url_as_observation_landing_url = 5 [default = true];
 }
 
 // Configuration for simhash clustering
@@ -174,6 +184,8 @@ message DetectionConfig {
   optional int32 std_constant = 2;
   optional SimhashType simhash_type = 3 [default = TEXT];
   optional int32 p = 4 [default = 97];  // percentile
+  // The minimum radius for each cluster
+  optional int32 min_radius = 5 [default = 0];
 }
 
 // Crawler data structures, used by crawler to store information.

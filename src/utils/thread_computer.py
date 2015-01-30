@@ -1,3 +1,4 @@
+import logging
 import Queue
 import threading
 import time
@@ -35,7 +36,13 @@ class _ThreadWorker(threading.Thread):
 				item = self.q.get()
 				self.lock.release()
 				if self.para_type == CD.FILE_PATH:
-					data = open(item, 'r').read()
+					try:
+						data = open(item, 'r').read()
+					except:
+						logger = logging.getLogger("global")
+						logger.error("Error in thread run")
+						logger.error(sys.exc_info()[0])
+						return
 				elif self.para_type == CD.NORMAL:
 					data = item
 				if self.default_paras:
