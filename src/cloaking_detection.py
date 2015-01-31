@@ -10,7 +10,7 @@ import sys, getopt, math
 import simhash
 from threading import Thread
 from html_simhash_computer import HtmlSimhashComputer
-from utils.learning_detection_util import write_proto_to_file, read_proto_from_file, valid_instance, average_distance, centroid_distance, file_path_set
+from utils.learning_detection_util import write_proto_to_file, read_proto_from_file, valid_instance, average_distance, centroid_distance, sites_file_path_set
 from utils.thread_computer import ThreadComputer
 import utils.proto.cloaking_detection_pb2 as CD
 
@@ -204,8 +204,8 @@ def compute_metrics(detected, expected, total):
 	"""
 	valid_instance(detected, CD.ObservedSites)
 	valid_instance(expected, CD.ObservedSites)
-	detected_files = file_path_set(detected)
-	expected_files = file_path_set(expected)
+	detected_files = sites_file_path_set(detected)
+	expected_files = sites_file_path_set(expected)
 	detected_size = len(detected_files)
 	true_total = len(expected_files)
 	false_total = total - true_total

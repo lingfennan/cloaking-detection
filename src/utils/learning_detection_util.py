@@ -12,15 +12,24 @@ import proto.cloaking_detection_pb2 as CD
 """
 Below are util functions.
 """
-def file_path_set(observed_sites):
+def ob_file_path_set(site):
 	"""
-	Get the file_path set from obsered_sites.
+	Get the file_path set from SiteObservations.
+	"""
+	valid_instance(site, CD.SiteObservations)
+	result = set()
+	for observation in site.observation:
+		result.add(observation.file_path)
+	return result
+
+def sites_file_path_set(observed_sites):
+	"""
+	Get the file_path set from ObservedSites.
 	"""
 	valid_instance(observed_sites, CD.ObservedSites)
 	result = set()
 	for site in observed_sites.site:
-		for observation in site.observation:
-			result.add(observation.file_path)
+		result |= ob_file_path_set(site)
 	return result
 
 def interact_query(out_str):
@@ -190,6 +199,43 @@ def merge_observed_sites(observed_sites_filenames):
 	for site_name in observed_sites_map:
 		observed_site = observed_sites.site.add()
 		observed_site.CopyFrom(observed_sites_map[site_name])
+	return observed_sites
+
+def intersect_observed_sites(site_filename, to_add_site_filename):
+	"""
+	Load observed_sits from multiple files and intersect them.
+	@parameter
+	observed_sites_filenames: observed site list files to intersect.
+	@return
+	observed_sites: the intersect result.
+	"""
+	observed_sites = CD.ObservedSites()
+	temp_observed_sites_map = dict()
+	temp_observed_sites = CD.ObservedSites()
+	read_proto_from_file(temp_observed_sites, site_filename)
+	observed_sites.config.CopyFrom(temp_observed_sites.config)
+	for observed_site in temp_observed_sites.site:
+		temp_observed_sites_map[observed_site.name] = CD.SiteObservations()
+		temp_observed_sites_map[observed_site.name].CopyFrom(observed_site)
+	to_add_map = dict()
+	to_add = CD.ObservedSites()
+	read_proto_from_file(to_add, to_add_site_filename)
+	for observed_site in to_add.site:
+		to_add_map[observed_site.name] = CD.SiteObservations()
+		to_add_map[observed_site.name].CopyFrom(observed_site)
+	for name in temp_observed_sites_map:
+		if name in to_add_map:
+			temp_site = temp_observed_sites_map[name]
+			to_add_site = to_add_map[name]
+			result_set = ob_file_path_set(temp_site) & ob_file_path_set(to_add_site)
+			if len(result_set) == 0:
+				continue
+			observed_site = observed_sites.site.add()
+			observed_site.name = name
+			for observation in temp_site.observation:
+				if observation.file_path in result_set:
+					ob = observed_site.observation.add()
+					ob.CopyFrom(observation)
 	return observed_sites
 
 def write_proto_to_file(proto, filename):

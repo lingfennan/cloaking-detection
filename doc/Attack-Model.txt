@@ -1,0 +1,15 @@
+This project requires collecting users simhash and URL
+
+1. Attacker has the hash.
+Because it is one-way hash. The attacker could not tell what is the content.
+
+2. Attacker has URL/Simhash pair. He could visit the URL and compute hash by himself.
+Comparing the hash he sees with what user sees,
+if the hash is similar, then he knows what user is seeing but he could not know a particular field.
+Because of high collision probability.
+if the hash varies a lot, then the attacker could not get content from the hash because of 1.
+but he could know that the user is seeing something different from him.
+
+3. RAPPOR differential privacy. the user answers the simhash and URL in probability.
+Therefore, the attacker could not know who is answering this question. whether he is telling the truth.
+

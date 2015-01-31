@@ -1,5 +1,6 @@
 import logging
 import Queue
+import sys
 import threading
 import time
 import proto.cloaking_detection_pb2 as CD
@@ -39,9 +40,12 @@ class _ThreadWorker(threading.Thread):
 					try:
 						data = open(item, 'r').read()
 					except:
+						"""
 						logger = logging.getLogger("global")
 						logger.error("Error in thread run")
 						logger.error(sys.exc_info()[0])
+						"""
+						print sys.exc_info()[0]
 						return
 				elif self.para_type == CD.NORMAL:
 					data = item

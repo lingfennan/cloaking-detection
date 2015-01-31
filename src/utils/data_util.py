@@ -15,7 +15,7 @@ Example Usage:
 import subprocess
 import sys, getopt
 import time
-from learning_detection_util import _split_path_by_data, show_proto, file_path_set, read_proto_from_file
+from learning_detection_util import _split_path_by_data, show_proto, sites_file_path_set, intersect_observed_sites, read_proto_from_file, write_proto_to_file
 import proto.cloaking_detection_pb2 as CD
 
 
@@ -68,13 +68,8 @@ def main(argv):
 		show_proto(inputfile, proto_type)
 	elif function == "intersect_sites":
 		observed_sites_list = [line[:-1] for line in sys.stdin]
-		result = None
-		for filename in observed_sites_list:
-			observed_sites = CD.ObservedSites()
-			read_proto_from_file(observed_sites, filename)
-			files = file_path_set(observed_sites)
-			result = result & files if result else files
-		open(outfile, 'w').write("\n".join(result))
+		result_sites = intersect_observed_sites(*observed_sites_list)
+		write_proto_to_file(result_sites, outfile)
 	else:
 		print help_msg
 		sys.exit(2)

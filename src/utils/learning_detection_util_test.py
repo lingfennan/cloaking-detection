@@ -1,5 +1,5 @@
 import numpy as np
-from learning_detection_util import hierarchical_clustering, load_observed_sites, _strip_parameter, average_distance, read_proto_from_file, _split_path_by_data
+from learning_detection_util import hierarchical_clustering, load_observed_sites, _strip_parameter, average_distance, read_proto_from_file, _split_path_by_data, intersect_observed_sites, sites_file_path_set
 import proto.cloaking_detection_pb2 as CD
 
 def assert_equal(actual_value, expected_value):
@@ -24,18 +24,31 @@ def check_equal(first_file, second_file):
 			return False
 	return True
 
+############################ Tests for specific functions ##########################
+def test_intersect_observed_sites():
+	observed_sites_list = ["../../data/abusive_words_9_category.computed/test.user.dom.cloaking",
+			"../../data/abusive_words_9_category.computed/test.user.text.cloaking"]
+	result = None
+	for filename in observed_sites_list:
+		observed_sites = CD.ObservedSites()
+		read_proto_from_file(observed_sites, filename)
+		files = sites_file_path_set(observed_sites)
+		result = result & files if result else files
+	result_sites = intersect_observed_sites(*observed_sites_list)
+	new_set = sites_file_path_set(result_sites)
+	assert_equal(result, new_set)
+
 def test_load_observed_sites():
-	site_list_filenames = ['../../data/US_list_10.20141109-180617.selenium.crawl/crawl_log']
+	site_list_filenames = ['../../data/abusive_words_9_category.selenium.crawl/search_crawl_log.20150122-193448.0c41fc41f4f009d24c0b61d24fd9a527_8']
 	s, p = load_observed_sites(site_list_filenames)
 	print s
 	print p
 
 def test_check_equal():
-	first_file = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.text.learned"
-	second_file = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/old_crawl_log.text.learned"
-	third_file = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/20141110_crawl_log.dom.learned"
+	first_file = "../../data/abusive_words_9_category.computed/test.google.dom.learned"
+	second_file = "../../data/abusive_words_9_category.computed/test.google.text.learned"
 	assert_equal(check_equal(first_file, second_file), False)
-	assert_equal(check_equal(first_file, third_file), False)
+	assert_equal(check_equal(first_file, first_file), True)
 
 def test__split_path_by_data():
 	path = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.dom.learned"
@@ -59,6 +72,7 @@ def test__strip_parameter():
 def _prepare_observed_site():
 	observed_site = CD.SiteObservations()
 	observation = observed_site.add()
+	return observed_site
 
 def test_HammingThreshold():
 	cluster_config = CD.ClusterConfig()
@@ -133,6 +147,7 @@ def test_average_distance():
 	assert_equal(dist_3, 8)
 
 if __name__=="__main__":
+	test_intersect_observed_sites()
 	test__strip_parameter()
 	test__split_path_by_data()
 	test_load_observed_sites()
