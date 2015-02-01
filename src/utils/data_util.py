@@ -10,12 +10,17 @@ Example Usage:
 
 	# intersect observed sites
 	ls ../../data/abusive_words_9_category.selenium.crawl/*.cloaking | python data_util.py -f intersect_sites -o outfile
+
+	# visit site list periodically. In order to generate plots.
+	python data_util.py -f collect_observations -i site_list -o outdir -m user
 """
 
 import subprocess
 import sys, getopt
 import time
 from learning_detection_util import _split_path_by_data, show_proto, sites_file_path_set, intersect_observed_sites, read_proto_from_file, write_proto_to_file
+from crawl_util import collect_site_for_plot
+from util import evaluation_form
 import proto.cloaking_detection_pb2 as CD
 
 
@@ -31,9 +36,9 @@ def append_prefix(inputfile_list, prefix):
 
 def main(argv):
 	has_function = False
-	help_msg = "data_util.py -f <function> [-p <prefix>][-p <prefix> -o <outfile>][-i <inputfile> -t <proto_type>][-o <outfile>], valid functions are append_prefix, compute_list, show_proto, intersect_sites"
+	help_msg = "data_util.py -f <function> [-p <prefix>][-p <prefix> -o <outfile>][-i <inputfile> -t <proto_type>][-o <outfile>][-i <site_list> -o <outdir> -m <mode>], valid functions are append_prefix, compute_list, show_proto, intersect_sites, collect_observations"
 	try:
-		opts, args = getopt.getopt(argv, "hf:p:o:t:i:", ["function=", "prefix=", "outfile=", "type=", "ifile="])
+		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:", ["function=", "prefix=", "outfile=", "type=", "ifile=", "mode="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
@@ -52,6 +57,8 @@ def main(argv):
 			inputfile = arg
 		elif opt in ("-t", "--type"):
 			proto_type = arg
+		elif opt in ("-m", "--mode"):
+			mode = arg
 		else:
 			print help_msg
 			sys.exit(2)
@@ -70,6 +77,12 @@ def main(argv):
 		observed_sites_list = [line[:-1] for line in sys.stdin]
 		result_sites = intersect_observed_sites(*observed_sites_list)
 		write_proto_to_file(result_sites, outfile)
+		evaluation_form(outfile, outfile + ".eval", "ObservedSites")
+	elif function == "collect_observations":
+		site_list = filter(bool, open(inputfile, 'r').read().split('\n'))
+		site_set = set(site_list)
+		outdir = outfile
+		collect_site_for_plot(site_set, outdir, mode)
 	else:
 		print help_msg
 		sys.exit(2)

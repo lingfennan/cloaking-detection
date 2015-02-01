@@ -140,6 +140,7 @@ class CloakingDetection(object):
 	def detect(self, observed_sites):
 		valid_instance(observed_sites, CD.ObservedSites)
 		cloaking_sites = CD.ObservedSites()
+		cloaking_sites.config.CopyFrom(observed_sites.config)
 		# iterate through all the URLs
 		size = 0
 		for observed_site in observed_sites.site:

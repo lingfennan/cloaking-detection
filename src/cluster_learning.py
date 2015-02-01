@@ -11,6 +11,7 @@ from html_simhash_computer import HtmlSimhashComputer
 from utils.learning_detection_util import add_failure, load_observed_sites, merge_observed_sites, write_proto_to_file, read_proto_from_file, valid_instance
 from utils.learning_detection_util import HammingTreshold, KMeans, SpectralClustering, HierarchicalClustering, interact_query
 from utils.thread_computer import ThreadComputer
+from utils.util import evaluation_form
 import utils.proto.cloaking_detection_pb2 as CD
 
 class ClusterLearning(object):
@@ -181,7 +182,11 @@ def main(argv):
 		compute(site_list_filenames, outputfile, simhash_type, is_google)
 		if compute_and_learn:
 			learn([outputfile + ".dom"], None)
+			learned_file = outputfile + ".dom.learned"
+			evaluation_form(learned_file, learned_file + ".eval", "LearnedSites")
 			learn([outputfile + ".text"], None)
+			learned_file = outputfile + ".text.learned"
+			evaluation_form(learned_file, learned_file + ".eval", "LearnedSites")
 	elif function == 'learn':
 		observed_sites_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
 		learn(observed_sites_filenames, outputfile)

@@ -12,39 +12,221 @@ import threading
 import os
 from datetime import datetime
 from selenium import webdriver
-from util import start_browser, restart_browser, mkdir_if_not_exist, safe_quit
 from learning_detection_util import valid_instance, write_proto_to_file, read_proto_from_file
 from thread_computer import ThreadComputer
+from util import start_browser, restart_browser, mkdir_if_not_exist, safe_quit
 import proto.cloaking_detection_pb2 as CD
 
 
-def collect_site_for_plot(site_list, mode="user"):
+"""
+In order to generate plots, use cron to visit site_set periodically.
+"""
+def crawl_log_attr_set(crawl_log, attr_name, success_only=True):
 	"""
-	Collect user and google observation for site in site_list.
-	This is scheduled by 7_14.py. In order to show how hash values of
+	Get attribute set from CrawlLog.
+	@parameter
+	crawl_log: the crawl log to extract attribute set from.
+	attr_name: the name of attribute in crawl_log to collect.
+	@return
+	attr_set: the set of attrbiutes corresponding to attr_name
+	"""
+	valid_instance(crawl_log, CD.CrawlLog)
+	attr_set = set()
+	for result_search in crawl_log.result_search:
+		for result in result_search.result:
+			# collect information on success or not
+			if success_only:
+				if result.success:
+					attr_set.add(getattr(result, attr_name))
+			else:
+				attr_set.add(getattr(result, attr_name))
+	return attr_set
+
+def collect_site_for_plot(site_set, outdir, mode="user"):
+	"""
+	Collect user and google observation for site in site_set.
+	This is scheduled by cron job. In order to show how hash values of
 	websites change over time.
+
+	@parameter
+	site_set: the set of urls to visit
+	outdir: the output directory
+	mode: which user agent to use, supported mode includes user, google, both
 	"""
+	valid_instance(site_set, set)
+	mkdir_if_not_exist(outdir)
+
 	user_UA = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/" \
 			"537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36"
 	google_UA = "AdsBot-Google (+http://www.google.com/adsbot.html)"
 	crawl_config = CD.CrawlConfig()
 	crawl_config.maximum_threads = 1
 	crawl_config.browser_type = CD.CrawlConfig.CHROME
+	crawl_config.crawl_log_dir = outdir
+	now_suffix = datetime.now().strftime(".%Y%m%d-%H%M%S")
+	UAs = dict()
 	if mode == "user":
-		UAs = [user_UA]
+		UAs["user"] = user_UA
 	elif mode == "google":
-		UAs = [google_UA]
+		UAs["google"] = google_UA
 	elif mode == "both":
-		UAs = [user_UA, google_UA]
+		UAs["user"] =  user_UA
+		UAs["google"] = google_UA
 	else:
 		raise Exception("Unknown mode {0}".format(mode))
+	for mode in UAs:
+		crawl_config.user_agent = UAs[mode]
+		crawl_config.user_agent_md5_dir = outdir + hex_md5(crawl_config.user_agent) \
+				+ now_suffix + '/'
+		crawl_config.log_filename = mode + '_crawl_log' + now_suffix
+		mode_visit = Visit(crawl_config)
+		mode_visit.visit_landing_url(site_set)
+		mode_visit.write_crawl_log(False)
 
-	UAs = [user_UA, google_UA]
-	for ua in UAs:
-		crawl_config.user_agent = ua
-		url_fetcher = UrlFetcher()
+
+"""
+for each word, start a browser session to do google search on it,
+click and visit the landing page. directly visit the advertisement link
+"""
+class Visit:
+	def __init__(self, crawl_config, max_word_per_file=5):
+		# user_agent, user_agent_md5_dir should be set.
+		valid_instance(crawl_config, CD.CrawlConfig)
+		self.crawl_config = CD.CrawlConfig()
+		self.crawl_config.CopyFrom(crawl_config)
+		self.first = True 
+		self.max_word_per_file = max_word_per_file 
+		self.counter = 0
+
+	def update_crawl_config(self, crawl_config):
+		valid_instance(crawl_config, CD.CrawlConfig)
+		self.crawl_config = CD.CrawlConfig()
+		self.crawl_config.CopyFrom(crawl_config)
+	
+	def __del__(self):
+		if not self.counter % self.max_word_per_file == 0:
+			self.write_crawl_log()
+
+	def visit(self, clickstring_set, search_term):
+		"""
+		Count how many times this visit has been called, ie.
+		how many words has been searched and visited so far.
+
+		Note: some of the words might have empty advertisement
+		clickstring_set, these words are counted but not logged.
+		@parameter
+		clickstring_set: the links to visit
+		search_term: search term related to clickstring_set
+		@return
+		None or current_log_filename (from write_crawl_log())
+		"""
+		self.counter += 1
+		clickstring_set_size = len(clickstring_set)
+		if clickstring_set_size == 0:
+			return None
+		mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
+		# crawl web pages
+		if clickstring_set_size < 8:
+			record_maximum_threads = self.crawl_config.maximum_threads
+			self.crawl_config.maximum_threads = 2
+		url_fetcher = UrlFetcher(self.crawl_config)
+		thread_computer = ThreadComputer(url_fetcher, 'fetch_url',
+				clickstring_set)
+		url_fetcher.quit()
+		if clickstring_set_size < 8:
+			self.crawl_config.maximum_threads = record_maximum_threads
+		# create and fill current_search, including urls, search_term etc.
+		current_search = CD.CrawlSearchTerm()
+		for p, s in thread_computer.result:
+			result = current_search.result.add()
+			result.CopyFrom(s)
+		current_search.search_term = search_term
+		current_search.result_type = self.crawl_config.result_type
+		# update current_log
+		if self.first:
+			self.first = False
+			self.current_log = CD.CrawlLog()
+		result_search = self.current_log.result_search.add()
+		result_search.CopyFrom(current_search)
+		if self.counter % self.max_word_per_file == 0:
+			return self.write_crawl_log()
+	
+	def write_crawl_log(self, counter_suffix=True):
+		crawl_log_dir = self.crawl_config.crawl_log_dir
+		if (not crawl_log_dir) or crawl_log_dir == "":
+			crawl_log_dir = self.crawl_config.user_agent_md5_dir
+		current_log_filename = crawl_log_dir + self.crawl_config.log_filename
+		if counter_suffix:
+			current_log_filename += "_" + str(self.counter)
+		# Write global crawl_log
+		write_proto_to_file(self.current_log, current_log_filename)
+		# After write, reset variables
+		self.current_log = CD.CrawlLog()
+		return current_log_filename
+
+	def visit_landing_url(self, landing_url_set, url_fetcher=None):
+		"""
+		@parameter
+		landing_url_set: landing url set to visit
+		url_fetcher: selenium handles to use for crawl
+		"""
+		valid_instance(landing_url_set, set)
+		mkdir_if_not_exist(self.crawl_config.user_agent_md5_dir)
+		# crawl web pages
+		landing_url_set_size = len(landing_url_set)
+		if landing_url_set_size < 8:
+			record_maximum_threads = self.crawl_config.maximum_threads
+			self.crawl_config.maximum_threads = 2
+		quit_fetcher_when_done = False
+		if not url_fetcher:
+			url_fetcher = UrlFetcher(self.crawl_config)
+			quit_fetcher_when_done = True
+		thread_computer = ThreadComputer(url_fetcher, 'fetch_url',
+				landing_url_set)
+		if quit_fetcher_when_done:
+			url_fetcher.quit()
+		if landing_url_set_size < 8:
+			self.crawl_config.maximum_threads = record_maximum_threads
+		# create and fill current_search, including urls, search_term etc.
+		current_search = CD.CrawlSearchTerm()
+		for p, s in thread_computer.result:
+			result = current_search.result.add()
+			result.CopyFrom(s)
+		# update current_log
+		if self.first:
+			self.first = False
+			self.current_log = CD.CrawlLog()
+		result_search = self.current_log.result_search.add()
+		result_search.CopyFrom(current_search)
+
+	def visit_landing_url_n_times(self, crawl_log, n_times, revisit_dir_prefix,
+			word_md5, word_md5_delimiter):
+		"""
+		@parameter
+		crawl_log: crawl log to visit
+		n_times: visit crawl_log for n_times
+		"""
+		valid_instance(crawl_log, CD.CrawlLog)
+		valid_instance(n_times, int)
+		url_fetcher = UrlFetcher(self.crawl_config)
+		for i in range(n_times):
+			# the time label is set for each iteration of visit
+			revisit_now_suffix = datetime.now().strftime(".%Y%m%d-%H%M%S")
+			self.crawl_config.user_agent_md5_dir = word_md5.join(
+					revisit_dir_prefix.split(word_md5_delimiter)) + \
+					'.revisit_time' + revisit_now_suffix + '/'
+			url_fetcher.update_dir(self.crawl_config.user_agent_md5_dir)
+
+			# prepare landing_url_set
+			landing_url_set = crawl_log_attr_set(crawl_log, "landing_url")
+			self.visit_landing_url(landing_url_set, url_fetcher)
+		self.write_crawl_log(False)
+		url_fetcher.quit()
 
 
+"""
+Below are crawl functions to fetch URLs lists parallelly.
+"""
 def hex_md5(string):
 	# util function to return md5 in hex of the input string.
 	m = hashlib.md5()
