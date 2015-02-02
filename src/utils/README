@@ -1,3 +1,86 @@
-Scripts:
-extract_cookies.sh	script used to read firefox cookies.
-BinaryCookieReader.py	script used to read safari cookies.
+Experiment Utils:
+
+data_util.py
+	# Note: prefix is the path prescending data/XXX, for example ../../data/XXX, "../../" should be the prefix
+	ls ../../data/abusive_words_9_category.computed/*.list | python data_util.py -f append_prefix -p prefix
+
+	# create the crawl_log file list for simhash_computer to compute
+	# Note: prefix is the path prescending data/XXX, for example ../../data/XXX, "../../" should be the prefix
+	ls ../../data/abusive_words_9_category.selenium.crawl/*.google | python data_util.py -f compute_list -p prefix -o outfile
+
+	# intersect observed sites
+	ls ../../data/abusive_words_9_category.selenium.crawl/*.cloaking | python data_util.py -f intersect_sites -o outfile
+
+	# visit site list periodically. In order to generate plots.
+	python data_util.py -f collect_observations -i site_list -l server_link -o outdir -m user
+	
+	# output the simhash from ObservedSites or LearnedSites for plotting purpose.
+	python data_util.py -f plot_simhash -i sites_file [-o outfile] -s DOM\TEXT -t LearnedSites\ObservedSites
+
+search_and_crawl.py
+	# search words from $WORD_FILE and crawl the search results and ads.
+	python search_and_crawl.py -f search -i word_file
+
+	# revisit the landing pages in search and crawl phase as Google bot.
+	ls ../../data/abusive_words.selenium.crawl/XXX/ad_crawl_log* | python search_and_crawl.py -f revisit -i word_file  -n number_of_visits
+
+	# search and revisit words from word_file for n times
+	python search_and_crawl.py -f search_and_revisit -i word_file -n n_times
+
+crawl_util.py
+	# used by search_and_crawl.py most of the time.
+	# Usage:
+	python crawl.py $URL_FILE $USER_AGENT_FILE [$THREAD_NUMBER]
+
+url_filter.py
+	# Read ObservedSites from inputfile. For each site, filter the trusted domains and output the
+	# remaining to outputfile.
+	python url_filter.py bar_points inputfile outputfile
+
+wot.py
+	# used by url_filter.py
+
+thread_computer.py
+	# used by cluster_learning.py and search_and_crawl.py
+
+statistics.py
+	# histogram the number of features extracted from each observation. feature type is TEXT or DOM
+	python statistics.py -f feature_hist -i inputfile -t feature_type
+
+	# count failure in inputfile. This stat can be used to estimated the success rate of visiting.
+	python statistics.py -f count_failure -i inputfile -l links_to_check
+
+
+*_test.py
+	unit test for corresponding files.
+
+
+=====================================================================================================
+Analysis Utils:
+
+extract_cookies.sh	
+	script used to read firefox cookies.
+
+BinaryCookieReader.py
+	script used to read safari cookies.
+
+plot_clusters.m	
+	matlab function to plot clusters for each website, input format is as follows:
+		link,count
+		s1
+		s2
+		s3
+		...
+
+plot_detect_results.m
+	plot detection results including, fpr, tpr et al.
+
+DataHash.m
+	used by plot_clusters.m
+
+plot_stats.m
+	plot statistics.
+
+plot_ROC.m
+	plot ROC for result.
+

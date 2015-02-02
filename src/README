@@ -1,0 +1,35 @@
+Main entries:
+
+cluster_learning.py
+	# compute simhash, learned cluster if google
+	python cluster_learning.py -f compute -i <inputfile_list> [-o <outputfile> -t <simhash_type> -g]
+	# learn cluster
+	python cluster_learning.py -f learn -i <inputfile_list> [-o <outputfile>]
+
+cloaking_detection.py
+	# detect cloaking
+	python cloaking_detection.py -f detect -i <inputfile> -l <learnedfile> [-r <min_radius> -n <std_constant>, -t <simhash_type> default to TEXT]
+	# evaluate the result against expected result and give performance
+	python cloaking_detection.py -f evaluate -i <inputfile> -l <learnedfile> -e <expectedfile> [-t <simhash_type>]
+
+html_simhash_computer.py
+	used by cluster_learning.py
+
+scan.py
+	scan parameters must be numerical
+	parameter to scan
+		-s=a:1-2,b:3-4,c:7-10 
+	parameter to set
+		-p=name:haha,value:hehe 
+	output filename
+		-o=outfile 	
+	module to import
+		-m=cloaking_detection 
+	function to call
+		-f=cloaking_detection
+	python scan.py -m cloaking_detection -f cloaking_detection -p simhash_type:TEXT,learnedfile:*.text.learned,inputfile:*.text -s min_radius:0-4,std_constant:3-6 -o outfile
+
+
+*_test.py
+	unit test for corresponding files.
+

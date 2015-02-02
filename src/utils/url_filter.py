@@ -1,3 +1,12 @@
+"""
+Read ObservedSites from inputfile. For each site, filter the trusted domains and output the
+remaining to outputfile.
+
+Example Usage:
+	python url_filter.py bar_points inputfile outputfile
+"""
+
+
 import sys, getopt, math
 from threading import Thread
 from learning_detection_util import write_proto_to_file, read_proto_from_file, valid_instance, average_distance, centroid_distance, read_proto_from_file

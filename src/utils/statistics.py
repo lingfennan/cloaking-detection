@@ -2,6 +2,12 @@
 1. Do statistics about the dataset and aims at help
 tuning the parameters.
 2. Collect stats for writing paper.
+Example Usage:
+	# histogram the number of features extracted from each observation. feature type is TEXT or DOM
+	python statistics.py -f feature_hist -i inputfile -t feature_type
+
+	# count failure in inputfile. This stat can be used to estimated the success rate of visiting.
+	python statistics.py -f count_failure -i inputfile -l links_to_check
 """
 
 import numpy as np
