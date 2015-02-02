@@ -78,6 +78,7 @@ def evaluation_form(sites_filename, out_filename, proto):
 		for site in sites.site:
 			for observation in site.observation:
 				out_f.write(site.name + "\n" + observation.file_path + "\n")
+		out_f.close()
 	else:
 		raise Exception("Wrong proto! Only LearnedSites and ObservedSites can be used!")
 

@@ -13,6 +13,9 @@ Example Usage:
 
 	# visit site list periodically. In order to generate plots.
 	python data_util.py -f collect_observations -i site_list -l server_link -o outdir -m user
+	
+	# output the simhash from ObservedSites or LearnedSites for plotting purpose.
+	python data_util.py -f plot_simhash -i sites_file [-o outfile] -s DOM\TEXT -t LearnedSites\ObservedSites
 """
 
 import subprocess
@@ -25,6 +28,34 @@ from crawl_util import collect_site_for_plot
 from util import evaluation_form
 import proto.cloaking_detection_pb2 as CD
 
+def plot_simhash(inputfile, outfile, simhash_type, proto_type):
+	if "text" in simhash_type.lower():
+		simhash_type = "text_simhash"
+	elif "dom" in simhash_type.lower():
+		simhash_type = "dom_simhash"
+	else:
+		raise Exception("wrong type of simhash_type!")
+	sites = getattr(CD, proto_type)()
+	read_proto_from_file(sites, inputfile)
+	out_f = open(outfile, "w")
+	if proto_type == "LearnedSites":
+		for site in sites.site:
+			out_f.write(site.name + "\n")
+			for pattern in site.pattern:
+				for item in pattern.item:
+					item_str = "%0.16x" % item.simhash
+					item_str_array = [item_str for i in range(item.count)]
+					out_f.write("\n".join(item_str_array) + "\n")
+		out_f.close()
+	elif proto_type == "ObservedSites":
+		for site in sites.site:
+			out_f.write(site.name + "\n")
+			for observation in site.observation:
+				simhash_str = "%0.16x" % getattr(observation, simhash_type)
+				out_f.write(simhash_str + "\n")
+		out_f.close()
+	else:
+		raise Exception("Wrong proto! Only LearnedSites and ObservedSites can be used!")
 
 def compute_list(crawl_log_list, outfile, prefix):
 	open(outfile, 'w').write("\n".join(crawl_log_list))
@@ -38,12 +69,13 @@ def append_prefix(inputfile_list, prefix):
 
 def main(argv):
 	has_function = False
-	help_msg = "data_util.py -f <function> [-p <prefix>][-p <prefix> -o <outfile>][-i <inputfile> -t <proto_type>][-o <outfile>][-i <site_list> -l <server_link> -o <outdir> -m <mode>], valid functions are append_prefix, compute_list, show_proto, intersect_sites, collect_observations"
+	help_msg = "data_util.py -f <function> [-p <prefix>][-p <prefix> -o <outfile>][-i <inputfile> -t <proto_type>][-o <outfile>][-i <site_list> -l <server_link> -o <outdir> -m <mode>][-i <inputfile> -o <outfile> -s <simhash_type> -p <proto_type>], valid functions are append_prefix, compute_list, show_proto, intersect_sites, collect_observations, plot_simhash"
 	try:
-		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:", ["function=", "prefix=", "outfile=", "type=", "ifile=", "mode=", "link="])
+		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:s:", ["function=", "prefix=", "outfile=", "proto_type=", "ifile=", "mode=", "link=", "simhash_type="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
+	outfile = None
 	for opt, arg in opts:
 		if opt == "-h":
 			print help_msg
@@ -57,12 +89,14 @@ def main(argv):
 			outfile = arg
 		elif opt in ("-i", "--ifile"):
 			inputfile = arg
-		elif opt in ("-t", "--type"):
+		elif opt in ("-t", "--proto_type"):
 			proto_type = arg
 		elif opt in ("-m", "--mode"):
 			mode = arg
 		elif opt in ("-l", "--link"):
 			link = arg
+		elif opt in ("-s", "--simhash_type"):
+			simhash_type = arg
 		else:
 			print help_msg
 			sys.exit(2)
@@ -89,6 +123,10 @@ def main(argv):
 		site_set = set(site_list)
 		outdir = outfile
 		collect_site_for_plot(site_set, outdir, mode)
+	elif function == "plot_simhash":
+		if not outfile:
+			outfile = inputfile + ".plot_cluster"
+		plot_simhash(inputfile, outfile, simhash_type, proto_type)
 	else:
 		print help_msg
 		sys.exit(2)
