@@ -12,12 +12,14 @@ Example Usage:
 	ls ../../data/abusive_words_9_category.selenium.crawl/*.cloaking | python data_util.py -f intersect_sites -o outfile
 
 	# visit site list periodically. In order to generate plots.
-	python data_util.py -f collect_observations -i site_list -o outdir -m user
+	python data_util.py -f collect_observations -i site_list -l server_link -o outdir -m user
 """
 
 import subprocess
 import sys, getopt
 import time
+# For REMOTE_DRIVER
+import util
 from learning_detection_util import _split_path_by_data, show_proto, sites_file_path_set, intersect_observed_sites, read_proto_from_file, write_proto_to_file
 from crawl_util import collect_site_for_plot
 from util import evaluation_form
@@ -36,9 +38,9 @@ def append_prefix(inputfile_list, prefix):
 
 def main(argv):
 	has_function = False
-	help_msg = "data_util.py -f <function> [-p <prefix>][-p <prefix> -o <outfile>][-i <inputfile> -t <proto_type>][-o <outfile>][-i <site_list> -o <outdir> -m <mode>], valid functions are append_prefix, compute_list, show_proto, intersect_sites, collect_observations"
+	help_msg = "data_util.py -f <function> [-p <prefix>][-p <prefix> -o <outfile>][-i <inputfile> -t <proto_type>][-o <outfile>][-i <site_list> -l <server_link> -o <outdir> -m <mode>], valid functions are append_prefix, compute_list, show_proto, intersect_sites, collect_observations"
 	try:
-		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:", ["function=", "prefix=", "outfile=", "type=", "ifile=", "mode="])
+		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:", ["function=", "prefix=", "outfile=", "type=", "ifile=", "mode=", "link="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
@@ -59,6 +61,8 @@ def main(argv):
 			proto_type = arg
 		elif opt in ("-m", "--mode"):
 			mode = arg
+		elif opt in ("-l", "--link"):
+			link = arg
 		else:
 			print help_msg
 			sys.exit(2)
@@ -79,6 +83,8 @@ def main(argv):
 		write_proto_to_file(result_sites, outfile)
 		evaluation_form(outfile, outfile + ".eval", "ObservedSites")
 	elif function == "collect_observations":
+		if link:
+			util.REMOTE_DRIVER = link
 		site_list = filter(bool, open(inputfile, 'r').read().split('\n'))
 		site_set = set(site_list)
 		outdir = outfile
