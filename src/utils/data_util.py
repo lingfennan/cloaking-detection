@@ -40,7 +40,10 @@ def plot_simhash(inputfile, outfile, simhash_type, proto_type):
 	out_f = open(outfile, "w")
 	if proto_type == "LearnedSites":
 		for site in sites.site:
-			out_f.write(site.name + "\n")
+			site_size = 0
+			for pattern in site.pattern:
+				site_size += pattern.size
+			out_f.write(site.name + "," + str(site_size) + "\n")
 			for pattern in site.pattern:
 				for item in pattern.item:
 					item_str = "%0.16x" % item.simhash
@@ -49,7 +52,7 @@ def plot_simhash(inputfile, outfile, simhash_type, proto_type):
 		out_f.close()
 	elif proto_type == "ObservedSites":
 		for site in sites.site:
-			out_f.write(site.name + "\n")
+			out_f.write(site.name + "," + str(len(site.observation)) + "\n")
 			for observation in site.observation:
 				simhash_str = "%0.16x" % getattr(observation, simhash_type)
 				out_f.write(simhash_str + "\n")
