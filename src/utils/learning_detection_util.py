@@ -61,6 +61,8 @@ def _strip_parameter(link):
 
 	Blank values are kept.
 	"""
+	# encode in ascii to avoid UnicodeEncodeError
+	link = link.encode('ascii')
 	link, frag = urldefrag(link)
 	parsed_link = urlparse(link)
 	query = parse_qs(parsed_link.query, keep_blank_values=True)

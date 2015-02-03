@@ -37,7 +37,10 @@ class CloakingDetection(object):
 			return False
 		for pattern in self.learned_sites_map[site_name]:
 			# dist = average_distance(pattern, ob_simhash), deprecated
-			dist = centroid_distance(pattern, ob_simhash)
+			try:
+				dist = centroid_distance(pattern, ob_simhash)
+			except:
+				raise Exception("You probably used ObservedSites as LearnedSites")
 			# less or equal, have equal because std may be zero.
 			# if dist <= pattern.mean + self.detection_config.std_constant * pattern.std:
 			thres = pattern.mean + self.detection_config.std_constant * pattern.std
