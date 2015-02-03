@@ -85,12 +85,17 @@ class WOT:
 
 def filt(domains = ['example.net','everlastinghelp.com','13xa.com', 'google.com', 'sina.com.cn'], bar_points = 66):
 	# define constants 
+	block_size = 10
 	bar_points = int(bar_points)
 	reputation = WOT()
 	#print reputation.process(domains)
-	result =  reputation.process(domains)
-	evaluationRes = reputation.evaluate(result, bar_points)
-	print evaluationRes
+	evaluationRes = []
+	domain_count = len(domains)
+	for i in range(0, domain_count, block_size):
+		sub_domains = domains[i:i+block_size] if i + block_size <= domain_count \
+				else domains[i:]
+		result =  reputation.process(sub_domains)
+		evaluationRes.extend(reputation.evaluate(result, bar_points))
 	return evaluationRes
 	
 if __name__ == "__main__":
