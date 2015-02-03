@@ -176,9 +176,9 @@ def main(argv):
 						"landing url!\n Do you want to continue?[Y/N]"
 				if not interact_query(out_str):
 					sys.exit(0)
-			# Whether to learn after compute
-			out_str = "Do you want to learn cluster after compute?[Y/N]"
-			compute_and_learn = interact_query(out_str)
+		# Whether to learn after compute
+		out_str = "Do you want to learn cluster after compute?[Y/N]"
+		compute_and_learn = interact_query(out_str)
 		compute(site_list_filenames, outputfile, simhash_type, is_google)
 		if compute_and_learn:
 			learn([outputfile + ".dom"], None)
