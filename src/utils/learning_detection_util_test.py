@@ -51,11 +51,11 @@ def test_check_equal():
 	assert_equal(check_equal(first_file, first_file), True)
 
 def test__split_path_by_data():
-	path = "../../data/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.dom.learned"
+	path = "../../data/abusive_words_9_category.computed/test.google.text.learned"
 	first = _split_path_by_data(path, 0)
 	second = _split_path_by_data(path, 1)
 	assert_equal(first, "../../")
-	assert_equal(second, "/US_web_search_list.Chrome.20141110-185317.selenium.crawl/crawl_log.dom.learned")
+	assert_equal(second, "/abusive_words_9_category.computed/test.google.text.learned")
 
 def test__strip_parameter():
 	link = "http://www.walmart.com/search/search-ng.do?search_query=Bicycles&adid=22222222220202379358&wmlspartner=wmtlabs&wl0=e&wl1=g&wl2=c&wl3=30633615476&wl4=&veh=sem"
