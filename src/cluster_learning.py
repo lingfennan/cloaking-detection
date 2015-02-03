@@ -129,7 +129,7 @@ def learn(observed_sites_filenames, outfile = None):
 
 def main(argv):
 	has_function = False
-	help_msg = 'cluster_learning.py -f <function> [-i <inputfile> -t <simhash_type> -o <outputfile> -g] [-i <inputfile> -o <outputfile>], valid functions are compute, learn'
+	help_msg = 'cluster_learning.py -f <function> [-i <inputfile> -t <simhash_type> -o <outputfile> -g] [-i <inputfile> -o <outputfile>] [-i <inputfile>], valid functions are compute, learn, compute_list'
 	outputfile = None
 	simhash_type = None
 	is_google = False
@@ -190,6 +190,29 @@ def main(argv):
 	elif function == 'learn':
 		observed_sites_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
 		learn(observed_sites_filenames, outputfile)
+	elif function == 'compute_list':
+		"""
+		Repeat function compute for a list files. Doing this, because simply aggregating
+		all the computed result into one proto is dangerous, which exceeds the file size limit.
+		@parameter
+		inputfile
+		"""
+		site_list_filenames_list = filter(bool, open(inputfile, 'r').read().split('\n'))
+		for filename in site_list_filenames_list:
+			print "Processing {0}".format(filename)
+			site_list_filenames = filter(bool, open(filename, 'r').read().split('\n'))
+			compute_and_learn = False
+			if 'google' in site_list_filenames[0].lower():
+				is_google = True
+				compute_and_learn = True
+			compute(site_list_filenames, filename, simhash_type, is_google)
+			if compute_and_learn:
+				learn([filename + ".dom"], None)
+				learned_file = filename + ".dom.learned"
+				evaluation_form(learned_file, learned_file + ".eval", "LearnedSites")
+				learn([filename + ".text"], None)
+				learned_file = filename + ".text.learned"
+				evaluation_form(learned_file, learned_file + ".eval", "LearnedSites")
 	else:
 		print help_msg
 		sys.exit(2)
