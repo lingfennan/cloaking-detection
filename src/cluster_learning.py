@@ -47,7 +47,14 @@ class ClusterLearning(object):
 			path_simhash_dict[p] = s
 		observed_sites.config.CopyFrom(simhash_config)
 		for site in observed_sites.site:
+			count = 0
 			for observation in site.observation:
+				if not observation.file_path in path_simhash_dict:
+					# If simhash computation of this observation failed,
+					# just ignore this one. Because we don't have sample
+					# and it is not marked as failure.
+					del site.observation[count]
+					continue
 				result = path_simhash_dict[observation.file_path]
 				if simhash_config.simhash_type in [CD.TEXT, CD.TEXT_DOM]:
 					observation.text_simhash = result[0][0].value
@@ -55,6 +62,7 @@ class ClusterLearning(object):
 				if simhash_config.simhash_type in [CD.DOM, CD.TEXT_DOM]:
 					observation.dom_simhash = result[-1][0].value
 					observation.dom_feature_count = result[-1][1]
+				count += 1
 		if not simhash_config.discard_failure:
 			observed_sites = add_failure(observed_sites, site_list_filenames)
 		return observed_sites

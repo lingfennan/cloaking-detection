@@ -740,6 +740,7 @@ def main(argv):
 		sys.exit(2)
 	# For merge_html
 	all_info = False
+	outputfile = None
 	for opt, arg in opts:
 		if opt == '-h':
 			print help_msg
@@ -793,6 +794,8 @@ def main(argv):
 		ad_list(report_list, outputfile, browser_type)
 	elif function == "evaluation_form":
 		print 'function is', function
+		if not outputfile:
+			outputfile = inputfile + ".eval"
 		evaluation_form(inputfile, outputfile, proto)
 	else:
 		print help_msg
