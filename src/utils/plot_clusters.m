@@ -52,8 +52,11 @@ while ~feof(fid)
     data = data * 20;
     h = figure('Name', label_md5);
     set(gcf, 'Visible', 'off');
-    image(data);
-    title(label_md5);
+    %im2bw(data);
+    %image(data);
+    %title(label_md5);
+    bm_to_bw(data);
+    title(label);
     xlabel('bits');
     ylabel('simhashs');
     
@@ -67,5 +70,22 @@ for n = 1:size(labels, 2)
 end
 fclose(label_md5_map_fid);
 end
+
+function bm_to_bw( mat )
+
+[r,c] = size(mat);                           %# Get the matrix size
+imagesc((1:c)+0.5,(1:r)+0.5, mat);            %# Plot the image
+colormap(gray);                              %# Use a gray colormap
+axis equal                                   %# Make axes grid sizes equal
+%{
+set(gca,'XTick',1:(c+1),'YTick',1:(r+1),...  %# Change some axes properties
+        'XLim',[1 c+1],'YLim',[1 r+1],...
+        'GridLineStyle','-','XGrid','on','YGrid','on');
+%}
+set(gca, 'XLim',[1 c+1],'YLim',[1 r+1], 'GridLineStyle','-', ...
+    'XGrid','on','YGrid','on');
+
+end
+
 
 

@@ -19,69 +19,107 @@ Example Usage:
 
 	# output the distance between simhashes from ObservedSites or LearnedSites for plotting and model
 	# checking purpose. Flag -a, --avg_dist is a switch to use average distance or not.
-	python data_util.py -f plot_sim_distance -i sites_file [-o outfile] -s DOM\TEXT -t LearnedSites\ObservedSites [-a]
+	python data_util.py -f plot_sim_distance -i sites_file [-o outfile] -s DOM\TEXT -t LearnedSites\ObservedSites [-a -d]
 """
 
+import math
 import subprocess
 import sys, getopt
 import time
 # For REMOTE_DRIVER
 import util
-from learning_detection_util import _split_path_by_data, show_proto, sites_file_path_set, intersect_observed_sites, read_proto_from_file, write_proto_to_file, aggregate_simhash 
+from learning_detection_util import _split_path_by_data, show_proto, sites_file_path_set, intersect_observed_sites, read_proto_from_file, write_proto_to_file, aggregate_simhash
+from learning_detection_util import hamming_distance
 from crawl_util import collect_site_for_plot
 from util import evaluation_form
 import proto.cloaking_detection_pb2 as CD
 
 
-def _get_simhash_type(simhash_type):
+def _get_simhash_type(simhash_type, return_proto=False):
 	if "text" in simhash_type.lower():
 		simhash_type = "text_simhash"
+		type_proto = CD.TEXT
 	elif "dom" in simhash_type.lower():
 		simhash_type = "dom_simhash"
+		type_proto = CD.DOM
 	else:
 		raise Exception("wrong type of simhash_type!")
-	return simhash_type
+	return simhash_type if not return_proto else type_proto
 
-def plot_sim_distance(inputfile, outfile, simhash_type, proto_type, avg_dist=False):
-	simhash_type = _get_simhash_type(simhash_type)
+def simhash_vector_distance(simhash_item_vector, avg_dist=True, dedup=False):
+	"""
+	Give simhash item vector (s1, c1), (s2, c2), (s3, c3), compute one of the following two
+	1. average distance list
+	[avg(s1 to rest) * c1, avg(s2 to rest) * c2, avg(s3 to rest) * c3]
+	2. distance list, this is actually problematic (TODO)
+	[(s1, s2) * c2, (s1, s3) * c3, (s2, s3) *c3]
+	"""
+	# compute the distance array
+	# the number of observations
+	total_size = 0
+	# the average distance list
+	avg_dist_list = list()
+	# the distance list
+	dist_list = list()
+	# the number of distinct simhashs
+	pattern_size = len(simhash_item_vector)
+	for item in simhash_item_vector:
+		total_size += item.count
+	if avg_dist:
+		if pattern_size == 1:
+			return [0]
+		for i in xrange(pattern_size):
+			dist_i = 0
+			for j in xrange(pattern_size):
+				# doesn't compute the distance to the pattern itself
+				if i == j:
+					continue
+				dist_i_j = hamming_distance(simhash_item_vector[i].simhash, \
+						simhash_item_vector[j].simhash)
+				if dedup:
+					dist_i += dist_i_j
+				else:
+					dist_i += simhash_item_vector[j].count * dist_i_j
+			if dedup:
+				avg_dist_list.append(float(dist_i) /
+					(pattern_size - 1))
+				continue
+			for j in xrange(simhash_item_vector[i].count):
+				avg_dist_list.append(float(dist_i) / (total_size - 1))
+		return avg_dist_list
+	else:	
+		print "This method is problematic when simhash count is more than 1. use with care!"
+		for i in range(pattern_size):
+			for j in range(i+1, pattern_size):
+				dist_i_j = hamming_distance(simhash_item_vector[i].simhash, \
+						simhash_item_vector[j].simhash)
+				for k in xrange(simhash_item_vector[j].count):
+					dist_list.append(dist_i_j)
+					if dedup:
+						break
+		return dist_list
+
+def plot_sim_distance(inputfile, outfile, simhash_type, proto_type,
+		avg_dist=True, dedup = False):
+	simhash_type = _get_simhash_type(simhash_type, True)
 	sites = getattr(CD, proto_type)()
 	read_proto_from_file(sites, inputfile)
 	out_f = open(outfile, "w")
-	if proto_type == "LearedSites":
-		raise Exception("LearnedSites not implemented yet!")
-	elif proto_type == "ObservedSite":
+	if proto_type == "LearnedSites":
+		for learned_site in sites.site:
+			out_f.write(learned_site.name + "," + str(len(learned_site.pattern)) + "\n")
+			for pattern in learned_site.pattern:
+				dist_list = simhash_vector_distance(pattern.item, avg_dist, dedup)
+				out_f.write("pattern\n" + "\n".join([str(d) for d in
+					dist_list]) + "\n")
+		out_f.close()
+	elif proto_type == "ObservedSites":
 		for observed_site in sites.site:
-			out_f.write(site.name + "," + str(len(site.observation)) + "\n")
-			# compute the distance array
-			# the number of observations
-			total_size = 0
-			# the average distance list
-			avg_dist_list = list()
-			# the distance list
-			dist_list = list()
+			out_f.write(observed_site.name + "," + str(len(observed_site.observation)) + "\n")
 			simhash_item_vector = aggregate_simhash(observed_site, simhash_type)
-			# the number of distinct simhashs
-			pattern_size = len(simhash_item_vector)
-			for item in simhash_item_vector:
-				total_size += item.count
-			 
-			for i in xrange(pattern_size):
-				dist_i = 0
-				for j in xrange(pattern_size):
-					# doesn't compute the distance to the pattern itself
-					if i == j:
-						continue
-					dist_i_j = hamming_distance(simhash_item_vector[i].simhash, \
-							simhash_item_vector[j].simhash)
-					dist_i += simhash_item_vector[j].count * dist_i_j
-					for k in xrange(simhash_item_vector[j].count):
-						dist_list.append(dist_i_j)
-				for j in xrange(simhash_item_vector[i].count):
-					avg_dist_list.append(dist_i / (total_size - 1))
-			if avg_dist:
-				out_f.write("\n".join([str(d) for d in avg_dist_list]) + "\n")
-			else:
-				out_f.write("\n".join([str(d) for d in dist_list]) + "\n")
+			dist_list = simhash_vector_distance(simhash_item_vector,
+					avg_dist, dedup)
+			out_f.write("\n".join([str(d) for d in dist_list]) + "\n")
 		out_f.close()
 	else:
 		raise Exception("Wrong proto! Only LearnedSites and ObservedSites can be used!")
@@ -125,14 +163,25 @@ def append_prefix(inputfile_list, prefix):
 
 def main(argv):
 	has_function = False
-	help_msg = "data_util.py -f <function> [-p <prefix>][-p <prefix> -o <outfile>][-i <inputfile> -t <proto_type>][-o <outfile>][-i <site_list> -l <server_link> -o <outdir> -m <mode>][-i <inputfile> -o <outfile> -s <simhash_type> -p <proto_type>][-i <inputfile> -o <outfile> -s <simhash_type> -p <proto_type> -a], valid functions are append_prefix, compute_list, show_proto, intersect_sites, collect_observations, plot_simhash, plot_sim_distance"
+	help_msg = """data_util.py -f <function> [-p <prefix>][-p <prefix> -o
+	<outfile>][-i <inputfile> -t <proto_type>][-o <outfile>][-i <site_list>
+	-l <server_link> -o <outdir> -m <mode>][-i <inputfile>-o <outfile> -s
+	<simhash_type> -t <proto_type>][-i <inputfile> -o <outfile> -s
+	<simhash_type> -t <proto_type> -a --dedup], valid functions are
+	append_prefix, compute_list, show_proto, intersect_sites,
+	collect_observations, plot_simhash, plot_sim_distance"""
 	try:
-		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:s:a", ["function=", "prefix=", "outfile=", "proto_type=", "ifile=", "mode=", "link=", "simhash_type=", "avg_dist"])
+		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:s:ad",
+				["function=", "prefix=", "outfile=",
+					"proto_type=", "ifile=", "mode=",
+					"link=", "simhash_type=", "avg_dist",
+					"dedup"])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
 	outfile = None
 	avg_dist = False
+	dedup = False
 	for opt, arg in opts:
 		if opt == "-h":
 			print help_msg
@@ -156,6 +205,8 @@ def main(argv):
 			simhash_type = arg
 		elif opt in ("-a", "--avg_dist"):
 			avg_dist = True
+		elif opt in ("-d", "--dedup"):
+			dedup = True
 		else:
 			print help_msg
 			sys.exit(2)
@@ -189,7 +240,8 @@ def main(argv):
 	elif function == "plot_sim_distance":
 		if not outfile:
 			outfile = inputfile + ".plot_sim_distance"
-		plto_sim_distance(inputfile, outfile, simhash_type, proto_type, avg_dist)
+		plot_sim_distance(inputfile, outfile, simhash_type, proto_type,
+				avg_dist, dedup)
 	else:
 		print help_msg
 		sys.exit(2)

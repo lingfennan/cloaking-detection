@@ -1,0 +1,52 @@
+===============================================================================================
+Notes from Ji Zhang
+
+	if it can be done within an existing generic framework, with minimum system to
+	build
+	it would be a lot easier
+	not sure if you paper will contain any of the system design aspect or not
+	or pure proto-type level discussion
+
+
+===============================================================================================
+Report detail:
+
+	word strategy is correct
+	labeling system
+	precision 50%
+	many graphs to plot and theoretical stuff to generate
+	paper draft / abstract
+	schedule a meeting with you
+
+
+===============================================================================================
+Discussion with Wenke
+
+think about this work:
+why do we need to collect information from user?
+	IP cloaking really hard? Buy IPs
+
+how effective is the method?
+	Compare with other methods
+
+how are we going to deploy? this have to be voluntery based.
+	User install extensions
+
+
+===============================================================================================
+Note
+
+Plot a graph for this:
+	user install this extension
+	opt in for cloaking detection aid
+		cloaking sites are pushed to browser and checked against at real time
+		if user find suspicious pages, he can submit this page.
+		periodically collect pages simhash from user side / reduce the
+		website to look at by whitelisting.
+
+	the key point is to perform the cloaking detection task well and in near
+	real-time.
+	
+Ask Simon, Long, Xinyu, Wei to help
+
+

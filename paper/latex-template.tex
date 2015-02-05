@@ -28,7 +28,7 @@
 \date{}
 
 %make title bold and 14 pt font (Latex default is non-bold, 16 pt)
-\title{\Large \bf Simhash-based Dynamic Cloaking Detection}
+\title{\Large \bf Simhash-based Website Model for Cloaking Detection}
 
 %for single author (just remove % characters)
 \author{
@@ -51,19 +51,44 @@ Second Institution
 
 
 \subsection*{Abstract}
-Your Abstract Text Goes Here.  Just a few facts.
-Whet our appetites.
+Cloaking, used by spammers for the purpose of increasing the visiting rates of
+their website, as well as to circumvent censorship, has been a challenging
+spamming technique to search engines. Recently, there is a rising trend of employing cloaking in advertisement spam ~\cite{li2012knowing}.  The motivation of cloaking is to hide the true nature of a website by delivering different semantic content users versus censors.
+Cloaking is popular due to low cost to setup and lack of efficient technique to detect.
+
+There are two major challenges in cloaking detection:(A) revealing the uncloaked content (B) differentiating cloaking from naturally dynamic changes of the same page. This work employs simhash-based ~\cite{charikar2002similarity} website modeling to detect cloaking. The key idea to address challenge (A) is to crowd-source data collection to user. However, collect such information directly violates user privacy. Simhash-based website model helps protect user privacy and address challenge (B).
+
+In order to show the effectiveness of simhash-based website model, we build a two phase system. Results have shown data set show that we can achieve more than 95\% True positive rate with 5\% false positive rate.
+
 
 \section{Introduction}
+
+Cloaking, used by spammers for the purpose of increasing the visiting rates of
+their website, as well as to circumvent censorship, has been a challenging
+spamming technique to search engines. Recently, there is a rising trend of employing cloaking in advertisement spam \cite{li2012knowing}.  The motivation of cloaking is to hide the true nature of a website by delivering different semantic content users versus censors.
+
+Spammers use user agent, referer, IP etc based cloaking techniques to differentiate censors and normal users.
+
+Cloaking is popular due to the low cost to setup and lack of efficient technique to detect. Spammers use user agent, referer, IP etc based cloaking techniques to differentiate censors and normal users.
+
+There are two major challenges in cloaking detection (A) revealing the uncloaked content (B) differentiating cloaking from naturally dynamic changes of the same page. Existing approaches pretend to be the user, e.g. use proxies, set referer, to reveal the uncloaked content, but spammers could detect and block them. An intuitive way is to collect data from user directly. However, it is hard to collect sufficient data for comparison while protecting user privacy.
+
+
+The workflow is to collect page contents simhash on the user side, and compare them to simhash of the same link from ad serving company to find cloaking. When the differences of the simhashes are significantly large, the page is marked cloaking. We generate two simhash for page content and structure respectively. Intuition behind this is, simhash difference between different sites are larger than different visits of the same site. We build a two-phase system to detect cloaking: cluster learning phase, and cloaking detection phase. In the cluster learning phase, an ad company visit urls and generate simhash from its content with its owned IP, and learn pattern and distribution of the simhashes, i.e. simhash-based website model. In the cloaking detection phase, the ad company collects simhash from its users. Compare them with learned patterns, return cloaking score or mismatch. Results on have shown data set show that we can achieve more than 95\% True positive rate with 5\% false positive rate for page content simhash and 100\% true positive rate with 2\% false positive rate for structure simhash. If we define cloaking as mismatch in both page content simhash and structure simhash (intersection of mismatches in both case), we can achieve more than 99\% true positive rate with 1\% false positive rate.
+
 
 A paragraph of text goes here.  Lots of text.  Plenty of interesting
 text. \\
 
 More fascinating text. Features\endnote{Remember to use endnotes, not footnotes!} galore, plethora of promises.\\
 
-\section{This is Another Section}
+\section{Related Work}
+Talk about simhash related work here.
 
-Some embedded literal typset code might 
+Talk about cloaking detection related work here.
+
+
+Some embedded literal typeset code might 
 look like the following :
 
 {\tt \small
@@ -91,8 +116,8 @@ in the source means a non-breaking space.  This way, your reference will
 always be attached to the word that preceded it, instead of going to the
 next line.
 
-\section{This Section has SubSections}
-\subsection{First SubSection}
+\section{Simhash-based Web Model}
+\subsection{Computation}
 
 Here's a typical figure reference.  The figure is centered at the
 top of the column.  It's scaled.  It's explicitly placed.  You'll
@@ -111,7 +136,7 @@ have to tweak the numbers to get what you want.\\
 This text came after the figure, so we'll casually refer to Figure 1
 as we go on our merry way.
 
-\subsection{New Subsection}
+\subsection{Aggregating / Clustering}
 
 It can get tricky typesetting Tcl and C code in LaTeX because they share
 a lot of mystical feelings about certain magic characters.  You
@@ -154,7 +179,16 @@ the number of objects read.
 \end{itemize}
 This concludes the definitions tag.
 
-\subsection{How to Build Your Paper}
+\subsection{Model Selection}
+In the simhash based cloaking detection model, input from the user is simply simhash. How to compare against the simhashs that is already collected?
+
+One simple way is to compute the average distance from this simhash to all the observed simhashs. The next step is then to tell whether this distance is reasonable. 
+
+The text distribution follows lognormal distribution.
+After mannual check of those results.
+
+
+
 
 You have to run {\tt latex} once to prepare your references for
 munging.  Then run {\tt bibtex} to build your bibliography metadata.
@@ -204,8 +238,8 @@ We've preserved some real ones in addition to the template-speak.
 After the bibliography you are DONE.
 
 {\footnotesize \bibliographystyle{acm}
-\bibliography{../common/bibliography}}
-
+%\bibliography{../common/bibliography}}
+\bibliography{ruian}}
 
 \theendnotes
 
