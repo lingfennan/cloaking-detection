@@ -18,7 +18,9 @@ Example Usage:
 	python data_util.py -f plot_simhash -i sites_file [-o outfile] -s DOM\TEXT -t LearnedSites\ObservedSites
 
 	# output the distance between simhashes from ObservedSites or LearnedSites for plotting and model
-	# checking purpose. Flag -a, --avg_dist is a switch to use average distance or not.
+	# checking purpose. Flag -a, --avg_dist is a switch to use average
+	# distance or not. Flag -d, --dup is a switch to include duplicate or
+	# not.
 	python data_util.py -f plot_sim_distance -i sites_file [-o outfile] -s DOM\TEXT -t LearnedSites\ObservedSites [-a -d]
 """
 
@@ -46,7 +48,7 @@ def _get_simhash_type(simhash_type, return_proto=False):
 		raise Exception("wrong type of simhash_type!")
 	return simhash_type if not return_proto else type_proto
 
-def simhash_vector_distance(simhash_item_vector, avg_dist=True, dedup=False):
+def simhash_vector_distance(simhash_item_vector, avg_dist=True, dup=False):
 	"""
 	Give simhash item vector (s1, c1), (s2, c2), (s3, c3), compute one of the following two
 	1. average distance list
@@ -76,11 +78,11 @@ def simhash_vector_distance(simhash_item_vector, avg_dist=True, dedup=False):
 					continue
 				dist_i_j = hamming_distance(simhash_item_vector[i].simhash, \
 						simhash_item_vector[j].simhash)
-				if dedup:
+				if not dup:
 					dist_i += dist_i_j
 				else:
 					dist_i += simhash_item_vector[j].count * dist_i_j
-			if dedup:
+			if not dup:
 				avg_dist_list.append(float(dist_i) /
 					(pattern_size - 1))
 				continue
@@ -95,12 +97,12 @@ def simhash_vector_distance(simhash_item_vector, avg_dist=True, dedup=False):
 						simhash_item_vector[j].simhash)
 				for k in xrange(simhash_item_vector[j].count):
 					dist_list.append(dist_i_j)
-					if dedup:
+					if not dup:
 						break
 		return dist_list
 
 def plot_sim_distance(inputfile, outfile, simhash_type, proto_type,
-		avg_dist=True, dedup = False):
+		avg_dist=True, dup = False):
 	simhash_type = _get_simhash_type(simhash_type, True)
 	sites = getattr(CD, proto_type)()
 	read_proto_from_file(sites, inputfile)
@@ -109,7 +111,8 @@ def plot_sim_distance(inputfile, outfile, simhash_type, proto_type,
 		for learned_site in sites.site:
 			out_f.write(learned_site.name + "," + str(len(learned_site.pattern)) + "\n")
 			for pattern in learned_site.pattern:
-				dist_list = simhash_vector_distance(pattern.item, avg_dist, dedup)
+				dist_list = simhash_vector_distance(pattern.item,
+						avg_dist, dup)
 				out_f.write("pattern\n" + "\n".join([str(d) for d in
 					dist_list]) + "\n")
 		out_f.close()
@@ -118,7 +121,7 @@ def plot_sim_distance(inputfile, outfile, simhash_type, proto_type,
 			out_f.write(observed_site.name + "," + str(len(observed_site.observation)) + "\n")
 			simhash_item_vector = aggregate_simhash(observed_site, simhash_type)
 			dist_list = simhash_vector_distance(simhash_item_vector,
-					avg_dist, dedup)
+					avg_dist, dup)
 			out_f.write("\n".join([str(d) for d in dist_list]) + "\n")
 		out_f.close()
 	else:
@@ -167,7 +170,7 @@ def main(argv):
 	<outfile>][-i <inputfile> -t <proto_type>][-o <outfile>][-i <site_list>
 	-l <server_link> -o <outdir> -m <mode>][-i <inputfile>-o <outfile> -s
 	<simhash_type> -t <proto_type>][-i <inputfile> -o <outfile> -s
-	<simhash_type> -t <proto_type> -a --dedup], valid functions are
+	<simhash_type> -t <proto_type> -a --dup], valid functions are
 	append_prefix, compute_list, show_proto, intersect_sites,
 	collect_observations, plot_simhash, plot_sim_distance"""
 	try:
@@ -175,13 +178,13 @@ def main(argv):
 				["function=", "prefix=", "outfile=",
 					"proto_type=", "ifile=", "mode=",
 					"link=", "simhash_type=", "avg_dist",
-					"dedup"])
+					"dup"])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
 	outfile = None
 	avg_dist = False
-	dedup = False
+	dup = False
 	for opt, arg in opts:
 		if opt == "-h":
 			print help_msg
@@ -205,8 +208,8 @@ def main(argv):
 			simhash_type = arg
 		elif opt in ("-a", "--avg_dist"):
 			avg_dist = True
-		elif opt in ("-d", "--dedup"):
-			dedup = True
+		elif opt in ("-d", "--dup"):
+			dup = True
 		else:
 			print help_msg
 			sys.exit(2)
@@ -241,7 +244,7 @@ def main(argv):
 		if not outfile:
 			outfile = inputfile + ".plot_sim_distance"
 		plot_sim_distance(inputfile, outfile, simhash_type, proto_type,
-				avg_dist, dedup)
+				avg_dist, dup)
 	else:
 		print help_msg
 		sys.exit(2)

@@ -1,0 +1,129 @@
+\renewcommand{\ttdefault}{pxtt}
+
+\newcommand{\URL}{\url}
+\newcommand{\cc}[1]{\mbox{\smaller[0.5]\texttt{#1}}}
+
+%\clubpenalty=10000
+%\widowpenalty=10000
+
+%\linespread{1.2}
+
+\fvset{fontsize=\scriptsize,xleftmargin=8pt,numbers=left,numbersep=5pt}
+
+\input{code/fmt}
+\newcommand{\figrule}{\hrule width \hsize height .33pt}
+\newcommand{\coderule}{\vspace{-0.4em}\figrule}
+
+\setlength{\abovedisplayskip}{0pt}
+\setlength{\abovedisplayshortskip}{0pt}
+\setlength{\belowdisplayskip}{0pt}
+\setlength{\belowdisplayshortskip}{0pt}
+\setlength{\jot}{0pt}
+
+\def\Snospace~{\S{}}
+\renewcommand*\sectionautorefname{\Snospace}
+\def\sectionautorefname{\Snospace}
+\def\subsectionautorefname{\Snospace}
+\def\subsubsectionautorefname{\Snospace}
+\def\chapterautorefname{\Snospace}
+%\renewcommand{\figurename}{Fig.}
+%\def\figureautorefname{\figurename}
+\newcommand{\subfigureautorefname}{\figureautorefname}
+
+%\numberwithin{equation}{section}
+\newcommand{\yes}{Y}
+\newcommand{\no}{}
+
+% sema
+\newcommand{\shl}{\ \cc{<}\cc{<}\ }
+\newcommand{\shr}{\ \cc{>}\cc{>}\ }
+
+\if 0
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.9}
+\renewcommand{\dblfloatpagefraction}{0.9}
+\setcounter{topnumber}{10}
+\setcounter{bottomnumber}{10}
+\setcounter{totalnumber}{10}
+\setcounter{dbltopnumber}{10}
+\fi
+
+\newif\ifdraft\drafttrue
+\newif\ifnotes\notestrue
+\ifdraft\else\notesfalse\fi
+
+% ref. http://en.wikibooks.org/wiki/LaTeX/Colors
+\newcommand{\TK}[1]{\textcolor{LimeGreen}{TK: #1}}
+\newcommand{\BL}[1]{\textcolor{LimeGreen}{BL: #1}}
+\newcommand{\CS}[1]{\textcolor{LimeGreen}{CS: #1}}
+\newcommand{\YJ}[1]{\textcolor{LimeGreen}{YJ: #1}}
+\newcommand{\KLU}[1]{\textcolor{LimeGreen}{KLU: #1}}
+\newcommand{\XXX}[1]{\textcolor{red}{XXX: #1}}
+\newcommand{\TODO}[1]{\textcolor{Melon}{TODO: #1}}
+
+% hide comments
+% \renewcommand{\TK}[1]{\ignorespaces}
+% \renewcommand{\XXX}[1]{\ignorespaces}
+% \renewcommand{\TODO}[1]{\ignorespaces}
+
+%% Ensure ligatures (e.g., ``fine official flag'') can be copy/pasted from PDF.
+\input{glyphtounicode}
+\pdfgentounicode=1
+
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+
+% include macros
+\newcommand{\includepdf}[1]{
+  \includegraphics[width=\columnwidth]{#1}
+}
+\newcommand{\includeplot}[1]{
+  \resizebox{\columnwidth}{!}{\input{#1}}
+}
+
+% list
+\newcommand{\squishlist}{
+\begin{itemize}[noitemsep,nolistsep]
+  \setlength{\itemsep}{-0pt}
+}
+\newcommand{\squishend}{
+  \end{itemize}
+}
+
+\usepackage{float}
+\floatstyle{plain}
+\restylefloat{algorithm}
+
+\newfloat{table}{thp}{lop}
+\floatname{table}{\bf Table}
+\def\tableautorefname{Table}
+
+\newfloat{example}{thp}{lop}
+\floatname{example}{\bf Example}
+\def\exampleautorefname{Example}
+\floatname{algorithm}{\bf Algorithm}
+
+\newfloat{figure}{thp}{lop}
+\floatname{figure}{\bf Figure}
+\def\figureautorefname{Figure}
+
+\newfloat{appendix}{}{lop}
+\floatname{appendix}{\bf Appendix}
+\def\appendixautorefname{Appendix}
+
+\newcommand{\PP}[1]{
+\noindent{\bf #1}
+}
+
+%%
+%% NOTE.
+%%  to use circled number in caption, use
+%%   (e.g., \protect\C{1})
+%%
+\usepackage{tikz}
+\newcommand*\C[1]{%
+\begin{tikzpicture}[baseline=(C.base)]
+\node[draw,circle,inner sep=0.3pt](C) {#1};
+\end{tikzpicture}}

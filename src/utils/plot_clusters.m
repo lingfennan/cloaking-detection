@@ -33,6 +33,12 @@ while ~feof(fid)
     label = char(C(1));
     label_md5 = DataHash(uint8(label), md5_opt);
     label_md5_map(label) = label_md5;
+    % string manipulation
+    label = strsplit(label, '//');
+    label = char(label(2));
+    if label(end) == '/'
+        label = label(1:end-1);
+    end
 
     count = str2num(char(C(2)));
     data = zeros(count, SIMHASH_SIZE);
@@ -60,7 +66,7 @@ while ~feof(fid)
     xlabel('bits');
     ylabel('simhashs');
     
-    out_filename = strcat(in_filename, '_', label_md5, '.png');
+    out_filename = strcat(in_filename, '_', label_md5, '.svg');
     saveas(h, fullfile(out_dir, out_filename));
 end
 labels = keys(label_md5_map);
