@@ -71,6 +71,23 @@ in HTML.  You don't need a surrounding list macro pair.
 This concludes the definitions tag.
 
 \subsection{Model Selection}
+
+
+\begin{table*}[!th]                                                     
+  \centering                                                            
+  \scriptsize                                                           
+  \input{fig/para-select}                                     
+  \caption{Model statistics for selected websites}
+  \label{tbl:para-select}                                         
+\end{table*}                                                            
+
+
+This table ~\autoref{tbl:para-select} shows the Anderson-Darling (AD) value and P-value for each model.
+A common rule used in model selection is pick the model which has the smallest
+value with P-value greater than 5\%. Each row in the table represents one
+website. From the statistics of these websites, we choose normal distribution
+for text simhash and Lognomal distribution for dom simhash.
+
 In the simhash based cloaking detection model, input from the user is simply simhash. How to compare against the simhashs that is already collected?
 
 One simple way is to compute the average distance from this simhash to all the observed simhashs. The next step is then to tell whether this distance is reasonable. 

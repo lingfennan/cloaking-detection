@@ -164,6 +164,8 @@ message ClusterConfig {
   optional int32 minimum_cluster_size = 2 [default = 2];
   optional int32 maximum_threads = 3 [default = 10];
   optional SimhashType simhash_type = 4 [default = TEXT];
+  // Whether to use the simhash count in the cluster algorithm
+  optional bool use_simhash_count = 5 [default = true];
 }
 
 // Configuration for cloaking detection
