@@ -1,14 +1,28 @@
 \section{Related Work}
 \label{s:related-work}
 
+Search Enginee Optimization (SEO) is encouraged by Seach Enginee companies like Google to improve the indexing and searching accuracy. SEO technology being used should follow the Google Policy. However, because imfluencing the search results has huge commerical incentives, some hackers designed Black Hat SEO which violate Google's policy. Cloaking is a representative of Black Hat SEO. Websites feed different information between Google and Users. In our study, we found that cloaking not only exists in SEO field but also Search Engiee Marketing (SEM). SEM is a term that exclusively to mean pay per click advertising, particularly in the commercial advertising and markerting communities which have a vested interest in thisnarrow defination. Advertisers pay Google to advertise one kind of advertisements. By cloaking, advertisers actually cheat Google and provide different kinds of advertisements, even maladvertising~\cite{Li:2012:KYE:2382196.2382267} and malicious attacks. 
 
 \subsection{Cloaking Example}
-This is an example of cloaking. Search engine cloaking. Show viagra.
-Advertisement cloaking. Show essay writing.
+As an example of cloaking in SEM, enter the term "essay writing" on Google on Feb 6, 2015 returned a set of search results and advertisements related to essay writing. (The appendix includes screenshots of this example.) For the second advertisement result in right side, the bold line circle the webstie (everlastinghelp.com) that is sending google 
 
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=.5\textwidth]{fig/three-parties}
+	\label{fig:sem-model}
+	\caption{Three-paries relationships in SEM}
+\end{figure}
 
 \subsection{Cloaking Detection}
 Talk about cloaking detection related work here.
+According to ~\cite{wang2011cloak}, they used the precision rate to measure the cloaking distribution on the search enginee hot terms. However, precision is highly depends on TRP and FPR. Using the precision to measure the distribution is fundamentally wrong method to do that. One of the right ways is using the TPR and FPR to measure the distribution. Another mistake they made is using constant numbers to measure time-based data without doing cross-validation. One way to do that is using the cross-validation or time-based adaptive parameter to solve this problem. 
+
+Tree party relationships in SEM field. 
+To better understanding the advantages of our crowdsourcing model, we briefly introduce the relationships in Search Enginee Markering (SEM). 
+
+Traditional cloaking detection model only targets SEO field, our simhash based cloaking detection method could work both on SEO and SEM field. The main difference between the SEM and SEO is that every link in SEM is "pay per click". This indicates that  traiditional crawler will increase the advertisers payments by clicking the search result links and collecting data. If the cralwers first collect the landing page of the search result links then visit urls to collect data. The crawlers won't find the referal cloaking accoding to defination of referal cloaking. However, in our crowdsoucing model, the data we collected is from real users' clicks. Advertisers wouldn't pay extra money because of data collection. 
+Model based on crowdsourcing could preserve the three party relationships between Users, Search Enginee Providers and Advertisers.
 
 
 
