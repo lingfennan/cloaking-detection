@@ -4,6 +4,7 @@ References:
 	api: http://api.mywot.com/0.4/public_link_json2?hosts=example.COM/www.EXAMPLE.NET/&
 	callback=process&key=<your API key>
 	key: 2527e6e5cca9451a605eea8171b5c89314c74a7a 
+	key: 494d0f03189d934b337198ea397a25e11161c9da
 """
 import json
 import sys
@@ -11,7 +12,8 @@ import urllib2
 
 class WOT:
 	def __init__(self):
-		api_key = '2527e6e5cca9451a605eea8171b5c89314c74a7a'
+		# api_key = '2527e6e5cca9451a605eea8171b5c89314c74a7a'
+		api_key = '494d0f03189d934b337198ea397a25e11161c9da'
 		self.params = dict()
 		self.params['key'] = api_key
 		#self.params['callback']='process'
@@ -65,11 +67,8 @@ class WOT:
 					result[keysTier1] = pointsList
 
 		bad_domain = list(set(examples) - set(good_domain));	
-		return bad_domain
+		return bad_domain, result
 						
-					
-		
-
 
 	def process(self, domains):
 		# prepare the api request URL
@@ -95,8 +94,28 @@ def filt(domains = ['example.net','everlastinghelp.com','13xa.com', 'google.com'
 		sub_domains = domains[i:i+block_size] if i + block_size <= domain_count \
 				else domains[i:]
 		result =  reputation.process(sub_domains)
-		evaluationRes.extend(reputation.evaluate(result, bar_points))
+		evaluationRes.extend(reputation.evaluate(result, bar_points)[0])
 	return evaluationRes
+
+def domain_scores(domains, outfile):
+	block_size = 10
+	bar_points = 85
+	reputation = WOT()
+	domain_count = len(domains)
+	for i in range(0, domain_count, block_size):
+		evaluationRes = []
+		sub_domains = domains[i:i+block_size] if i + block_size <= domain_count \
+				else domains[i:]
+		result =  reputation.process(sub_domains)
+		result_dict = reputation.evaluate(result, bar_points)[1]
+		for key, value in result_dict:
+			temp_list = list()
+			temp_list.append(key)
+			temp_list.extend(value)
+			evaluationRes.append(temp_list)
+		outf = open(outfile, 'a')
+		for domain_score in evaluationRes:
+			outf.write(",".join(domain_score))
 	
 if __name__ == "__main__":
 	# print urllib2.urlopen('http://api.mywot.com/0.4/public_link_json?hosts=google.com/').read()
