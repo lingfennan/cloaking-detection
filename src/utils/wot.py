@@ -62,9 +62,9 @@ class WOT:
 				pointsList = []
 				pointsList.extend([negativePoints, questionablePoints, neutralPoints, positivePoints])
 				
+				result[keysTier1] = pointsList
 				if positivePoints > bar_points:
 					good_domain.append(keysTier1)
-					result[keysTier1] = pointsList
 
 		bad_domain = list(set(examples) - set(good_domain));	
 		return bad_domain, result
@@ -108,14 +108,14 @@ def domain_scores(domains, outfile):
 				else domains[i:]
 		result =  reputation.process(sub_domains)
 		result_dict = reputation.evaluate(result, bar_points)[1]
-		for key, value in result_dict:
+		for key in result_dict:
 			temp_list = list()
 			temp_list.append(key)
-			temp_list.extend(value)
+			temp_list.extend(result_dict[key])
 			evaluationRes.append(temp_list)
 		outf = open(outfile, 'a')
 		for domain_score in evaluationRes:
-			outf.write(",".join(domain_score))
+			outf.write(",".join([str(ele) for ele in domain_score]) + '\n')
 	
 if __name__ == "__main__":
 	# print urllib2.urlopen('http://api.mywot.com/0.4/public_link_json?hosts=google.com/').read()
