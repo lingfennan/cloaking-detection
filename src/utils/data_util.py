@@ -22,27 +22,184 @@ Example Usage:
 	# not.
 	python data_util.py -f plot_sim_distance -i sites_file [-o outfile] -s DOM\TEXT -t LearnedSites\ObservedSites [-a]
 
-	# get_domains
+	# get_domains, this is used to generate a domain list for get domain
+	# scores to use
 	ls ../../data/all.computed/* | python data_util.py -f get_domains -o ../../data/all.computed/all_domains
 
 	# get_domain_scores
 	python data_util.py -f get_domain_scores -i ../../data/all.computed/all_domains -o ../../data/all.computed/all_domains.score
+
+	# remove duplicate websites, ad/search.user.list is the input
+	# This funciton will fetch dom and text observed sites for each item in list, compare
+	# with dom and text observed sites by Google, if there is exact
+	# duplicate, then remove.
+	# 
+	# Remove failures now. remove the crawl failure ones.
+	python data_util.py -f dedup -i computed_crawl_list
+
+	# filter observed sites
+	python data_util.py -f domain_filter -i ../../data/all.computed/filter_list
 """
 
 import math
+import os
+import random
 import subprocess
 import sys, getopt
 import time
 # For REMOTE_DRIVER
 import util
 from learning_detection_util import _split_path_by_data, show_proto, sites_file_path_set, intersect_observed_sites, read_proto_from_file, write_proto_to_file, aggregate_simhash
-from learning_detection_util import hamming_distance
+from learning_detection_util import hamming_distance, merge_observed_sites, valid_instance
 from crawl_util import collect_site_for_plot
-from util import evaluation_form
-from url_filter import get_domain
+from util import evaluation_form, top_domain
+from url_filter import get_bad
 from wot import domain_scores
 import proto.cloaking_detection_pb2 as CD
 
+
+def load_split_observed_sites(filename):
+	if not os.path.exists(filename):
+		count = 0
+		split_files = list()
+		while True:
+			split_file = filename.replace('list', 'list_' +
+					str(count))
+			if not os.path.exists(split_file):
+				break
+			split_files.append(split_file)
+			count += 1
+		observed_sites = merge_observed_sites(split_files)
+	else:
+		observed_sites = CD.ObservedSites()
+		read_proto_from_file(observed_sites, filename)
+	return observed_sites
+
+def build_site_simhash_dict(observed_sites):
+	"""
+	Return two dict, one maps site name to all the simhashs,
+	the other maps site name to observed site
+	"""
+	valid_instance(observed_sites, CD.ObservedSites)
+	site_simhash_dict = dict()
+	observed_sites_dict = dict()
+	if observed_sites.config.simhash_type == CD.TEXT:
+		attr_name = 'text_simhash'
+	elif observed_sites.config.simhash_type == CD.DOM:
+		attr_name = 'dom_simhash'
+	else:
+		raise Exception("TEXT_DOM simhash are not supported by now! \
+				Use either TEXT or DOM")
+	for observed_site in observed_sites.site:
+		if not observed_site.name in site_simhash_dict:
+			site_simhash_dict[observed_site.name] = set()
+			observed_sites_dict[observed_site.name] = observed_site
+		for observation in observed_site.observation:
+			site_simhash_dict[observed_site.name].add(getattr(observation,
+				attr_name))
+	return site_simhash_dict, observed_sites_dict
+
+def _add_observed_site(to_observed_sites, observed_sites_dict, site_name):
+	"""
+	Performs in place operation
+	"""
+	observed_site = to_observed_sites.site.add()
+	observed_site.CopyFrom(observed_sites_dict[site_name])
+
+def dedup(text_file):
+	"""
+	1. dom_file, google_text_file, google_dom_file are deducted from text_file
+	2. google files can be split. we first check whether unsplit exisits, if
+	not we merge all the split ones.
+	3. The observed sites are output to correponding filename + '.dedup'
+
+	@parameter
+	text_file: text observed sites file
+	@return
+	number of websites after deduplicate
+	"""
+	dom_file = text_file.replace('text', 'dom')
+	user_text_observed_sites = CD.ObservedSites()
+	read_proto_from_file(user_text_observed_sites, text_file)
+	print "before dedup: {0}".format(len(user_text_observed_sites.site))
+	user_dom_observed_sites = CD.ObservedSites()
+	read_proto_from_file(user_dom_observed_sites, dom_file)
+	google_text_file = text_file.replace('user', 'google')
+	google_text_observed_sites = load_split_observed_sites(google_text_file)
+	google_dom_file = dom_file.replace('user', 'google')
+	google_dom_observed_sites = load_split_observed_sites(google_dom_file)
+
+	user_text_dict, user_text_sites_dict = build_site_simhash_dict(user_text_observed_sites)
+	user_dom_dict, user_dom_sites_dict = build_site_simhash_dict(user_dom_observed_sites)
+	google_text_dict, google_text_sites_dict = build_site_simhash_dict(google_text_observed_sites)
+	google_dom_dict, google_dom_sites_dict = build_site_simhash_dict(google_dom_observed_sites)
+
+	# how to define exact match
+	user_text_remained = CD.ObservedSites()
+	user_dom_remained = CD.ObservedSites()
+	google_text_remained = CD.ObservedSites()
+	google_dom_remained = CD.ObservedSites()
+	for site_name in user_text_dict:
+		if ((not site_name in google_text_dict) or
+				(not site_name in google_dom_dict)):
+			continue
+		text_common = user_text_dict[site_name] & google_text_dict[site_name] 
+		dom_common = user_dom_dict[site_name] & google_dom_dict[site_name]
+		if (text_common == user_text_dict[site_name] and 
+				dom_common == user_dom_dict[site_name]):
+			_add_observed_site(user_text_remained, user_text_sites_dict, site_name)
+			_add_observed_site(user_dom_remained, user_dom_sites_dict, site_name)
+			_add_observed_site(google_text_remained, google_text_sites_dict, site_name)
+			_add_observed_site(google_dom_remained, google_dom_sites_dict, site_name)
+
+	user_text_remained.config.CopyFrom(user_text_observed_sites.config)
+	user_dom_remained.config.CopyFrom(user_dom_observed_sites.config)
+	google_text_remained.config.CopyFrom(google_text_observed_sites.config)
+	google_dom_remained.config.CopyFrom(google_dom_observed_sites.config)
+	write_proto_to_file(user_text_remained, text_file + ".dedup")
+	write_proto_to_file(user_dom_remained, dom_file + ".dedup")
+	write_proto_to_file(google_text_remained, google_text_file + ".dedup")
+	write_proto_to_file(google_dom_remained, google_dom_file + ".dedup")
+	print "after dedup: {0}".format(len(user_text_remained.site))
+	return len(user_text_remained.site)
+
+def sample(text_filenames, dom_filenames, outfile, sample_size):
+	observed_sites = merge_observed_sites(text_filenames)
+	observed_site_list = list()
+	url_set = set()
+	for observed_site in observed_sites.site:
+		observed_site_list.append(observed_site)
+		for observation in observed_site.observation:
+			url_set.add(observation.landing_url)
+	print "there are {0} urls".format(len(url_set))
+	print "there are {0} observed sites".format(len(observed_site_list))
+	random.shuffle(observed_site_list)
+	# test_size is number of sites, actual observation should be more than this.
+	sample_sites = CD.ObservedSites()
+	sample_sites.config.CopyFrom(observed_sites.config)
+	sample_list = observed_site_list[0:sample_size]
+	original_label_list = [observed_site.name for observed_site in sample_list]
+	for observed_site in sample_list:
+		sample_site = sample_sites.site.add()
+		sample_site.CopyFrom(observed_site)
+	sample_filename = outfile + ".sample.text"
+	write_proto_to_file(sample_sites, sample_filename)
+
+	# select for dom simhash now
+	observed_sites = merge_observed_sites(dom_filenames)
+	observed_sites_map = dict()
+	for observed_site in observed_sites.site:
+		observed_sites_map[observed_site.name] = observed_site
+	sample_sites = CD.ObservedSites()
+	sample_sites.config.CopyFrom(observed_sites.config)
+	sample_list = list()
+	for label in original_label_list:
+		sample_list.append(observed_sites_map[label])
+	for observed_site in sample_list:
+		sample_site = sample_sites.site.add()
+		sample_site.CopyFrom(observed_site)
+	sample_filename = outfile + ".sample.dom"
+	write_proto_to_file(sample_sites, sample_filename)
 
 def get_domains(observed_sites_list, outfile):
 	domain_set = set()
@@ -51,7 +208,7 @@ def get_domains(observed_sites_list, outfile):
 		read_proto_from_file(observed_sites, filename)
 		for site in observed_sites.site:
 			for observation in site.observation:
-				url_domain = get_domain(observation.landing_url)
+				url_domain = top_domain(observation.landing_url)
 				domain_set.add(url_domain)
 	open(outfile, 'w').write("\n".join(domain_set))
 
@@ -174,15 +331,16 @@ def main(argv):
 	-l <server_link> -o <outdir> -m <mode>][-i <inputfile>-o <outfile> -s
 	<simhash_type> -t <proto_type>][-i <inputfile> -o <outfile> -s
 	<simhash_type> -t <proto_type> -a] [-o <outfile>] [-i <inputfile> -o
-	<outfile>] , valid functions are
+	<outfile>] [-i <inputfile>] [-i <inputfile> -c <count>], valid functions are
 	append_prefix, compute_list, show_proto, intersect_sites,
 	collect_observations, plot_simhash, plot_sim_distance, get_domains,
-	get_domain_scores"""
+	get_domain_scores, domain_filter, sample"""
 	try:
-		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:s:ad",
+		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:s:ac:",
 				["function=", "prefix=", "outfile=",
 					"proto_type=", "ifile=", "mode=",
-					"link=", "simhash_type=", "avg_dist"])
+					"link=", "simhash_type=", "avg_dist",
+					"count"])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
@@ -211,6 +369,8 @@ def main(argv):
 			simhash_type = arg
 		elif opt in ("-a", "--avg_dist"):
 			avg_dist = True
+		elif opt in ("-c", "--count"):
+			count = arg
 		else:
 			print help_msg
 			sys.exit(2)
@@ -252,6 +412,19 @@ def main(argv):
 	elif function == "get_domain_scores":
 		domains = filter(bool, open(inputfile, 'r').read().split('\n'))
 		result = domain_scores(domains, outfile)
+	elif function == "domain_filter":
+		bar_points = 80
+		observed_sites_list = filter(bool, open(inputfile, 'r').read().split('\n'))
+		for filename in observed_sites_list:
+			get_bad(bar_points, filename, filename + ".filt")
+	elif function == "sample":
+		text_filenames = filter(bool, open(inputfile + ".text", 'r').read().split('\n'))
+		dom_filenames = filter(bool, open(inputfile + ".dom", 'r').read().split('\n'))
+		sample(text_filenames, dom_filenames, outfile, int(count))
+	elif function == "dedup":
+		text_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
+		for filename in text_filenames:
+			 dedup(filename)
 	else:
 		print help_msg
 		sys.exit(2)

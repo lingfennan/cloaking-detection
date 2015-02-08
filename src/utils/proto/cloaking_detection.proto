@@ -16,6 +16,7 @@ message SitePatterns {
 }
 
 message Pattern {
+  // Deprecated.
   // Currently there are three ways to represent (model) a pattern,
   // NORMAL_DISTRIBUTION, GRADIENT_DESCENT, JOINT_DISTRIBUTION
   // centroid, size: the center of a pattern
@@ -26,9 +27,14 @@ message Pattern {
   // GRADIENT_DESCENT.
   // distribution: for JOINT_DISTRIBUTION
   //
+  //
+
+  // Use hierarchical clustering to learn clusters,
+  // Use inconsistent coefficient to test belonging.
+  //
   // mean and std is used for NORMAL_DISTRIBUTION
-  required double mean = 1;
-  required double std = 2;
+  optional double mean = 1;
+  optional double std = 2;
   // Used in model computation.
   // Used in data labeling where one pattern requires one representative (file_path).
   // Not used in detection (can be removed in this case).
@@ -46,6 +52,10 @@ message Pattern {
   // percentile is used for NORMAL_DITRIBUTION
   // mean + 3 * std should be the same as percentile.p99
   optional Percentile percentile = 8;
+  // Used in hierarchical clustering and detection
+  // link height list, used for std and mean computation
+  // Y[k, 4] = (Z[k, 3] - Y[k, 1]) / Y[k, 2]
+  repeated double link_heights = 9 [packed=true];
 }
 
 message Percentile {
@@ -156,16 +166,21 @@ message Algorithm {
   required AlgoName name = 1;
   optional int32 thres = 2; // thres used by hamming threshold
   optional int32 k = 3;  // k used by k-means, and spectral clustering
-  optional int32 left_out_ratio = 4;  // left out ratio used by hierarchical clustering
+  // left out ratio used by hierarchical clustering
+  // deprecated. use inconsistent coefficient as cutoff now
+  optional int32 left_out_ratio = 4 [deprecated=true]; 
+  // inconsistent coefficient is used to tell clusters apart
+  optional double inconsistent_coefficient = 5 [default = 1];
+  optional int32 inconsistent_depth = 6 [default = 2];
 }
 
 message ClusterConfig {
   required Algorithm algorithm = 1;
-  optional int32 minimum_cluster_size = 2 [default = 2];
+  optional int32 minimum_cluster_size = 2 [deprecated = true];
   optional int32 maximum_threads = 3 [default = 10];
   optional SimhashType simhash_type = 4 [default = TEXT];
   // Whether to use the simhash count in the cluster algorithm
-  optional bool use_simhash_count = 5 [default = true];
+  optional bool use_simhash_count = 5 [deprecated = true];
 }
 
 // Configuration for cloaking detection
@@ -181,13 +196,18 @@ message DetectionConfig {
     JOINT_DISTRIBUTION = 2;
     // Use Percentile as threshold, percentile is given by p.
     PERCENTILE = 3;
+    // Use inconsistent_coefficient as threshold.
+    INCONSISTENT_COEFFICIENT = 4;
   }
   required Algorithm algorithm = 1;
   optional int32 std_constant = 2;
   optional SimhashType simhash_type = 3 [default = TEXT];
   optional int32 p = 4 [default = 97];  // percentile
   // The minimum radius for each cluster
-  optional int32 min_radius = 5 [default = 0];
+  optional double min_radius = 5 [default = 0];
+  // inconsistent coefficient threshold, used to test cluster belonging
+  // similar to std_constant. but with a better name.
+  optional double inconsistent_coefficient = 6 [default = 1];
 }
 
 // Crawler data structures, used by crawler to store information.

@@ -84,6 +84,7 @@ class WOT:
 
 def filt(domains = ['example.net','everlastinghelp.com','13xa.com', 'google.com', 'sina.com.cn'], bar_points = 66):
 	# define constants 
+	domains = list(domains)
 	block_size = 10
 	bar_points = int(bar_points)
 	reputation = WOT()
@@ -98,6 +99,8 @@ def filt(domains = ['example.net','everlastinghelp.com','13xa.com', 'google.com'
 	return evaluationRes
 
 def domain_scores(domains, outfile):
+	domains = list(domains)
+	print domains
 	block_size = 10
 	bar_points = 85
 	reputation = WOT()
