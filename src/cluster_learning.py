@@ -8,8 +8,10 @@ import sys, getopt
 import simhash
 from threading import Thread
 from html_simhash_computer import HtmlSimhashComputer
+from utils.data_util import plot_sim_distance, plot_simhash
 from utils.learning_detection_util import add_failure, load_observed_sites, merge_observed_sites, write_proto_to_file, read_proto_from_file, valid_instance
-from utils.learning_detection_util import HammingTreshold, KMeans, SpectralClustering, HierarchicalClustering, interact_query
+from utils.learning_detection_util import HammingTreshold, KMeans
+from utils.learning_detection_util import SpectralClustering, HierarchicalClustering, ScipyHierarchicalClustering, interact_query
 from utils.thread_computer import ThreadComputer
 from utils.util import evaluation_form
 import utils.proto.cloaking_detection_pb2 as CD
@@ -19,7 +21,8 @@ class ClusterLearning(object):
 		if not cluster_config:
 			self.cluster_config = None
 		elif valid_instance(cluster_config, CD.ClusterConfig):
-			self.cluster_config = cluster_config
+			self.cluster_config = CD.ClusterConfig()
+			self.cluster_config.CopyFrom(cluster_config)
 	
 	def compute_simhash(self, site_list_filenames, simhash_config):
 		"""
@@ -80,7 +83,8 @@ class ClusterLearning(object):
 		if (not cluster_config) and (not self.cluster_config):
 			raise Exception("Cluster config missing")
 		elif cluster_config and valid_instance(cluster_config, CD.ClusterConfig):
-			self.cluster_config = cluster_config
+			self.cluster_config = CD.ClusterConfig()
+			self.cluster_config.CopyFrom(cluster_config)
 		# learn the clusters
 		observed_sites = merge_observed_sites(observed_sites_filenames)
 		learned_sites = CD.LearnedSites()
@@ -94,7 +98,9 @@ class ClusterLearning(object):
 			if cluster_config.algorithm.name == CD.Algorithm.SPECTRAL_CLUSTERING:
 				result = SpectralClustering(cluster_config, observed_site)
 			if cluster_config.algorithm.name == CD.Algorithm.HIERARCHICAL_CLUSTERING:
-				result = HierarchicalClustering(cluster_config, observed_site)
+				# result = HierarchicalClustering(cluster_config, observed_site)
+				result = ScipyHierarchicalClustering(cluster_config,
+						observed_site)
 			# If no pattern can be extracted, return None
 			if result:
 				learned_site = learned_sites.site.add()
@@ -125,24 +131,29 @@ def compute(site_list_filenames, outfile = None, simhash_type = None, is_google 
 		res = cluster_learner.compute_simhash(site_list_filenames, simhash_config)
 		write_proto_to_file(res, dom_out_filename)
 
-def learn(observed_sites_filenames, outfile = None):
+def learn(observed_sites_filenames, outfile = None, inconsistent_coefficient = 1):
+	"""
+	After mannual testing, left out ratio may be a good candidate.
+	"""
 	out_filename = outfile + ".learned" if outfile else observed_sites_filenames[0] + ".learned"
 	cluster_learner = ClusterLearning()
 	cluster_config = CD.ClusterConfig()
 	cluster_config.algorithm.name = CD.Algorithm.HIERARCHICAL_CLUSTERING
-	cluster_config.algorithm.left_out_ratio = 5 # left out ratio is 5%
-	cluster_config.minimum_cluster_size = 2
+	cluster_config.algorithm.inconsistent_coefficient = inconsistent_coefficient
 	res = cluster_learner.learn(observed_sites_filenames, cluster_config)
 	write_proto_to_file(res, out_filename)
 
 def main(argv):
 	has_function = False
-	help_msg = 'cluster_learning.py -f <function> [-i <inputfile> -t <simhash_type> -o <outputfile> -g] [-i <inputfile> -o <outputfile>] [-i <inputfile>], valid functions are compute, learn, compute_list'
+	help_msg = 'cluster_learning.py -f <function> [-i <inputfile> -t <simhash_type> -o <outputfile> -g] [-c <inconsisteny> -i <inputfile> -o <outputfile>] [-i <inputfile>], valid functions are compute, learn, compute_list'
 	outputfile = None
 	simhash_type = None
 	is_google = False
+	inconsistent_coefficient = 1
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:o:t:g", ["function=", "ifile=", "ofile=", "type=", "is_google"])
+		opts, args = getopt.getopt(argv, "hf:i:o:t:gc:", ["function=",
+			"ifile=", "ofile=", "type=", "is_google",
+			"use_simhash_count", "inconsistency="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
@@ -161,6 +172,8 @@ def main(argv):
 			simhash_type = arg
 		elif opt in ("-g", "--is_google"):
 			is_google = True
+		elif opt in ("-c", "--inconsistency"):
+			inconsistent_coefficient = float(arg)
 		else:
 			print help_msg
 			sys.exit(2)
@@ -196,8 +209,13 @@ def main(argv):
 			learned_file = outputfile + ".text.learned"
 			evaluation_form(learned_file, learned_file + ".eval", "LearnedSites")
 	elif function == 'learn':
-		observed_sites_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
-		learn(observed_sites_filenames, outputfile)
+		# observed_sites_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
+		observed_sites_filenames = [inputfile]
+		learn(observed_sites_filenames, outputfile, inconsistent_coefficient)
+		plot_sim_distance(outputfile + ".learned", outputfile + ".learned.plot_sim_distance",
+				simhash_type, "LearnedSites", True)
+		plot_simhash(outputfile + ".learned", 
+				outputfile + ".learned.plot_cluster", simhash_type, "LearnedSites")
 	elif function == 'compute_list':
 		"""
 		Repeat function compute for a list files. Doing this, because simply aggregating

@@ -6,6 +6,7 @@ python cloaking_detection.py -f evaluate -i <inputfile> -l <learnedfile> -e <exp
 
 """
 
+import numpy as np
 import sys, getopt, math
 import simhash
 from threading import Thread
@@ -23,6 +24,41 @@ class CloakingDetection(object):
 		self.learned_sites_map = dict()
 		for site in learned_sites.site:
 			self.learned_sites_map[site.name] = site.pattern
+
+	def _inconsistent_coefficient_detection(self, site_name, ob_simhash):
+		"""
+		@parameter
+		site_name: site name of observation
+		ob_simhash: simhash of observation
+		@return
+		True if the site is learned and this observation is not seen,
+		o.w. False
+		"""
+		if not site_name in self.learned_sites_map:
+			# If current site is not learned, return False.
+			return False
+		for pattern in self.learned_sites_map[site_name]:
+			try:
+				dist = centroid_distance(pattern, ob_simhash)
+			except:
+				raise Exception("You probably used ObservedSites as LearnedSites")
+			if len(pattern.link_heights) > 0:
+				link_heights = [link_height for link_height in
+						pattern.link_heights]
+				link_heights.append(dist)
+				print pattern.link_heights
+				link_heights = np.array(link_heights)
+				y_k_1 = np.mean(link_heights)
+				y_k_2 = np.std(link_heights)
+				z_k_3 = dist - self.detection_config.min_radius
+				thres = self.detection_config.inconsistent_coefficient
+				if (z_k_3 - y_k_1) / y_k_2 < thres:
+					return False
+			else:
+				thres = self.detection_config.min_radius
+				if dist < thres:
+					return False
+		return True
 	
 	def _normal_distribution_detection(self, site_name, ob_simhash):
 		"""
@@ -70,10 +106,6 @@ class CloakingDetection(object):
 			for point in pattern.cdf.point:
 				if(int(math.ceil(dist-1)) == point.x): 
 					"""point.count == 0 is the centroid"""
-	#				if pattern.size-point.count>0:
-	#					return False
-
-#		return True
 					#the prob is not belong to this pattern
 					prob_array.append((pattern.size-point.count)/ float(pattern.size))
 
@@ -119,6 +151,8 @@ class CloakingDetection(object):
 			detection_algorithm = "_joint_distribution_detection"
 		elif self.detection_config.algorithm == CD.DetectionConfig.PERCENTILE:
 			detection_algorithm = "_percentile_detection"
+		elif self.detection_config.algorithm == CD.DetectionConfig.INCONSISTENT_COEFFICIENT:
+			detection_algorithm = "_inconsistent_coefficient_detection"
 		else:
 			raise Exception("Unknown detection algorithm!")
 		has_cloaking = False
@@ -154,30 +188,33 @@ class CloakingDetection(object):
 				size += len(cloaking_site.observation)
 		print "total site {0}".format(len(observed_sites.site))
 		print "cloaking site {0}".format(len(cloaking_sites.site))
+		for site in cloaking_sites.site:
+			print site.name
 		print "cloaking count"
 		print size
 		return cloaking_sites
 
 def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type,
-		min_radius = 0, std_constant = 3):
-	valid_instance(min_radius, int)
+		min_radius = 0, std_constant = 3, inconsistent_coefficient = 2):
+	valid_instance(min_radius, float)
 	valid_instance(std_constant, int)
+	valid_instance(inconsistent_coefficient, float)
 	detection_config = CD.DetectionConfig()
 	# detection_config.algorithm = CD.DetectionConfig.JOINT_DISTRIBUTION
-	detection_config.algorithm = CD.DetectionConfig.NORMAL_DISTRIBUTION
+	# detection_config.algorithm = CD.DetectionConfig.NORMAL_DISTRIBUTION
+	detection_config.algorithm = CD.DetectionConfig.INCONSISTENT_COEFFICIENT
 	# detection_config.algorithm = CD.DetectionConfig.PERCENTILE
 	detection_config.p = 99
 	detection_config.min_radius = min_radius
 	detection_config.std_constant = std_constant
+	detection_config.inconsistent_coefficient = inconsistent_coefficient
 	if simhash_type:
-		if simhash_type == "DOM":
+		if simhash_type.upper() == "DOM":
 			detection_config.simhash_type = CD.DOM
-		elif simhash_type == "TEXT":
+		elif simhash_type.upper() == "TEXT":
 			detection_config.simhash_type = CD.TEXT
-		elif simhash_type == "TEXT_DOM":
-			# Essentially we want to combine DOM and TEXT,
-			# but how to do that is still not decided yet.
-			None
+		elif simhash_type.upper() == "TEXT_DOM":
+			detection_config.simhash_type = CD.TEXT_DOM
 		else:
 			raise Exception("Invalid simhash_type. Only DOM and TEXT are supported.")
 	learned_sites = CD.LearnedSites()
@@ -241,15 +278,22 @@ def evaluate(learned_sites_filename, observed_sites_filename, simhash_type, expe
 
 def main(argv):
 	has_function = False
-	help_msg = "cloaking_detection.py -f <function> [-i <inputfile> -l <learnedfile> -t <simhash_type> -r <min_radius> -n <std_constant>][-i <testfile> -l <learnedfile> -e <expectedfile> -t <simhash_type>], valid functions are detect, evaluate"
+	help_msg = """cloaking_detection.py -f <function> [-i <inputfile> -l
+		<learnedfile> -t <simhash_type> -r <min_radius> -n <std_constant> -c
+		<coefficient][-i <testfile> -l <learnedfile> -e <expectedfile> -t
+		<simhash_type>], valid functions are detect, evaluate"""
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:l:e:t:r:n:", ["function=", "ifile=", "lfile=", "efile=", "type=", "radius=", "constant="])
+		opts, args = getopt.getopt(argv, "hf:i:l:e:t:r:n:c:",
+				["function=", "ifile=", "lfile=", "efile=",
+					"type=", "radius=", "constant=",
+					"coefficient="])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
 	simhash_type = None
 	min_radius = 0
 	std_constant = 3
+	coefficient = 1
 	for opt, arg in opts:
 		if opt == "-h":
 			print help_msg
@@ -269,6 +313,8 @@ def main(argv):
 			min_radius = arg
 		elif opt in ("-n", "--constant"):
 			std_constant = arg
+		elif opt in ("-c", "--coefficient"):
+			coefficient = arg
 		else:
 			print help_msg
 			sys.exit(2)
@@ -276,7 +322,9 @@ def main(argv):
 		print help_msg
 		sys.exit()
 	if function == "detect":
-		cloaking_detection(learnedfile, inputfile, simhash_type, int(min_radius), int(std_constant))
+		cloaking_detection(learnedfile, inputfile, simhash_type,
+				float(min_radius), int(std_constant),
+				float(coefficient))
 	elif function == "evaluate":
 		evaluate(learnedfile, inputfile, simhash_type, expectedfile)
 	else:

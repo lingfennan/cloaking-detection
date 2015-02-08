@@ -2,6 +2,8 @@
 \label{s:experiment}
 
 \subsection{Dataset}
+
+
 Because we want to measure cloaking in SEO and SEM, we have compiled a list of
 cloaking words, from the policies specified by Adwords, inspired by the words
 collection process in ~\cite{wang2011cloak}. We have looked at the policies, and
@@ -19,6 +21,12 @@ we may want to collect as many examples as possible.
 
 
 \subsection{Groundtruth}
+
+We remove the failure websites and this results in 
+113242 urls, exact match, parameter different are counted.
+98390 sites, parameters ignored. Later we will use the latter parameter because
+it makes more sense.
+
 
 Visit \XXX{N} search words, for collected search urls, we have collected \XXX{Some} URLs.
 In order to get groundtruth, we follow a similar process employed in

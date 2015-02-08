@@ -121,6 +121,7 @@ def dedup(text_file):
 	dom_file = text_file.replace('text', 'dom')
 	user_text_observed_sites = CD.ObservedSites()
 	read_proto_from_file(user_text_observed_sites, text_file)
+	print "processing {0}".format(text_file)
 	print "before dedup: {0}".format(len(user_text_observed_sites.site))
 	user_dom_observed_sites = CD.ObservedSites()
 	read_proto_from_file(user_dom_observed_sites, dom_file)
@@ -163,30 +164,17 @@ def dedup(text_file):
 	print "after dedup: {0}".format(len(user_text_remained.site))
 	return len(user_text_remained.site)
 
-def sample(text_filenames, dom_filenames, outfile, sample_size):
-	observed_sites = merge_observed_sites(text_filenames)
-	observed_site_list = list()
-	url_set = set()
-	for observed_site in observed_sites.site:
-		observed_site_list.append(observed_site)
-		for observation in observed_site.observation:
-			url_set.add(observation.landing_url)
-	print "there are {0} urls".format(len(url_set))
-	print "there are {0} observed sites".format(len(observed_site_list))
-	random.shuffle(observed_site_list)
-	# test_size is number of sites, actual observation should be more than this.
-	sample_sites = CD.ObservedSites()
-	sample_sites.config.CopyFrom(observed_sites.config)
-	sample_list = observed_site_list[0:sample_size]
-	original_label_list = [observed_site.name for observed_site in sample_list]
-	for observed_site in sample_list:
-		sample_site = sample_sites.site.add()
-		sample_site.CopyFrom(observed_site)
-	sample_filename = outfile + ".sample.text"
-	write_proto_to_file(sample_sites, sample_filename)
 
-	# select for dom simhash now
-	observed_sites = merge_observed_sites(dom_filenames)
+def _output_sample_sites(original_label_list, filenames, outfile):
+	"""
+	Output the sample sites, either google or user
+
+	@parameter
+	oringinal_label_list: the selected websites
+	filenames: observed sites filenames
+	outfile: output filename
+	"""
+	observed_sites = merge_observed_sites(filenames)
 	observed_sites_map = dict()
 	for observed_site in observed_sites.site:
 		observed_sites_map[observed_site.name] = observed_site
@@ -198,8 +186,46 @@ def sample(text_filenames, dom_filenames, outfile, sample_size):
 	for observed_site in sample_list:
 		sample_site = sample_sites.site.add()
 		sample_site.CopyFrom(observed_site)
-	sample_filename = outfile + ".sample.dom"
+	write_proto_to_file(sample_sites, outfile)
+
+def _replace_list_by(to_replace_list, src, dst):
+	valid_instance(to_replace_list, list)
+	return [item.replace(src, dst) for item in to_replace_list]
+
+def sample(text_filenames, outfile, sample_size):
+	dom_filenames = _replace_list_by(text_filenames, 'text', 'dom')
+	google_text_filenames = _replace_list_by(text_filenames, 'user',
+			'google')
+	google_dom_filenames = _replace_list_by(dom_filenames, 'user', 'google')
+
+	text_observed_sites = merge_observed_sites(text_filenames)
+	observed_site_list = list()
+	url_set = set()
+	for observed_site in text_observed_sites.site:
+		observed_site_list.append(observed_site)
+		for observation in observed_site.observation:
+			url_set.add(observation.landing_url)
+	print "there are {0} urls".format(len(url_set))
+	print "there are {0} observed sites".format(len(observed_site_list))
+	random.shuffle(observed_site_list)
+	# test_size is number of sites, actual observation should be more than this.
+	sample_sites = CD.ObservedSites()
+	sample_sites.config.CopyFrom(text_observed_sites.config)
+	sample_list = observed_site_list[0:sample_size]
+	original_label_list = [observed_site.name for observed_site in sample_list]
+	for observed_site in sample_list:
+		sample_site = sample_sites.site.add()
+		sample_site.CopyFrom(observed_site)
+	sample_filename = outfile + ".user.sample.text"
 	write_proto_to_file(sample_sites, sample_filename)
+
+
+	_output_sample_sites(original_label_list, dom_filenames, outfile + ".user.sample.dom")
+	_output_sample_sites(original_label_list, google_text_filenames,
+			outfile + '.google.sample.text')
+	_output_sample_sites(original_label_list, google_dom_filenames, outfile
+			+ '.google.sample.dom')
+
 
 def get_domains(observed_sites_list, outfile):
 	domain_set = set()
@@ -331,10 +357,10 @@ def main(argv):
 	-l <server_link> -o <outdir> -m <mode>][-i <inputfile>-o <outfile> -s
 	<simhash_type> -t <proto_type>][-i <inputfile> -o <outfile> -s
 	<simhash_type> -t <proto_type> -a] [-o <outfile>] [-i <inputfile> -o
-	<outfile>] [-i <inputfile>] [-i <inputfile> -c <count>], valid functions are
+	<outfile>] [-i <inputfile>] [-i <text_filt>] [-i <inputfile> -c <count>], valid functions are
 	append_prefix, compute_list, show_proto, intersect_sites,
 	collect_observations, plot_simhash, plot_sim_distance, get_domains,
-	get_domain_scores, domain_filter, sample"""
+	get_domain_scores, domain_filter, dedup, sample"""
 	try:
 		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:s:ac:",
 				["function=", "prefix=", "outfile=",
@@ -413,18 +439,25 @@ def main(argv):
 		domains = filter(bool, open(inputfile, 'r').read().split('\n'))
 		result = domain_scores(domains, outfile)
 	elif function == "domain_filter":
+		"""
+		Three steps for computed sites.
+		1. filter known benign
+		2. de-duplicate
+		3. sample $count number of sites
+		"""
 		bar_points = 80
 		observed_sites_list = filter(bool, open(inputfile, 'r').read().split('\n'))
 		for filename in observed_sites_list:
 			get_bad(bar_points, filename, filename + ".filt")
-	elif function == "sample":
-		text_filenames = filter(bool, open(inputfile + ".text", 'r').read().split('\n'))
-		dom_filenames = filter(bool, open(inputfile + ".dom", 'r').read().split('\n'))
-		sample(text_filenames, dom_filenames, outfile, int(count))
 	elif function == "dedup":
 		text_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
+		count = 0
 		for filename in text_filenames:
-			 dedup(filename)
+			 count += dedup(filename)
+		print "total sites after dedup: {0}".format(count)
+	elif function == "sample":
+		text_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
+		sample(text_filenames, outfile, int(count))
 	else:
 		print help_msg
 		sys.exit(2)
