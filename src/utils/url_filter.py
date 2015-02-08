@@ -42,8 +42,8 @@ def get_domain_reputation(domain_list, bar_points,
 		if len(unknown_domain) > 0:
 			# call self recursively
 			print "Querying WOT service"
+			bad_domain = bad_domain | set(wot.filt(unknown_domain, bar_points))
 			wot.domain_scores(unknown_domain, domain_database)
-			bad_domain = bad_domain | get_domain_reputation(unknown_domain, bar_points)
 		return bad_domain
 
 def get_bad(bar_points, filename, outfilename):
