@@ -2,6 +2,7 @@
 How to use:
 python cluster_learning.py -f compute -i <inputfile_list> [-o <outputfile> -t <simhash_type> -g]
 python cluster_learning.py -f learn -i <inputfile_list> [-o <outputfile>]
+python cluster_learning.py -f compute_list -i <list of inputfile_list> [-o <outputfile> -t <simhash_type> -g]
 """
 
 import sys, getopt
@@ -175,6 +176,8 @@ def main(argv):
 		2. aggregate by landing url
 		3. learn right after compute
 		"""
+		if not outputfile:
+			outputfile = inputfile
 		site_list_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
 		compute_and_learn = False
 		if 'google' in site_list_filenames[0].lower():
@@ -196,6 +199,8 @@ def main(argv):
 			learned_file = outputfile + ".text.learned"
 			evaluation_form(learned_file, learned_file + ".eval", "LearnedSites")
 	elif function == 'learn':
+		if not outputfile:
+			outputfile = inputfile
 		observed_sites_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
 		learn(observed_sites_filenames, outputfile)
 	elif function == 'compute_list':
