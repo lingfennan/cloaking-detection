@@ -62,6 +62,23 @@ from wot import domain_scores
 import proto.cloaking_detection_pb2 as CD
 
 
+def get_learned_eval(learned_file, observed_file):
+	learned_sites = CD.LearnedSites()
+	read_proto_from_file(learned_sites, learned_file)
+	observed_sites = CD.ObservedSites()
+	read_proto_from_file(observed_sites, observed_file)
+	observed_sites_list = list()
+	for observed_site in observed_sites.site:
+		observed_sites_list.append(observed_site.name)
+	learned_sites_map = dict()
+	for learned_site in learned_sites.site:
+		learned_sites_map[learned_site.name] = learned_site
+	result_sites = CD.LearnedSites()
+	for site_name in observed_sites_list:
+		result_site = result_sites.site.add()
+		result_site.CopyFrom(learned_sites_map[site_name])
+	return result_sites
+
 def load_split_observed_sites(filename):
 	if not os.path.exists(filename):
 		count = 0
@@ -376,10 +393,11 @@ def main(argv):
 	<simhash_type> -t <proto_type>][-i <inputfile> -o <outfile> -s
 	<simhash_type> -t <proto_type> -a] [-o <outfile>] [-i <inputfile> -o
 	<outfile>] [-i <inputfile>] [-i <text_filt>] [-i <inputfile> -c <count>]
-	[-o <outfile>], valid functions are
+	[-o <outfile>] [-i <inputfile> -l <leanredfile> -o <outfile>], valid functions are
 	append_prefix, compute_list, show_proto, intersect_sites,
 	collect_observations, plot_simhash, plot_sim_distance, get_domains,
-	get_domain_scores, domain_filter, dedup, sample, merge_sites"""
+	get_domain_scores, domain_filter, dedup, sample, merge_sites,
+	get_learned_eval"""
 	try:
 		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:s:ac:",
 				["function=", "prefix=", "outfile=",
@@ -491,6 +509,15 @@ def main(argv):
 		observed_sites_names = [line[:-1] for line in sys.stdin]
 		observed_sites = merge_observed_sites(observed_sites_names)
 		write_proto_to_file(observed_sites, outfile)
+	elif function == "get_learned_eval":
+		"""
+		-l learned_file -i detected_file
+		"""
+		learned_file = link
+		observed_file = inputfile
+		result_sites = get_learned_eval(learned_file, observed_file)
+		write_proto_to_file(result_sites, outfile)
+		evaluation_form(outfile, outfile + ".eval", "LearnedSites")
 	else:
 		print help_msg
 		sys.exit(2)

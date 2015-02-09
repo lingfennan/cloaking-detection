@@ -46,7 +46,6 @@ class CloakingDetection(object):
 				link_heights = [link_height for link_height in
 						pattern.link_heights]
 				link_heights.append(dist)
-				print pattern.link_heights
 				link_heights = np.array(link_heights)
 				y_k_1 = np.mean(link_heights)
 				y_k_2 = np.std(link_heights)
