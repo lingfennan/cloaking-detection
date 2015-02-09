@@ -9,11 +9,12 @@ References:
 import json
 import sys
 import urllib2
+import urllib
 
 class WOT:
 	def __init__(self):
-		# api_key = '2527e6e5cca9451a605eea8171b5c89314c74a7a'
-		api_key = '494d0f03189d934b337198ea397a25e11161c9da'
+		api_key = '2527e6e5cca9451a605eea8171b5c89314c74a7a'
+		# api_key = '494d0f03189d934b337198ea397a25e11161c9da'
 		self.params = dict()
 		self.params['key'] = api_key
 		#self.params['callback']='process'
@@ -94,8 +95,13 @@ def filt(domains = ['example.net','everlastinghelp.com','13xa.com', 'google.com'
 	for i in range(0, domain_count, block_size):
 		sub_domains = domains[i:i+block_size] if i + block_size <= domain_count \
 				else domains[i:]
-		result =  reputation.process(sub_domains)
-		evaluationRes.extend(reputation.evaluate(result, bar_points)[0])
+		try:
+			result =  reputation.process(sub_domains)
+			evaluationRes.extend(reputation.evaluate(result, bar_points)[0])
+		except:
+			# If the URL retrieve failed, simply return it for
+			# safety.
+			evaluationRes.extend(sub_domains)
 	return evaluationRes
 
 def domain_scores(domains, outfile):
@@ -108,8 +114,12 @@ def domain_scores(domains, outfile):
 		evaluationRes = []
 		sub_domains = domains[i:i+block_size] if i + block_size <= domain_count \
 				else domains[i:]
-		result =  reputation.process(sub_domains)
-		result_dict = reputation.evaluate(result, bar_points)[1]
+		try:
+			# we don't know the score for this domain
+			result =  reputation.process(sub_domains)
+			result_dict = reputation.evaluate(result, bar_points)[1]
+		except:
+			continue
 		for key in result_dict:
 			temp_list = list()
 			temp_list.append(key)

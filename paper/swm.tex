@@ -37,17 +37,21 @@ organized.
   \centering
   \begin{subfigure}
     \centering
-    \includegraphics[width=.5\textwidth]{fig/yahoo-text}
-    \label{fig:yahoo-text}
+    \includegraphics[width=.5\textwidth]{fig/yahoo-text-user}
+    \label{fig:yahoo-text-user}
   \end{subfigure}%
   \begin{subfigure}
     \centering
-    \includegraphics[width=.5\textwidth]{fig/yahoo-dom}
-    \label{fig:yahoo-dom}
+    \includegraphics[width=.5\textwidth]{fig/yahoo-dom-user}
+    \label{fig:yahoo-dom-user}
   \end{subfigure}
-  \caption{Yahoo simhash changes over 7x24 period}
+  \caption{Yahoo simhash changes over 7x24 period Feb.1 - 7, 2015}
   \label{fig:yahoo-simhash}
 \end{figure}
+
+
+
+
 
 It is pretty straightforward from ~\autoref{fig:yahoo-simhash} that,
 text simhash changes rapidly, indicating dynamic nature of this
@@ -75,6 +79,27 @@ Using the hamming distance measure on a dimension of 64-bit.
 For different websites, simhash can be considered as an algorithm to map them to
 a 64-bit number randomly ~\cite{manku2007detecting}. For the same website,
 simhash measures the similarity between them.
+
+
+
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}
+    \centering
+    \includegraphics[width=.5\textwidth]{fig/yahoo-dom-user}
+    \label{fig:yahoo-dom-user}
+  \end{subfigure}%
+  \begin{subfigure}
+    \centering
+    \includegraphics[width=.5\textwidth]{fig/yahoo-dom-google}
+    \label{fig:yahoo-dom-google}
+  \end{subfigure}
+  \caption{Comparison of user and google seen dom simhash}
+  \label{fig:yahoo-simhash}
+\end{figure}
+
+
+
 
 Different from ~\cite{manku2007detecting}, we not only want to know whether two pages are
 duplicate, we also want to know the patterns of these simhash. In this work, we employ
