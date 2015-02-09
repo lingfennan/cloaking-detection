@@ -2,7 +2,10 @@ import collections
 import numpy as np
 import re
 import sys
-import scipy.cluster.hierarchy as h
+from scipy.spatial.distance import pdist
+from scipy.cluster.hierarchy import fcluster
+from scipy.cluster.hierarchy import fclusterdata
+from scipy.cluster.hierarchy import linkage
 from Queue import Queue
 from urllib import urlencode
 from urlparse import urlparse, urlunparse, parse_qs, urldefrag
@@ -339,6 +342,42 @@ def hamming_distance(u, v, f = 64):
 		x &= x-1
 	return ans
 
+def uint_to_bool(u, size = 64):
+	"""
+	Read from high bit to low bit and fill them in the bool array
+	"""
+	bool_array = np.zeros(size, dtype=bool)
+	base = 1
+	for index in range(size):
+		if u & base:
+			bool_array[size-index-1] = True
+		base = base << 1
+	return bool_array
+
+def prepare_matrix(simhash_item_vector):
+	vector_size = len(simhash_item_vector)
+	mat = np.zeros((vector_size, 64), dtype=np.bool)
+	for i in range(vector_size):
+		item = simhash_item_vector[i]
+		np.copyto(mat[i], uint_to_bool(item.simhash))
+	return mat
+
+def get_indexes(cluster_label):
+	cluster_dict = dict()
+	vector_size = len(cluster_label)
+	for i in range(vector_size):
+		cluster_id = cluster_label[i]
+		if not cluster_id in cluster_dict:
+			cluster_dict[cluster_id] = list()
+		cluster_dict[cluster_id].append(i)
+	clusters = list()
+	for cluster_id in cluster_dict:
+		clusters.append(cluster_dict[cluster_id])
+	return clusters
+
+"""
+Below are functions used by deprecated version of hierarchical clustering
+"""
 def _get_key(numbers):
 	number_str = ''
 	for number in sorted(numbers):
@@ -356,7 +395,7 @@ def connected_components(adj_list, weight_list, minimum_cluster_size):
 	clusters = list()
 	visited_nodes = set()
 	size = len(adj_list)
-	for i in xrange(size):
+	for i in range(size):
 		if i in visited_nodes:
 			continue
 		q = Queue()
@@ -381,11 +420,11 @@ def adjacency_list(dist_mat, num_points, threshold):
 	valid_instance(dist_mat, np.ndarray)
 	adj_list = list()
 	index = 0
-	for i in xrange(num_points):
+	for i in range(num_points):
 		neighbors = list()
 		neighbors.append(i) # record the node itself
 		adj_list.append(neighbors)
-	for i in xrange(num_points):
+	for i in range(num_points):
 		for j in range(i+1, num_points):
 			if dist_mat[index] <= threshold:
 				adj_list[i].append(j)
@@ -466,7 +505,7 @@ def distance_matrix(simhash_item_vector):
 	# key is <number, number>, this is used to reduce computation overhead
 	dist_map = dict()
 	index = 0
-	for i in xrange(size):
+	for i in range(size):
 		weight_list[i] = simhash_item_vector[i].count
 		for j in range(i+1, size):
 			key = _get_key([simhash_item_vector[i].simhash, simhash_item_vector[j].simhash])
@@ -482,6 +521,8 @@ def distance_matrix(simhash_item_vector):
 
 def compute_mce_threshold(learned_site):
 	"""
+	Deprecated.
+
 	Compute minimum classification error threshold for each pattern.
 	@parameter
 	learned_site: patterns for learned_site.name, mce_threshold is not set.
@@ -495,70 +536,86 @@ def compute_mce_threshold(learned_site):
 					in learned_site.pattern]
 	return learned_site
 
+
+def compute_deprecated_stats(pattern):
+	"""
+	Deprecated.
+	These are the stats not being used now.
+
+	set mean and std
+	"""
+	dist_list = list()  # the list of dist for each simhash_item
+	for item in pattern.item:
+		"""
+		Difference from compute_model_old. Need to prove that normal distribution still hold. (TODO)
+		New: Compute centroid and compare simhash to centroid, which takes into account the current simhash itself.
+		Old: Compute avg_dist from simhash to all the other simhash, which doesn't consider current simhash.
+		"""
+		dist = centroid_distance(pattern, item.simhash)
+		dist_list.append(dist)
+	dist_array = np.array(dist_list)
+	pattern.mean = np.mean(dist_array)
+	pattern.std = np.std(dist_array)
+	# set percentile
+	[p50, p75, p90, p95, p97, p99] = np.percentile(dist_array, [50,75,90,95,97,99])
+	pattern.percentile.p99 = int(p99)
+	pattern.percentile.p97 = int(p97)
+	pattern.percentile.p95 = int(p95)
+	pattern.percentile.p90 = int(p90)
+	pattern.percentile.p75 = int(p75)
+	pattern.percentile.p50 = int(p50)
+	# set cdf
+	hist, edges = np.histogram(dist_array, bins=np.arange(66))
+	hist = np.cumsum(hist)
+	edges = edges[0:65]
+	for x, count in zip(edges, hist):
+		"""
+		x range in [0, 64], so there are 65 points.
+		"""
+		p = pattern.cdf.point.add()
+		p.x = int(x)
+		p.count = int(count)
+
+def compute_hierarchical_stats(pattern):
+	"""
+	Compute the linkage, and record the link heights.
+	"""
+	y = prepare_matrix(pattern.item)
+	Z = linkage(y, method='average', metric='hamming')
+	for row in Z:
+		pattern.link_heights.append(row[2])
+
 def compute_model(learned_site):
 	"""
 	Compute centroid, mean and std for each pattern.
 	@parameter
 	learned_site: patterns for learned_site.name, centroid, size, mean and std are not set.
 	@return
-	learned_site: centroid, size, mean and std are set. Performs in-place operation.
+	learned_site: centroid, size, mean and std are set, link_heights. Performs in-place operation.
 	"""
 	for pattern in learned_site.pattern:
 		# set size and centroid
-		total_size = 0
 		centroid = np.zeros((64,), dtype=int)
 		for item in pattern.item:
-			total_size += item.count
 			simhash = item.simhash
 			base = 1
-			for index in xrange(64):
+			for index in range(64):
 				if simhash & base:
-					centroid[index] += item.count
+					centroid[index] += 1
 				base = base << 1
-		pattern.size = total_size
+		pattern.size = len(pattern.item)
 		for c in centroid:
 			pattern.centroid.append(long(c))
-		# set mean and std
-		dist_list = list()  # the list of dist for each simhash_item
-		for item in pattern.item:
-			"""
-			Difference from compute_model_old. Need to prove that normal distribution still hold. (TODO)
-			New: Compute centroid and compare simhash to centroid, which takes into account the current simhash itself.
-			Old: Compute avg_dist from simhash to all the other simhash, which doesn't consider current simhash.
-			"""
-			dist = centroid_distance(pattern, item.simhash)
-			for j in xrange(item.count):
-				dist_list.append(dist)
-		dist_array = np.array(dist_list)
-		pattern.mean = np.mean(dist_array)
-		pattern.std = np.std(dist_array)
-		# set percentile
-		[p50, p75, p90, p95, p97, p99] = np.percentile(dist_array, [50,75,90,95,97,99])
-		pattern.percentile.p99 = int(p99)
-		pattern.percentile.p97 = int(p97)
-		pattern.percentile.p95 = int(p95)
-		pattern.percentile.p90 = int(p90)
-		pattern.percentile.p75 = int(p75)
-		pattern.percentile.p50 = int(p50)
-		# set cdf
-		hist, edges = np.histogram(dist_array, bins=np.arange(66))
-		hist = np.cumsum(hist)
-		edges = edges[0:65]
-		for x, count in zip(edges, hist):
-			"""
-			x range in [0, 64], so there are 65 points.
-			"""
-			p = pattern.cdf.point.add()
-			p.x = int(x)
-			p.count = int(count)
-	# compute minimum classification error based threshold
-	# compute_mce_threshold(learned_site)
+		compute_deprecated_stats(pattern)
+		compute_hierarchical_stats(pattern)
 	return learned_site
 
-# This method is deprecated because the comptation cost is high.
-# But can be used to verify implementation of new method.
 def compute_model_old(learned_site):
 	"""
+	Deprecated
+	This method is deprecated because the comptation cost is high.
+	But can be used to verify implementation of new method.
+
 	Compute mean and std for each pattern.
 	@parameter
 	learned_site: patterns for learned_site.name, mean and std are not set.
@@ -576,14 +633,14 @@ def compute_model_old(learned_site):
 			total_size += item.count
 			pattern_size += 1
 			item_list.append(item)
-		for i in xrange(pattern_size):
+		for i in range(pattern_size):
 			dist_i = 0
-			for j in xrange(pattern_size):
+			for j in range(pattern_size):
 				# doesn't compute the distance to the pattern itself
 				if i == j:
 					continue
 				dist_i += item_list[j].count * hamming_distance(item_list[i].simhash, item_list[j].simhash)
-			for j in xrange(item_list[i].count):
+			for j in range(item_list[i].count):
 				avg_dist_list.append(dist_i / (total_size - 1))
 		avg_dist_array = np.array(avg_dist_list)
 		pattern.mean = np.mean(avg_dist_array)
@@ -653,6 +710,44 @@ def SpectralClustering(cluster_config, observed_site):
 	valid_instance(cluster_config, CD.ClusterConfig)
 	valid_instance(observed_site, CD.SiteObservations)
 
+def ScipyHierarchicalClustering(cluster_config, observed_site):
+	valid_instance(cluster_config, CD.ClusterConfig)
+	valid_instance(observed_site, CD.SiteObservations)
+	simhash_item_vector = aggregate_simhash(observed_site, cluster_config.simhash_type)
+	vector_size = len(simhash_item_vector)
+	learned_site = CD.SitePatterns()
+	learned_site.name = observed_site.name
+
+	if vector_size == 0:
+		return None
+	elif vector_size == 1:
+		# Only one simhash, just one pattern.
+		pattern = learned_site.pattern.add()
+		for simhash_item in simhash_item_vector:
+			item = pattern.item.add()
+			item.CopyFrom(simhash_item)
+	else:
+		y = prepare_matrix(simhash_item_vector)
+		'''
+		Z = linkage(y, method='average', metric='hamming')
+		cluster_label = fcluster(Z, t = cluster_config.algorithm.inconsistent_coefficient,
+				criterion='inconsistent',
+				depth = cluster_config.algorithm.inconsistent_depth)
+		'''
+		cluster_label = fclusterdata(X = y, t = cluster_config.algorithm.inconsistent_coefficient, 
+				criterion = 'inconsistent',
+				depth = cluster_config.algorithm.inconsistent_depth,
+				metric = 'hamming', method = 'average')
+		clusters = get_indexes(cluster_label)
+		for cluster in clusters:
+			pattern = learned_site.pattern.add()
+			for index in cluster:
+				item = pattern.item.add()
+				item.CopyFrom(simhash_item_vector[index])
+	# Compute the cluster information.
+	learned_site = compute_model(learned_site)
+	return learned_site
+
 def HierarchicalClustering(cluster_config, observed_site):
 	"""
 	Learn clusters through hierarchical clustering.
@@ -669,18 +764,18 @@ def HierarchicalClustering(cluster_config, observed_site):
 	learned_site = CD.SitePatterns()
 	learned_site.name = observed_site.name
 	# Compute the learned site
-	num_observation = 0
-	for s in simhash_item_vector:
-		num_observation += s.count
-	if vector_size == 0 or num_observation < cluster_config.minimum_cluster_size:
+	if vector_size == 0:
 		return None
-	elif vector_size == 1:
+	elif vector_size <= cluster_config.minimum_cluster_size:
 		# Only one simhash, just one pattern.
 		pattern = learned_site.pattern.add()
-		item = pattern.item.add()
-		item.CopyFrom(simhash_item_vector[0])
+		for simhash_item in simhash_item_vector:
+			item = pattern.item.add()
+			item.CopyFrom(simhash_item)
 	else:
 		dist_mat, weight_list = distance_matrix(simhash_item_vector)
+		if not cluster_config.use_simhash_count:
+			weight_list = np.ones(vector_size, dtype = int)
 		left_out_ratio = cluster_config.algorithm.left_out_ratio
 		"""
 		linkage_mat = h.linkage(dist_mat, method = 'single')

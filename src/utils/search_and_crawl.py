@@ -421,16 +421,14 @@ def search_and_revisit(word_file, n, threads=6):
 	search_visit = Visit(search_crawl_config, 1)
 
 	# prepare the revisit
-	google_UA = "AdsBot-Google (+http://www.google.com/adsbot.html)"
+	google_ad_UA = "AdsBot-Google (+http://www.google.com/adsbot.html)"
+	google_search_UA = "Googlebot/2.1 (+http://www.google.com/bot.html)"
 
 	# set revisit crawl_config
 	revisit_crawl_config = CD.CrawlConfig()
 	revisit_crawl_config.maximum_threads = threads
-	revisit_crawl_config.user_agent = google_UA
 	revisit_crawl_config.browser_type = CD.CrawlConfig.CHROME
 	# base directory uses search_now_suffix to correlate these two
-	revisit_dir_prefix = base_dir + word_md5_delimiter + "/" + \
-			hex_md5(revisit_crawl_config.user_agent) + search_now_suffix
 	revisit_crawl_config.crawl_log_dir = base_dir
 
 	# search, visit and revisit each word
@@ -459,6 +457,12 @@ def search_and_revisit(word_file, n, threads=6):
 		if search_crawl_log_filename:
 			crawl_log_file_list.append(search_crawl_log_filename)
 		for crawl_log_file in crawl_log_file_list:
+			if crawl_log_file == ad_crawl_log_filename:
+				revisit_crawl_config.user_agent = google_ad_UA
+			else:
+				revisit_crawl_config.user_agent = google_search_UA
+			revisit_dir_prefix = base_dir + word_md5_delimiter + "/" + \
+					hex_md5(revisit_crawl_config.user_agent) + search_now_suffix
 			revisit_crawl_config.log_filename = crawl_log_file.split('/')[-1] + '.google'
 			revisit = Visit(revisit_crawl_config)
 			crawl_log = CD.CrawlLog()

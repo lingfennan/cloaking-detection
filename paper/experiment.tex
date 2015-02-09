@@ -2,6 +2,8 @@
 \label{s:experiment}
 
 \subsection{Dataset}
+
+
 Because we want to measure cloaking in SEO and SEM, we have compiled a list of
 cloaking words, from the policies specified by Adwords, inspired by the words
 collection process in ~\cite{wang2011cloak}. We have looked at the policies, and
@@ -20,15 +22,42 @@ we may want to collect as many examples as possible.
 
 \subsection{Groundtruth}
 
-Visit \XXX{N} search words, for collected search urls, we have collected \XXX{Some} URLs.
+We remove the failure websites and this results in 
+113242 urls, exact match, parameter different are counted.
+98390 sites, parameters ignored. Later we will use the latter parameter because
+it makes more sense.
+
+
+Visit \XXX{N} search words, for collected search urls, we have collected
+\XXX{130K} URLs.
+
+
+\bf{Step 1: Filter}
+
 In order to get groundtruth, we follow a similar process employed in
 ~\cite{lin2009detection}, we first filter the results and get rid of the highly reputated ones. We write a
 script to query the WOT API, and remove websites with combined score 80
 (which is a pretty high score) and the results are \XXX{N} urls after that.
 
+for advertisements, after filtering, there are 2354 urls
+remained.\XXX{Problematic because I haven't merged them}
+
+for search results, after filtering, there are 94467 urls remained.
+\XXX{Problematic because I haven't merged them}
+
+
+\bf{Step 2: De-duplication}
 This results in \XXX{Some} links. Then we compare the text simhash and dom
 simhash, remove those which are exactly duplicate of one of the simhash observed
 by Google. After this step, we have \XXX{N} url left.
+
+For advertisements, after deduplication, there are 1300 urls remained.
+
+For search results, after deduplication, there are 52633 urls remained.
+51124 websites.
+
+\bf{Step 3: Random Sample and Labeling}
+
 
 Then we randomly select 1000 urls from the dataset, and label them, after
 labeling, we found \XXX{N} cloaking sites and \XXX{M} dynamic websites.

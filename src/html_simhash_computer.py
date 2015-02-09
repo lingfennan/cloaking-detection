@@ -28,7 +28,8 @@ def strip_tags(html):
 '''
 
 def visible_text(html, twice=True):
-	texts = BeautifulSoup(html).findAll(text=True)
+	# add html.decode('utf-8') to avoid UnicodeEncodeError
+	texts = BeautifulSoup(html.decode('utf-8')).findAll(text=True)
 	def visible(element):
 		if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
 			return False
@@ -208,7 +209,7 @@ class HtmlSimhashComputer(object):
 			html_text = self._extract_html_text(text)
 			result.append(self.build_by_text(html_text))
 		if self.simhash_config.simhash_type in [CD.DOM, CD.TEXT_DOM]:
-			soup = BeautifulSoup(data)
+			soup = BeautifulSoup(data.decode('utf-8'))
 			html_dom = self._extract_html_dom(soup, iterative)
 			result.append(self.build_by_dom(html_dom))
 		return result
