@@ -454,7 +454,8 @@ def main(argv):
 		text_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
 		count = 0
 		for filename in text_filenames:
-			if not 'text' in filename:
+			if ((not 'text' in filename) or ('google' in filename) or
+					(dom in filename)):
 				response = interact_query("The input file doesn't seem to \
 						be valid! Press [Yes/No] to continue or exit!")
 				if not response:
