@@ -2,8 +2,14 @@
 INFILE=$1
 LEARN=$2
 
-python cloaking_detection.py -f detect -i ../data/abusive_words_9_category.computed/$1.text -l ../data/abusive_words_9_category.computed/$2.text.learned -t TEXT -n 10 -n 20
-python cloaking_detection.py -f detect -i ../data/abusive_words_9_category.computed/$1.dom -l ../data/abusive_words_9_category.computed/$2.dom.learned -t DOM -n 10 -n 20
+while read observed_file
+do
+	# this parameter is based on what i observed from site_dynamics sites.
+	echo "Results on $observed_file.text.filt.dedup"
+	python cloaking_detection.py -f detect -i $observed_file.text.filt.dedup -l $LEARN.text.learned -t TEXT -r 1.8 -c 1.2
+	echo "Results on $observed_file.dom.filt.dedup"
+	python cloaking_detection.py -f detect -i $observed_file.dom.filt.dedup -l $LEARN.dom.learned -t DOM -r 1.7 -c 1.8
 
-INTERSECT=$1.n20_r10.intersect
-ls ../data/abusive_words_9_category.computed/$1.*.cloaking | python utils/data_util.py -f intersect_sites -o ../data/abusive_words_9_category.computed/$INTERSECT
+	INTERSECT=$observed_file.cloaking.intersect
+	ls $observed_file.*.cloaking | python utils/data_util.py -f intersect_sites -o $INTERSECT
+done < $INFILE

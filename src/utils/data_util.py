@@ -39,6 +39,9 @@ Example Usage:
 
 	# filter observed sites
 	python data_util.py -f domain_filter -i ../../data/all.computed/filter_list
+
+	# merge sites
+	ls ../data/all.computed/*.intersect | python data_util.py -o ../../data/all.computed/search.detection_results
 """
 
 import math
@@ -141,14 +144,27 @@ def dedup(text_file):
 	user_dom_remained = CD.ObservedSites()
 	google_text_remained = CD.ObservedSites()
 	google_dom_remained = CD.ObservedSites()
+	text_failure = set([0])
+	failure_count = 0
+	# if the feature set is empty, then this is the hash value.
+	text_zero = set([18446744073709551615])
+	zero_count = 0
 	for site_name in user_text_dict:
 		if ((not site_name in google_text_dict) or
 				(not site_name in google_dom_dict)):
+			continue
+		if (user_text_dict[site_name] == text_failure):
+			failure_count += 1
+			continue
+		elif (user_text_dict[site_name] == text_zero):
+			zero_count += 1
 			continue
 		text_common = user_text_dict[site_name] & google_text_dict[site_name] 
 		dom_common = user_dom_dict[site_name] & google_dom_dict[site_name]
 		if (text_common == user_text_dict[site_name] and 
 				dom_common == user_dom_dict[site_name]):
+			continue
+		else:
 			_add_observed_site(user_text_remained, user_text_sites_dict, site_name)
 			_add_observed_site(user_dom_remained, user_dom_sites_dict, site_name)
 			_add_observed_site(google_text_remained, google_text_sites_dict, site_name)
@@ -163,6 +179,7 @@ def dedup(text_file):
 	write_proto_to_file(google_text_remained, google_text_file + ".dedup")
 	write_proto_to_file(google_dom_remained, google_dom_file + ".dedup")
 	print "after dedup: {0}".format(len(user_text_remained.site))
+	print "failure count: {0}, zero feature count: {1}".format(failure_count, zero_count)
 	return len(user_text_remained.site)
 
 
@@ -358,10 +375,11 @@ def main(argv):
 	-l <server_link> -o <outdir> -m <mode>][-i <inputfile>-o <outfile> -s
 	<simhash_type> -t <proto_type>][-i <inputfile> -o <outfile> -s
 	<simhash_type> -t <proto_type> -a] [-o <outfile>] [-i <inputfile> -o
-	<outfile>] [-i <inputfile>] [-i <text_filt>] [-i <inputfile> -c <count>], valid functions are
+	<outfile>] [-i <inputfile>] [-i <text_filt>] [-i <inputfile> -c <count>]
+	[-o <outfile>], valid functions are
 	append_prefix, compute_list, show_proto, intersect_sites,
 	collect_observations, plot_simhash, plot_sim_distance, get_domains,
-	get_domain_scores, domain_filter, dedup, sample"""
+	get_domain_scores, domain_filter, dedup, sample, merge_sites"""
 	try:
 		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:s:ac:",
 				["function=", "prefix=", "outfile=",
@@ -446,7 +464,7 @@ def main(argv):
 		2. de-duplicate
 		3. sample $count number of sites
 		"""
-		bar_points = 80
+		bar_points = 60
 		observed_sites_list = filter(bool, open(inputfile, 'r').read().split('\n'))
 		for filename in observed_sites_list:
 			get_bad(bar_points, filename, filename + ".filt")
@@ -455,7 +473,7 @@ def main(argv):
 		count = 0
 		for filename in text_filenames:
 			if ((not 'text' in filename) or ('google' in filename) or
-					(dom in filename)):
+					('dom' in filename)):
 				response = interact_query("The input file doesn't seem to \
 						be valid! Press [Yes/No] to continue or exit!")
 				if not response:
@@ -465,6 +483,14 @@ def main(argv):
 	elif function == "sample":
 		text_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
 		sample(text_filenames, outfile, int(count))
+		evaluation_form(outfile + '.user.sample.text', outfile +
+				".user.sample.text.eval", "ObservedSites")
+		evaluation_form(outfile + '.google.sample.text', outfile +
+				".google.sample.text.eval", "ObservedSites")
+	elif function == "merge_sites":
+		observed_sites_names = [line[:-1] for line in sys.stdin]
+		observed_sites = merge_observed_sites(observed_sites_names)
+		write_proto_to_file(observed_sites, outfile)
 	else:
 		print help_msg
 		sys.exit(2)
