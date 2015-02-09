@@ -51,6 +51,7 @@ import time
 import util
 from learning_detection_util import _split_path_by_data, show_proto, sites_file_path_set, intersect_observed_sites, read_proto_from_file, write_proto_to_file, aggregate_simhash
 from learning_detection_util import hamming_distance, merge_observed_sites, valid_instance
+from learning_detection_util import interact_query
 from crawl_util import collect_site_for_plot
 from util import evaluation_form, top_domain
 from url_filter import get_bad
@@ -453,7 +454,12 @@ def main(argv):
 		text_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
 		count = 0
 		for filename in text_filenames:
-			 count += dedup(filename)
+			if not 'text' in filename:
+				response = interact_query("The input file doesn't seem to \
+						be valid! Press [Yes/No] to continue or exit!")
+				if not response:
+					sys.exit(0)
+			count += dedup(filename)
 		print "total sites after dedup: {0}".format(count)
 	elif function == "sample":
 		text_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
