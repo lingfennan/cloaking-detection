@@ -20,12 +20,9 @@ def output_db(cursor, output_filename):
 
 cnx = MySQLdb.connect(host='localhost',user='root', passwd='asdf', db='LabelDB')
 cursor = cnx.cursor()
-query_dom = "SELECT url, userFilePath FROM test_intersect_google_dom WHERE label='Yes'";
-query_text = "SELECT url, userFilePath FROM test_intersect_google_text WHERE label='Yes'";
-cursor.execute(query_dom)
-output_db(cursor, 'export_db_cloaking_websites_dom')
-cursor.execute(query_text)
-output_db(cursor, 'export_db_cloaking_websites_text')
+query = "SELECT url, userFilePath FROM search_detection WHERE label='Yes'";
+cursor.execute(query)
+output_db(cursor, 'cloaking_label_weiren')
 
 
 cursor.close();
