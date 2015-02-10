@@ -1,1 +1,25 @@
 This directory is for paper writing.
+
+Randomly sample the data and run our algorithm on them.
+
+Evaluate the results.
+
+Write interesting cases and discuss in the paper.
+1. cloaking sites, reuse their content and distribute content across websites.
+
+2. deliver text to google, but to user a questioinarre. with similar text. the
+form may be phishing.
+
+3. cloaking sites, show google benign content, but for user, they wait a few
+seconds and redirect user to different pages. The landing pages are typically
+malicious download, or something else.
+
+This tells us that, attacker raise ranking by SEO in Google, but deliver user to
+different locations at runtime.
+
+4. categories
+medicines, gambling, cheating, general purpose SEO
+
+5. works
+
+

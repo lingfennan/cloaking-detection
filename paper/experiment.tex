@@ -1,8 +1,11 @@
 \section{Experiment}
 \label{s:experiment}
 
+
+
 \subsection{Dataset}
 
+\XXX{plot simhash of known cloaking}
 
 Because we want to measure cloaking in SEO and SEM, we have compiled a list of
 cloaking words, from the policies specified by Adwords, inspired by the words
@@ -39,10 +42,10 @@ In order to get groundtruth, we follow a similar process employed in
 script to query the WOT API, and remove websites with combined score 80
 (which is a pretty high score) and the results are \XXX{N} urls after that.
 
-for advertisements, after filtering, there are 2354 urls
+for advertisements, after filtering, there are 2279 (score 60) urls
 remained.\XXX{Problematic because I haven't merged them}
 
-for search results, after filtering, there are 94467 urls remained.
+for search results, after filtering, there are 90120 (60) urls remained.
 \XXX{Problematic because I haven't merged them}
 
 
@@ -51,10 +54,10 @@ This results in \XXX{Some} links. Then we compare the text simhash and dom
 simhash, remove those which are exactly duplicate of one of the simhash observed
 by Google. After this step, we have \XXX{N} url left.
 
-For advertisements, after deduplication, there are 1300 urls remained.
+For advertisements, after deduplication, there are 997 (score 60) urls remained.
 
-For search results, after deduplication, there are 52633 urls remained.
-51124 websites.
+For search results, after deduplication 37155 urls, 35444 websites remained.
+
 
 \bf{Step 3: Random Sample and Labeling}
 
@@ -73,3 +76,6 @@ us.
 
 
 
+
+We see a lower clokaing rate compared to XXX, may be because Google has done
+something to this. However, this problem still remains.

@@ -75,6 +75,10 @@ def get_learned_eval(learned_file, observed_file):
 		learned_sites_map[learned_site.name] = learned_site
 	result_sites = CD.LearnedSites()
 	for site_name in observed_sites_list:
+		if site_name not in learned_sites_map:
+			print "Detected cloaking: {0} not in learned sites, \
+					Strange!".format(site_name)
+			continue
 		result_site = result_sites.site.add()
 		result_site.CopyFrom(learned_sites_map[site_name])
 	return result_sites

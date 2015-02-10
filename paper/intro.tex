@@ -1,6 +1,14 @@
 \section{Introduction}
 \label{s:intro}
 
+Security problems in cloaking, phishing site, suspicious site, non-compliant
+content, malware, dishonest behavior.
+
+Given a form to the user and tell him, you can get some money if you sigh up,
+but this form is not delivered to Google.
+
+
+
 Cloaking, used by spammers for the purpose of increasing the visiting rates of
 their website, as well as to circumvent censorship, has been a challenging
 spamming technique to search engines. Recently, there is a rising trend of
@@ -23,7 +31,17 @@ intuitive way is to collect data from user directly. However, it is hard to
 collect sufficient data for comparison while protecting user privacy.
 
 
-The workflow is to collect page contents simhash on the user side, and compare
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.5\textwidth]{fig/workflow}
+  \caption{Workflow of the Proposed cloaking detection sysetem}
+  \label{fig:workflow}
+\end{figure}
+
+
+
+
+The workflow ~\autoref{fig:workflow} is to collect page contents simhash on the user side, and compare
 them to simhash of the same link from ad serving company to find cloaking. When
 the differences of the simhashes are significantly large, the page is marked
 cloaking. We generate two simhash for page content and structure respectively.
@@ -40,6 +58,19 @@ content simhash and 100\% true positive rate with 2\% false positive rate for
 structure simhash. If we define cloaking as mismatch in both page content
 simhash and structure simhash (intersection of mismatches in both case), we can
 achieve more than 99\% true positive rate with 1\% false positive rate.
+
+
+In our detection result, we have observed many cloaking cases, where URL are
+completely different, while the content are similar or even the same.
+We argue that, the foundamental reason for them to do this is the low cost of
+getting a new URL and lack of efficient way to detect spammy content.
+Based on this observation, we propose content based blacklist to raise the bar
+for reusing spammy content. This approach leverages the most popular use of
+simhash - near duplicate detection. For spammy pages, in order to evade our
+detection, they not only need to change URL rapidly, but also update their
+content everytime, which can be expensive in their current mode if they want
+every copy their website to be different and have meaningful and stay attractive
+to user.
 
 
 This paper makes the following contributions:
