@@ -11,7 +11,7 @@ to these websites included an Google Signature. These cloaking websites detected
 typed the website URL directly to the brower or set the HTTP proxy as Google-bot. We revisited the website and saw different content without malicious downloads. The cloaking idea is clear. To avoid Google censorship system find their maclicious downloads, the websites serves benign content related to "Game Texas Holdm Poker Online" if visits are from Google IP address or directly input url. Because this website is a unknown small website, most of their visits are from Google Search. Thus, the website only show their mailicious downloads when visits are from Google search results while serve benign content to direct URL access and Google IP address. 
 As an example of advertisement cloaking, enter the term "essay writing" on Google on Feb 6, 2015 returned a set of search results and advertisements related to essay writing. (The appendix includes screenshots of this example.) For the second advertisement result in right side, the bold line circle the webstie (everlastinghelp.com) that sent "Homework assignment help" to users when users click the link from Google. After we set our browser agent as Google-bot, we accessed the same website again. This time, the website sent totally different content about travel to us. In this example, homework assignment help is classified as dishonest behaviors which is not allowed by Google-Ads-Words Policy. To get profits by providing illegal services and survive from the cencorship of Google, this website (everlastinghelp.com) identify Google-bots by IP address and serve Goolge-bots different content  from users. 
 From these two examples, we see different incentives of cloaking. In first example, the incentive of cloaking is malicious downloading. In second example, the incentive of cloaking is providing 
-illegale serices. To understand various cloaking incentives, we will introcuce areas such as search enginee optimization and search enginee marketing where cloaking exists. To understand 
+illegale serices. To understand various cloaking incentives, we will introcuce areas such as search enginee optimization(SEO) and search enginee marketing(SEM) where enourmous cloaking exists. To understand 
 mechamisms of cloaking, we will introduce types of cloaking such as IP cloaking, referrer cloaking, repeat cloaking and user-agent cloaking. 
 
 
@@ -34,12 +34,22 @@ In order to sell products or services that don't follow the Search Enginee Polic
 Traditional cloaking detection model only targets SEO field, our simhash based cloaking detection method could work both on SEO and SEM field. The main difference between the SEM and SEO is that every link in SEM is "pay per click". This indicates that  traiditional crawler will increase the advertisers payments by clicking the search result links and collecting data. If the cralwers first collect the landing page of the search result links then visit urls to collect data. The crawlers won't find the referal cloaking accoding to defination of referal cloaking. However, in our crowdsoucing model, the data we collected is from real users' clicks. Advertisers wouldn't pay extra money because of data collection. 
 Model based on crowdsourcing could preserve the three party relationships between Users, Search Enginee Providers and Advertisers.
 
+why cloaking matters in security field?
+malicious download, illegal drugs, illegal services, guns, phishing site, 
+
+
+
 1.David Y. Wang Single IP not efficient in  IP cloaking.
+2.text shingling computation complexity is o(nlgn), simhash is 0(n). 5 bilion pages are indexed by google. 
 2.While David Y. Wang crawlers disguised as users, crawlwers are still not users. There is no proof whehter the data collected by cralwer disguised as users could is exact same aas user sees. 
 2.5 David Y. Wang crawlers are actively crawl data. We are passively receive the SimHash Value compare. 
-3.computation--distributed the part of computation work (SimHash calculation) to users. Servers only needs to compare the SimHash value. David Y. Wang need to do whole computation. 
-4.not real time base
-
+3.distributed workload computation--distributed the part of computation work (SimHash calculation) to users. Servers only needs to compare the SimHash value. David Y. Wang need to do whole computation. 
+4.cloaking is dynamic. users could monitor the webstite every time. cralwers could only peredically crawl. But users will give us much more data.
+5.map(url1, simhash1)cloaking,  map(url2,simhash2) if simhash2==simhash1, high likely that url2 is cloaking. when a new (url, simhash) come, we firstly index the url. if simhash match, highly possible
+cloaking. If not same, then compute the existed one. Index a simhash value only takes o(1) time. If we compare, this will takes google crawl 6 times, compute a simhash model and compare the user 
+simhash value and simhash model. it takes too much time. Many cloaking websites are shareing the same content. show figure. \XXX{} building this simhash table takes 2^64. It's enought to measure 
+cloaking websites because the whole websites is 5 billion(2^34) which is also dynamic. simhash table (simhash value, cloaking or not or percentages of cloaking websites in this field). Using the traditional one, they couldn't find this. They firstly need to store the whole cloaking websites. Not enought storage. Then indexed a same cloaking website. Indexing cost is higher than O(1). 
+6. Our simhash model mearsue time is smaller than most of cloaking changing duration. Wouldn't miss any cloaking because cloaking change too slowly. Traditional crawleing would miss. 
 \subsection{Simhash}
 Talk about simhash related work here. \\
 Simhash~\cite{charikar2002similarity}  is a locality sensitive hash algorithm.
