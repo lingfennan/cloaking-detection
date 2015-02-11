@@ -91,7 +91,7 @@ class Operations {
 			url VARCHAR(1000) NOT NULL,
 			userFilePath VARCHAR(1000) NOT NULL,
 			googleFilePath VARCHAR(1000) NOT NULL,
-			label ENUM('Yes', 'No', 'NoByRef', 'PageBroken', 'NotSure', 'TODO', 'Processing'))";
+			label ENUM('Adult', 'Pharmacy', 'Cheat', 'Gambling', 'BadDomain', 'BenignCloaking', 'No', 'NoByRef', 'PageBroken', 'NotSure', 'TODO', 'Processing'))";
 		// TODO is the start state,
 		// Processing is the processing state,
 		// Yes, No, NoByRef, PageBroken, NotSure are processed state.
@@ -101,26 +101,17 @@ class Operations {
 		// For a specific site, when comparing user view with Google view, if we already identified
 		// a similar copy, then it is not cloaking (No). We mark the rest as NoByRef.
 		$create_query = sprintf($create_format, $table_name);
-
-		// Generate load query
-		$all_sites = new AllSites($googleFile, $userFile);
-		$insert_format = "INSERT INTO %s (url, userFilePath, googleFilePath, label) VALUES ";
-		$insert_str = sprintf($insert_format, $table_name);
-		$values_format = "('%s', '%s', '%s', 'TODO')";
-		$values_array = array();
-		while (True) {
-			$result = $all_sites->getCurrent(False);
-			if ($result == NULL) break;
-			$userFilePath = substr($result[0], 2);
-			$googleFilePath = substr($result[1], 2);
-			$resultURL = $result[2];
-			$values_str = sprintf($values_format, $resultURL, $userFilePath,
-			       	$googleFilePath);
-			array_push($values_array, $values_str);
-		}
-		$load_query = $insert_str . implode(",", $values_array);
 		$q = array(
 			array("query" => $create_query),
+			);
+		$this->database->transaction($q);
+		$this->loadComparisonTask($userFile, $googleFile, $table_name);
+	}
+
+	function loadBlock($insert_str, $values_array, $start, $size) {
+		$sub_array = array_slice($values_array, $start, $size);
+		$load_query = $insert_str . implode(",", $sub_array);
+		$q = array(
 			array("query" => $load_query),
 			);
 		$this->database->transaction($q);
@@ -133,34 +124,53 @@ class Operations {
 		$values_format = "('%s', '%s', '%s', 'TODO')";
 		$values_array = array();
 		while (True) {
-			$result = $all_sites->getCurrent(False);
+			$result = $all_sites->getCurrent(True);
 			if ($result == NULL) break;
 			$userFilePath = substr($result[0], 2);
 			$googleFilePath = substr($result[1], 2);
 			$resultURL = $result[2];
-			$values_str = sprintf($values_format, $resultURL, $userFilePath,
+			$values_str = sprintf($values_format, 
+				mysql_real_escape_string($resultURL), $userFilePath,
 			       	$googleFilePath);
 			array_push($values_array, $values_str);
 		}
-		$load_query = $insert_str . implode(",", $values_array);
-		$q = array(
-			array("query" => $load_query),
-			);
-		$this->database->transaction($q);
+		$block_size = 500;
+		$block_count = count($values_array) / $block_size;
+		$residue = count($values_array) % $block_size;
+		for ($x = 0; $x < $block_count; $x ++) {
+			$this->loadBlock($insert_str, $values_array, $x * $block_size, $block_size);
+		}
+		if ($residue != 0) {
+			$this->loadBlock($insert_str, $values_array, $block_count * $block_size, $residue);
+		}
 	}
 
-	function countRows($table_name) {
+	function countRows($table_name, $field=NULL, $label=NULL) {
 		// count how many rows there is in the table
 		// -1 means table doesn't exist
 		// o.w. it returns number of rows
-		$count_format = "SELECT COUNT(*) FROM %s";
+		if ($field == NULL) {
+			$count_format = "SELECT COUNT(*) FROM %s";
+		} else {
+			$count_format = "SELECT COUNT(DISTINCT(%s)) ";
+			$count_format = sprintf($count_format, $field);
+			$count_format = $count_format . " FROM %s";
+			if ($label != NULL) {
+				$suffix = sprintf(" where label = '%s'", $label);
+				$count_format = $count_format . $suffix;
+			}
+		}
 		$count_query = sprintf($count_format, $table_name);
 		$q = array(
 			array("query" => $count_query),
 			);
 		$result = $this->database->transaction($q);
 		if ($result[0] and $result[1][0] != NULL) {
-			return $result[1][0][0]["COUNT(*)"];
+			if ($field == NULL) {
+				return $result[1][0][0]["COUNT(*)"];
+			} else {
+				return $result[1][0][0]["COUNT(DISTINCT(" . $field . "))"];
+			}
 		} else {
 			return -1;
 		}
@@ -194,10 +204,10 @@ class Operations {
 		} 
 	}
 
-	function skipUrl($table_name, $url) {
+	function skipUrl($table_name, $label, $url) {
 		// Skip a URL and mark all the TODO items as NotSure
 		$select_format = "SELECT * FROM %s where label = 'TODO' and url = '%s'";
-		$update_format = "UPDATE %s SET label = 'NotSure'";
+		$update_format = "UPDATE %s SET label = '" . $label . "'";
 		$select_query = sprintf($select_format, $table_name, $url);
 		$update_format = sprintf($update_format, $table_name) . " WHERE id = %d";
 		$result = $this->database->selectUpdate($select_query, $update_format);

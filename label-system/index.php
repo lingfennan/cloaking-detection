@@ -22,18 +22,39 @@ include("mysql_db.php");
 if (isset($_GET["userFile"])) {
 	$userFile = $_GET["userFile"];
 } else {
-	$userFile = "user_sees";
+	// $userFile = "user_sees";
+	// $userFile = "data/all.computed/search_sample_list.100.user.sample.text.eval";
+	// $userFile = "data/all.computed/search.detection.result.eval";
+	//$userFile = "data/all.computed/ad.detection.result.eval";
+	//$userFile = "data/dishonest_behavior_abusive_words.computed/search.detection.result.eval";
+	//$userFile = "data/all.computed/search_sample_list_600_1.user.sample.text.eval";
+	$userFile = "data/all.computed/search_sample_list_600_combined_user.sample.text.eval";
 }
 if (isset($_GET["googleFile"])) {
 	$googleFile = $_GET["googleFile"];
 } else {
-	$googleFile = "google_sees";
+	// $googleFile = "google_sees";
+	// $googleFile = "data/all.computed/search_sample_list.100.google.sample.text.eval";
+	// $googleFile = "data/all.computed/search.detection.learned.eval";
+	//$googleFile = "data/all.computed/ad.detection.learned.eval";
+	//$googleFile = "data/dishonest_behavior_abusive_words.computed/search.detection.learned.eval";
+	//$googleFile = "data/all.computed/search_sample_list_600_1.google.sample.text.eval";
+	$googleFile = "data/all.computed/search_sample_list_600_combined_google.sample.text.eval";
 }
 if (isset($_GET["table"])) {
 	$table_name = $_GET["table"];
+	// $table_name = preg_replace("/[^0-9a-zA-Z$_]/", "_", $table_name);
 } else {
-	$table_name = "search_text";
+	// $table_name = "search_text";
+	//$table_name = "search_groundtruth_1000";
+	// $table_name = "search_detection";
+	//$table_name = "ad_detection";
+	//$table_name = "dishonest_ad_detection";
+	//$table_name = "dishonest_search_detection";
+	//$table_name = "search_sample_list_600_1";
+	$table_name = "search_sample_list_600_combined";
 }
+// echo $userFile . $googleFile . $table_name;
 $oper = new Operations;
 
 // POST Handler
@@ -44,8 +65,10 @@ if (isset($_POST["submit"])) {
 			$_POST["user"]);
 	} else if ($action == "exit") {
 		$oper->processed($table_name, "TODO", $_POST["id"]);
-	} else if ($action == "skip url") {
-		$oper->skipUrl($table_name, $_POST["url"]);
+	} else if ($action == "label and skip url") {
+		$oper->processed($table_name, $_POST["response"], $_POST["id"], $_POST["url"], 
+			$_POST["user"]);
+		$oper->skipUrl($table_name, $_POST["response"], $_POST["url"]);
 	}
 }
 
@@ -64,6 +87,8 @@ if ($count == -1) {
 	$result = $oper->processing($table_name);
 }
 echo "Current id: " . $result["id"] . ", Total count: " . $count . "<br>";
+echo "Remaining websites: " . $oper->countRows($table_name, "url", "TODO") . 
+	", Total websites: " . $oper->countRows($table_name, "url");
 ?>
 
 <!DOCTYPE html>
@@ -79,12 +104,19 @@ echo "<title>" . $table_name . "</title>";
 <form method="post">
 <div class="wrapper">
 <input class="button" type="radio" name="response" value="No">Similar
-<input class="button" type="radio" name="response" value="Yes">Different
+<input class="button" type="radio" name="response" value="BenignCloaking">Benign Cloaking
 <input class="button" type="radio" name="response" value="PageBroken">PageBroken
 <input class="button" type="radio" name="response" value="NotSure">Not Sure
 <br>
+<br>
+<input class="button" type="radio" name="response" value="Adult">Adult
+<input class="button" type="radio" name="response" value="Pharmacy">Pharmacy
+<input class="button" type="radio" name="response" value="Cheat">Cheat
+<input class="button" type="radio" name="response" value="Gambling">Gambling
+<input class="button" type="radio" name="response" value="BadDomain">Bad Domain
+<br>
 <input class="button" type="submit" name="submit" value="submit">
-<input class="button" type="submit" name="submit" value="skip url">
+<input class="button" type="submit" name="submit" value="label and skip url">
 <input class="button" type="submit" name="submit" value="exit">
 </div>
 
