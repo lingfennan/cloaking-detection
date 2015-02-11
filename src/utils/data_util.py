@@ -52,6 +52,7 @@ import sys, getopt
 import time
 # For REMOTE_DRIVER
 import util
+import logging
 from learning_detection_util import _split_path_by_data, show_proto, sites_file_path_set, intersect_observed_sites, read_proto_from_file, write_proto_to_file, aggregate_simhash
 from learning_detection_util import hamming_distance, merge_observed_sites, valid_instance
 from learning_detection_util import interact_query
@@ -146,8 +147,9 @@ def dedup(text_file):
 	dom_file = text_file.replace('text', 'dom')
 	user_text_observed_sites = CD.ObservedSites()
 	read_proto_from_file(user_text_observed_sites, text_file)
-	print "processing {0}".format(text_file)
-	print "before dedup: {0}".format(len(user_text_observed_sites.site))
+	logger = logging.getLogger("global")
+	logger.info("processing {0}".format(text_file))
+	logger.info("before dedup: {0}".format(len(user_text_observed_sites.site)))
 	user_dom_observed_sites = CD.ObservedSites()
 	read_proto_from_file(user_dom_observed_sites, dom_file)
 	google_text_file = text_file.replace('user', 'google')
@@ -170,6 +172,8 @@ def dedup(text_file):
 	# if the feature set is empty, then this is the hash value.
 	text_zero = set([18446744073709551615])
 	zero_count = 0
+	google_failure_count = 0
+	google_zero_count = 0
 	for site_name in user_text_dict:
 		if ((not site_name in google_text_dict) or
 				(not site_name in google_dom_dict)):
@@ -179,6 +183,12 @@ def dedup(text_file):
 			continue
 		elif (user_text_dict[site_name] == text_zero):
 			zero_count += 1
+			continue
+		elif (google_text_dict[site_name] == text_failure):
+			google_failure_count += 1
+			continue
+		elif (google_text_dict[site_name] == text_zero):
+			google_zero_count += 1
 			continue
 		text_common = user_text_dict[site_name] & google_text_dict[site_name] 
 		dom_common = user_dom_dict[site_name] & google_dom_dict[site_name]
@@ -199,8 +209,10 @@ def dedup(text_file):
 	write_proto_to_file(user_dom_remained, dom_file + ".dedup")
 	write_proto_to_file(google_text_remained, google_text_file + ".dedup")
 	write_proto_to_file(google_dom_remained, google_dom_file + ".dedup")
-	print "after dedup: {0}".format(len(user_text_remained.site))
-	print "failure count: {0}, zero feature count: {1}".format(failure_count, zero_count)
+	logger.info("after dedup: {0}".format(len(user_text_remained.site)))
+	logger.info("failure count: {0}, zero feature count: {1}".format(failure_count, zero_count))
+	logger.info("google failure count: {0}, google zero feature \
+			count: {1}".format(google_failure_count, google_zero_count))
 	return len(user_text_remained.site)
 
 
@@ -244,8 +256,9 @@ def sample(text_filenames, outfile, sample_size):
 		observed_site_list.append(observed_site)
 		for observation in observed_site.observation:
 			url_set.add(observation.landing_url)
-	print "there are {0} urls".format(len(url_set))
-	print "there are {0} observed sites".format(len(observed_site_list))
+	logger = logging.getLogger("global")
+	logger.info("there are {0} urls".format(len(url_set)))
+	logger.info("there are {0} observed sites".format(len(observed_site_list)))
 	random.shuffle(observed_site_list)
 	# test_size is number of sites, actual observation should be more than this.
 	sample_sites = CD.ObservedSites()
@@ -396,8 +409,8 @@ def main(argv):
 	-l <server_link> -o <outdir> -m <mode>][-i <inputfile>-o <outfile> -s
 	<simhash_type> -t <proto_type>][-i <inputfile> -o <outfile> -s
 	<simhash_type> -t <proto_type> -a] [-o <outfile>] [-i <inputfile> -o
-	<outfile>] [-i <inputfile>] [-i <text_filt>] [-i <inputfile> -c <count>]
-	[-o <outfile>] [-i <inputfile> -l <leanredfile> -o <outfile>], valid functions are
+	<outfile>] [-i <inputfile>] [-i <text_filt>] [-i <inputfile> -c <count>
+	-o <outfile>] [-o <outfile>] [-i <inputfile> -l <leanredfile> -o <outfile>], valid functions are
 	append_prefix, compute_list, show_proto, intersect_sites,
 	collect_observations, plot_simhash, plot_sim_distance, get_domains,
 	get_domain_scores, domain_filter, dedup, sample, merge_sites,
@@ -411,6 +424,7 @@ def main(argv):
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
+	hasinputfile = False
 	outfile = None
 	avg_dist = False
 	for opt, arg in opts:
@@ -426,6 +440,7 @@ def main(argv):
 			outfile = arg
 		elif opt in ("-i", "--ifile"):
 			inputfile = arg
+			hasinputfile = True
 		elif opt in ("-t", "--proto_type"):
 			proto_type = arg
 		elif opt in ("-m", "--mode"):
@@ -441,6 +456,9 @@ def main(argv):
 		else:
 			print help_msg
 			sys.exit(2)
+	if hasinputfile:
+		logging.basicConfig(filename= inputfile + "_running_log_" + function, level=logging.DEBUG)
+		logging.getLogger("global")
 	if not has_function:
 		print help_msg
 		sys.exit()
@@ -501,7 +519,9 @@ def main(argv):
 				if not response:
 					sys.exit(0)
 			count += dedup(filename)
-		print "total sites after dedup: {0}".format(count)
+
+		logger = logging.getLogger("global")
+		logger.info("total sites after dedup: {0}".format(count))
 	elif function == "sample":
 		text_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
 		sample(text_filenames, outfile, int(count))
