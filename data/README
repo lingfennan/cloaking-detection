@@ -13,3 +13,21 @@ US_web_search_list.Chrome[1]	: google ad list collected through Chrome, using ho
 US_web_search_list.Firefox[2]	: google ad list collected through Firefox, using hot word list for web search. [csv.20140929-211720/*Web Search*]
 US_web_search_list.Chrome.201411(10 + 2N)*	: ad list [1] crawled data using google_bot_list (even dates)
 US_web_search_list.Chrome.201411(11 + 2N)*	: ad list [2] crawled data using nong_google_bot_list_1 (odd dates)
+
+
+
+
+The following are labels.
+US_web_search_list.Chrome.bot.20141116-100001.selenium.crawl.tgz
+US_web_search_list.Chrome.bot.20141118-100000.selenium.crawl.tgz
+US_web_search_list.Chrome.bot.20141120-100001.selenium.crawl.tgz
+US_web_search_list.Chrome.bot.20141128-160000.selenium.crawl.tgz
+US_web_search_list.Chrome.user.20141111-085851.selenium.crawl.tgz
+US_web_search_list.Chrome.user.20141121-140101.selenium.crawl.tgz
+US_web_search_list.Chrome.user.20141127-160000.selenium.crawl.tgz
+US_web_search_list.Chrome.user.20141129-160000.selenium.crawl.tgz
+US_web_search_list.Chrome.user.20141130-160000.selenium.crawl.tgz
+US_web_search_list.Chrome.bot.20141110-185317.selenium.crawl.tgz
+US_web_search_list.Chrome.bot.20141112-100001.selenium.crawl.tgz
+US_web_search_list.Chrome.bot.20141114-100000.selenium.crawl.tgz
+

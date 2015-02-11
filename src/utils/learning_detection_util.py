@@ -359,7 +359,7 @@ def prepare_matrix(simhash_item_vector):
 	mat = np.zeros((vector_size, 64), dtype=np.bool)
 	for i in range(vector_size):
 		item = simhash_item_vector[i]
-		np.copyto(mat[i], uint_to_bool(item.simhash))
+		mat[i] = np.copy(uint_to_bool(item.simhash))
 	return mat
 
 def get_indexes(cluster_label):
