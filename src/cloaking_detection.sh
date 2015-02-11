@@ -1,34 +1,60 @@
 #!/bin/bash
 #
 # INFILE=$1
-BASEDIR='../data/all.computed/'
-INFILE=$BASEDIR'search_user_list'
-# in the above step, we just processed search_google_list
-LEARN=$BASEDIR'search_google_list'
+TYPE=$1
+BASEDIR=$2
+FILT=$3
 
-#python cluster_learning.py -f learn -i ../data/all.computed/search_google_text_list -o ../data/all.computed/search_google_list.text -t TEXT -c 1.1
-#python cluster_learning.py -f learn -i ../data/all.computed/search_google_dom_list -o ../data/all.computed/search_google_list.dom -t DOM -c 1.1
+echo "Note: I need to specify TYPE [ad/search] [BASEDIR, eg. $BASEDIR/, and compile the user list, either search user list or ad user list, with no suffix"
+
+#BASEDIR='../data/all.computed/'
+INFILE=$BASEDIR$TYPE'_user_list'
+# in the above step, we just processed $TYPE_google_list
+LEARN=$BASEDIR$TYPE'_google_list'
+
+
+# for search, use text r 15, c 3
+# for search, use dom 10, c 3
+
+# for ad, use text r 10, c 2
+# for ad, use dom 8, c 2
+if [ "$TYPE" == "ad" ]; then
+	TEXT_R=10
+	TEXT_C=3
+	DOM_R=8
+	DOM_C=2
+else
+	TEXT_R=15
+	TEXT_C=3
+	DOM_R=8
+	DOM_C=2
+fi
+
+
+ls $BASEDIR*$TYPE*google*list.dom*dedup  > $BASEDIR$TYPE'_google_dom_list'
+ls $BASEDIR*$TYPE*google*list.text*dedup  > $BASEDIR$TYPE'_google_text_list'
+
+#python cluster_learning.py -f learn -i $BASEDIR$TYPE'_google_text_list' -o $BASEDIR$TYPE'_google_list.text' -t TEXT -c 1.1
+#python cluster_learning.py -f learn -i $BASEDIR$TYPE'_google_dom_list' -o $BASEDIR$TYPE'_google_list.dom' -t DOM -c 1.1
 while read observed_file
 do
 	# this parameter is based on what i observed from site_dynamics sites.
-	echo "Results on $observed_file.text.filt.dedup"
-	#python cloaking_detection.py -f detect -i $observed_file.text.filt.dedup -l $LEARN.text.learned -t TEXT -r 1.8 -c 1.2
-	python cloaking_detection.py -f detect -i $observed_file.text.filt.dedup -l $LEARN.text.learned -t TEXT -r 15 -c 3.0
+	echo "Results on $observed_file.text.${FILT}dedup"
+	python cloaking_detection.py -f detect -i $observed_file.text.${FILT}dedup -l $LEARN.text.learned -t TEXT -r $TEXT_R -c $TEXT_C
 
-	echo "Results on $observed_file.dom.filt.dedup"
-	python cloaking_detection.py -f detect -i $observed_file.dom.filt.dedup	-l $LEARN.dom.learned -t DOM -r 10 -c 3.0
+	echo "Results on $observed_file.dom.${FILT}dedup"
+	python cloaking_detection.py -f detect -i $observed_file.dom.${FILT}dedup	-l $LEARN.dom.learned -t DOM -r $DOM_R -c $DOM_C
 
 	INTERSECT=$observed_file.cloaking.intersect
 	ls $observed_file.*.cloaking | python utils/data_util.py -f intersect_sites -o $INTERSECT
 done < $INFILE
 
-BASEDIR='../data/all.computed/'
-LEARN=$BASEDIR'search_google_list'
+LEARN=$BASEDIR$TYPE'_google_list'
 
-RESULT=$BASEDIR'search.detection.result'
-LEARNED=$BASEDIR'search.detection.learned'
+RESULT=$BASEDIR$TYPE'.detection.result'
+LEARNED=$BASEDIR$TYPE'.detection.learned'
 
-ls $BASEDIR*.intersect | python utils/data_util.py -f merge_sites -o $BASEDIR'search.detection.result'
+ls $BASEDIR*$TYPE*.intersect | python utils/data_util.py -f merge_sites -o $RESULT
 
 python utils/util.py -f evaluation_form -i $RESULT  -p ObservedSites
 
