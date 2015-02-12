@@ -53,6 +53,7 @@ import time
 # For REMOTE_DRIVER
 import util
 import logging
+from export_db_cloaking_websites import export_db_to_file
 from learning_detection_util import _split_path_by_data, show_proto, sites_file_path_set, intersect_observed_sites, read_proto_from_file, write_proto_to_file, aggregate_simhash
 from learning_detection_util import hamming_distance, merge_observed_sites, valid_instance
 from learning_detection_util import interact_query
@@ -414,7 +415,7 @@ def main(argv):
 	append_prefix, compute_list, show_proto, intersect_sites,
 	collect_observations, plot_simhash, plot_sim_distance, get_domains,
 	get_domain_scores, domain_filter, dedup, sample, merge_sites,
-	get_learned_eval"""
+	get_learned_eval, [-i <table_name> -o <outfie>] export_db"""
 	try:
 		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:s:ac:",
 				["function=", "prefix=", "outfile=",
@@ -542,6 +543,11 @@ def main(argv):
 		result_sites = get_learned_eval(learned_file, observed_file)
 		write_proto_to_file(result_sites, outfile)
 		evaluation_form(outfile, outfile + ".eval", "LearnedSites")
+	elif function == "export_db":
+		"""
+		-i table_name -o outfile
+		"""
+		export_db_to_file(inputfile, outfile)
 	else:
 		print help_msg
 		sys.exit(2)

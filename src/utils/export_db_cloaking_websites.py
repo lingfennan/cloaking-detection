@@ -17,14 +17,20 @@ def output_db(cursor, output_filename):
 	write_proto_to_file(observed_sites, output_filename);
 		
 
+def export_db_to_file(table, outfile, labels=None):
+	cnx = MySQLdb.connect(host='localhost',user='root', passwd='asdf', db='LabelDB')
+	cursor = cnx.cursor()
+	if labels:
+		enum = labels
+	else:
+		enum = ['Adult', 'Pharmacy', 'Cheat', 'Gambling', 'BadDomain']
+	label_str = " OR ".join(["label='" + e +"'" for e in enum])
+	query = "SELECT url, userFilePath FROM " + table + " WHERE " + label_str
+	print query
+	cursor.execute(query)
+	# output_db(cursor, 'cloaking_label_weiren')
+	output_db(cursor, outfile)
 
-cnx = MySQLdb.connect(host='localhost',user='root', passwd='asdf', db='LabelDB')
-cursor = cnx.cursor()
-query = "SELECT url, userFilePath FROM search_detection WHERE label='Yes'";
-cursor.execute(query)
-output_db(cursor, 'cloaking_label_weiren')
-
-
-cursor.close();
-cnx.close();
+	cursor.close();
+	cnx.close();
 
