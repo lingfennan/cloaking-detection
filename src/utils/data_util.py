@@ -548,6 +548,7 @@ def main(argv):
 		-i table_name -o outfile
 		"""
 		export_db_to_file(inputfile, outfile)
+		export_db_to_file(inputfile, outfile + ".noise", ["PageBroken"])
 	else:
 		print help_msg
 		sys.exit(2)
