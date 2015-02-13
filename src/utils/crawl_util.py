@@ -208,6 +208,12 @@ class Visit:
 		"""
 		valid_instance(crawl_log, CD.CrawlLog)
 		valid_instance(n_times, int)
+		# prepare landing_url_set
+		landing_url_set = crawl_log_attr_set(crawl_log, "landing_url")
+		landing_url_set_size = len(landing_url_set)
+		if landing_url_set_size < 8:
+			record_maximum_threads = self.crawl_config.maximum_threads
+			self.crawl_config.maximum_threads = 2
 		url_fetcher = UrlFetcher(self.crawl_config)
 		for i in range(n_times):
 			# the time label is set for each iteration of visit
@@ -217,11 +223,11 @@ class Visit:
 					'.revisit_time' + revisit_now_suffix + '/'
 			url_fetcher.update_dir(self.crawl_config.user_agent_md5_dir)
 
-			# prepare landing_url_set
-			landing_url_set = crawl_log_attr_set(crawl_log, "landing_url")
 			self.visit_landing_url(landing_url_set, url_fetcher)
 		self.write_crawl_log(False)
 		url_fetcher.quit()
+		if landing_url_set_size < 8:
+			self.crawl_config.maximum_threads = record_maximum_threads
 
 
 """
