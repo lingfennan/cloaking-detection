@@ -451,6 +451,7 @@ def search_and_revisit(word_file, n, threads=6, ad_only=False):
 	for word in words.get_word_list():
 		print "Processing {0} word: {1}".format(words.current(), word)
 		# update word_md5 related directories
+		print word
 		word_md5 = hex_md5(word)
 		ad_crawl_config.log_filename = ad_log_filename_prefix + "." + word_md5
 		ad_crawl_config.user_agent_md5_dir = word_md5.join(
