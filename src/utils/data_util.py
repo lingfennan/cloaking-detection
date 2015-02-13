@@ -533,6 +533,8 @@ def main(argv):
 	elif function == "merge_sites":
 		observed_sites_names = [line[:-1] for line in sys.stdin]
 		observed_sites = merge_observed_sites(observed_sites_names)
+		logger = logging.getLogger("global")
+		logger.info("total sites after merge: {0}".format(len(observed_sites.site)))
 		write_proto_to_file(observed_sites, outfile)
 	elif function == "get_learned_eval":
 		"""

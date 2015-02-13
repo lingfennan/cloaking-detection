@@ -12,6 +12,7 @@ import simhash
 from threading import Thread
 from html_simhash_computer import HtmlSimhashComputer
 from utils.learning_detection_util import write_proto_to_file, read_proto_from_file, valid_instance, average_distance, centroid_distance, sites_file_path_set
+from utils.learning_detection_util import intersect_observed_sites
 from utils.thread_computer import ThreadComputer
 import utils.proto.cloaking_detection_pb2 as CD
 
@@ -187,10 +188,12 @@ class CloakingDetection(object):
 				size += len(cloaking_site.observation)
 		print "total site {0}".format(len(observed_sites.site))
 		print "cloaking site {0}".format(len(cloaking_sites.site))
+		"""
 		for site in cloaking_sites.site:
 			print site.name
 		print "cloaking count"
 		print size
+		"""
 		return cloaking_sites
 
 def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type,
@@ -244,12 +247,12 @@ def compute_metrics(detected, expected, total):
 	"""
 	valid_instance(detected, CD.ObservedSites)
 	valid_instance(expected, CD.ObservedSites)
-	detected_files = sites_file_path_set(detected)
-	expected_files = sites_file_path_set(expected)
-	detected_size = len(detected_files)
-	true_total = len(expected_files)
+	detected_names = sites_name_set(detected)
+	expected_names = sites_name_set(expected)
+	detected_size = len(detected_names)
+	true_total = len(expected_names)
 	false_total = total - true_total
-	true_positive = len(detected_files & expected_files)
+	true_positive = len(detected_names & expected_names)
 	false_positive = detected_size - true_positive
 	true_positive_rate = float (true_positive) / true_total
 	false_positive_rate = float (false_positive) / false_total
@@ -259,28 +262,71 @@ def compute_metrics(detected, expected, total):
 	pr = [precision, recall]
 	return rate, pr
 
-def _get_total(observed_sites):
+def sites_name_set(observed_sites):
 	valid_instance(observed_sites, CD.ObservedSites)
-	total = 0
-	for observed_site in observed_sites.site:
-		total += len(observed_site.observation)
-	return total
+	name_set = set()
+	for site in observed_sites.site:
+		name_set.add(site.name)
+	return name_set
 
-def evaluate(learned_sites_filename, observed_sites_filename, simhash_type, expected_sites_filename):
-	cloaking_sites = cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type)
+def remove_noise(cloaking_sites, noise_sites):
+	valid_instance(cloaking_sites, CD.ObservedSites)
+	valid_instance(noise_sites, CD.ObservedSites)
+	new_observed_sites = CD.ObservedSites()
+	noise_set = sites_name_set(noise_sites)
+	for observed_site in cloaking_sites.site:
+		if not observed_site.name in noise_set:
+			new_observed_site = new_observed_sites.site.add()
+			new_observed_site.CopyFrom(observed_site)
+	new_observed_sites.config.CopyFrom(cloaking_sites.config)
+	print "Before de-noise: {0}".format(len(cloaking_sites.site))
+	print "After de-noise: {0}".format(len(new_observed_sites.site))
+	return new_observed_sites
+
+def evaluate(learned_sites_filename, observed_sites_filename, simhash_type,
+		min_radius, std_constant, coefficient, expected_sites_filename,
+		noise_sites_filename):
+	cloaking_sites = cloaking_detection(learned_sites_filename,
+			observed_sites_filename, simhash_type, min_radius = float(min_radius),
+			std_constant = std_constant, inconsistent_coefficient = float(coefficient))
 	expected_sites = CD.ObservedSites()
 	read_proto_from_file(expected_sites, expected_sites_filename)
 	observed_sites = CD.ObservedSites()
 	read_proto_from_file(observed_sites, observed_sites_filename)
-	total = _get_total(observed_sites)
-	print compute_metrics(cloaking_sites, expected_sites, total)
+	noise_sites = CD.ObservedSites()
+	read_proto_from_file(noise_sites, noise_sites_filename)
+
+	filt_cloaking_sites = remove_noise(cloaking_sites, noise_sites)
+	filt_observed_sites = remove_noise(observed_sites, noise_sites)
+	total = len(filt_observed_sites.site)
+	print compute_metrics(filt_cloaking_sites, expected_sites, total)
+
+
+def evaluate_both(observed_sites_filename, text_detected_sites_filename,
+		dom_detected_sites_filename, expected_sites_filename,
+		noise_sites_filename):
+	expected_sites = CD.ObservedSites()
+	read_proto_from_file(expected_sites, expected_sites_filename)
+	observed_sites = CD.ObservedSites()
+	read_proto_from_file(observed_sites, observed_sites_filename)
+	noise_sites = CD.ObservedSites()
+	read_proto_from_file(noise_sites, noise_sites_filename)
+	both_detected = intersect_observed_sites(text_detected_sites_filename,
+			dom_detected_sites_filename)
+	filt_cloaking_sites = remove_noise(both_detected, noise_sites)
+	filt_observed_sites = remove_noise(observed_sites, noise_sites)
+	total = len(filt_observed_sites.site)
+	print compute_metrics(filt_cloaking_sites, expected_sites, total)
 
 def main(argv):
 	has_function = False
 	help_msg = """cloaking_detection.py -f <function> [-i <inputfile> -l
 		<learnedfile> -t <simhash_type> -r <min_radius> -n <std_constant> -c
 		<coefficient][-i <testfile> -l <learnedfile> -e <expectedfile> -t
-		<simhash_type>], valid functions are detect, evaluate"""
+		<simhash_type> -r <min_radius> -n <std_constant> -c
+		<coefficient>] [-i <totalfile> -l <detected_text_file> -e
+		<expectedfile>], valid functions are detect, evaluate,
+		evaluate_both"""
 	try:
 		opts, args = getopt.getopt(argv, "hf:i:l:e:t:r:n:c:",
 				["function=", "ifile=", "lfile=", "efile=",
@@ -325,7 +371,15 @@ def main(argv):
 				float(min_radius), int(std_constant),
 				float(coefficient))
 	elif function == "evaluate":
-		evaluate(learnedfile, inputfile, simhash_type, expectedfile)
+		noisefile = expectedfile + ".noise"
+		evaluate(learnedfile, inputfile, simhash_type,
+				float(min_radius), int(std_constant),
+				float(coefficient), expectedfile, noisefile)
+	elif function == "evaluate_both":
+		noisefile = expectedfile + ".noise"
+		textfile  = learnedfile
+		domfile = textfile.replace("text", "dom")
+		evaluate_both(inputfile, textfile, domfile, expectedfile, noisefile)
 	else:
 		print help_msg
 		sys.exit(2)

@@ -15,7 +15,6 @@ import sys, getopt
 from learning_detection_util import write_proto_to_file, read_proto_from_file
 import proto.cloaking_detection_pb2 as CD
 
-
 def feature_hist(filename, feature_type):
 	if feature_type == "TEXT":
 		count_attr_name = "text_feature_count"
@@ -29,13 +28,19 @@ def feature_hist(filename, feature_type):
 	observed_sites = CD.ObservedSites()
 	read_proto_from_file(observed_sites, filename)
 	feature_count_list = list()
+	count = 0
+	ob_count = 0
 	for site in observed_sites.site:
+		count += 1
+		ob_count += len(site.observation)
 		for observation in site.observation:
 			feature_count = getattr(observation, count_attr_name)
 			simhash_value = getattr(observation, simhash_attr_name)
 			if feature_count < 4:
 				print observation
 			feature_count_list.append(feature_count)
+	print "there are {0} websites".format(count)
+	print "there are {0} urls".format(ob_count)
 	feature_count_array = np.array(feature_count_list)
 	feature_count_array = np.log2(np.add(feature_count_array, 1))
 	hist, edges = np.histogram(feature_count_array)

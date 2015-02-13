@@ -47,8 +47,10 @@ malicious download, illegal drugs, illegal services, guns, phishing site,
 4.cloaking is dynamic. users could monitor the webstite every time. cralwers could only peredically crawl. But users will give us much more data.
 5.map(url1, simhash1)cloaking,  map(url2,simhash2) if simhash2==simhash1, high likely that url2 is cloaking. when a new (url, simhash) come, we firstly index the url. if simhash match, highly possible
 cloaking. If not same, then compute the existed one. Index a simhash value only takes o(1) time. If we compare, this will takes google crawl 6 times, compute a simhash model and compare the user 
-simhash value and simhash model. it takes too much time. Many cloaking websites are shareing the same content. show figure. \XXX{} building this simhash table takes 2^64. It's enought to measure 
-cloaking websites because the whole websites is 5 billion(2^34) which is also dynamic. simhash table (simhash value, cloaking or not or percentages of cloaking websites in this field). Using the traditional one, they couldn't find this. They firstly need to store the whole cloaking websites. Not enought storage. Then indexed a same cloaking website. Indexing cost is higher than O(1). 
+simhash value and simhash model. it takes too much time. Many cloaking websites
+are shareing the same content. show figure. \XXX{} building this simhash table
+takes 2\^64. It's enought to measure 
+cloaking websites because the whole websites is 5 billion(2\^34) which is also dynamic. simhash table (simhash value, cloaking or not or percentages of cloaking websites in this field). Using the traditional one, they couldn't find this. They firstly need to store the whole cloaking websites. Not enought storage. Then indexed a same cloaking website. Indexing cost is higher than O(1). 
 6. Our simhash model mearsue time is smaller than most of cloaking changing duration. Wouldn't miss any cloaking because cloaking change too slowly. Traditional crawleing would miss. 
 \subsection{Simhash}
 Talk about simhash related work here. \\

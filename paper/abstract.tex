@@ -1,33 +1,21 @@
 
 \subsection*{Abstract}
-Cloaking, used by spammers for the purpose of increasing the visiting rates of
-their website, as well as to circumvent censorship, has been a challenging
-spamming technique to search engines. Recently, there is a rising trend of
-employing
-cloaking in advertisement spam ~\cite{li2012knowing}.  The motivation of
-cloaking 
-is to hide the true nature of a website by delivering different semantic
-content users versus censors.
-Cloaking is popular due to low cost to setup and lack of efficient technique
-to detect.
+Cloaking, used by spammers for the purpose of increasing exposure of
+their websites, as well as to circumvent censorship, has been a nostorious
+spamming search enginee optimization method. Recently, besides SEO, we also
+found a rising trend of employing cloaking in search engine marketing. The motivation of cloaking 
+is to hide the true nature of a website by delivering blatantly different 
+content users versus censors. Cloaking is popular due to low setup cost 
+and lack of efficient detection technique.
 
-There are two major challenges in cloaking detection (A) revealing the
-uncloaked content 
-(B) differentiating cloaking from naturally dynamic changes of the same page.
-This work employs
-simhash-based website model to detect cloaking. The key idea to address
-challenge 
-(A) is to crowd-source data collection to user. However, collect such
-information 
-introduces large volume of traffic and violates user privacy. 
-This work proposes simhash-based website model to address challenge (B)
-with minimum amount of data and guarantee of user privacy.
-
-In order to show the effectiveness of simhash-based website model, we build
-a prototype and results 
-show that we can achieve more than 95\%? true positive rate with 5\%? false
-positive rate.
-
-Precision is 0.9610642439974043, out of 1541.
-
+In this paper, we propose Simhash-based Website Model, or SWM, a new way to
+fuzzy hash the content and layout of a
+website and model the dynamics of a website. 
+We apply SWM in cloaking detection, and achieve higher accuracy and efficiency
+compared with past approaches. In order to understand the incentives
+behind cloaking, we systematically
+categorize and review the detected samples, and find 9\% of them are malicious
+websites. We discuss deployment of SWM in cloaking detection and
+propose a novel model to
+detect cloaking through crowdsourcing with user privacy guarantee.
 
