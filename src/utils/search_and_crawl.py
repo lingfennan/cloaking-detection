@@ -412,7 +412,7 @@ def search_and_revisit(word_file, n, threads=6, ad_only=False):
 	search_config.user_agent = user_UA
 	# number of top search results to be inspected
 	if ad_only:
-		search_config.count = 5
+		search_config.count = 50
 	search_config.browser_type = CD.CrawlConfig.CHROME
 
 	ad_crawl_config = CD.CrawlConfig()
