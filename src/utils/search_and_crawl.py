@@ -264,6 +264,16 @@ class SearchTerm:
 	def google_suggest(self):
 		None
 
+def search_and_visit_ads(word_file, max_word_per_file=50):
+	"""
+	Search words in word_file, get clickstring for ads,
+	then visit these clickstrings.
+	@parameter
+	word_file: the filename containing the words to search
+	max_word_per_file: the maximum number of words to store in one crawl_log file
+	"""
+
+
 
 def search_and_crawl(word_file, max_word_per_file=50):
 	"""

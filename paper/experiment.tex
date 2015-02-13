@@ -23,6 +23,11 @@ a tradeoff between space and precision. If we want to model the website better,
 we may want to collect as many examples as possible.
 
 
+We randomly sample 600 websites from the dataset, for 10 times. This results in
+5726 websites. We manually label them and \XXX{cloaking}, \XXX{not}, percentage
+for each is.
+
+
 \subsection{Groundtruth}
 
 We remove the failure websites and this results in 
@@ -31,10 +36,12 @@ We remove the failure websites and this results in
 it makes more sense.
 
 
-Visit \XXX{N} search words, for collected search urls, we have collected
+Visit \XXX{1000} search words, for collected search urls, we have collected
 \XXX{130K} URLs.
 
 
+\XXX{Filter?}
+Maybe not
 \bf{Step 1: Filter}
 
 In order to get groundtruth, we follow a similar process employed in
@@ -50,6 +57,12 @@ for search results, after filtering, there are 90120 (60) urls remained.
 
 
 \bf{Step 2: De-duplication}
+
+71116 urls
+
+62042 websites
+
+
 This results in \XXX{Some} links. Then we compare the text simhash and dom
 simhash, remove those which are exactly duplicate of one of the simhash observed
 by Google. After this step, we have \XXX{N} url left.
@@ -79,3 +92,11 @@ us.
 
 We see a lower clokaing rate compared to XXX, may be because Google has done
 something to this. However, this problem still remains.
+
+
+For the United States, web search dataset.
+
+The advertisements are
+before dedup: 4381
+after dedup: 1487
+

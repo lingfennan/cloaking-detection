@@ -9,6 +9,42 @@ but this form is not delivered to Google.
 
 
 
+
+
+
+There are two major challenges in cloaking detection (A) revealing the
+uncloaked content 
+(B) differentiating cloaking from naturally dynamic changes of the same page.
+Previous cloaking works try to disguise themselves as normal user
+
+
+This work leverages the eucledean distance nature of simhash and proposes
+simhash-based website model to model the dynamics of a web pages efficiently.
+One application of this website model is to detect cloaking.
+
+The key idea to address
+challenge 
+(A) is to crowd-source data collection to user. However, collect such
+information 
+introduces large volume of traffic and violates user privacy. 
+This work proposes simhash-based website model to address challenge (B)
+with minimum amount of data and guarantee of user privacy.
+
+In order to show the effectiveness of simhash-based website model, we build
+a prototype and results 
+show that we can achieve more than 95\%? true positive rate with 5\%? false
+positive rate.
+
+Precision is 0.9610642439974043, out of 1541.
+
+
+
+
+
+
+
+
+
 Cloaking, used by spammers for the purpose of increasing the visiting rates of
 their website, as well as to circumvent censorship, has been a challenging
 spamming technique to search engines. Recently, there is a rising trend of
@@ -29,6 +65,35 @@ page. Existing approaches pretend to be the user, e.g. use proxies, set referer,
 to reveal the uncloaked content, but spammers could detect and block them. An
 intuitive way is to collect data from user directly. However, it is hard to
 collect sufficient data for comparison while protecting user privacy.
+
+In our approach, we stand back and think about the dynamic nature of websites
+and try to figure out how can we measure or quantify the dynamics of websites.
+For example, does the change of a website follow some pattern? What is the
+average change? By answering these questions, we can then figure out the
+websites and then model them better. We first illustrate the dynamicness of a
+webpage and propose a way to model their change.
+Next, we train our model on manually label dataset to check some paramter to
+identify cloaking (one use case for website modeling). 
+Then, we employ our model to detect cloaking on advertisement cloaking dataset
+and identified \XXX{??} cloaking sites, showing prevalence of cloaking in both
+advertisements and search.
+
+
+
+This work leverages the eucledean distance nature of simhash and proposes
+simhash-based website model to model the dynamics of a web pages efficiently.
+One application of this website model is to detect cloaking.
+
+We argue that, due to the high efficiency and accuracy of simhash-website model
+based cloaking detection.
+
+
+Past approaches cannot handle advertisements, however, because of privacy issues
+and efficient hash technique. In comparison, our model is light-weight, easy to
+implement algorithm that can be used to fingerprint a website. And this
+fingerprint can be used to either compare against known blacklist, or send back
+to search engine for further analysis.
+
 
 
 \begin{figure}[t]

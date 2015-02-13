@@ -62,3 +62,5 @@ ls $BASEDIR*$TYPE*.intersect | python utils/data_util.py -f merge_sites -o $RESU
 python utils/util.py -f evaluation_form -i $RESULT  -p ObservedSites
 
 python utils/data_util.py -f get_learned_eval -i $RESULT -l $LEARN.text.learned -o $LEARNED
+
+
