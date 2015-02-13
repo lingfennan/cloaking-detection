@@ -163,11 +163,12 @@ class Search:
 			logger.error(sys.exc_info()[0])
 		return clickstring_set
 
-	def search(self, search_term):
+	def search(self, search_term, right_click = True):
 		"""
 		Search search_term in browser. Return True if search succeeded.
 		@parmeter
 		search_term: the words to search
+		click: whether to right click on each search result
 		@return
 		result_set: the set of results
 		"""
@@ -195,7 +196,8 @@ class Search:
 					raise Exception("Page load failed.")
 				time.sleep(random.randint(1, 3))
 				ad_set = ad_set | self.ad_links()
-				search_set = search_set | self.search_results()
+				if right_click:
+					search_set = search_set | self.search_results()
 				start = start + 10
 			except:
 				# For robustness, don't throw errors here.
@@ -354,7 +356,7 @@ def revisit(crawl_log_file_list, word_file, n):
 			revisit.visit_landing_url(landing_url_set)
 			revisit.write_crawl_log(False)
 
-def search_and_revisit(word_file, n, threads=6):
+def search_and_revisit(word_file, n, threads=6, ad_only=False):
 	"""
 	This function does the following things.
 	1. Search each word in word file.
@@ -365,6 +367,7 @@ def search_and_revisit(word_file, n, threads=6):
 	@parameter
 	word_file: the filename containing the words to search
 	n: repeat step 3 for n times
+	ad_only: Only retrieve the advertisements. In this case, we only view the first 5 pages.
 
 	@output
 	Following are output of this function
@@ -397,6 +400,9 @@ def search_and_revisit(word_file, n, threads=6):
 	search_config = CD.CrawlConfig()
 	search_config.maximum_threads = threads
 	search_config.user_agent = user_UA
+	# number of top search results to be inspected
+	if ad_only:
+		search_config.count = 5
 	search_config.browser_type = CD.CrawlConfig.CHROME
 
 	ad_crawl_config = CD.CrawlConfig()
@@ -446,9 +452,13 @@ def search_and_revisit(word_file, n, threads=6):
 		search_visit.update_crawl_config(search_crawl_config)
 		
 		# search and crawl
-		ad_set, search_set = search.search(word)
+		right_click = not ad_only
+		ad_set, search_set = search.search(word, right_click)
 		ad_crawl_log_filename = ad_visit.visit(ad_set, word)
-		search_crawl_log_filename = search_visit.visit(search_set, word)
+		if ad_only:
+			search_crawl_log_filename = None
+		else:
+			search_crawl_log_filename = search_visit.visit(search_set, word)
 
 		# revisit
 		crawl_log_file_list = list()
@@ -477,16 +487,19 @@ def search_and_revisit(word_file, n, threads=6):
 			dropcache()
 		"""
 
+
+
 def main(argv):
 	has_function = False
-	help_msg = "search_and_crawl.py -f <function> [-i <inputfile>] [-i <inputfile> -n <number>] [-i <inputfile> -n <number> -l <linkaddress> -t <threads>], valid functions are search, revisit, search_and_revisit"
+	help_msg = "search_and_crawl.py -f <function> [-i <inputfile>] [-i <inputfile> -n <number>] [-i <inputfile> -n <number> -l <linkaddress> -t <threads> -a], valid functions are search, revisit, search_and_revisit"
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:n:l:t:", ["function=", "ifile=", "number=", "link=", "threads="])
+		opts, args = getopt.getopt(argv, "hf:i:n:l:t:a", ["function=", "ifile=", "number=", "link=", "threads=", "adonly"])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
 	link = None
 	threads = None
+	ad_only = False
 	for opt, arg in opts:
 		if opt == "-h":
 			print help_msg
@@ -502,6 +515,8 @@ def main(argv):
 			link = arg
 		elif opt in ("-t", "--threads"):
 			threads = arg
+		elif opt in ("-a", "--adonly"):
+			ad_only = True
 		else:
 			print help_msg
 			sys.exit(2)
@@ -517,9 +532,9 @@ def main(argv):
 		if link:
 			util.REMOTE_DRIVER = link
 		if threads:
-			search_and_revisit(inputfile, number, int(threads))
+			search_and_revisit(inputfile, number, int(threads), ad_only = ad_only)
 		else:
-			search_and_revisit(inputfile, number)
+			search_and_revisit(inputfile, number, ad_only = ad_only)
 	else:
 		print help_msg
 		sys.exit(2)

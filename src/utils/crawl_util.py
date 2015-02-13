@@ -230,7 +230,7 @@ Below are crawl functions to fetch URLs lists parallelly.
 def hex_md5(string):
 	# util function to return md5 in hex of the input string.
 	m = hashlib.md5()
-	m.update(string.encode('utf-8'))
+	m.update(string.decode('utf-8').encode('utf-8'))
 	return m.hexdigest()
 
 def set_browser_type(crawl_config):
