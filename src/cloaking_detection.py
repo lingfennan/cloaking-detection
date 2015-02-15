@@ -12,7 +12,7 @@ import simhash
 from threading import Thread
 from html_simhash_computer import HtmlSimhashComputer
 from utils.learning_detection_util import write_proto_to_file, read_proto_from_file, valid_instance, average_distance, centroid_distance, sites_file_path_set
-from utils.learning_detection_util import intersect_observed_sites
+from utils.learning_detection_util import intersect_observed_sites, de_noise
 from utils.thread_computer import ThreadComputer
 import utils.proto.cloaking_detection_pb2 as CD
 
@@ -223,6 +223,8 @@ def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_
 	read_proto_from_file(learned_sites, learned_sites_filename)
 	observed_sites = CD.ObservedSites()
 	read_proto_from_file(observed_sites, observed_sites_filename)
+	de_noise_config = CD.DeNoiseConfig()
+	observed_sites = de_noise(observed_sites, de_noise_config)
 	detector = CloakingDetection(detection_config, learned_sites)
 	cloaking_sites = detector.detect(observed_sites)
 	out_filename = observed_sites_filename + '.cloaking'

@@ -15,6 +15,86 @@ import proto.cloaking_detection_pb2 as CD
 """
 Below are util functions.
 """
+def get_simhash_type(simhash_type, return_proto=False):
+	"""
+	Return proto or attribute name for simhash_type
+	@parameter
+	simhash_type: type of simhash specified, can either be str or CD.SimhashType
+	return_proto: bool
+	@return
+	simhash_type: text_simhash/dom_simhash or CD.TEXT/CD.DOM
+	"""
+	if isinstance(simhash_type, str):
+		if "text" in simhash_type.lower():
+			simhash_type = "text_simhash"
+			type_proto = CD.TEXT
+		elif "dom" in simhash_type.lower():
+			simhash_type = "dom_simhash"
+			type_proto = CD.DOM
+		else:
+			raise Exception("wrong type of simhash_type!")
+	elif simhash_type == CD.TEXT:
+		simhash_type = 'text_simhash'
+	elif simhash_type == CD.DOM:
+		simhash_type = 'dom_simhash'
+	else:
+		raise Exception("wrong type of simhash_type!")
+	return simhash_type if not return_proto else type_proto
+
+def valid_observation(observation, config):
+	"""
+	@parameter
+	observation: Obervation
+	config: DeNoiseConfig
+	@return
+	whether this observation is valid
+	"""
+	valid_instance(observation, CD.Observation)
+	valid_instance(config, CD.DeNoiseConfig)
+	if config.empty_file_path and (not observation.HasField("file_path")):
+		return False
+	if config.zero_simhash and getattr(observation, config.simhash_name) == 0:
+		return False
+	if config.zero_feature and getattr(observation, config.feature_name) < config.feature_count_threshold:
+		return False
+	return True
+
+def de_noise(observed_sites, config):
+	"""
+	Remove noise from observed_sites and return the cleaned one.
+	@parameter
+	observed_sites: the observed_sites to remove noise from
+	config: what is considered as noise
+	@return
+	de_noise: the de-noise result
+	"""
+	valid_instance(observed_sites, CD.ObservedSites)
+	valid_instance(config, CD.DeNoiseConfig)
+	original = observed_sites
+	de_noise = CD.ObservedSites()
+	de_noise.config.CopyFrom(original.config)
+	simhash_type = original.config.simhash_type
+	if simhash_type == CD.TEXT:
+		config.feature_name = "text_feature_count"
+	elif simhash_type == CD.DOM:
+		config.feature_name = "dom_feature_count"
+	else:
+		raise Exception("Wrong simhash_type")
+	config.simhash_name = get_simhash_type(simhash_type)
+	for observed_site in original.site:
+		has_valid_ob = False
+		de_noise_site = CD.SiteObservations()
+		de_noise_site.name = observed_site.name
+		for observation in observed_site.observation:
+			if valid_observation(observation, config):
+				has_valid_ob = True
+				de_noise_ob = de_noise_site.observation.add()
+				de_noise_ob.CopyFrom(observation)
+		if has_valid_ob:
+			add_site = de_noise.site.add()
+			add_site.CopyFrom(de_noise_site)
+	return de_noise
+
 def ob_file_path_set(site):
 	"""
 	Get the file_path set from SiteObservations.
@@ -276,6 +356,7 @@ def aggregate_simhash(observed_site, simhash_type):
 			simhash_dict[simhash_value] += 1
 		else:
 			simhash_dict[simhash_value] = 1
+		if (not simhash_value in simhash_sample_file_path) and observation.HasField("file_path"):
 			simhash_sample_file_path[simhash_value] = observation.file_path
 	for key in simhash_dict:
 		simhash_item = CD.SimhashItem()

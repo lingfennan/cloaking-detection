@@ -1,0 +1,36 @@
+\section{Related Work}
+\label{s:related work}
+Search engine, as a most innovative technology  introduced in late 20th century, has widely influenced our relationships. Search engine used their own page ranking algorthim to rank and indexed websites. In this way, users could find information by entering the search terms into the search enginee. To get better rankings and accurate indexed on search engines such as Google, websites are encouraged by Google to optimize their content. This is a technology called search engine optimization (SEO).
+SEO policies were introduced by search engine later to maintain a fairness of search enginee ranking. Recently, some websites break the SEO policies to get better rankings on websites because of the large profits. These technology are called Black Hat SEO, which is used to get better rankings on search engine but break the SEO policy.
+From the SEO policy, one of the most efficient methods to get better page rankings is to update the content of website frequently~\cite{wang2011cloak}.
+Following this rule, cloaking, a Black Hat SEO method, is invented. Cloaking serves a blatently different information to users and Google to maintain their
+profits and get better page rank. To be clear, we give a general example. Websites provide a frequently updated information to the Google so that they could get
+better rank. On the other side, they send a different information to users to get profits.
+\subsection{Example}
+To concrete the idea of cloaking, a specific cloaking example, malicious downlowd cloaking, is introduced. We entered the term "Game
+Texas Holdem Poker Online - Dj w" in Google. Google returned a set of search results as showned in figure 1.
+From the figure 1, we see that the top 6 search results are all under domain "dje,.com.ol". If we disguised ourselves as normal users without setting HTTP proxy 
+agent and clicked the links, the broswers sent an HTTP request with Google reference. The website received our HTTP request and found Google reference. The website
+redirected several times, eventually landed to a page and automatically download malicious software. On the other hand, we reconfiguerd our browsers and set
+Google-Bot as our HTTP agent. We revisited the website. This time, the website provide us totally different information without redirecting and malicious downloading.
+From two scenarios, the cloaking idea is clear. Websites provide legal information to Google to get good page rank and avoid censorships. On the other side,
+websites provide different information with redericting and malicious downloads to get profits from users. 
+\subsection{Search Engine Marketing}
+Priviously, we briefly talked about search engine optimization. In this section, we introduce another area called search engine marking(SEM)
+where enourmous cloaking websites exist. According to wikipedia~\cite{sem-wiki}, the term SEM is used to mean pay per click advertising,
+particularly in the commercial advertising and marketing communities which have a vested interest in this narrow definition. To be clear,
+search egnine marketing defines the advertisements shown on search engines after searching terms. Accoding to wikipedia~\cite{sem-wiki},
+boundary beween SEO and SEM are sometimes not clear. However, when studying the cloaking, the SEO and SEM are clearly different. The difference
+betwen them is because that the policies and rules on SEO and SEM are different. On SEM, the policy are usually strict and commertial-related. 
+Further, the cloaking-incentives on SEO and SEM are different. On SEM, websites are more likely to provide illegal medicines and services. On SEO,
+websites are inclined to do malicious downloading. 
+Further, the strategy on cloaking detection on SEO and SEM are different. The difference is crucially decided by ranking mechanisims.
+In SEO, though the page rank algorithm is not fully public, it is well known that rankings are related to content, page rank and visit traffic.
+In SEM, the rank algroithm depends on real time biding system. Websites need to bid the "pay per click" price on the real time biding system. 
+The one with the the higher price will be shown in higher priority. The terms with large commerical potential ask higher price. Because of the 
+difference between SEM and SEO, the strategy to detect cloaking should change. The cloaking detection algorithm should change such as collecting commercial related terms, 
+crawling adverstisements, checking the SEM policy(Google Ads Policy). To ensure "Pay per click" mechanisms, in other words,
+websites won't pay much extra money because of cloaking detection, we introduced a new model and "click counting" mechanisms.
+Traditional methods failed to do this adjust on SEM. Thus, the traditional methods are inefficient detect cloakings in SEM.
+\subsection{Cloaking Types}
+\subsection{Previous Work}
