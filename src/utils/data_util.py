@@ -41,7 +41,10 @@ Example Usage:
 	python data_util.py -f domain_filter -i ../../data/all.computed/filter_list
 
 	# merge sites
-	ls ../data/all.computed/*.intersect | python data_util.py -o ../../data/all.computed/search.detection_results
+	ls ../data/all.computed/*.intersect | python data_util.py -f merge_sites -o ../../data/all.computed/search.detection_results
+
+	# de-noise sites
+	python data_util.py -f de_noise -i <inputfile> -t <proto_type> [-o <outfile>]
 """
 
 import math
@@ -53,15 +56,16 @@ import time
 # For REMOTE_DRIVER
 import util
 import logging
-from export_db_cloaking_websites import export_db_to_file
+#from export_db_cloaking_websites import export_db_to_file
 from learning_detection_util import _split_path_by_data, show_proto, sites_file_path_set, intersect_observed_sites, read_proto_from_file, write_proto_to_file, aggregate_simhash
 from learning_detection_util import hamming_distance, merge_observed_sites, valid_instance
-from learning_detection_util import interact_query
+from learning_detection_util import interact_query, de_noise, get_simhash_type
 from crawl_util import collect_site_for_plot
 from util import evaluation_form, top_domain
 from url_filter import get_bad
 from wot import domain_scores
 import proto.cloaking_detection_pb2 as CD
+
 
 
 def get_learned_eval(learned_file, observed_file):
@@ -110,13 +114,7 @@ def build_site_simhash_dict(observed_sites):
 	valid_instance(observed_sites, CD.ObservedSites)
 	site_simhash_dict = dict()
 	observed_sites_dict = dict()
-	if observed_sites.config.simhash_type == CD.TEXT:
-		attr_name = 'text_simhash'
-	elif observed_sites.config.simhash_type == CD.DOM:
-		attr_name = 'dom_simhash'
-	else:
-		raise Exception("TEXT_DOM simhash are not supported by now! \
-				Use either TEXT or DOM")
+	attr_name = get_simhash_type(observed_sites.config.simhash_type)
 	for observed_site in observed_sites.site:
 		if not observed_site.name in site_simhash_dict:
 			site_simhash_dict[observed_site.name] = set()
@@ -279,7 +277,6 @@ def sample(text_filenames, outfile, sample_size):
 	_output_sample_sites(original_label_list, google_dom_filenames, outfile
 			+ '.google.sample.dom')
 
-
 def get_domains(observed_sites_list, outfile):
 	domain_set = set()
 	for filename in observed_sites_list:
@@ -290,17 +287,6 @@ def get_domains(observed_sites_list, outfile):
 				url_domain = top_domain(observation.landing_url)
 				domain_set.add(url_domain)
 	open(outfile, 'w').write("\n".join(domain_set))
-
-def _get_simhash_type(simhash_type, return_proto=False):
-	if "text" in simhash_type.lower():
-		simhash_type = "text_simhash"
-		type_proto = CD.TEXT
-	elif "dom" in simhash_type.lower():
-		simhash_type = "dom_simhash"
-		type_proto = CD.DOM
-	else:
-		raise Exception("wrong type of simhash_type!")
-	return simhash_type if not return_proto else type_proto
 
 def simhash_vector_distance(simhash_item_vector, avg_dist=True):
 	"""
@@ -341,7 +327,7 @@ def simhash_vector_distance(simhash_item_vector, avg_dist=True):
 
 def plot_sim_distance(inputfile, outfile, simhash_type, proto_type,
 		avg_dist=True):
-	simhash_type = _get_simhash_type(simhash_type, True)
+	simhash_type = get_simhash_type(simhash_type, True)
 	sites = getattr(CD, proto_type)()
 	read_proto_from_file(sites, inputfile)
 	out_f = open(outfile, "w")
@@ -366,7 +352,7 @@ def plot_sim_distance(inputfile, outfile, simhash_type, proto_type,
 		raise Exception("Wrong proto! Only LearnedSites and ObservedSites can be used!")
 
 def plot_simhash(inputfile, outfile, simhash_type, proto_type):
-	simhash_type = _get_simhash_type(simhash_type)
+	simhash_type = get_simhash_type(simhash_type)
 	sites = getattr(CD, proto_type)()
 	read_proto_from_file(sites, inputfile)
 	out_f = open(outfile, "w")
@@ -415,7 +401,8 @@ def main(argv):
 	append_prefix, compute_list, show_proto, intersect_sites,
 	collect_observations, plot_simhash, plot_sim_distance, get_domains,
 	get_domain_scores, domain_filter, dedup, sample, merge_sites,
-	get_learned_eval, [-i <table_name> -o <outfie>] export_db"""
+	get_learned_eval, [-i <table_name> -o <outfie>] export_db
+	[-i <inputfile> -o <outfile>] de_noise"""
 	try:
 		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:s:ac:",
 				["function=", "prefix=", "outfile=",
@@ -551,6 +538,28 @@ def main(argv):
 		"""
 		export_db_to_file(inputfile, outfile)
 		export_db_to_file(inputfile, outfile + ".noise", ["PageBroken"])
+	elif function == "de_noise":
+		"""
+		remove noise: index.html not found, feature count = 0
+		"""
+		if "learn" in inputfile:
+			response = interact_query("The input file seems to \
+					be learned sites, we only support observed \
+					sites! Press [Yes/No] to continue or exit!")
+			if not response:
+				sys.exit(0)
+
+		logger = logging.getLogger("global")
+		logger.info("processing {0}".format(inputfile))
+		de_noise_config = CD.DeNoiseConfig()
+		de_noise_config.zero_feature = True
+		original = CD.ObservedSites()
+		read_proto_from_file(original, inputfile)
+		observed_sites = de_noise(original, de_noise_config)
+		logger.info("before de-noise {0}".format(len(original.site)))
+		logger.info("after de-noise: {0}".format(len(observed_sites.site)))
+		outfile = outfile if outfile else inputfile
+		write_proto_to_file(observed_sites, outfile)
 	else:
 		print help_msg
 		sys.exit(2)

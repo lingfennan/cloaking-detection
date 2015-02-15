@@ -103,6 +103,17 @@ message Observation {
   optional uint32 dom_feature_count = 7;
 }
 
+message DeNoiseConfig {
+  // The config used in phase of de-noising
+  optional bool empty_file_path = 1 [default = true];
+  optional bool zero_simhash = 2 [default = true];
+  optional bool zero_feature = 3 [default = false];
+  optional string simhash_name = 4;
+  optional string feature_name = 5;
+  // Less than this threshold is considered as noise
+  optional uint32 feature_count_threshold = 6 [default = 1];
+}
+
 // Text features
 message HtmlText {
   repeated Feature word = 1;

@@ -13,6 +13,7 @@ from utils.data_util import plot_sim_distance, plot_simhash
 from utils.learning_detection_util import add_failure, load_observed_sites, merge_observed_sites, write_proto_to_file, read_proto_from_file, valid_instance
 from utils.learning_detection_util import HammingTreshold, KMeans
 from utils.learning_detection_util import SpectralClustering, HierarchicalClustering, ScipyHierarchicalClustering, interact_query
+from utils.learning_detection_util import de_noise
 from utils.thread_computer import ThreadComputer
 from utils.util import evaluation_form
 import utils.proto.cloaking_detection_pb2 as CD
@@ -88,6 +89,8 @@ class ClusterLearning(object):
 			self.cluster_config.CopyFrom(cluster_config)
 		# learn the clusters
 		observed_sites = merge_observed_sites(observed_sites_filenames)
+		de_noise_config = CD.DeNoiseConfig()
+		observed_sites = de_noise(observed_sites, de_noise_config)
 		learned_sites = CD.LearnedSites()
 		cluster_config.simhash_type = observed_sites.config.simhash_type
 		for observed_site in observed_sites.site:
@@ -213,7 +216,8 @@ def main(argv):
 			evaluation_form(learned_file, learned_file + ".eval", "LearnedSites")
 	elif function == 'learn':
 		observed_sites_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
-		# observed_sites_filenames = [inputfile]
+		#observed_sites_filenames = [inputfile]
+		outputfile = inputfile + ".learned" if not outputfile else outputfile
 		learn(observed_sites_filenames, outputfile, inconsistent_coefficient)
 		plot_sim_distance(outputfile + ".learned", outputfile + ".learned.plot_sim_distance",
 				simhash_type, "LearnedSites", True)
