@@ -28,5 +28,6 @@ LEARNED=$USER_IN'.detection.learned'
 echo "Intersection file is $RESULT"
 ls $USER_IN.*.cloaking | python utils/data_util.py -f intersect_sites -o $RESULT
 python utils/util.py -f evaluation_form -i $RESULT  -p ObservedSites
-echo $GOOGLE_TEXT_IN'.text.learned'
+echo "Input is "$GOOGLE_TEXT_IN".text.learned"
+echo "Learned Evaluation is $LEARNED"
 python utils/data_util.py -f get_learned_eval -i $RESULT -l $GOOGLE_TEXT_IN.text.learned -o $LEARNED

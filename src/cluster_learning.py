@@ -88,7 +88,12 @@ class ClusterLearning(object):
 			self.cluster_config = CD.ClusterConfig()
 			self.cluster_config.CopyFrom(cluster_config)
 		# learn the clusters
-		observed_sites = merge_observed_sites(observed_sites_filenames)
+		if isinstance(observed_sites_filenames, list):
+			observed_sites = merge_observed_sites(observed_sites_filenames)
+		elif valid_instance(observed_sites_filenames, CD.ObservedSites):
+			observed_sites = observed_sites_filenames
+		else:
+			raise Exception("Wrong argument for learn!")
 		de_noise_config = CD.DeNoiseConfig()
 		observed_sites = de_noise(observed_sites, de_noise_config)
 		learned_sites = CD.LearnedSites()

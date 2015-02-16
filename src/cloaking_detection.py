@@ -233,7 +233,6 @@ def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_
 	# print cloaking_sites
 	return cloaking_sites
 
-
 def compute_metrics(detected, expected, total):
 	"""
 	Evaluate the result and return two kind of measures.
@@ -258,7 +257,7 @@ def compute_metrics(detected, expected, total):
 	false_positive = detected_size - true_positive
 	true_positive_rate = float (true_positive) / true_total
 	false_positive_rate = float (false_positive) / false_total
-	precision = float (true_positive) / detected_size
+	precision = float (true_positive) / detected_size if detected_size > 0 else 0
 	recall = true_positive_rate
 	rate = [true_positive_rate, false_positive_rate]
 	pr = [precision, recall]
