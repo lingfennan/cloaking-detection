@@ -23,7 +23,7 @@ def export_db_to_file(table, outfile, labels=None):
 	if labels:
 		enum = labels
 	else:
-		enum = ['Adult', 'Pharmacy', 'Cheat', 'Gambling', 'BadDomain']
+		enum = ['Adult', 'Pharmacy', 'Cheat', 'Gambling', 'BadDomain', 'Phishing', 'Yes']
 	label_str = " OR ".join(["label='" + e +"'" for e in enum])
 	query = "SELECT url, userFilePath FROM " + table + " WHERE " + label_str
 	print query
