@@ -13,6 +13,7 @@ from threading import Thread
 from html_simhash_computer import HtmlSimhashComputer
 from utils.learning_detection_util import write_proto_to_file, read_proto_from_file, valid_instance, average_distance, centroid_distance, sites_file_path_set
 from utils.learning_detection_util import intersect_observed_sites, de_noise
+from utils.learning_detection_util import sites_name_set
 from utils.thread_computer import ThreadComputer
 import utils.proto.cloaking_detection_pb2 as CD
 
@@ -37,6 +38,8 @@ class CloakingDetection(object):
 		"""
 		if not site_name in self.learned_sites_map:
 			# If current site is not learned, return False.
+			print "error"
+			print site_name
 			return False
 		for pattern in self.learned_sites_map[site_name]:
 			try:
@@ -255,20 +258,21 @@ def compute_metrics(detected, expected, total):
 	false_total = total - true_total
 	true_positive = len(detected_names & expected_names)
 	false_positive = detected_size - true_positive
-	true_positive_rate = float (true_positive) / true_total
-	false_positive_rate = float (false_positive) / false_total
+	false_negative = true_total - true_positive
+	if true_total == 0:
+		true_positive_rate = 0
+	else:
+		true_positive_rate = float (true_positive) / true_total
+	if false_total == 0:
+		false_positive_rate = 0
+	else:
+		false_positive_rate = float (false_positive) / false_total
 	precision = float (true_positive) / detected_size if detected_size > 0 else 0
 	recall = true_positive_rate
 	rate = [true_positive_rate, false_positive_rate]
 	pr = [precision, recall]
-	return rate, pr
-
-def sites_name_set(observed_sites):
-	valid_instance(observed_sites, CD.ObservedSites)
-	name_set = set()
-	for site in observed_sites.site:
-		name_set.add(site.name)
-	return name_set
+	errors = [false_positive, false_negative]
+	return rate, pr, errors
 
 def remove_noise(cloaking_sites, noise_sites):
 	valid_instance(cloaking_sites, CD.ObservedSites)

@@ -179,10 +179,15 @@ message Algorithm {
   optional int32 k = 3;  // k used by k-means, and spectral clustering
   // left out ratio used by hierarchical clustering
   // deprecated. use inconsistent coefficient as cutoff now
-  optional int32 left_out_ratio = 4 [deprecated=true]; 
+  optional int32 left_out_ratio = 4 [deprecated = true]; 
   // inconsistent coefficient is used to tell clusters apart
   optional double inconsistent_coefficient = 5 [default = 1];
-  optional int32 inconsistent_depth = 6 [default = 2];
+  // deprecated, suppose there are m observations, we set depth to m-1, meaning
+  // that we want to take into consideration of all the links in the tree.
+  //
+  // We are doing this, in order to be consistent with the detection phase.
+  //
+  optional int32 inconsistent_depth = 6 [deprecated = true];
 }
 
 message ClusterConfig {

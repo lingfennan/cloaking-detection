@@ -6,6 +6,7 @@ From the SEO policy, one of the most efficient methods to get better page rankin
 Following this rule, cloaking, a Black Hat SEO method, is invented. Cloaking serves a blatently different information to users and Google to maintain their
 profits and get better page rank. To be clear, we give a general example. Websites provide a frequently updated information to the Google so that they could get
 better rank. On the other side, they send a different information to users to get profits.
+
 \subsection{Example}
 To concrete the idea of cloaking, a specific cloaking example, malicious downlowd cloaking, is introduced. We entered the term "Game
 Texas Holdem Poker Online - Dj w" in Google. Google returned a set of search results as showned in figure 1.
@@ -15,6 +16,7 @@ redirected several times, eventually landed to a page and automatically download
 Google-Bot as our HTTP agent. We revisited the website. This time, the website provide us totally different information without redirecting and malicious downloading.
 From two scenarios, the cloaking idea is clear. Websites provide legal information to Google to get good page rank and avoid censorships. On the other side,
 websites provide different information with redericting and malicious downloads to get profits from users. 
+
 \subsection{Search Engine Marketing}
 Priviously, we briefly talked about search engine optimization. In this section, we introduce another area called search engine marking(SEM)
 where enourmous cloaking websites exist. According to wikipedia~\cite{sem-wiki}, the term SEM is used to mean pay per click advertising,
@@ -23,7 +25,7 @@ search egnine marketing defines the advertisements shown on search engines after
 boundary beween SEO and SEM are sometimes not clear. However, when studying the cloaking, the SEO and SEM are clearly different. The difference
 betwen them is because that the policies and rules on SEO and SEM are different. On SEM, the policy are usually strict and commertial-related. 
 Further, the cloaking-incentives on SEO and SEM are different. On SEM, websites are more likely to provide illegal medicines and services. On SEO,
-websites are inclined to do malicious downloading. 
+websites are inclined to do malicious downloading and phishing. 
 Further, the strategy on cloaking detection on SEO and SEM are different. The difference is crucially decided by ranking mechanisims.
 In SEO, though the page rank algorithm is not fully public, it is well known that rankings are related to content, page rank and visit traffic.
 In SEM, the rank algroithm depends on real time biding system. Websites need to bid the "pay per click" price on the real time biding system. 
@@ -33,4 +35,32 @@ crawling adverstisements, checking the SEM policy(Google Ads Policy). To ensure 
 websites won't pay much extra money because of cloaking detection, we introduced a new model and "click counting" mechanisms.
 Traditional methods failed to do this adjust on SEM. Thus, the traditional methods are inefficient detect cloakings in SEM.
 \subsection{Cloaking Types}
+A website could differentiate search engine crawler from user web browser, from
+the following data:
+\subsubsection{IP address}
+Attackers blacklist a list of IP addresses and simply block their access.
+\subsubsection{HTTP user-agent header}
+Attackers identify bots by looking at user-agent, serve different content.
+\subsubsection{HTTP referer header}
+Referer tells landing page, where user is coming from, they may only allow
+access for users with referer http://www.google.com.
+\subsubsection{Cookie}
+This is used as a complementary method to referer, in order to track whether
+user is shown malicious content before. If so, then subsequent accesses are
+bad as well. If not, set cookie and disallow access to bad stuff.
+
+This is mainly observed on websites, that try to provide illegal services. The
+intuition of doing this is to track past user visit, and provide further service
+to the victim.
+\subsubsection{Number of visit times}
+The website shows malicious content to a specific IP only once.
+
 \subsection{Previous Work}
+Previous work on cloaking detection.
+
+Previous work on phishing. We are solving cloaking, which has a strong
+relationship with phishing sites.
+
+Previous work on simhash. ~\cite{manku2007detecting} employ simhash to detect
+near duplicate at scale.
+

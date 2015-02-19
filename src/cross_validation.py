@@ -39,7 +39,7 @@ def list_to_sites(sites_list, config, y_list = None):
 	return sites
 
 class Estimator(object):
-	def __init__(self, simhash_config):
+	def __init__(self, simhash_config, outfile):
 		# load learned sites map, which maps site name to related patterns
 		self.best_params = dict()
 		self.best_params['score'] = 0.0
@@ -48,14 +48,17 @@ class Estimator(object):
 		self.best_params['test_diameter'] = 15
 		self.simhash_config = CD.SimhashConfig()
 		self.simhash_config.CopyFrom(simhash_config)
+		self.outf = open(outfile, 'a')
 
 	def fit(self, learn_train, detect_train, y_train):
 		learn_train = list_to_sites(learn_train, self.simhash_config)
 		detect_train = list_to_sites(detect_train, self.simhash_config)
-		max_params = dict()
-		max_params['score'] = 0
+		min_params = dict()
+		min_params['score'] = 0
 		test_params = dict()
-		for t1 in np.arange(0.5, 1.6, 0.5):
+		# for t1 in np.arange(0.0, 0.5, 0.1):
+		# for t1 in np.arange(0.5, 3.1, 0.5):
+		for t1 in np.arange(-0.5, 1.0, 0.1):
 			test_params['train_inconsistent'] = t1
 			cluster_learner = ClusterLearning()
 			cluster_config = CD.ClusterConfig()
@@ -65,22 +68,33 @@ class Estimator(object):
 			logger.info("learning with coefficient: {0}".format(t1))
 			learned_sites = cluster_learner.learn(learn_train, cluster_config)
 			logger.info("learning complete!")
-			for t2 in np.arange(1, 3.1, 1):
+			# for t2 in np.arange(0.0, 1.0, 0.1):
+			# for t2 in np.arange(0.5, 6.0, 1):
+			for t2 in np.arange(0.5, 1.5, 0.1):
 				test_params['test_inconsistent'] = t2
-				for r in np.arange(5, 21, 5):
+				# for r in np.arange(5, 21, 5):
+				# for r in np.arange(5, 31, 5):
+				for r in np.arange(10, 20, 1):
 					test_params['test_diameter'] = r
 					logger.info("testing with coefficient: {0}, min_radius: {1}".format(t2, r))
 					current_score = self.score_learned(learned_sites, detect_train, y_train, test_params) 
 					logger.info("testing complete, f1 score is: {0}".format(current_score))
-					if current_score > max_params['score']:
-						max_params['score'] = current_score
-						max_params['train_inconsistent'] = t1
-						max_params['test_inconsistent'] = t2
-						max_params['test_diameter'] = r
-		if max_params['score'] > self.best_params['score']:
-			self.best_params = dict(max_params)
+					if current_score < min_params['score']:
+						min_params['score'] = current_score
+						min_params['train_inconsistent'] = t1
+						min_params['test_inconsistent'] = t2
+						min_params['test_diameter'] = r
+		if min_params['score'] < self.best_params['score']:
+			self.best_params = dict(min_params)
 			logger.info(self.best_params)
-		return max_params
+		return min_params
+
+	def objective(self, errors):
+		"""
+		Our objective is to minimize the number of errors: including
+		type I error and type II error.
+		"""
+		return errors[0] + errors[1]
 
 	def score_learned(self, learned_sites, detect_test, y_test, test_params):
 		valid_instance(learned_sites, CD.LearnedSites)
@@ -97,15 +111,25 @@ class Estimator(object):
 		detection_config.simhash_type = self.simhash_config.simhash_type
 		detector = CloakingDetection(detection_config, learned_sites)
 		cloaking_sites = detector.detect(X_test)
-		rate, pr = compute_metrics(cloaking_sites, X_expected, total_size)
+		rate, pr, errors = compute_metrics(cloaking_sites, X_expected, total_size)
 		logger = logging.getLogger("global")
 		logger.warning(test_params)
 		logger.warning(rate)
 		logger.warning(pr)
+		logger.warning(errors)
+		# write to file for plotting
+		res_str = ",".join([ str(test_params["train_inconsistent"]),
+				str(test_params["test_inconsistent"]),
+				str(test_params["test_diameter"]) ]) + "\n"
+		res_str += ",".join([ str(rate[0]), str(rate[1]) ]) + "\n"
+		self.outf.write(res_str)
+		"""
 		if pr[0] + pr[1] == 0:
 			return 0
 		else:
 			return 2 * pr[0] * pr[1] / (pr[0] + pr[1]) 
+		"""
+		return self.objective(errors)
 
 	def score(self, learn_test, detect_test, y_test):
 		learn_test = list_to_sites(learn_test, self.simhash_config)
@@ -123,7 +147,7 @@ class Estimator(object):
 		return self.score_learned(learned_test_sites, detect_test, y_test,
 				self.best_params)
 
-def cross_validation(to_detect, to_learn, expected, noise):
+def cross_validation(to_detect, to_learn, expected, noise, outfile):
 	to_learn_sites = CD.ObservedSites()
 	read_proto_from_file(to_learn_sites, to_learn)
 	expected_sites = CD.ObservedSites()
@@ -163,18 +187,20 @@ def cross_validation(to_detect, to_learn, expected, noise):
 		else:
 			Y.append(0)
 
-	skf = StratifiedKFold(Y, kfold)
 	to_detect_sites_list = np.array(to_detect_sites_list)
 	to_learn_sites_list = np.array(to_learn_sites_list)
 	Y = np.array(Y)
+	skf = StratifiedKFold(Y, kfold)
 	scores = list()
 	best_params = list()
 	for train, test in skf:
-		print train, test
+		print "train size: {0}, test size: {1}".format(len(train),
+				len(test))
 		learn_train, learn_test = to_learn_sites_list[train], to_learn_sites_list[test]
 		detect_train, detect_test = to_detect_sites_list[train], to_detect_sites_list[test]
 		y_train, y_test = Y[train], Y[test]
-		estimator = Estimator(filt_to_detect_sites.config)
+
+		estimator = Estimator(filt_to_detect_sites.config, outfile)
 		estimator.fit(learn_train, detect_train, y_train)
 		best_params.append(estimator.best_params)
 		scores.append(estimator.score(learn_test, detect_test, y_test))
@@ -187,11 +213,11 @@ def cross_validation(to_detect, to_learn, expected, noise):
 def main(argv):
 	has_function = False
 	help_msg = """cross_validation.py -f <function> [-i <inputfile> -l
-		<trainfile> -e <expectedfile>] cross_validation"""
+		<trainfile> -e <expectedfile> -o <outfile>] cross_validation"""
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:l:e:t:r:n:c:",
+		opts, args = getopt.getopt(argv, "hf:i:l:e:t:r:n:c:o:",
 				["function=", "ifile=", "lfile=", "efile=",
-					"trainfile=", "radius=", "constant=",
+					"trainfile=", "ofile=", "radius=", "constant=",
 					"coefficient="])
 	except getopt.GetoptError:
 		print help_msg
@@ -217,6 +243,8 @@ def main(argv):
 			expectedfile = arg
 		elif opt in ("-t", "--trainfile"):
 			trainfile = arg
+		elif opt in ("-o", "--ofile"):
+			outfile = arg
 		elif opt in ("-r", "--radius"):
 			min_radius = arg
 		elif opt in ("-n", "--constant"):
@@ -235,7 +263,8 @@ def main(argv):
 	if function == "cross_validation":
 		# cross validation for one type
 		noisefile = expectedfile + ".noise"
-		cross_validation(inputfile, trainfile, expectedfile, noisefile)
+		cross_validation(inputfile, trainfile, expectedfile, noisefile,
+				outfile)
 	else:
 		print help_msg
 		sys.exit(2)

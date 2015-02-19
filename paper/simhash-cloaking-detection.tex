@@ -27,6 +27,7 @@
 \usepackage{endnotes,microtype,xspace,fancyvrb,multirow}
 \usepackage{array,underscore,relsize}
 \usepackage{booktabs,amsmath}
+\usepackage{authblk}
 
 \input{cmds}
 
@@ -41,17 +42,36 @@
 % Real-Time Cloaking Detection based on Simhash and Crowdsourcing
 
 %for single author (just remove % characters)
-\author{
-{\rm Your N.\ Here}\\
-Your Institution
-\and
-{\rm Second Name}\\
-Second Institution
-% copy the following lines to add more authors
-% \and
-% {\rm Name}\\
-%Name Institution
-} % end author
+
+%\author{
+%{\rm Ruian Duan}\\
+%\thanks{Georgia Institute of Technology}
+%\and
+%{\rm Weiren Wang}\\
+%\thanks{Georgia Institute of Technology}
+%\and
+%{\rm Ji Zhang}\\
+%\thanks{Google Inc.}
+%\and
+%{\rm Wenke Lee}\\
+%\thanks{Georgia Institute of Technology}
+%
+%%wenke@cc.gatech.edu
+%% copy the following lines to add more authors
+%% \and
+%% {\rm Name}\\
+%%Name Institution
+%} % end author
+%
+
+
+
+\author[*]{Ruian Duan}%\thanks{ruian@gatech.edu}}
+\author[*]{Weiren Wang}%\thanks{weirenwang@gatech.edu}}
+\author[**]{Ji Zhang}%\thanks{jiz@google.com}}
+\author[*]{Wenke Lee}%\thanks{wenke@cc.gatech.edu}}
+\affil[*]{Georgia Institute of Technology}
+\affil[**]{Google Inc.}
 
 \maketitle
 
@@ -63,56 +83,52 @@ Second Institution
 
 \input{intro}
 
-\input{related-work}
+\input{related-work-new}
 
-\input{swm}
+\input{methodology}
 
-\input{framework}
+\input{evaluation}
 
-\input{implementation}
-
-\input{experiment}
+\input{measurement}
 
 \input{discussion}
 
-\section{Acknowledgments}
-
-A polite author always includes acknowledgments.  Thank everyone,
-especially those who funded the work. 
-
-\section{Availability}
-
-It's great when this section says that MyWonderfulApp is free software, 
-available via anonymous FTP from
-
-\begin{center}
-{\tt ftp.site.dom/pub/myname/Wonderful}\\
-\end{center}
-
-Also, it's even greater when you can write that information is also 
-available on the Wonderful homepage at 
-
-\begin{center}
-{\tt http://www.site.dom/\~{}myname/SWIG}
-\end{center}
-
-Now we get serious and fill in those references.  Remember you will
-have to run latex twice on the document in order to resolve those
-cite tags you met earlier.  This is where they get resolved.
-We've preserved some real ones in addition to the template-speak.
-After the bibliography you are DONE.
+\input{conclusion}
+%
+%\section{Acknowledgments}
+%
+%A polite author always includes acknowledgments.  Thank everyone,
+%especially those who funded the work. 
+%
+%\section{Availability}
+%
+%It's great when this section says that MyWonderfulApp is free software, 
+%available via anonymous FTP from
+%
+%\begin{center}
+%{\tt ftp.site.dom/pub/myname/Wonderful}\\
+%\end{center}
+%
+%Also, it's even greater when you can write that information is also 
+%available on the Wonderful homepage at 
+%
+%\begin{center}
+%{\tt http://www.site.dom/\~{}myname/SWIG}
+%\end{center}
+%
+%Now we get serious and fill in those references.  Remember you will
+%have to run latex twice on the document in order to resolve those
+%cite tags you met earlier.  This is where they get resolved.
+%We've preserved some real ones in addition to the template-speak.
+%After the bibliography you are DONE.
 
 {\footnotesize \bibliographystyle{acm}
 %\bibliography{../common/bibliography}}
 \bibliography{ruian,weiren}}
 
-\theendnotes
+%\theendnotes
 
 \end{document}
-
-
-
-
 
 
 

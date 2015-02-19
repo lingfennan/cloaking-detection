@@ -94,8 +94,12 @@ class ClusterLearning(object):
 			observed_sites = observed_sites_filenames
 		else:
 			raise Exception("Wrong argument for learn!")
+		
+		print "in learning phase"
+		print "before de noise {0}".format(len(observed_sites.site))
 		de_noise_config = CD.DeNoiseConfig()
 		observed_sites = de_noise(observed_sites, de_noise_config)
+		print "after de noise {0}".format(len(observed_sites.site))
 		learned_sites = CD.LearnedSites()
 		cluster_config.simhash_type = observed_sites.config.simhash_type
 		for observed_site in observed_sites.site:
