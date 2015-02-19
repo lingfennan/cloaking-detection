@@ -1,0 +1,16 @@
+Note: I made a change to the clustering algorithm.
+
+The training data, including user text/dom, google text/dom, expected and noise.
+
+The ROC curve:
+
+Before Feb 18, 3:30 PM, learning depth = 2
+training_data_dom_ROC
+training_data_text_ROC
+
+After Feb 18, 3:30 PM, learning depth = m - 1, m is the number of obesrvations.
+new_learn_training_data_dom_ROC
+new_learn_training_data_text_ROC
+
+
+

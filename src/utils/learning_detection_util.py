@@ -15,6 +15,13 @@ import proto.cloaking_detection_pb2 as CD
 """
 Below are util functions.
 """
+def sites_name_set(observed_sites):
+	valid_instance(observed_sites, CD.ObservedSites)
+	name_set = set()
+	for site in observed_sites.site:
+		name_set.add(site.name)
+	return name_set
+
 def get_simhash_type(simhash_type, return_proto=False):
 	"""
 	Return proto or attribute name for simhash_type
@@ -130,6 +137,7 @@ def show_proto(inputfile, proto_type):
 	proto = getattr(CD, proto_type)()
 	read_proto_from_file(proto, inputfile)
 	print proto
+	print len(proto.site)
 
 def _strip_parameter(link):
 	"""
@@ -260,12 +268,14 @@ def load_observed_sites(site_list_filenames, url_field="landing_url"):
 			observation.file_path = path 
 	return observed_sites, path_list
 
-def merge_observed_sites(observed_sites_filenames):
+def merge_observed_sites(observed_sites_filenames, allow_repeat = False):
 	"""
 	Different from load_observed_sites which extracts site name and fill observed_sites.
 	Load observed_sites from multiple files and merge them.
 	@parameter
 	site_list_filenames: observed site list files to merge.
+	Previous implementation just concat the repeated fields. However, this
+	wastes a lot of space. We want to have unique ones stored.
 	@return
 	observed_sites: the merged result.
 	"""
@@ -275,12 +285,22 @@ def merge_observed_sites(observed_sites_filenames):
 		temp_observed_sites = CD.ObservedSites()
 		read_proto_from_file(temp_observed_sites, observed_sites_filename)
 		for observed_site in temp_observed_sites.site:
-			if observed_site.name in observed_sites_map:
+			if not observed_site.name in observed_sites_map:
+				observed_sites_map[observed_site.name] = CD.SiteObservations()
+				observed_sites_map[observed_site.name].name = observed_site.name
+			if allow_repeat:
 				observed_sites_map[observed_site.name].MergeFrom(observed_site)
 			else:
-				observed_sites_map[observed_site.name] = CD.SiteObservations()
-				observed_sites_map[observed_site.name].CopyFrom(observed_site)
-	observed_sites.config.CopyFrom(temp_observed_sites.config)
+				existing = ob_file_path_set(observed_sites_map[observed_site.name])
+				for ob in observed_site.observation:
+					if not ob.file_path in existing:
+						existing.add(ob.file_path)
+						to_add = observed_sites_map[observed_site.name].observation.add()
+						to_add.CopyFrom(ob)
+	if temp_observed_sites.HasField("config"):
+		observed_sites.config.CopyFrom(temp_observed_sites.config)
+	else:
+		print "The merged sites doesn't have config, make sure it's correct"
 	for site_name in observed_sites_map:
 		observed_site = observed_sites.site.add()
 		observed_site.CopyFrom(observed_sites_map[site_name])
@@ -808,16 +828,24 @@ def ScipyHierarchicalClustering(cluster_config, observed_site):
 			item = pattern.item.add()
 			item.CopyFrom(simhash_item)
 	else:
+		# suppose there are m observations, there will be m-1 links in
+		# the clustering. Specifying the cluster algorithm to use depth
+		# m-1, will take into consideration of all the links in the
+		# sub-trees.
 		y = prepare_matrix(simhash_item_vector)
 		'''
 		Z = linkage(y, method='average', metric='hamming')
 		cluster_label = fcluster(Z, t = cluster_config.algorithm.inconsistent_coefficient,
 				criterion='inconsistent',
 				depth = cluster_config.algorithm.inconsistent_depth)
-		'''
 		cluster_label = fclusterdata(X = y, t = cluster_config.algorithm.inconsistent_coefficient, 
 				criterion = 'inconsistent',
 				depth = cluster_config.algorithm.inconsistent_depth,
+				metric = 'hamming', method = 'average')
+		'''
+		cluster_label = fclusterdata(X = y, t = cluster_config.algorithm.inconsistent_coefficient, 
+				criterion = 'inconsistent',
+				depth = vector_size - 1,
 				metric = 'hamming', method = 'average')
 		clusters = get_indexes(cluster_label)
 		for cluster in clusters:

@@ -60,11 +60,138 @@ import logging
 from learning_detection_util import _split_path_by_data, show_proto, sites_file_path_set, intersect_observed_sites, read_proto_from_file, write_proto_to_file, aggregate_simhash
 from learning_detection_util import hamming_distance, merge_observed_sites, valid_instance
 from learning_detection_util import interact_query, de_noise, get_simhash_type
+from learning_detection_util import sites_name_set
 from crawl_util import collect_site_for_plot
 from util import evaluation_form, top_domain
 from url_filter import get_bad
 from wot import domain_scores
 import proto.cloaking_detection_pb2 as CD
+
+def update_groundtruth_redundant(count, original_expected,
+		original_u_text, original_u_dom,
+		original_g_text, original_g_dom,
+		add_expected, add_all,
+		out_expected, out_u_text, out_u_dom,
+		out_g_text, out_g_dom):
+	valid_instance(count, int)
+	in_e = CD.ObservedSites()
+	read_proto_from_file(in_e, original_expected)
+	in_u_t = CD.ObservedSites()
+	read_proto_from_file(in_u_t, original_u_text)
+	in_u_d = CD.ObservedSites()
+	read_proto_from_file(in_u_d, original_u_dom)
+	in_g_t = CD.ObservedSites()
+	read_proto_from_file(in_g_t, original_g_text)
+	in_g_d = CD.ObservedSites()
+	read_proto_from_file(in_g_d, original_g_dom)
+	add_e = CD.ObservedSites()
+	read_proto_from_file(add_e, add_expected)
+
+	in_e_set = sites_name_set(in_e)
+	add_e_set = sites_name_set(add_e)
+	diff_e_set = add_e_set - in_e_set
+	logger = logging.getLogger("global")
+	logger.info("size of original set: {0}, size of add set: {1}, size of diff set: {2}".format(
+		len(in_e_set), len(add_e_set), len(diff_e_set)))
+	logger.info("diff set is")	
+	logger.info(diff_e_set)
+	diff_e_list = list(diff_e_set)
+	logger.info(len(diff_e_list))
+	random.shuffle(diff_e_list)
+	diff_e_sample = diff_e_list[:count]
+	
+
+	"""
+	get the sites that are in "de-deduplicated" examples and add them
+	this is necessary, because there are sites, that are cloaking, but
+	remove in de-dup phase. Doesn't know why.
+	"""
+	add_u_text_fs = filter(bool, open(add_all, 'r').read().split('\n'))
+	diff_e_sample = set(_output_sample_sites(diff_e_sample, add_u_text_fs, add_all
+		+ ".u.text.temp"))
+
+	# use the updated diff expected set, to generate the new data
+	_output_sample_sites(diff_e_sample, [add_expected], add_expected + ".temp")
+	add_u_dom_fs = _replace_list_by(add_u_text_fs, 'text', 'dom')
+	_output_sample_sites(diff_e_sample, add_u_dom_fs, add_all + ".u.dom.temp")
+	add_g_text_fs = _replace_list_by(add_u_text_fs, 'user', 'google')
+	_output_sample_sites(diff_e_sample, add_g_text_fs, add_all + ".g.text.temp")
+	add_g_dom_fs = _replace_list_by(add_u_dom_fs, 'user', 'google')
+	_output_sample_sites(diff_e_sample, add_g_dom_fs, add_all + ".g.dom.temp")
+	out_expected_sites = merge_observed_sites([original_expected, add_expected + ".temp"])
+	out_u_t_sites = merge_observed_sites([original_u_text, add_all + ".u.text.temp"])
+	out_u_d_sites = merge_observed_sites([original_u_dom, add_all + ".u.dom.temp"])
+	out_g_t_sites = merge_observed_sites([original_g_text, add_all +
+		".g.text.temp"])
+	out_g_d_sites = merge_observed_sites([original_g_dom, add_all +
+		".g.dom.temp"])
+	out_u_t_sites.config.CopyFrom(in_u_t.config)
+	out_u_d_sites.config.CopyFrom(in_u_d.config)
+	out_g_t_sites.config.CopyFrom(in_g_t.config)
+	out_g_d_sites.config.CopyFrom(in_g_d.config)
+	write_proto_to_file(out_expected_sites, out_expected)
+	write_proto_to_file(out_u_t_sites, out_u_text)
+	write_proto_to_file(out_u_d_sites, out_u_dom)
+	write_proto_to_file(out_g_t_sites, out_g_text)
+	write_proto_to_file(out_g_d_sites, out_g_dom)
+
+
+def update_groundtruth(original_expected,
+		original_u_text, original_u_dom, original_g_text, original_g_dom, 
+		add_expected, add_u_text, add_u_dom, add_g_text, add_g_dom, 
+		out_expected, out_u_text, out_u_dom, out_g_text, out_g_dom):
+	in_e = CD.ObservedSites()
+	read_proto_from_file(in_e, original_expected)
+	in_u_t = CD.ObservedSites()
+	read_proto_from_file(in_u_t, original_u_text)
+	in_u_d = CD.ObservedSites()
+	read_proto_from_file(in_u_d, original_u_dom)
+	in_g_t = CD.ObservedSites()
+	read_proto_from_file(in_g_t, original_g_text)
+	in_g_d = CD.ObservedSites()
+	read_proto_from_file(in_g_d, original_g_dom)
+
+	# add google is list
+	add_e = CD.ObservedSites()
+	read_proto_from_file(add_e, add_expected)
+	#add_u_t = CD.ObservedSites()
+	#read_proto_from_file(add_u_t, add_u_text)
+	#add_u_d = CD.ObservedSites()
+	#read_proto_from_file(add_u_d, add_u_dom)
+	#add_g_t = merge_observed_sites(add_g_text)
+	#add_g_d = merge_observed_sites(add_g_dom)
+	in_e_set = sites_name_set(in_e)
+	add_e_set = sites_name_set(add_e)
+	diff_e_set = add_e_set - in_e_set
+	logger = logging.getLogger("global")
+	logger.info("size of original set: {0}, size of add set: {1}, size of diff set: {2}".format(
+		len(in_e_set), len(add_e_set), len(diff_e_set)))
+	logger.info("diff set is")	
+	logger.info(diff_e_set)
+
+	_output_sample_sites(diff_e_set, [add_expected], add_expected + ".temp")
+	_output_sample_sites(diff_e_set, [add_u_text], add_u_text + ".temp")
+	_output_sample_sites(diff_e_set, [add_u_dom], add_u_dom + ".temp")
+	add_g_text_fs = filter(bool, open(add_g_text, 'r').read().split('\n'))
+	add_g_dom_fs = filter(bool, open(add_g_dom, 'r').read().split('\n'))
+	_output_sample_sites(diff_e_set, add_g_text_fs, add_g_text + ".temp")
+	_output_sample_sites(diff_e_set, add_g_dom_fs, add_g_dom + ".temp")
+	out_expected_sites = merge_observed_sites([original_expected,
+		add_expected + ".temp"])
+	out_u_t_sites = merge_observed_sites([original_u_text, add_u_text + ".temp"])
+	out_u_d_sites = merge_observed_sites([original_u_dom, add_u_dom + ".temp"])
+	out_g_t_sites = merge_observed_sites([original_g_text, add_g_text + ".temp"])
+	out_g_d_sites = merge_observed_sites([original_g_dom, add_g_dom + ".temp"])
+	out_u_t_sites.config.CopyFrom(in_u_t.config)
+	out_u_d_sites.config.CopyFrom(in_u_d.config)
+	out_g_t_sites.config.CopyFrom(in_g_t.config)
+	out_g_d_sites.config.CopyFrom(in_g_d.config)
+	write_proto_to_file(out_expected_sites, out_expected)
+	write_proto_to_file(out_u_t_sites, out_u_text)
+	write_proto_to_file(out_u_d_sites, out_u_dom)
+	write_proto_to_file(out_g_t_sites, out_g_text)
+	write_proto_to_file(out_g_d_sites, out_g_dom)
+
 
 
 
@@ -210,8 +337,7 @@ def dedup(text_file):
 	write_proto_to_file(google_dom_remained, google_dom_file + ".dedup")
 	logger.info("after dedup: {0}".format(len(user_text_remained.site)))
 	logger.info("failure count: {0}, zero feature count: {1}".format(failure_count, zero_count))
-	logger.info("google failure count: {0}, google zero feature \
-			count: {1}".format(google_failure_count, google_zero_count))
+	logger.info("google failure count: {0}, google zero feature count: {1}".format(google_failure_count, google_zero_count))
 	return len(user_text_remained.site)
 
 
@@ -223,20 +349,38 @@ def _output_sample_sites(original_label_list, filenames, outfile):
 	oringinal_label_list: the selected websites
 	filenames: observed sites filenames
 	outfile: output filename
+	@return
+	If observed_sites from filenames doesn't contain all urls from original
+	label list, use the return value new_label_list to get the updated
+	label list.
 	"""
 	observed_sites = merge_observed_sites(filenames)
 	observed_sites_map = dict()
 	for observed_site in observed_sites.site:
 		observed_sites_map[observed_site.name] = observed_site
 	sample_sites = CD.ObservedSites()
-	sample_sites.config.CopyFrom(observed_sites.config)
+	if observed_sites.HasField("config"):
+		sample_sites.config.CopyFrom(observed_sites.config)
+	else:
+		print "There is no config in the observed_sites, please double check why"
+		print "This can only happen to expected sites"
+		print filenames
 	sample_list = list()
+	new_label_list = list()
 	for label in original_label_list:
-		sample_list.append(observed_sites_map[label])
+		if label in observed_sites_map:
+			sample_list.append(observed_sites_map[label])
+			new_label_list.append(label)
 	for observed_site in sample_list:
 		sample_site = sample_sites.site.add()
 		sample_site.CopyFrom(observed_site)
 	write_proto_to_file(sample_sites, outfile)
+	o_size = len(original_label_list) 
+	n_size = len(new_label_list)
+	if not o_size == n_size:
+		print "size of the original label list is: {0}".format(o_size)
+		print "size of the new label list is: {0}".format(n_size)
+	return new_label_list
 
 def _replace_list_by(to_replace_list, src, dst):
 	valid_instance(to_replace_list, list)
@@ -402,7 +546,8 @@ def main(argv):
 	collect_observations, plot_simhash, plot_sim_distance, get_domains,
 	get_domain_scores, domain_filter, dedup, sample, merge_sites,
 	get_learned_eval, [-i <table_name> -o <outfie>] export_db
-	[-i <inputfile> -o <outfile>] de_noise"""
+	[-i <inputfile> -o <outfile>] de_noise
+	[-i <inputfile> -c <count>] update_groundtruth"""
 	try:
 		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:s:ac:",
 				["function=", "prefix=", "outfile=",
@@ -560,6 +705,75 @@ def main(argv):
 		logger.info("after de-noise: {0}".format(len(observed_sites.site)))
 		outfile = outfile if outfile else inputfile
 		write_proto_to_file(observed_sites, outfile)
+	elif function == "update_groundtruth":
+		"""
+		This function is too specific. It is to add more malicious
+		examples to the collected groundtruth.
+		"""
+		filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
+		if len(filenames) == 15:
+			original_expected = filenames[0]
+			original_u_text = filenames[1]
+			original_u_dom = filenames[2]
+			original_g_text = filenames[3]
+			original_g_dom = filenames[4]
+			# observed site may have same URL.
+			add_count = count
+			add_expected = filenames[5]
+			add_u_text = filenames[6]
+			add_u_dom = filenames[7]
+			add_g_text = filenames[8]
+			add_g_dom = filenames[9]
+			# outfile
+			out_expected = filenames[10]
+			out_u_text = filenames[11]
+			out_u_dom = filenames[12]
+			out_g_text = filenames[13]
+			out_g_dom = filenames[14]
+			# in this case we will add all
+			update_groundtruth(original_expected,
+					original_u_text, original_u_dom,
+					original_g_text, original_g_dom,
+					add_expected, add_u_text, add_u_dom,
+					add_g_text, add_g_dom,
+					out_expected, out_u_text, out_u_dom,
+					out_g_text, out_g_dom)
+		elif len(filenames) == 12:
+			original_expected = filenames[0]
+			original_u_text = filenames[1]
+			original_u_dom = filenames[2]
+			original_g_text = filenames[3]
+			original_g_dom = filenames[4]
+			# observed site may have same URL.
+			add_count = int(count)
+			add_expected = filenames[5]
+			add_all = filenames[6]
+			'''
+			add_u_text = filenames[6]
+			add_u_dom = filenames[7]
+			add_g_text = filenames[8]
+			add_g_dom = filenames[9]
+			# outfile
+			out_expected = filenames[10]
+			out_u_text = filenames[11]
+			out_u_dom = filenames[12]
+			out_g_text = filenames[13]
+			out_g_dom = filenames[14]
+			'''
+			out_expected = filenames[7]
+			out_u_text = filenames[8]
+			out_u_dom = filenames[9]
+			out_g_text = filenames[10]
+			out_g_dom = filenames[11]
+
+			update_groundtruth_redundant(add_count, original_expected,
+					original_u_text, original_u_dom,
+					original_g_text, original_g_dom,
+					add_expected, add_all,
+					out_expected, out_u_text, out_u_dom,
+					out_g_text, out_g_dom)
+		else:
+			raise Exception("Cannot handle now!")
 	else:
 		print help_msg
 		sys.exit(2)
