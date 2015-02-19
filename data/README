@@ -13,6 +13,7 @@ US_web_search_list.Chrome[1]	: google ad list collected through Chrome, using ho
 US_web_search_list.Firefox[2]	: google ad list collected through Firefox, using hot word list for web search. [csv.20140929-211720/*Web Search*]
 US_web_search_list.Chrome.201411(10 + 2N)*	: ad list [1] crawled data using google_bot_list (even dates)
 US_web_search_list.Chrome.201411(11 + 2N)*	: ad list [2] crawled data using nong_google_bot_list_1 (odd dates)
+*.computed/	: the computed files, they are all processed.
 
 
 
