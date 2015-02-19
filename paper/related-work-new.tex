@@ -56,6 +56,11 @@ to the victim.
 The website shows malicious content to a specific IP only once.
 
 \subsection{Previous Work}
+\subsubsection{Simhash}
+
+Previous work on simhash. ~\cite{manku2007detecting} employ simhash to detect
+near duplicate at scale.
+
 \subsubsection{Cloaking Detection}
 The major challenge in claoking detection, is to differentiate dynamic pages
 from blatantly different content.
@@ -87,17 +92,13 @@ They used text-based method and tag-based method to detect Cloaking page.
 However, non of them take into consideration the data collection part. Nor do
 they take into account the efficiency of the algorithms.
 
-In order to detect cloaking, we design a much more efficient algorithm with
+In order to detect cloaking, we introduce Simhash-based Website Model (SWM) and
+design and implement a much more efficient algorithm based on SWM, which has
 comparable false positive rate and true positive rate. We take into account the
 efficiency of the algorithm and implement a plugin which introduce negligible
-overhead to user. With crowdsourcing, we can solving cloaking at scale.
-Besides, previous 
+overhead to user. With crowdsourcing, we can solve cloaking at scale.
 
-Previous work on cloaking detection.
+%Previous work on phishing. We are solving cloaking, which has a strong
+%relationship with phishing sites.
 
-Previous work on phishing. We are solving cloaking, which has a strong
-relationship with phishing sites.
-
-Previous work on simhash. ~\cite{manku2007detecting} employ simhash to detect
-near duplicate at scale.
 
