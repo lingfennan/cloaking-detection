@@ -56,6 +56,43 @@ to the victim.
 The website shows malicious content to a specific IP only once.
 
 \subsection{Previous Work}
+\subsubsection{Cloaking Detection}
+The major challenge in claoking detection, is to differentiate dynamic pages
+from blatantly different content.
+Comparing document word by word is very expensive and slow, therefore, 
+various ways to test similarity of documents are proposed. 
+~\cite{henzinger2002challenges}
+ considered cloaking as one of the major search engine spam
+techniques.
+ ~\cite{najork2005system} proposed a method of detecting cloaked pages from browsers by
+ installing a toolbar. The toolbar would send the signature of user perceived
+ pages to search engines.
+ ~\cite{wu2006detecting} use statistics of web pages to detect cloaking,
+ % common terms
+~\cite{chellapilla2006improving} detected syntactic on the most popular and
+ monetizable search terms. They showed that monetized search terms had a higher
+ prevalence of cloaking than popular terms.
+ Referrer cloaking was first studied by ~\cite{wang2006detecting}. They found
+ a large number of referrer cloaking pages in their work.
+ ~\cite{lin2009detection} use tag based methods,
+
+ ~\cite{wang2011cloak}
+ extended their previous efforts to examine the dynamics of cloaking over five
+ months, identifying when distinct results were provided to search engine
+ crawlers and browsers.
+They used text-based method and tag-based method to detect Cloaking page.
+ ~\cite{deng2013uncovering} use summarize previous work and compare text, tag,
+ link based approaches. However, JavaScript redirects were not able be handled by their crawler.
+
+However, non of them take into consideration the data collection part. Nor do
+they take into account the efficiency of the algorithms.
+
+In order to detect cloaking, we design a much more efficient algorithm with
+comparable false positive rate and true positive rate. We take into account the
+efficiency of the algorithm and implement a plugin which introduce negligible
+overhead to user. With crowdsourcing, we can solving cloaking at scale.
+Besides, previous 
+
 Previous work on cloaking detection.
 
 Previous work on phishing. We are solving cloaking, which has a strong
