@@ -2,17 +2,44 @@
 \label{s:evaluation}
 
 
+%1. Collect terms
+%2. Query search results.
+%3. Crawl data and get ground truth (how
+%many).
+%4. Train model and select parameters use 5-fold stratified cross validation
+%~\cite{scikit-learn}.
+
+In the above section ~\autoref{s:methodology}, we propose the SWM and explains
+how it can be used to do cloaking detection (outlier detection). There are three
+parameters to be learned, the upper bound of inconsistent coefficient in
+learning phase $T_{learn}$, the lower bound of inconsistent coefficient in the detection
+phase $T_{detect}$, the fix parameter minimum radius $R_{detect}$. In this
+section, we describe our dataset and groundtruth and train and test and
+performance of the proposed model.
 
 \subsection{Dataset}
-
-\XXX{plot simhash of known cloaking}
-
 Because we want to measure cloaking in SEO and SEM, we have compiled a list of
 cloaking words, from the policies specified by Adwords, inspired by the words
 collection process in ~\cite{wang2011cloak}. We have looked at the policies, and
 collected \XXX{N} words, from ad network abuse, adult abuse, alcohol abusive, dangerous behavior
 abuse, dishonest behavior abuse, health abuse, gambling abuse.
 
+We have collected four datasets, spammy search, $D_{spam, search}$, hot search,
+$D_{hot, search}$, spammy ads $D_{spam, ad}$, hot ads, $D_{hot, ad}$. 
+$D_{spam, search}$, spammy search words collected manually, \XXX{N} words.
+$D_{hot, search}$, hot search monthly words from Jan 2013, Dec, 2014, 24 month
+in total,  \XXX{N} words.
+From $D_{hot, search}$, we evaluate the monetizability of each word through
+Google Keyword Planner~\cite{keyword-planner} and simply
+remove the words that have no bid price. This results in our spammy
+advertisements words set, $D_{spam, ad}$, we have collected advertisements from 573 words.
+$D_{hot, ad}$, we need as much words as possible, i.e. as much ads as possible,
+therefore first download hots words list from Google Trend, for hot words in
+each category, we download weekly, monthly, and yearly from 2004 to 2014, and
+then we find the useful keywords with Keyword Planner~\cite{keyword-planner}.
+We have collected advertisements from 4108 words.
+
+For the above keywords, we do the following:
 Step 1: For each word, with chrome user agent, we click and visit search results and advertisements on first
 twenty pages.
 Step 2: For the landing pages collected in step 1, with google bot user agent, we visit them 6 times at an
@@ -23,22 +50,37 @@ a tradeoff between space and precision. If we want to model the website better,
 we may want to collect as many examples as possible.
 
 
-We randomly sample 600 websites from the dataset, for 10 times. This results in
-5726 websites. We manually label them and \XXX{cloaking}, \XXX{not}, percentage
-for each is.
-
-
 \subsection{Groundtruth}
 
-We remove the failure websites and this results in 
-113242 urls, exact match, parameter different are counted.
-98390 sites, parameters ignored. Later we will use the latter parameter because
-it makes more sense.
+%We randomly sample 600 websites from the dataset, for 10 times. This results in
+%5726 websites. We manually label them and \XXX{cloaking}, \XXX{not}, percentage
+%for each is.
+Similar to ~\cite{lin2009detection}, we first remove duplicates (same simhash
+from user side and Google side), then label $D_{spam, search}$ and $D_{hot,
+search}$. We also manually add the examples that we observe when we do case
+study. We manually labeled 1195 cloaking examples. And we randomly
+ 5308 samples from non-cloaking dataset. This composes our
+dataset 6503 for algorithm learning.
+
+%\subsubsection{De-duplication}
+%71116 urls
+%
+%62042 websites
+%
+%This results in \XXX{Some} links. Then we compare the text simhash and dom
+%simhash, remove those which are exactly duplicate of one of the simhash observed
+%by Google. After this step, we have \XXX{N} url left.
+%
+%For advertisements, after deduplication, there are 997 (score 60) urls remained.
+%
+%For search results, after deduplication 37155 urls, 35444 websites remained.
 
 
-Visit 1000 search words, for collected search urls, we have collected
-130K URLs.
-Maybe not
+
+%We remove the failure websites and this results in 
+%113242 urls, exact match, parameter different are counted.
+%98390 sites, parameters ignored. Later we will use the latter parameter because
+%it makes more sense.
 
 %Step 1: Filter
 %
@@ -54,48 +96,60 @@ Maybe not
 %\XXX{Problematic because I haven't merged them}
 %
 
-\subsubsection{De-duplication}
-71116 urls
+%\subsubsection{Random Sample and Labeling}
+%Then we randomly select 1000 urls from the dataset, and label them, after
+%labeling, we found \XXX{N} cloaking sites and \XXX{M} dynamic websites.
+%These are the groundtruth we used to label our data.
 
-62042 websites
-
-This results in \XXX{Some} links. Then we compare the text simhash and dom
-simhash, remove those which are exactly duplicate of one of the simhash observed
-by Google. After this step, we have \XXX{N} url left.
-
-For advertisements, after deduplication, there are 997 (score 60) urls remained.
-
-For search results, after deduplication 37155 urls, 35444 websites remained.
-
-\subsubsection{Random Sample and Labeling}
-Then we randomly select 1000 urls from the dataset, and label them, after
-labeling, we found \XXX{N} cloaking sites and \XXX{M} dynamic websites.
-These are the groundtruth we used to label our data.
 
 \subsection{Detection and Evaluation}
-We have detected.
-We manually examine the results and found \XXX{N} are actually cloaking.
-For SEO and SEM, the cloaking rate is 5\% and 3\% in the dataset collected by
-us.
 
-We see a lower cloaking rate compared to XXX, may be because Google has done
-something to this. However, this problem still remains.
+\subsubsection{Selection of $T_{learn}$ and $T_{detect}$}
+Because $R_{detect}$ is a parameter to allow the system to handle consistent
+difference between spider and user copies, therefore, we first set detect
+$R_{detect}$ to be zero, do 5 fold stratified cross validation~\cite{scikit-learn}.
+on the result. 
+In the learning phase,
+Our objective function is to first minimize the total number of errors in classification $E = FP + FN$, and
+if $E$ is the same, minimize $d = T_{detect} - T_{learn}$.
+This is reasonable because $d$ is the area that we cannot judge, and the smaller
+the area, indicates that the learned model is more compact. The two objective
+function are widely used metrics in machine
+learning parameter selection \XXX{cite}.
 
-For the United States, web search dataset.
+By applying five-fold cross validation on the groundtruth, and the described
+objective function, dom simhash returned 
+$T_{detect, dom} = 1.8$ and $T_{learn, dom} = 0.7$, and text simhash yields
+$T_{detect, text} = 2.1$ and $T_{learn, text} = 0.7$.
+% this is meaningless, i think
+%
+% majority is false positive.
+% which yields to distance 1.1 at optimal (1318.4 learn error, 329 detect error), 
+\subsubsection{Radius Selection $R_{detect}$}
+From the above section, we have selected $T_{detect, dom} = 1.8$ and $T_{learn, dom} = 0.7$,
+$T_{detect, text} = 2.1$ and $T_{learn, text} = 0.7$. Now, we want to decide,
+$R_{detect, text}$ and $R_{detect, dom}$ separately. In this section, we conduct
+three experiments: cloaking detection using (1) dom simhash (2) text simhash (3)
+both dom simhash and text simhash.
+Again, we use five-fold cross validation to learn and test the dataset. The
+selected parameter for dom simhash is $R_{detect, dom} = 17$, text simhash is
+$R_{detect, text} = 16$. If we consider great difference in both text and dom as
+cloaking (intersect the detected results), the result is $R_{detect, dom} = 13$,
+$R_{detect, text} = 17$, get $FPR = 0.1\%, TPR = 94\%$.
+Figure ~\autoref{fig:roc} gives an illustration on how FPR and TPR changes as
+threshold for DOM and TEXT changes.
 
-The advertisements are
-before dedup: 4381
-after dedup: 1487
-\subsection{Cross Domain Spam Detection}
-In our detection result, we have observed many cloaking cases, where URL are
-completely different, while the content are similar or even the same.
-We argue that, the foundamental reason for them to do this is the low cost of
-getting a new URL and lack of efficient way to detect spammy content.
-Based on this observation, we propose content based blacklist to raise the bar
-for reusing spammy content. This approach leverages the most popular use of
-simhash - near duplicate detection. For spammy pages, in order to evade our
-detection, they not only need to change URL rapidly, but also update their
-content everytime, which can be expensive in their current mode if they want
-every copy their website to be different and have meaningful and stay attractive
-to user.
+% you can also use the wonderful epsfig package...
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.5\textwidth]{fig/roc}
+  \caption{ROC for DOM, TEXT, DOM \& TEXT}
+  \label{fig:roc}
+\end{figure}
+
+With the learned model, in Section ~\autoref{s:measurement} 
+detect on the four dataset that we obtained and
+manually label the results. In our detection, we want a low false positive rate,
+therefore, we use the FPR = 0.1\%, TRP = 92\% in ~\autoref{fig:roc}. This yields
+to $R_{detect, dom} = 16$, $R_{detect, text} = 20$.
 
