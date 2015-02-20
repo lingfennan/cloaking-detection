@@ -1,19 +1,13 @@
 \section{Measurement}
 \label{s:measurement}
 
-label total cloaking
-173
-phishing
-78 + 69 (gambling)
-cheat, dishonest behavior
-13
-malware or bad domain
-16
 
-
-
-\subsection{Dataset}
-Get detected results from 60K (scale of previous research) data and analyze. 
+With the model built in ~\autoref{s:evaluation}, we detect cloaking in
+the four collected datasets, spammy search, $D_{spam, search}$, hot search,
+$D_{hot, search}$, spammy ads $D_{spam, ad}$, hot ads, $D_{hot, ad}$. 
+$D_{spam, search}$.
+%\subsection{Dataset}
+%Get detected results from 60K (scale of previous research) data and analyze. 
 
 \subsection{Cloaking in SEO}
 
@@ -21,6 +15,41 @@ SEO: How severe is cloaking? How many categories and percentages of various
 cloaking? For each type of cloaking, what are their incentives?
 
 \XXX{Plot a log scale pie or histogram for categories in SEO}
+Out of the 20k distinct urls, we detect 1600 urls. There are mainly composed of
+60\% phishing sites, 30\%illegal services, 10\% malicous domain. Phishing sites includes rogue
+pharmacy sites. Illegal services include gambling, essay writing. Malicious
+domain are verified manually, we manually visit these URLs and are redirected to
+malware download.
+
+%label total cloaking
+%173
+%phishing
+%78 + 69 (gambling)
+%cheat, dishonest behavior
+%13
+%malware or bad domain
+%16
+Compared to  ~\cite{wang2011cloak}, we detected a relatively small percentage of
+cloaking, this is probably because search engine is taking active action now, or
+the cloaking methods have evolved.
+
+%We have detected.
+%We manually examine the results and found \XXX{N} are actually cloaking.
+%For SEO and SEM, the cloaking rate is 5\% and 3\% in the dataset collected by
+%us.
+%
+%We see a lower cloaking rate compared to XXX, may be because Google has done
+%something to this. However, this problem still remains.
+%
+%For the United States, web search dataset.
+%
+%The advertisements are
+%before dedup: 4381
+%after dedup: 1487
+
+
+
+
 
 
 \subsection{Cloaking in SEM}
@@ -29,4 +58,28 @@ How severe is cloaking? How many categories and percentages of various cloaking?
 For each type of cloaking, what are their incentives?
 
 \XXX{Plot a log scale pie or histogram for categories in SEM}
+In SEM, we have detected 100 claoking examples out of 10k ads. This percentage
+is lower compared to SEO. However, ads are much more important because they
+matters, clicks in ads equals money. Most of the detected cloaking are providing
+illegal services.
+
+We argue that, previous methods cannot be used to detect SEM cloaking, simply
+because performing clicks from search engine side, is ad fraud. In contrast,
+SWM simply collects the fuzzy signatures of websites. With privacy guarantee
+provided by RAPPOR~\cite{erlingsson2014rappor}, and one-wayness of simhash,
+crowdsourcing is an achievable and elegant way to detect cloaking.
+
+\subsection{Cross Domain Spam Detection}
+In our detection result, we have observed many cloaking cases, where URL are
+completely different, while the content are similar or even the same.
+We argue that, the foundamental reason for them to do this is the low cost of
+getting a new URL and lack of efficient way to detect spammy content.
+Based on this observation, we propose content based blacklist to raise the bar
+for reusing spammy content. This approach leverages the most popular use of
+simhash - near duplicate detection. For spammy pages, in order to evade our
+detection, they not only need to change URL rapidly, but also update their
+content everytime, which can be expensive in their current mode if they want
+every copy their website to be different and have meaningful and stay attractive
+to user.
+
 
