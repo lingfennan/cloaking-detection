@@ -39,26 +39,36 @@ def list_to_sites(sites_list, config, y_list = None):
 	return sites
 
 class Estimator(object):
-	def __init__(self, simhash_config, outfile):
+	def __init__(self, simhash_config, outfile, coefficient, radius):
 		# load learned sites map, which maps site name to related patterns
 		self.best_params = dict()
-		self.best_params['score'] = 0.0
+		'''
+		self.best_params['score'] = -1
 		self.best_params['train_inconsistent'] = 1.2
 		self.best_params['test_inconsistent'] = 3
 		self.best_params['test_diameter'] = 15
+		'''
 		self.simhash_config = CD.SimhashConfig()
 		self.simhash_config.CopyFrom(simhash_config)
 		self.outf = open(outfile, 'a')
+		if coefficient:
+			self.coefficient = list(coefficient)
+		else:
+			self.coefficient = [0.3, 1.0, 1.5, 2.0]
+		if radius:
+			self.radius = list(radius)
+		else:
+			self.radius = [15,20]
+		self.coefficient_step = 0.1
+		self.radius_step = 1.0
 
 	def fit(self, learn_train, detect_train, y_train):
 		learn_train = list_to_sites(learn_train, self.simhash_config)
 		detect_train = list_to_sites(detect_train, self.simhash_config)
 		min_params = dict()
-		min_params['score'] = 0
 		test_params = dict()
-		# for t1 in np.arange(0.0, 0.5, 0.1):
-		# for t1 in np.arange(0.5, 3.1, 0.5):
-		for t1 in np.arange(-0.5, 1.0, 0.1):
+		# T_train
+		for t1 in np.arange(self.coefficient[0], self.coefficient[1], self.coefficient_step):
 			test_params['train_inconsistent'] = t1
 			cluster_learner = ClusterLearning()
 			cluster_config = CD.ClusterConfig()
@@ -68,23 +78,28 @@ class Estimator(object):
 			logger.info("learning with coefficient: {0}".format(t1))
 			learned_sites = cluster_learner.learn(learn_train, cluster_config)
 			logger.info("learning complete!")
-			# for t2 in np.arange(0.0, 1.0, 0.1):
-			# for t2 in np.arange(0.5, 6.0, 1):
-			for t2 in np.arange(0.5, 1.5, 0.1):
+			# T_test
+			for t2 in np.arange(self.coefficient[2], self.coefficient[3], self.coefficient_step):
 				test_params['test_inconsistent'] = t2
-				# for r in np.arange(5, 21, 5):
-				# for r in np.arange(5, 31, 5):
-				for r in np.arange(10, 20, 1):
+				# R_test
+				for r in np.arange(self.radius[0], self.radius[1], self.radius_step):
 					test_params['test_diameter'] = r
 					logger.info("testing with coefficient: {0}, min_radius: {1}".format(t2, r))
 					current_score = self.score_learned(learned_sites, detect_train, y_train, test_params) 
 					logger.info("testing complete, f1 score is: {0}".format(current_score))
-					if current_score < min_params['score']:
+					"""
+					the less the error, 
+					the less the distance between train and test threshold, ie. uncertain area, the better.
+					"""
+					if (('score' not in min_params) or (current_score < min_params['score']) or
+							(current_score == min_params['score'] and min_params['distance'] > t2 - t1)):
 						min_params['score'] = current_score
+						min_params['distance'] = t2 - t1
 						min_params['train_inconsistent'] = t1
 						min_params['test_inconsistent'] = t2
 						min_params['test_diameter'] = r
-		if min_params['score'] < self.best_params['score']:
+		if (('score' not in self.best_params) or (min_params['score'] < self.best_params['score']) or 
+				(current_score == min_params['score'] and min_params['distance'] > t2 - t1)):
 			self.best_params = dict(min_params)
 			logger.info(self.best_params)
 		return min_params
@@ -147,7 +162,7 @@ class Estimator(object):
 		return self.score_learned(learned_test_sites, detect_test, y_test,
 				self.best_params)
 
-def cross_validation(to_detect, to_learn, expected, noise, outfile):
+def cross_validation(to_detect, to_learn, expected, noise, outfile, coefficient=None, radius=None):
 	to_learn_sites = CD.ObservedSites()
 	read_proto_from_file(to_learn_sites, to_learn)
 	expected_sites = CD.ObservedSites()
@@ -200,7 +215,7 @@ def cross_validation(to_detect, to_learn, expected, noise, outfile):
 		detect_train, detect_test = to_detect_sites_list[train], to_detect_sites_list[test]
 		y_train, y_test = Y[train], Y[test]
 
-		estimator = Estimator(filt_to_detect_sites.config, outfile)
+		estimator = Estimator(filt_to_detect_sites.config, outfile, coefficient, radius)
 		estimator.fit(learn_train, detect_train, y_train)
 		best_params.append(estimator.best_params)
 		scores.append(estimator.score(learn_test, detect_test, y_test))
@@ -212,8 +227,9 @@ def cross_validation(to_detect, to_learn, expected, noise, outfile):
 
 def main(argv):
 	has_function = False
-	help_msg = """cross_validation.py -f <function> [-i <inputfile> -l
-		<trainfile> -e <expectedfile> -o <outfile>] cross_validation"""
+	help_msg = """cross_validation.py -f <function> [-i <inputfile> -t
+		<trainfile> -e <expectedfile> -o <outfile> -c <min_train,max_train,min_test,max_test> -r <min_radius,max_radius>] cross_validation
+		[-i <inputfile> integrated_cross_validation]"""
 	try:
 		opts, args = getopt.getopt(argv, "hf:i:l:e:t:r:n:c:o:",
 				["function=", "ifile=", "lfile=", "efile=",
@@ -226,7 +242,7 @@ def main(argv):
 	simhash_type = None
 	min_radius = 0
 	std_constant = 3
-	coefficient = 1
+	coefficient = '0,1,1,3'
 	for opt, arg in opts:
 		if opt == "-h":
 			print help_msg
@@ -262,9 +278,23 @@ def main(argv):
 		sys.exit()
 	if function == "cross_validation":
 		# cross validation for one type
+		coefficient = [float(c) for c in coefficient.split(',')]
+		radius = [float(c) for c in min_radius.split(',')]
 		noisefile = expectedfile + ".noise"
 		cross_validation(inputfile, trainfile, expectedfile, noisefile,
-				outfile)
+				outfile, coefficient, radius)
+	elif function == "integrated_cross_validation":
+		filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
+		"""
+		text_input = filenames[0]
+		text_train = filenames[1]
+		dom_input = filenames[2]
+		dom_train = filenames[3]
+		expected = filenames[4]
+		noise = filenames[5]
+		outfile = filenames[6]
+		"""
+		integrated_cross_validation(filenames)
 	else:
 		print help_msg
 		sys.exit(2)

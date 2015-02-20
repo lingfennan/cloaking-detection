@@ -12,5 +12,17 @@ After Feb 18, 3:30 PM, learning depth = m - 1, m is the number of obesrvations.
 new_learn_training_data_dom_ROC
 new_learn_training_data_text_ROC
 
+After Feb 19, 4:00 PM, learning is set to two phase
+first learn T_test and T_train
+this corresponds to 
+train_dom_ROC_coefficient
+train_text_ROC_coefficient
+
+second learn R_test
+this corresponds to 
+train_dom_ROC_radius
+train_text_ROC_radius
+
+
 
 
