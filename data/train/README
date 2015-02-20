@@ -23,6 +23,9 @@ this corresponds to
 train_dom_ROC_radius
 train_text_ROC_radius
 
+On Feb 20, we have generated the ROC curve
+train_text_plot_ROC
+train_dom_plot_ROC
 
 
 

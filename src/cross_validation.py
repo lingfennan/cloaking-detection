@@ -405,7 +405,7 @@ def integrated_plot_ROC(text_input, text_train, dom_input, dom_train, expected, 
 	dom_params['test_inconsistent'] = c_dom_test
 
 	# params['test_diameter'] = radius[0]
-	outf = open(outfile, 'a')
+	outf = open(outfile + "_text_r_" + str(r_text_start), 'a')
 	for t_r in np.arange(r_text_start, r_text_end, 1):
 		text_params['test_diameter'] = t_r 
 		for d_r in np.arange(r_dom_start, r_dom_end, 1):
