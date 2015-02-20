@@ -314,17 +314,24 @@ def intersect_observed_sites(site_filename, to_add_site_filename):
 	@return
 	observed_sites: the intersect result.
 	"""
-	observed_sites = CD.ObservedSites()
-	temp_observed_sites_map = dict()
 	temp_observed_sites = CD.ObservedSites()
 	read_proto_from_file(temp_observed_sites, site_filename)
+	to_add = CD.ObservedSites()
+	read_proto_from_file(to_add, to_add_site_filename)
+	return intersect_observed_sites_util(temp_observed_sites, to_add)
+
+def intersect_observed_sites_util(temp_observed_sites, to_add):
+	"""
+	This is the sub function of intersect_observed_sites.
+	But takes ObservedSites as parameters.
+	"""
+	observed_sites = CD.ObservedSites()
 	observed_sites.config.CopyFrom(temp_observed_sites.config)
+	temp_observed_sites_map = dict()
 	for observed_site in temp_observed_sites.site:
 		temp_observed_sites_map[observed_site.name] = CD.SiteObservations()
 		temp_observed_sites_map[observed_site.name].CopyFrom(observed_site)
 	to_add_map = dict()
-	to_add = CD.ObservedSites()
-	read_proto_from_file(to_add, to_add_site_filename)
 	for observed_site in to_add.site:
 		to_add_map[observed_site.name] = CD.SiteObservations()
 		to_add_map[observed_site.name].CopyFrom(observed_site)
