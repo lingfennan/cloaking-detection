@@ -51,19 +51,6 @@ reach their websites. In this way, the cloaking websites only serves the scam pa
 In IP Cloaking, websites determine the visitors' identities by their IP addresses. With an accurate mapping between IP addresses
 and ornizations, the websites could easily distinguish cralwers from search engines and real users. 
 
-\subsubsection{HTTP referer header}
-Referer tells landing page, where user is coming from, they may only allow
-access for users with referer http://www.google.com.
-\subsubsection{Cookie}
-This is used as a complementary method to referer, in order to track whether
-user is shown malicious content before. If so, then subsequent accesses are
-bad as well. If not, set cookie and disallow access to bad stuff.
-
-This is mainly observed on websites, that try to provide illegal services. The
-intuition of doing this is to track past user visit, and provide further service
-to the victim.
-\subsubsection{Number of visit times}
-The website shows malicious content to a specific IP only once.
 
 \subsection{Previous Work}
 \subsubsection{Simhash}
