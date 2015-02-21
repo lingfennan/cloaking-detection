@@ -1,8 +1,26 @@
 \section{Discussion}
 \label{s:discussion}
 
-This section discusses the potential deployment of the system.
-\subsection{Server based}
+In this part, we will discuss two kinds of deployment of simhash based cloaking detection system: server based and crowdsoucing.
+
+\subsection{Server-based cloaking detetion system}
+In server-based cloaking detection system
+we first collect targeted search terms includes commecial terms, cloaking oriented terms and hot tread words.
+Using these search terms, the cralwer extracts the search results from the search engines for seven times.
+In the six times, the crawler disguises as Google Crawlers by using the Google Agent. With these
+data that is crawled from Google view, the system uses the simhash method to model the websites. The last
+time, the crawler disguises as normal users using User Agent. The system compares simhash value from user view and
+website model learned from Google view. From the comparsion result, the system judge is the website is cloaking
+or not. 
+Server based cloaking detection system has pros and cons. This deployment is pratical and could be deployed
+easily. The tradeoff of easy deployment is inefficient in IP cloaking detection. Usually, the servers IP addresses
+are in a range. Scammers could find this range and serve benign content to crawlers. One solution is buying numerous IP addresses
+from ISP providers and distribute IP addresses as users distribution. This increases cloaking detection cost. In
+addition, distributed IP addresses as users distribution is hard. In addition, server-based cloaking detection system is infeasiable
+to detect cloaking in search engine marketing(SEM). As we mentioned, using the crawlers to visit websites in SEM field
+will increase the advertisement cost of websites. Further, to save compuation resources, the system need to find different 
+crawling periods for different websites. 
+
 
 Pros:	practical, easy deployment.
 cons:	IP cloaking, SEM, hard to decide crawling periods. 
