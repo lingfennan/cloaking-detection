@@ -35,25 +35,22 @@ crawling adverstisements, checking the SEM policy(Google Ads Policy). To ensure 
 websites won't pay much extra money because of cloaking detection, we introduced a new model and "click counting" mechanisms.
 Traditional methods failed to do this adjust on SEM. Thus, the traditional methods are inefficient detect cloakings in SEM.
 \subsection{Cloaking Types}
-A website could differentiate search engine crawler from user web browser, from
-the following data:
-\subsubsection{IP address}
-Attackers blacklist a list of IP addresses and simply block their access.
-\subsubsection{HTTP user-agent header}
-Attackers identify bots by looking at user-agent, serve different content.
-\subsubsection{HTTP referer header}
-Referer tells landing page, where user is coming from, they may only allow
-access for users with referer http://www.google.com.
-\subsubsection{Cookie}
-This is used as a complementary method to referer, in order to track whether
-user is shown malicious content before. If so, then subsequent accesses are
-bad as well. If not, set cookie and disallow access to bad stuff.
+To understand how cloaking works in different scenarios, we will discuss the cloaking types.
+In order to serve targeted users cloaking content, the scammer must use some identifiers to distinguish 
+user segments. Based on these used identifiers, the cloaking techniques are classified as Repeat Cloaking, 
+User Agent Cloaking, Referred Cloaking and IP Cloaking. 
 
-This is mainly observed on websites, that try to provide illegal services. The
-intuition of doing this is to track past user visit, and provide further service
-to the victim.
-\subsubsection{Number of visit times}
-The website shows malicious content to a specific IP only once.
+In Repeat Cloaking, websites store the visit history in user-end(Cookies) or server-end (server log). Based on visit history, the website presents different information. 
+According to ~\cite{wang2011cloak}, they oberved websites that only show cloaking at first time, in the hopes of making a sale, but subsequent visits are presented 
+with benign page. In our observation, some repeat cloaking websites are willing to 
+show the same content as the first time. 
+In User Agent Cloaking, websites check the User Agent Field in the HTTP request. From the User agent field, they could find the crawlers that uses the well-known User-Agent
+strings and identify crawlers.
+In Referrer Cloaking, websites examamine the referer field of HTTP request. From the referer field, the website could easily find if the users clicked though search engines to
+reach their websites. In this way, the cloaking websites only serves the scam page to the targeted users from search engines. 
+In IP Cloaking, websites determine the visitors' identities by their IP addresses. With an accurate mapping between IP addresses
+and ornizations, the websites could easily distinguish cralwers from search engines and real users. 
+
 
 \subsection{Previous Work}
 \subsubsection{Simhash}
