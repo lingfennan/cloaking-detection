@@ -43,6 +43,9 @@ Example Usage:
 	# merge sites
 	ls ../data/all.computed/*.intersect | python data_util.py -f merge_sites -o ../../data/all.computed/search.detection_results
 
+	# merge user observed sites
+	python data_util.py -f merge_user_sites -i <user observation list, suffix removed>
+	
 	# de-noise sites
 	python data_util.py -f de_noise -i <inputfile> -t <proto_type> [-o <outfile>]
 """
@@ -547,7 +550,8 @@ def main(argv):
 	get_domain_scores, domain_filter, dedup, sample, merge_sites,
 	get_learned_eval, [-i <table_name> -o <outfie>] export_db
 	[-i <inputfile> -o <outfile>] de_noise
-	[-i <inputfile> -c <count>] update_groundtruth"""
+	[-i <inputfile> -c <count>] update_groundtruth
+	[-i <user observation list, suffix removed>] merge_user_sites"""
 	try:
 		opts, args = getopt.getopt(argv, "hf:p:o:t:i:m:l:s:ac:",
 				["function=", "prefix=", "outfile=",
@@ -668,6 +672,20 @@ def main(argv):
 		logger = logging.getLogger("global")
 		logger.info("total sites after merge: {0}".format(len(observed_sites.site)))
 		write_proto_to_file(observed_sites, outfile)
+	elif function == "merge_user_sites":
+		"""
+		-i input_file
+		"""
+		filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
+		text_filenames = [filename + '.text' for filename in filenames]
+		dom_filenames = [filename + '.dom' for filename in filenames]
+		text_observed_sites = merge_observed_sites(text_filenames)
+		logger = logging.getLogger("global")
+		logger.info("total sites after merge: {0}".format(len(text_observed_sites.site)))
+		write_proto_to_file(text_observed_sites, inputfile + '.text')
+		dom_observed_sites = merge_observed_sites(dom_filenames)
+		logger.info("total sites after merge: {0}".format(len(dom_observed_sites.site)))
+		write_proto_to_file(dom_observed_sites, inputfile + '.dom')
 	elif function == "get_learned_eval":
 		"""
 		-l learned_file -i detected_file
