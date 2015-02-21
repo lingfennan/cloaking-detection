@@ -132,7 +132,9 @@ same as the simhash algorithm used in spam detection by Google.
 %in ~\cite{manku2007detecting},
 This algorithm extract words, bi-gram, tri-gram set
 (repeated elements only recorded once) from a website and compute simhash using
-simhash algorithm described in ~\cite{charikar2002similarity}. 
+simhash algorithm described in ~\cite{charikar2002similarity}. For example, for
+sentence: thank you so much!, corresponds to feature set \{thank, you, so, much,
+thank you, you so, so much, thank you so, you so much\}.
 Because there are usually large number of words on a website, insight (B)
 suffices. Besides, bi-gram, tri-gram is essentially the structure of the document,
 thus insight (A) suffices.
@@ -151,7 +153,7 @@ phrase detection, and may introduce more overhead and need extra knowledge.
 \end{figure}
 
 The content of a web page, Document Object Model (DOM), is organized in the form of a tree.
-Figure ~\autoref{fig:dom-tree} shows a typical dom tree.
+~\autoref{fig:dom-tree} shows a typical dom tree.
 There is no current algorithm for generating dom simhash. Therefore, we design
 an algorithm based on drawn insights.
 
@@ -159,21 +161,27 @@ For each dom tree, we record presence of each node, as
 well as presence of each child parent pair. The node set tells us information about what
 tag is present in this page, and child parent pair tells us how these tags are
 organized, suffices insight (B). And the number of features extracted in this
-fashion is relatively large, suffices insight (A).
+fashion is relatively large, suffices insight (A). In order to get more
+features, we also record add attribute name to tag name, attribute value is
+discarded because some of them changes on every visit. For example,
+~\autoref{fig:dom-tree} correspond to feature set \{html, head, body, title,
+  meta charset, h1, img src, button type, script type, (head, html), (body,
+  html), (title, head), (meta charset, head), (h1, body), (img src, body),
+(button type, body), (script type, h1)\}
 
 % you can also use the wonderful epsfig package...
 \begin{figure}[t]
   \centering
-  \begin{subfigure}
+  \subfigure[User View of Yahoo Text Simhash]{
     \centering
     \includegraphics[width=.5\textwidth]{fig/yahoo-text-user}
     \label{fig:yahoo-text-user}
-  \end{subfigure}%
-  \begin{subfigure}
+  }
+  \subfigure[User View of Yahoo Dom Simhash]{
     \centering
     \includegraphics[width=.5\textwidth]{fig/yahoo-dom-user}
     \label{fig:yahoo-dom-user}
-  \end{subfigure}
+  }
   \caption{Yahoo simhash changes over 7x24 period Feb.1 - 7, 2015}
   \label{fig:yahoo-simhash}
 \end{figure}
@@ -245,16 +253,16 @@ to
 
 \begin{figure}[t]
   \centering
-  \begin{subfigure}
+  \subfigure[User View of Yahoo Dom Simhash]{
     \centering
     \includegraphics[width=.5\textwidth]{fig/yahoo-dom-user}
     \label{fig:yahoo-dom-user}
-  \end{subfigure}%
-  \begin{subfigure}
+  }
+  \subfigure[Google View of Yahoo Dom Simhash]{
     \centering
     \includegraphics[width=.5\textwidth]{fig/yahoo-dom-google}
     \label{fig:yahoo-dom-google}
-  \end{subfigure}
+  }
   \caption{Comparison of user and google seen dom simhash}
   \label{fig:yahoo-simhash}
 \end{figure}

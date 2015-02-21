@@ -153,3 +153,13 @@ manually label the results. In our detection, we want a low false positive rate,
 therefore, we use the FPR = 0.1\%, TRP = 92\% in ~\autoref{fig:roc}. This yields
 to $R_{detect, dom} = 16$, $R_{detect, text} = 20$.
 
+
+\subsection{Efficiency Comparison}
+While we can achieve similar false positve rate and true positive rate compared
+to past approaches, we argue that, our approach is much more efficient than past
+approaches and is light-weight enough to be deployed on user browser.
+\XXX{Table} is a comparison of time complexity and number of rounds that the
+documents need to be processed (each time they get smaller amount of document,
+though). Let $N$ denote the number of total urls collected, $M$ denoete the
+number of cloaking websites. The time complexity is \XXX{Plot}.
+
