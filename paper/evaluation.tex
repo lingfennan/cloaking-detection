@@ -13,42 +13,10 @@ In the above section ~\autoref{s:methodology}, we propose the SWM and explains
 how it can be used to do cloaking detection (outlier detection). There are three
 parameters to be learned, the upper bound of inconsistent coefficient in
 learning phase $T_{learn}$, the lower bound of inconsistent coefficient in the detection
-phase $T_{detect}$, the fix parameter minimum radius $R_{detect}$. In this
-section, we describe our dataset and groundtruth and train and test and
-performance of the proposed model.
-
-\subsection{Dataset}
-Because we want to measure cloaking in SEO and SEM, we have compiled a list of
-cloaking words, from the policies specified by Adwords, inspired by the words
-collection process in ~\cite{wang2011cloak}. We have looked at the policies, and
-collected \XXX{N} words, from ad network abuse, adult abuse, alcohol abusive, dangerous behavior
-abuse, dishonest behavior abuse, health abuse, gambling abuse.
-
-We have collected four datasets, spammy search, $D_{spam, search}$, hot search,
-$D_{hot, search}$, spammy ads $D_{spam, ad}$, hot ads, $D_{hot, ad}$. 
-$D_{spam, search}$, spammy search words collected manually, \XXX{N} words.
-$D_{hot, search}$, hot search monthly words from Jan 2013, Dec, 2014, 24 month
-in total,  \XXX{N} words.
-From $D_{hot, search}$, we evaluate the monetizability of each word through
-Google Keyword Planner~\cite{keyword-planner} and simply
-remove the words that have no bid price. This results in our spammy
-advertisements words set, $D_{spam, ad}$, we have collected advertisements from 573 words.
-$D_{hot, ad}$, we need as much words as possible, i.e. as much ads as possible,
-therefore first download hots words list from Google Trend, for hot words in
-each category, we download weekly, monthly, and yearly from 2004 to 2014, and
-then we find the useful keywords with Keyword Planner~\cite{keyword-planner}.
-We have collected advertisements from 4108 words.
-
-For the above keywords, we do the following:
-Step 1: For each word, with chrome user agent, we click and visit search results and advertisements on first
-twenty pages.
-Step 2: For the landing pages collected in step 1, with google bot user agent, we visit them 6 times at an
-interval of around 20 miniutes.
-
-6 copy is collected because we need to model the distribution of websites. It is
-a tradeoff between space and precision. If we want to model the website better,
-we may want to collect as many examples as possible.
-
+phase $T_{detect}$, the fix parameter minimum radius $R_{detect}$. 
+There are four dataset collected in ~\autoref{s:methodology}. In this section,
+we first describe the groundtruth obtained from $D_{spam, search}$ and $D_{hot,
+search}$. Then train and test the performance of the proposed model.
 
 \subsection{Groundtruth}
 
