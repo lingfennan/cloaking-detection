@@ -5,19 +5,18 @@ Cloaking is a technique to deliver blatantly different content to users versus
 censors on the web. 
 Search engine is the main entry for user to get online today, and therefore,
 attackers who want to promote illegal services or do phishing and malware
-hosting is willing to have their page ranked high in search engine.
+hosting is willing to have their page ranked high through search engine.
 On the other hand, search engine develops algorithms to rank pages and penalize
 these pages. In order to evade detection, attackers use cloaking to hide the
-true nature of their website.
-Similarly, in search engine marketing, advertisers pay search engine for
+true nature of their website, conducting blackhat Search Engine Optimization (SEO).
+Similarly, in Search Engine Marketing (SEM), advertisers pay search engine for
 specific advertisements and get their page displayed on the first page of search
 results. Attackers abuse this service to deliver non-compliant content to user.
 The foundamental reason of SEO and SEM cloaking is that, search engine is just processing
 information over the Internet, with no control over it, hence it is hard to
 tell whether the copy of website that they see are actually what user sees.
 
-In Search Engine Optimization (SEO) and Search Engine Marketing (SEM),
-spammers use user agent, referer, IP etc based cloaking
+In SEO and SEM, attackers use user agent, referer, IP etc based cloaking
 techniques to avoid inspection. Among the cloaking techniques, IP cloaking is
 very difficult to detect. 
 There are two major challenges in cloaking detection in SEO and SEM.
@@ -26,21 +25,26 @@ commercial tools, such as blackjack's, noIPfraud, and wpCloaker~\cite{intro:cloa
 that are efficient in performing cloaking.
 They provide different strategies of cloaking, including user agent, referer,
 redirect, IP etc. Regarding IP cloaking, they provide services to periodically refresh the list of
-crawlers' IP addresses. Therefore, unrevealing cloaked content is an ongoing war
+crawlers' IP addresses. Therefore, revealing uncloaked content is an ongoing war
 between cloakers and censors.
 Second challenge is differentiating
-cloaking from naturally dynamic changes of the same page. Dynamic content are
-allowed by SEO and SEM, however, blatantly deliver different, unrelated content
+cloaking from naturally dynamic changes of the same page. Dynamic content is
+allowed in SEO and SEM, however, blatantly deliver different, unrelated content
 to search engine spider versus normal user is not allowed.
 
 In order to address the first challenge, existing detection approaches pretend to be real user, e.g. set
 referer, user agent, use multiple IPs or proxy to hide identity. But
-attackers could identify them and incrementally blacklist IPs. It is an endless
-war between cloakers and spiders.
+attackers could identify them and incrementally blacklist IPs.
 Intuitively, an alternate is to collect data from user side directly. However, it is hard
 to collect sufficient data for comparison while protecting user privacy.
-Past work usually go through the documents multiple times and compare page
-difference to address the second challenge.
+Regarding the second challenge, previous works go through the documents multiple times and compare page
+difference to address the second challenge ~\cite{lin2009detection,
+chellapilla2006improving, deng2013uncovering, wang2011cloak}.
+There are mainly two shortcomings in previous approaches.
+First,  they are slow, because pairwise comparison of documents is
+computationally expensive.
+Second, they are not suitable for crowdsourcing, because they introduces
+high overhead to user and violates user privacy. 
 
 %To address the second challenge, ~\cite{wu2005cloaking} looks at the
 %statistical features of a website, including words, tags, links. 
@@ -82,10 +86,12 @@ for each website (fuzzy signature), and compare the differences between spider c
 In order to model dynamics of a website, we retrieve spider copy multiple
 times and leverage the fact that hamming distance is euclidean distance (
 L1 norm) to learn patterns.
-SWM cloaking detection performs comparable in terms of accuracy (95\% true positive
-rate with 5\% false positive rate) and much higher efficiency compared to past
-approaches. 
+The proposed system achieves 97.1\% true positive rate with
+0.3\% false positive rate.
+%And much higher efficiency compared to past
+%approaches. 
 
+By applying the trained model, we detected 3925\% cloaking samples in total.
 Then, we manually classify and illustrate the incentives behind cloaking,
 results show that 9\% of cloaking sites are malicious and 80\% of cloaking sites
 are phishing. With strong relationship between cloaking and phishing sites
@@ -94,7 +100,7 @@ and malicious download,  we propose a novel model to collect simhash
 %we establish incentives both search engine and users in cloaking detection.
 %both user and search engine are interested in this.
 %
-from user side, with low overhead and privacy guarantee provided by RAPPOR.
+from user side, with low overhead by Simhash and privacy guarantee provided by RAPPOR.
 By crowd-sourcing the fuzzy signatures of what is actually shown to user, we can
 address both challenges elegantly.
 

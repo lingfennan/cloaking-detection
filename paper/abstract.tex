@@ -1,8 +1,8 @@
 
 \subsection*{Abstract}
 Cloaking, used by spammers for the purpose of increasing exposure of
-their websites, as well as to circumvent censorship, has been a nostorious
-spamming Search Engine Optimization (SEO) technique. Recently, besides SEO, we also
+their websites, as well as to circumvent censorship, has been a notorious 
+spamming search engine optimization technique. Recently, we also
 identify a rising trend of employing cloaking in search engine marketing. The motivation of cloaking 
 is to hide the true nature of a website by delivering blatantly different 
 content to users versus censors. Cloaking is popular due to low setup cost 
@@ -11,12 +11,14 @@ and lack of efficient detection technique.
 In this paper, we propose Simhash-based Website Model, or SWM, a new way to
 fuzzy hash the content and layout of a
 website and model the dynamics of a website. 
-We apply SWM in cloaking detection, and achieve comparable accuracy and much
-higher efficiency
-compared with past approaches. In order to understand the incentives
+We apply SWM in cloaking detection, and achieve 97.1\% true positive rate with
+0.3\% false positive rate. 
+SWM is more efficient compared to past approaches and can be deployed as browser
+plugin for crowdsourcing user view of websites with negligible overhead.
+In order to understand the incentives
 behind cloaking, we systematically
 categorize and review the detected samples, and find 9\% of them are malicious
-websites, and 80\% of them are phishing sites. 
+websites, and 20\% of them are phishing sites, 10\% provides illegal services. 
 With this strong relationship between cloaking and maliciousness of a website,
 we discuss deployment of SWM in cloaking detection and
 propose a novel model to

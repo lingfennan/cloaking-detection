@@ -123,6 +123,18 @@ simhash.
 %the text information. 
 %
 
+\begin{figure*}[t]
+  \centering
+  \subfigure[]{
+  \includegraphics[width=.45\textwidth]{fig/text-feature-stats}
+  \label{fig:text-feature-stats}
+}
+\subfigure[]{
+  \includegraphics[width=.45\textwidth]{fig/dom-feature-stats}
+  \label{fig:dom-feature-stats}
+}
+\caption{Number of text and dom features extracted from different websites}
+\end{figure*}
 
 In order to detect cloaking, we need to capture the bahavior and similarity that
 a same website maintains. That is to say, we not only need to look at the text-based simhash,
@@ -136,7 +148,8 @@ simhash algorithm described in ~\cite{charikar2002similarity}. For example, for
 sentence: thank you so much!, corresponds to feature set \{thank, you, so, much,
 thank you, you so, so much, thank you so, you so much\}.
 Because there are usually large number of words on a website, insight (B)
-suffices. Besides, bi-gram, tri-gram is essentially the structure of the document,
+suffices. ~\autoref{fig:text-feature-stats} shows text feature statistics on %25610 urls in
+set urls obtained from hot search results $D_{hot, search}$. Besides, bi-gram, tri-gram is essentially the structure of the document,
 thus insight (A) suffices.
 This approach
 and has great benefit in our use scenario, because this requires a single pass
@@ -144,6 +157,8 @@ of the document and no extra information. In contrast,
 ~\cite{manku2007detecting} implement extract weighted features using standard IR
 techniques like tokenization, case folding, stop-word removal, stemming and
 phrase detection, and may introduce more overhead and need extra knowledge.
+
+
 
 \begin{figure}[t]
   \centering
@@ -160,7 +175,8 @@ an algorithm based on drawn insights.
 For each dom tree, we record presence of each node, as
 well as presence of each child parent pair. The node set tells us information about what
 tag is present in this page, and child parent pair tells us how these tags are
-organized, suffices insight (B). And the number of features extracted in this
+organized, suffices insight (B). ~\autoref{fig:dom-feature-stats} shows dom
+feature statistics $D_{hot, search}$. And the number of features extracted in this
 fashion is relatively large, suffices insight (A). In order to get more
 features, we also record add attribute name to tag name, attribute value is
 discarded because some of them changes on every visit. For example,
@@ -204,7 +220,7 @@ Different from ~\cite{manku2007detecting}, we not only want to know whether two 
 duplicate, we also want to know the patterns of these simhash. In this work, we employ
 hierarchical clustering to do this job.
 
-Since simhash maps a hight dimensional
+Since simhash maps a hightdimensional
 features set into fixed number of bits, where hamming distance represents the
 similarity between the original feature set. We leverage the fact that hamming
 distance is euclidean distance (L1 norm on 64 dimension). On each dimension, the
@@ -386,4 +402,56 @@ a minimum radius $R_{detect}$. The modified formula is like this:
 %  \end{verbatim}
 %}
 %
+
+
+\subsection{Dataset}
+\subsubsection{Keywords}
+Because we want to measure cloaking in SEO and SEM, we have compiled a list of
+cloaking words, from the policies specified by Adwords, inspired by the words
+collection process in ~\cite{wang2011cloak}. We have looked at the policies, and
+collected \XXX{N} words, from ad network abuse, adult abuse, alcohol abusive, dangerous behavior
+abuse, dishonest behavior abuse, health abuse, gambling abuse.
+
+
+\subsubsection{Crawl}
+
+We have collected four datasets, spammy search, $D_{spam, search}$, hot search,
+$D_{hot, search}$, spammy ads $D_{spam, ad}$, hot ads, $D_{hot, ad}$. 
+$D_{spam, search}$, spammy search words collected manually, \XXX{N} words.
+$D_{hot, search}$, hot search monthly words from Jan 2013, Dec, 2014, 24 month
+in total,  \XXX{N} words.
+From $D_{hot, search}$, we evaluate the monetizability of each word through
+Google Keyword Planner~\cite{keyword-planner} and simply
+remove the words that have no bid price. This results in our spammy
+advertisements words set, $D_{spam, ad}$, we have collected advertisements from 573 words.
+$D_{hot, ad}$, we need as much words as possible, i.e. as much ads as possible,
+therefore first download hots words list from Google Trend, for hot words in
+each category, we download weekly, monthly, and yearly from 2004 to 2014, and
+then we find the useful keywords with Keyword Planner~\cite{keyword-planner}.
+We have collected advertisements from 4108 words.
+
+For the above keywords, we do the following:
+Step 1: For each word, with chrome user agent, we click and visit search results and advertisements on first
+twenty pages.
+Step 2: For the landing pages collected in step 1, with google bot user agent, we visit them 6 times at an
+interval of around 20 miniutes.
+
+6 copy is collected because we need to model the distribution of websites. It is
+a tradeoff between space and precision. If we want to model the website better,
+we may want to collect as many examples as possible.
+
+\subsubsection{Data Statistics}
+
+For each dataset.
+
+
+
+
+
+\subsection{Server-based Cloaking Detection System}
+The server based detection system.
+For each search word, user visit once, then spider visit 6 times (this number
+can be tweaked) and we levearge the fact that, if we want to monitor the change
+of a website, multiple copies are essential.
+
 

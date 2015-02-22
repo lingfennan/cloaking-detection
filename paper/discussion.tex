@@ -1,33 +1,45 @@
 \section{Discussion}
 \label{s:discussion}
 
-In this part, we will discuss two kinds of deployment of simhash based cloaking detection system: server based and crowdsoucing.
+In this part, we will discuss two kinds of deployment of simhash based cloaking detection system: server-based and crowdsoucing.
 
 \subsection{Server-based cloaking detetion system}
-In server-based cloaking detection system
-we first collect targeted search terms includes commecial terms, cloaking oriented terms and hot tread words.
+In server-based cloaking detection system,
+we first collect targeted search terms includes commecial terms, cloaking oriented terms and hot trend words.
 Using these search terms, the cralwer extracts the search results from the search engines for seven times.
-In the six times, the crawler disguises as Google Crawlers by using the Google Agent. With these
-data that is crawled from Google view, the system uses the simhash method to model the websites. The last
-time, the crawler disguises as normal users using User Agent. The system compares simhash value from user view and
-website model learned from Google view. From the comparsion result, the system judge is the website is cloaking
+In six times, the crawler disguises as Google crawler by using the Google Agent and crawl data. With this data that
+is crawled from Google view, the system uses the simhash method to model the websites. The last
+time, the crawler disguises as normal user by using user agent. The system compares simhash value from user view and
+website model learned from Google view. From the comparsion result, the system judges if the website is cloaking
 or not. 
-Server based cloaking detection system has pros and cons. This deployment is pratical and could be deployed
+Server based cloaking detection system has pros and cons. The deployment of server based cloaking dectetion system
+is pratical and could be deployed
 easily. The tradeoff of easy deployment is inefficient in IP cloaking detection. Usually, the servers IP addresses
-are in a range. Scammers could find this range and serve benign content to crawlers. One solution is buying numerous IP addresses
-from ISP providers and distribute IP addresses as users distribution. This increases cloaking detection cost. In
-addition, distributed IP addresses as users distribution is hard. In addition, server-based cloaking detection system is infeasiable
+are in a range,  scammers could find this range and serve benign content to crawlers. One solution is buying numerous IP addresses
+from ISP providers and distributing IP addresses as users distribution. This increases cloaking detection cost. In
+addition, distributing IP addresses as users distribution is hard. Further, server-based cloaking detection system is infeasiable
 to detect cloaking in search engine marketing(SEM). As we mentioned, using the crawlers to visit websites in SEM field
-will increase the advertisement cost of websites. Further, to save compuation resources, the system need to find different 
-crawling periods for different websites. 
+increases the advertisement cost of websites. Moreover, different websites has different changing periods. For example, Yahoo website
+updates very quickly. Apple website updates slowly. Finding different crawling periods for different websites is difficult. 
+
+\subsection{Crowdsourcing}
+Crowdsourcing cloaking detection system includes user-side and server-side component. In user side, users needs to install the cloaking
+detection extension in their browers. While users click search results and view websites, the extention calculate the simhash value based on 
+website content and layouts. After calculation, extension packs URL and simhash value and sends to server. Server passively receives (URL, simhash value)
+ pairs from users. Server also utilizes crawlers to extract content several times in this URL from search engine view (crawler uses Google bot agents).
+ Server uses these extract content to model the website. From the comparison result between (URL, simhash value) from users and website model,
+ server could decide if the website is cloaking or not. From previous study, cloaking includes phishing and malware downloading. Based on cloaking
+ detection result, server categorizes cloaking and update blacklists in browsers' extensions. Updating blacklists and warning users phishing and
+ malware downloading is users incentive to install our extension. 
+
+ Previously, we describe our crowdsoucing workflow. Next, We discuss the pros and cons for this approach. The first advantage is privacy. Instead of solicting
+ website content from users, the system solicited a 64 bits simhash value from users. From this 64 bits value, system couldn't do reverse engineering to
+ get original content. In addition, the system could intergrate with Rappor~\cite{erlingsson2014rappor}, which protect the privacy of URL.
+ In addition, the crowdsouring deployment is low traffic. Browsers only  send a 64 bits value for
+ each URL. This won't jam traffic. Further, the crowdsoucing deployment wouldn't affect the model of SEM. Each click on advertisements of search engines is
+ from real users instead of crawlers. Advertisers don't need to pay extra money for cloaking detection. 
 
 
-Pros:	practical, easy deployment.
-cons:	IP cloaking, SEM, hard to decide crawling periods. 
-Solution: IP cloaking, Buy 100k IP.
-SEM, Deduce visits by search engine. 
-
-\subsection{Crowdsource based}
 Employ RAPPOR~\cite{erlingsson2014rappor} to provide user privacy gurantee.
 
 pros: 	1.privacy 2.Low traffic. 3.SEM 4.Distributed computation 
