@@ -1,3 +1,6 @@
+# USER_IN is the list of user observations, with suffix removed
+# GOOGLE_TEXT_IN is the list of google computed text observations
+# GOOGLE_DOM_IN is the list of google computed dom observations
 USER_IN=$1
 GOOGLE_TEXT_IN=$2
 GOOGLE_DOM_IN=$3
@@ -11,6 +14,7 @@ TEXT_C=2.1
 DOM_R=13
 DOM_C=1.8
 
+python utils/data_util.py -f merge_user_sites -i $USER_IN
 # The .learned suffix will be appended automatically
 python cluster_learning.py -f learn -i $GOOGLE_TEXT_IN -o $GOOGLE_TEXT_IN'.text' -t TEXT -c 0.7
 python cluster_learning.py -f learn -i $GOOGLE_DOM_IN -o $GOOGLE_DOM_IN'.dom' -t DOM -c 0.7

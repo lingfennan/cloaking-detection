@@ -200,7 +200,7 @@ class CloakingDetection(object):
 		return cloaking_sites
 
 def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_type,
-		min_radius = 0, std_constant = 3, inconsistent_coefficient = 2):
+		min_radius = 0, std_constant = 3, inconsistent_coefficient = 2, outfile = None):
 	valid_instance(min_radius, float)
 	valid_instance(std_constant, int)
 	valid_instance(inconsistent_coefficient, float)
@@ -230,7 +230,10 @@ def cloaking_detection(learned_sites_filename, observed_sites_filename, simhash_
 	observed_sites = de_noise(observed_sites, de_noise_config)
 	detector = CloakingDetection(detection_config, learned_sites)
 	cloaking_sites = detector.detect(observed_sites)
-	out_filename = observed_sites_filename + '.cloaking'
+	if outfile:
+		out_filename = outfile
+	else:
+		out_filename = observed_sites_filename + '.cloaking'
 	write_proto_to_file(cloaking_sites, out_filename)
 	# evaluation(cloaking_sites, expected, total)
 	# print cloaking_sites
@@ -326,15 +329,15 @@ def evaluate_both(observed_sites_filename, text_detected_sites_filename,
 def main(argv):
 	has_function = False
 	help_msg = """cloaking_detection.py -f <function> [-i <inputfile> -l
-		<learnedfile> -t <simhash_type> -r <min_radius> -n <std_constant> -c
+		<learnedfile> -o <outfile> -t <simhash_type> -r <min_radius> -n <std_constant> -c
 		<coefficient][-i <testfile> -l <learnedfile> -e <expectedfile> -t
 		<simhash_type> -r <min_radius> -n <std_constant> -c
 		<coefficient>] [-i <totalfile> -l <detected_text_file> -e
 		<expectedfile>], valid functions are detect, evaluate,
 		evaluate_both"""
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:l:e:t:r:n:c:",
-				["function=", "ifile=", "lfile=", "efile=",
+		opts, args = getopt.getopt(argv, "hf:i:l:e:t:r:n:c:o:",
+				["function=", "ifile=", "ofile=", "lfile=", "efile=",
 					"type=", "radius=", "constant=",
 					"coefficient="])
 	except getopt.GetoptError:
@@ -344,6 +347,7 @@ def main(argv):
 	min_radius = 0
 	std_constant = 3
 	coefficient = 1
+	outfile = None
 	for opt, arg in opts:
 		if opt == "-h":
 			print help_msg
@@ -357,6 +361,8 @@ def main(argv):
 			learnedfile = arg
 		elif opt in ("-e", "--efile"):
 			expectedfile = arg
+		elif opt in ("-o", "--ofile"):
+			outfile = arg
 		elif opt in ("-t", "--type"):
 			simhash_type = arg
 		elif opt in ("-r", "--radius"):
@@ -374,7 +380,7 @@ def main(argv):
 	if function == "detect":
 		cloaking_detection(learnedfile, inputfile, simhash_type,
 				float(min_radius), int(std_constant),
-				float(coefficient))
+				float(coefficient), outfile)
 	elif function == "evaluate":
 		noisefile = expectedfile + ".noise"
 		evaluate(learnedfile, inputfile, simhash_type,
