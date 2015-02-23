@@ -1,9 +1,71 @@
 \section{Discussion}
 \label{s:discussion}
 
-In this part, we will discuss two kinds of deployment of simhash based cloaking detection system: server-based and crowdsoucing.
+In this section, we first compare our work with previous cloaking detection
+works, then discuss two kinds of deployment of simhash-based cloaking
+detection system: server-based and crowdsoucing. The attack model and robustness
+are discussed as well.
 
-\subsection{Server-based cloaking detetion system}
+\subsection{Efficiency Comparison}
+\label{ss:efficiency}
+Previous cloaking detection approaches use various feature set from a website,
+and the latest work ~\cite{wang2011cloak} use text features, dom features and
+search snippet to detect cloaking. Comparing with their model, we achieve
+comparable precision and recall (transformed from FPR and TPR). However, a great
+advantage of our work compared to past approaches is that, our algorithm is
+clean (requires only single pass of website, to get fuzzy signature) and 
+can be deployed at user side for crowdsourcing.
+
+
+Previous cloaking detection approaches are mostly measured in terms of precision
+and recall, and the latest work ~\cite{wang2011cloak} , and after transformation from FPR and TPR to precision and recall,
+we achieve better performance. However, the great advantage of
+
+Compared with past approaches, we achiev
+While we can achieve similar false positve rate and true positive rate compared
+to past approaches, we argue that, our approach is much more efficient than past
+approaches and is light-weight enough to be deployed on user browser.
+\XXX{Table} is a comparison of time complexity and number of rounds that the
+documents need to be processed (each time they get smaller amount of document,
+though). Let $N$ denote the number of total urls collected, $M$ denoete the
+number of cloaking websites. The time complexity is \XXX{Plot}.
+
+
+
+For simhash computation, we implements a browser extension which exposes
+negligible overhead to user. We 
+
+\XXX{the table comparing our approach with past cloaking detection approaches}
+\XXX{the ability of simhash in measuring difference}.
+
+
+\begin{table*}[t]
+  \centering
+  \begin{center}
+    \begin{tabularx}{1\textwidth}{c|c|c|c|c|c|c}
+      Methods & Features & Detection Ability & Complexity & Performance &
+      Efficiency & Deployment \\
+      \hline
+      Spammy Search & 661 & 1514 & 33 & 28 & 28 & 
+      2491 \\
+      Hot Search & 33 & 2 & 26 & 27 & 0 &  2\\
+      Spammy Ads & 0 & 0 & 0 & 0 & 1 &2  \\
+      Hot Ads & 0 & 0 & 0 & 4 & 0 &2  \\
+      \bottomrule
+      \multicolumn{7}{c} {Detection Ability: Repeat Cloaking, IP Cloaking,
+      Referer Cloaking, User Agent Cloaking}
+
+    \end{tabularx}
+  \end{center}
+  \caption{Comparison of cloaking detection methods}
+\end{table*}
+
+
+
+
+
+
+\subsection{Server-based Cloaking Detetion}
 In server-based cloaking detection system,
 we first collect targeted search terms includes commecial terms, cloaking oriented terms and hot trend words.
 Using these search terms, the cralwer extracts the search results from the search engines for seven times.
@@ -22,7 +84,7 @@ to detect cloaking in search engine marketing(SEM). As we mentioned, using the c
 increases the advertisement cost of websites. Moreover, different websites has different changing periods. For example, Yahoo website
 updates very quickly. Apple website updates slowly. Finding different crawling periods for different websites is difficult. 
 
-\subsection{Crowdsourcing}
+\subsection{Crowdsourcing-based Cloaking Detection}
 Crowdsourcing cloaking detection system includes user-side and server-side component. In user side, users needs to install the cloaking
 detection extension in their browers. While users click search results and view websites, the extention calculate the simhash value based on 
 website content and layouts. After calculation, extension packs URL and simhash value and sends to server. Server passively receives (URL, simhash value)
@@ -76,7 +138,6 @@ with its owned IP, and learn pattern and distribution of the simhashes, i.e.
 simhash-based website model. In the cloaking detection phase, the ad company
 collects simhash from its users. Compare them with learned patterns, return
 cloaking score or mismatch
-
 
 \subsection{Robustness}
 Attack model: Attacker has the simhash of the content that user is viewing, and

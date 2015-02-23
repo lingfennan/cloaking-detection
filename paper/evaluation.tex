@@ -24,12 +24,18 @@ search}$, then use it to train and test the performance of the proposed model.
 %We randomly sample 600 websites from the dataset, for 10 times. This results in
 %5726 websites. We manually label them and \XXX{cloaking}, \XXX{not}, percentage
 %for each is.
-Similar to ~\cite{lin2009detection}, we first remove duplicates (same simhash
-from user side and Google side), then label $D_{spam, search}$ and $D_{hot,
-search}$. We also manually add the examples that we observe when we do case
-study. We manually labeled 1195 cloaking examples. And we randomly
- 5308 samples from non-cloaking dataset. This composes our
-dataset 6503 for algorithm learning.
+Similar to ~\cite{lin2009detection}, we start by remove duplicates (same simhash
+from user view and Google view) from $D_{hot, search}$ and $D_{spam, search}$,
+because these are not helpful for the algorithm training (designed to handle
+dynamics of websites, non-changing websites are handled by default). Then we
+manually label websites from $D_{hot, search}$ and $D_{spam, search}$ until we
+have relatively large sample size for training. By conducting this massive
+labeling, we collect 1195 cloaking examples. In terms of normal websites, we randomly
+select 5308 samples from non-cloaking dataset. The two parts, 6503 urls in
+total, are combined as groundtruth $D_{g}$ for algorithm training and evaluation.
+By applying feature extraction and simhash computation described in
+~\autoref{ss:swm}, we have each url associated with its DOM simhash $S_{g, DOM}$ 
+and text simhash $S_{g, text}$.
 
 %\subsubsection{De-duplication}
 %71116 urls
@@ -72,41 +78,61 @@ dataset 6503 for algorithm learning.
 
 
 \subsection{Detection and Evaluation}
+Regarding parameters to learn, $T_{learn}$ and $T_{detect}$ are parameters to
+handle page dynamics, and $R_{detect}$ is a fix parameter to make system 
+robust to consistent difference between spider and user copies, which doesnot
+contribute to website modeling. Therefore, 
+we first select optimal $T_{learn}$ and $T_{detect}$, and then present
+system performance for different settings of $R_{detect}$.
 
 \subsubsection{Selection of $T_{learn}$ and $T_{detect}$}
+\label{sss:threshold}
 Because $R_{detect}$ is a parameter to allow the system to handle consistent
 difference between spider and user copies, therefore, we first set detect
-$R_{detect}$ to be zero, do 5 fold stratified cross validation~\cite{scikit-learn}.
-on the result. 
-In the learning phase,
-Our objective function is to first minimize the total number of errors in classification $E = FP + FN$, and
+$R_{detect}$ to be zero, and do five-fold stratified cross validation~\cite{scikit-learn}.
+on with groundtruth $D_{g}$. In the learning phase,
+our objective function is to first minimize the total number of errors in
+classification $E = FP + FN, FP = \text{false positive}, FN = \text{false
+negative}$, and
 if $E$ is the same, minimize $d = T_{detect} - T_{learn}$.
-This is reasonable because $d$ is the area that we cannot judge, and the smaller
-the area, indicates that the learned model is more compact. The two objective
-function are widely used metrics in machine
-learning parameter selection \XXX{cite}.
+This is reasonable because $d$ is the area that we cannot reject or accept. The smaller
+the area, the more compact the learned model.
+%The two objective
+%function are widely used metrics in machine
+%learning parameter selection \XXX{cite}.
 
-By applying five-fold cross validation on the groundtruth, and the described
-objective function, dom simhash returned 
-$T_{detect, dom} = 1.8$ and $T_{learn, dom} = 0.7$, and text simhash yields
+By applying five-fold stratified cross validation on $S_{g, DOM}$ and $S_{g, text}$ and the described
+objective function for optimal parameter selection, DOM simhash returned 
+$T_{detect, DOM} = 1.8$ and $T_{learn, DOM} = 0.7$, and text simhash yields
 $T_{detect, text} = 2.1$ and $T_{learn, text} = 0.7$.
 % this is meaningless, i think
 %
 % majority is false positive.
 % which yields to distance 1.1 at optimal (1318.4 learn error, 329 detect error), 
+
 \subsubsection{Radius Selection $R_{detect}$}
-From the above section, we have selected $T_{detect, dom} = 1.8$ and $T_{learn, dom} = 0.7$,
-$T_{detect, text} = 2.1$ and $T_{learn, text} = 0.7$. Now, we want to decide,
-$R_{detect, text}$ and $R_{detect, dom}$ separately. In this section, we conduct
-three experiments: cloaking detection using (1) dom simhash (2) text simhash (3)
-both dom simhash and text simhash.
-Again, we use five-fold cross validation to learn and test the dataset. The
-selected parameter for dom simhash is $R_{detect, dom} = 17$, text simhash is
-$R_{detect, text} = 16$. If we consider great difference in both text and dom as
-cloaking (intersect the detected results), the result is $R_{detect, dom} = 13$,
-$R_{detect, text} = 17$, get $FPR = 0.1\%, TPR = 94\%$.
-~\autoref{fig:roc} gives an illustration on how FPR and TPR changes as
-threshold for DOM and TEXT changes.
+Similarly, $R_{detect, text}$ and $R_{detect, DOM}$ are decided separately. In this section, we conduct
+three experiments: cloaking detection using (1) DOM simhash (2) text simhash (3)
+intersection DOM simhash and text simhash result.
+Again, we use five-fold stratified cross validation and same objective function as in
+~\autoref{sss:threshold} to learn and test $S_{g, DOM}$ and
+$S_{g, text}$. The
+optimal parameter for DOM simhash is $R_{detect, DOM} = 17$, text simhash is
+$R_{detect, text} = 16$. ~\autoref{fig:roc} gives an illustration on
+how False Positive Rate (FPR) and True Positive Rate (TPR) changes as
+threshold for DOM and text changes. 
+%If we consider significant difference in both text and dom as
+%cloaking, the result is $R_{detect, dom} = 13$,
+%$R_{detect, text} = 17$, and we get $FPR = 0.1\%, TPR = 94\%$.
+
+Next, in order to show the combined result for different settings of $R_{detect,
+dom}$, $R_{detect, text}$, we set $R_{detect, text}$ around its optimal value
+and change $R_{detect, dom}$ as shown in ~\autoref{fig:roc}. It is obvious that
+combining both DOM and text features improved the performance. 
+The learned parameters are used in ~\autoref{s:measurement} to detect cloaking
+on the four dataset, and since we want to capture as much cloaking as possible
+for incentive study, we choose $R_{detect, text} = 15$ and $R_{detect, DOM} =
+13$, which corresponds to 0.3\% FPR and 97.1\% TPR.
 
 % you can also use the wonderful epsfig package...
 \begin{figure}[t]
@@ -115,32 +141,4 @@ threshold for DOM and TEXT changes.
   \caption{ROC for DOM, TEXT, DOM \& TEXT}
   \label{fig:roc}
 \end{figure}
-
-With the learned model, in Section ~\autoref{s:measurement} 
-detect on the four dataset that we obtained and
-manually label the results. In our detection, we want a low false positive rate,
-therefore, we use the FPR = 0.1\%, TRP = 92\% in ~\autoref{fig:roc}. This yields
-to $R_{detect, dom} = 16$, $R_{detect, text} = 20$.
-
-
-\subsection{Efficiency Comparison}
-\label{ss:efficiency}
-While we can achieve similar false positve rate and true positive rate compared
-to past approaches, we argue that, our approach is much more efficient than past
-approaches and is light-weight enough to be deployed on user browser.
-\XXX{Table} is a comparison of time complexity and number of rounds that the
-documents need to be processed (each time they get smaller amount of document,
-though). Let $N$ denote the number of total urls collected, $M$ denoete the
-number of cloaking websites. The time complexity is \XXX{Plot}.
-
-
-
-For simhash computation, we implements a browser extension which exposes
-negligible overhead to user. We 
-
-\XXX{the table comparing our approach with past cloaking detection approaches}
-\XXX{the ability of simhash in measuring difference}.
-
-
-
 

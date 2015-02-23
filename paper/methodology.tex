@@ -14,6 +14,7 @@ Besides, we demonstrate the complexity of simhash algorithm, and show
 that this plugin introduces negligible overhead to user browser.
 
 \subsection{Simhash-based Website Model}
+\label{ss:swm}
 A website is usually rendered through Document
 Object Model (DOM), which is maintained by browser in the fashion of a tree.
 DOM tree contains information about layout of a website (Cascading Style
@@ -140,12 +141,12 @@ structural information. (B) Size of feature set should be relatively large.
     \includegraphics[width=.45\textwidth]{fig/dom-feature-stats}
     \label{fig:dom-feature-stats}
   }
-  \caption{Number of text and dom features extracted from different websites}
+  \caption{Number of text and DOM features extracted from different websites}
 \end{figure*}
 
 In order to detect cloaking, we need to capture the bahavior and similarity that
 a same website maintains. Inspired by ~\cite{wang2011cloak}, this work looks at
-both text and dom features and generate simhash separately.
+both text and DOM features and generate simhash separately.
 %We implemented the text-simhash algorithm 
 %same as the simhash algorithm used in spam detection by Google.
 %described
@@ -204,8 +205,7 @@ For example,
 %  html), (title, head), (meta charset, head), (h1, body), (img src, body),
 %(button type, body), (script type, h1)\}
 
-~\autoref{fig:dom-feature-stats} shows dom
-feature statistics $D_{hot, search}$ and the number of features extracted in this
+~\autoref{fig:dom-feature-stats} shows DOM feature statistics $D_{hot, search}$ and the number of features extracted in this
 fashion is relatively large, suffices Requirement (B). 
 
 
@@ -229,16 +229,16 @@ fashion is relatively large, suffices Requirement (B).
 ~\autoref{fig:yahoo-simhash} gives an example on how DOM and text simhash looks
 like and how they are distributed on {\it www.yahoo.com} over 7 x 24 period from
 Feb.1, 2015 to Feb.7, 2015. ~\autoref{fig:yahoo-text-user} shows text simhash
-and ~\autoref{fig:yahoo-dom-user} shows dom simhash. The x-axis is bits of simhash value and
+and ~\autoref{fig:yahoo-dom-user} shows DOM simhash. The x-axis is bits of simhash value and
 y-axis is the id of each observation (id increases in the order of collection time).
 
 It is pretty straightforward from ~\autoref{fig:yahoo-simhash} that,
 text simhash changes rapidly, indicating dynamic nature of this
-website, and dom simhash changes relatively slow and less.
+website, and DOM simhash changes relatively slow and less.
 
 Till now, we have demonstrated the algorithm we are using to generate
-text-simhash and dom-simhash out of a website. Based on our observation, the
-text-simhash might change rapidly, while dom-simhash relatively remain the same.
+text-simhash and DOM-simhash out of a website. Based on our observation, the
+text-simhash might change rapidly, while DOM-simhash relatively remain the same.
 
 \subsubsection{Clustering}
 \label{sss:clustering}
@@ -404,17 +404,17 @@ mark $s_{user}$ as cloaking.
 
 \begin{figure}[t]
   \centering
-  \subfigure[User View of Google Dom Simhash]{
+  \subfigure[User View of Google DOM Simhash]{
     \centering
     \includegraphics[width=.5\textwidth]{fig/google-dom-user}
     \label{fig:google-dom-user}
   }
-  \subfigure[Spider View of Google Dom Simhash]{
+  \subfigure[Spider View of Google DOM Simhash]{
     \centering
     \includegraphics[width=.5\textwidth]{fig/google-dom-google}
     \label{fig:google-dom-google}
   }
-  \caption{Comparison of user and spider copies dom simhash, over 7x24 period Feb.1-7, 2015}
+  \caption{Comparison of user and spider copies DOM simhash, over 7x24 period Feb.1-7, 2015}
   \label{fig:google-simhash}
 \end{figure}
 
@@ -432,7 +432,7 @@ a minimum radius $R_{detect}$. The modified formula is ~\autoref{radius:detect}:
   \text{If } d' - R_{detect} - \mu > T_{detect} \sigma, \text{reject } s_{user}
 \end{equation}
 
-~\label{s:evaluation} evaluates the proposed SWM and cloaking detection
+Next section ~\autoref{s:evaluation} evaluates the proposed SWM and cloaking detection
 algorithm, and provides insights and suggestion on selection of $T_{learn}, T_{detect},
 R_{detect}$.
 
@@ -605,7 +605,7 @@ values and keep all the parameter names, and throw away the scheme field, i.e.
 {\it http://www.gatech.edu/?user=1234} is simplified to
 {\it //www.gatech.edu/?user=}. Under this definition of url, $D_{spam, search}$
 has 129393 unique urls, $D_{hot, search}$ has 25533, $D_{spam, ad}$ has 2219,
-and $D_{hot, ad}$ has 25209.
+and $D_{hot, ad}$ has 25209
 \footnote{Automating website visit through selenium
   and chrome can sometimes result in rendering errors or empty content, these
 examples are removed from collected dataset}.
