@@ -1,6 +1,6 @@
-\section{Related Work}
+\section{Background}
 \label{s:related-work}
-Search engine, as a most innovative technology  introduced in late 20th century, has widely influenced our relationships. Search engine used their own page ranking algorthim to rank and indexed websites. In this way, users could find information by entering the search terms into the search enginee. To get better rankings and accurate indexed on search engines such as Google, websites are encouraged by Google to optimize their content. This is a technology called search engine optimization (SEO).
+Search engine, as a most innovative technology introduced in late 20th century, has widely influenced our relationships. Search engine used their own page ranking algorthim to rank and indexed websites. In this way, users could find information by entering the search terms into the search enginee. To get better rankings and accurate indexed on search engines such as Google, websites are encouraged by Google to optimize their content. This is a technology called search engine optimization (SEO).
 SEO policies were introduced by search engine later to maintain a fairness of search enginee ranking. Recently, some websites break the SEO policies to get better rankings on websites because of the large profits. These technology are called Black Hat SEO, which is used to get better rankings on search engine but break the SEO policy.
 From the SEO policy, one of the most efficient methods to get better page rankings is to update the content of website frequently~\cite{wang2011cloak}.
 Following this rule, cloaking, a Black Hat SEO method, is invented. Cloaking serves a blatently different information to users and Google to maintain their
@@ -8,14 +8,45 @@ profits and get better page rank. To be clear, we give a general example. Websit
 better rank. On the other side, they send a different information to users to get profits.
 
 \subsection{Example}
-To concrete the idea of cloaking, a specific cloaking example, malicious downlowd cloaking, is introduced. We entered the term "Game
-Texas Holdem Poker Online - Dj w" in Google. Google returned a set of search results as showned in figure 1.
-From the figure 1, we see that the top 6 search results are all under domain "dje,.com.ol". If we disguised ourselves as normal users without setting HTTP proxy 
-agent and clicked the links, the broswers sent an HTTP request with Google reference. The website received our HTTP request and found Google reference. The website
-redirected several times, eventually landed to a page and automatically download malicious software. On the other hand, we reconfiguerd our browsers and set
-Google-Bot as our HTTP agent. We revisited the website. This time, the website provide us totally different information without redirecting and malicious downloading.
-From two scenarios, the cloaking idea is clear. Websites provide legal information to Google to get good page rank and avoid censorships. On the other side,
-websites provide different information with redericting and malicious downloads to get profits from users. 
+%To concrete the idea of cloaking, a specific cloaking example, malicious downlowd cloaking, is introduced. We entered the term "loose slot machines las vegas"
+%in Google. Google returned a set of search results as showned in figure 1.
+%From the figure 1, we see that the top 6 search results are all under domain "dje,.com.ol". If we disguised ourselves as normal users without setting HTTP proxy 
+%agent and clicked the links, the broswers sent an HTTP request with Google reference. The website received our HTTP request and found Google reference. The website
+%redirected several times, eventually landed to a page and automatically download malicious software. On the other hand, we reconfiguerd our browsers and set
+%Google-Bot as our HTTP agent. We revisited the website. This time, the website provide us totally different information without redirecting and malicious downloading.
+%From two scenarios, the cloaking idea is clear. Websites provide legal information to Google to get good page rank and avoid censorships. On the other side,
+%websites provide different information with redericting and malicious downloads to get profits from users. 
+
+
+To concrete the idea of cloaking, a specific cloaking example, traffic sale 
+cloaking, is introduced. We entered the term "instant loan quote"
+in Google. Google returned a set of search results as showned in
+~\autoref{seo:search}, and the third result is doing cloaking. 
+When clicking this link directly, ~\autoref{seo:user} is presented. However, if
+we visit the landing page as spider (set user agent to Google bot),
+~\autoref{seo:google} is shown.
+%However, the content is actually from ~\autoref{seo:victim}. 
+The fact is that, this website is doing blackhat SEO,
+raising its rank with junk content, but when user clicks, they simply iframe
+another page, monentizing from its ranking and the traffic.
+
+%\subsection{Cloaking and Redirection}
+%~\cite{wu2005cloaking} classifies 
+%The landing page is different. The redirection.
+%
+%We use a different approach. We first click on the landing page, record the URL,
+%and then disguise ourselves to visit that landing page. We leverage the fact
+%that, if the cloakers employ some complex infrastructure to redirect users to
+%different landing pages, and they are doing bad things. They will do user agent
+%cloaking on the landing page as well. Otherwise, if search engine visits.
+%
+%This example: user goes to 'sh.st/pZ78x'. Google visit the same clickstring is
+%redirected to '
+%http://apktribe.com/games-andriod/slot-machines-space-of-a-laugh-las-vegas-on-line-casino-video-games-loose-spin-win-slots-roulette/'.
+%However, if Google visit 'sh.st/pZ78x', Google is redirected back to
+%'http://apktribe.com/games-andriod/slot-machines-space-of-a-laugh-las-vegas-on-line-casino-video-games-loose-spin-win-slots-roulette/'
+%
+
 
 \subsection{Search Engine Marketing}
 Priviously, we briefly talked about search engine optimization. In this section, we introduce another area called search engine marking(SEM)
@@ -53,16 +84,6 @@ and ornizations, the websites could easily distinguish cralwers from search engi
 
 
 \subsection{Previous Work}
-\subsubsection{Simhash}
-
-
-~\cite{henzinger2006finding} did a large-scale evaluation of algorithms in
-finding near-duplicate web pages and results show that Simhash performs better
-than Minhash (text shingling).
-
-Previous work on simhash. ~\cite{manku2007detecting} employ simhash to detect
-near duplicate at scale.
-
 \subsubsection{Cloaking Detection}
 The major challenge in claoking detection, is to differentiate dynamic pages
 from blatantly different content.
@@ -102,5 +123,31 @@ overhead to user. With crowdsourcing, we can solve cloaking at scale.
 
 %Previous work on phishing. We are solving cloaking, which has a strong
 %relationship with phishing sites.
+
+\subsubsection{Simhash}
+Charikar's simhash~\cite{charikar2002similarity} has been widely used in near
+duplicate detection in search engine. ~\cite{henzinger2006finding}
+conducted a large-scale evaluation of simhash against Broder's shingle-based
+fingerprints~\cite{broder1997syntactic} in finding near-duplicate web pages.
+A great advantage of using simhash over shingles is that it
+requires relatively small-sized fingerprints.
+For example, ~\cite{broder1997syntactic} requires 24 bytes per fingerprint.
+In comparison, ~\cite{manku2007detecting} shows that for 8B web pages, 64-bit
+fingerprints suffice.
+
+These approaches are mainly focusing on using simhash to signature websites on
+the Internet and comparing them all together to identify near duplicates.
+In contrast, this work leverages the fact that content from same url is supposed
+to be near duplicate and employs simhash to do outlier detection.
+
+This work adopts the same simhash algorithm and setting as 
+~\cite{manku2007detecting}, but with different method of extrating text
+features. ~\cite{manku2007detecting} extracts text features from website with
+standard IR techniques, and weigh each feature with inverse document frequency.
+This requires extra information and introduces overhead if deployed in browser at user side.
+In ~\autoref{s:methodology}, we describe our approach of extracting text features.
+Inspired from previous cloaking work~\autoref{wang2011cloak} which compares both
+text and dom tree information, we extract dom features as well.
+
 
 
