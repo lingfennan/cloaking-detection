@@ -61,13 +61,13 @@ def feature_hist(filename, feature_type, allow_repeat = True):
 
 	pl.figure()
 	pl.hist(feature_count_array, bins=10 ** np.linspace(np.log10(MIN),
-		np.log10(MAX), 50))#, color='black', alpha=0.5)
+		np.log10(MAX), 50), color='black', alpha=0.5)
 	pl.gca().set_xscale("log")
 	pl.title(feature_type.lower() + ' feature count statistics', fontsize=20)
 	pl.ylabel('Number of Websites', fontsize=20)
 	pl.xlabel('Number of extracted ' + feature_type.lower() + ' features', fontsize=20)
 	#pl.show()
-	pl.savefig(filename + ".svg")
+	pl.savefig(filename + ".pdf")
 	"""
 	hist, bins = np.histogram(feature_count_array, bins=10 **
 			np.linspace(np.log10(MIN), np.log10(MAX), 50))
