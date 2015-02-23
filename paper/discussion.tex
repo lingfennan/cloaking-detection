@@ -77,3 +77,44 @@ simhash-based website model. In the cloaking detection phase, the ad company
 collects simhash from its users. Compare them with learned patterns, return
 cloaking score or mismatch
 
+
+\subsection{Robustness}
+Attack model: Attacker has the simhash of the content that user is viewing, and
+he want to find out the content.
+Defense: Because simhash has the property of one-wayness, attacker could not get
+the content. More formally speaking, pre-image attack fails. This is actually
+straightforward because when processing each feature, we apply hash functions
+which has the property of one-wayness.
+
+Attack Model: Attacker get the URL and corresponding simhash of the page that
+user is viewing, he visit the same page and want to find some sensitive
+information for the user on that page, e.g. name, numbers.
+Defense: Let x and y denote two sets, h denote simhash function, the probability
+that simhash of x and y collides is cosine similarity between x and y, and can
+be expressed by PrhF[h(x)=h(y)]=sim(x,y). When size of x and y are comparably
+large, say, 100, one word difference between x and y will result in the same
+simhash (collision). Therefore, attacker could not do dictionary attack on
+sensitive field of that page. Because feature set is large and difference in
+several features result in the same simhash.
+
+Attackers (bad advertisers who get to know what we are doing) may
+(1) Maintain dom structure, but show different text
+In this case, we need to come up with a good way to combine dom simhash score
+and text simhash score, to catch this kind of cloaking. (intersection of dom
+mismatch and text mismatch may be evaded by this approach)
+(2) Deliver bad content to Google periodically
+In this case, we can get content from Google, and this is technically cloaking
+anymore. As long we can force the advertiser to deliver bad content to Google,
+then we are winning this cloaking game. At Google side, we can have other
+independent approaches to distinguish and detect bad content and good content.
+(3) To reduce workload, ad serving company have to sample the ads at some
+probability, then cloakers may try to detect whether we are sampling and deliver
+good content if we are sampling or simply cloak at some probability, to reduce
+the risk of being caught.
+In this case, we need to prove, (a) when we sample at low probability, the
+cloakers will still be caught even if they cloak randomly, e.g. 10\% probability
+(10\% users will definitely be caught). (b) it is hard for the cloakers to find
+when we are sampling.
+
+
+

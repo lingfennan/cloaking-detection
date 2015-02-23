@@ -104,7 +104,7 @@ selected parameter for dom simhash is $R_{detect, dom} = 17$, text simhash is
 $R_{detect, text} = 16$. If we consider great difference in both text and dom as
 cloaking (intersect the detected results), the result is $R_{detect, dom} = 13$,
 $R_{detect, text} = 17$, get $FPR = 0.1\%, TPR = 94\%$.
-Figure ~\autoref{fig:roc} gives an illustration on how FPR and TPR changes as
+~\autoref{fig:roc} gives an illustration on how FPR and TPR changes as
 threshold for DOM and TEXT changes.
 
 % you can also use the wonderful epsfig package...
@@ -123,6 +123,7 @@ to $R_{detect, dom} = 16$, $R_{detect, text} = 20$.
 
 
 \subsection{Efficiency Comparison}
+\label{ss:efficiency}
 While we can achieve similar false positve rate and true positive rate compared
 to past approaches, we argue that, our approach is much more efficient than past
 approaches and is light-weight enough to be deployed on user browser.
@@ -130,4 +131,15 @@ approaches and is light-weight enough to be deployed on user browser.
 documents need to be processed (each time they get smaller amount of document,
 though). Let $N$ denote the number of total urls collected, $M$ denoete the
 number of cloaking websites. The time complexity is \XXX{Plot}.
+
+
+
+For simhash computation, we implements a browser extension which exposes
+negligible overhead to user. We 
+
+\XXX{the table comparing our approach with past cloaking detection approaches}
+\XXX{the ability of simhash in measuring difference}.
+
+
+
 

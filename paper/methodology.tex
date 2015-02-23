@@ -8,7 +8,7 @@ Model, that is, use clusters learned from fuzzy hashs to model average and
 variance of each change. This is based on the assumption that, the content and
 layout of a website delivered to different users each time, is consistent
 despite of the dynamic part on the page, e.g. advertisements. In order to reveal
-the uncloaked content, we design and implement simhash algorithm as browser
+the cloaked content, we design and implement simhash algorithm as browser
 plugin, enabling crowdsourcing from user side.
 Besides, we demonstrate the complexity of simhash algorithm, and show
 that this plugin introduces negligible overhead to user browser.
@@ -133,14 +133,14 @@ structural information. (B) Size of feature set should be relatively large.
 \begin{figure*}[t]
   \centering
   \subfigure[]{
-  \includegraphics[width=.45\textwidth]{fig/text-feature-stats}
-  \label{fig:text-feature-stats}
-}
-\subfigure[]{
-  \includegraphics[width=.45\textwidth]{fig/dom-feature-stats}
-  \label{fig:dom-feature-stats}
-}
-\caption{Number of text and dom features extracted from different websites}
+    \includegraphics[width=.45\textwidth]{fig/text-feature-stats}
+    \label{fig:text-feature-stats}
+  }
+  \subfigure[]{
+    \includegraphics[width=.45\textwidth]{fig/dom-feature-stats}
+    \label{fig:dom-feature-stats}
+  }
+  \caption{Number of text and dom features extracted from different websites}
 \end{figure*}
 
 In order to detect cloaking, we need to capture the bahavior and similarity that
@@ -222,13 +222,13 @@ fashion is relatively large, suffices Requirement (B).
     \includegraphics[width=.5\textwidth]{fig/yahoo-dom-user}
     \label{fig:yahoo-dom-user}
   }
-  \caption{Yahoo simhash changes over 7x24 period Feb.1 - 7, 2015}
+  \caption{Yahoo simhash changes over 7x24 period Feb.1-7, 2015}
   \label{fig:yahoo-simhash}
 \end{figure}
 
 ~\autoref{fig:yahoo-simhash} gives an example on how DOM and text simhash looks
 like and how they are distributed on {\it www.yahoo.com} over 7 x 24 period from
-Feb. 1, 2015 to Feb. 7, 2015. ~\autoref{fig:yahoo-text-user} shows text simhash
+Feb.1, 2015 to Feb.7, 2015. ~\autoref{fig:yahoo-text-user} shows text simhash
 and ~\autoref{fig:yahoo-dom-user} shows dom simhash. The x-axis is bits of simhash value and
 y-axis is the id of each observation (id increases in the order of collection time).
 
@@ -310,9 +310,9 @@ $inconsistent(Z, depth)$ ~\cite{icintro} to $m-1$, where $m$ is total number of 
     S_{spider, s} \text{ if } \alpha < T_{learn} \\
     d_{r, s} = \frac{1}{n_rn_s}\sum_{i=1}^{n_r}\sum_{j=1}^{n_s} dist(s_{spider,
     r, i}, s_{spider, s, j}) \\ 
-  \mu = avg(x), x \in  links_i \cup links_j \\
-  \sigma = std(x), x \in link_i \cup links_j \\
-\end{gathered}
+    \mu = avg(x), x \in  links_i \cup links_j \\
+    \sigma = std(x), x \in link_i \cup links_j \\
+  \end{gathered}
 \end{equation}
 
 Let $T_{learn}$ denote the threshold for inconsistent coefficient, 
@@ -330,23 +330,6 @@ to compute $\mu$ and $\sigma$.
 %a 64-bit number randomly ~\cite{manku2007detecting}. For the same website,
 %simhash measures the similarity between them.
 %
-
-
-%\begin{figure}[t]
-%  \centering
-%  \subfigure[User View of Yahoo Dom Simhash]{
-%    \centering
-%    \includegraphics[width=.5\textwidth]{fig/yahoo-dom-user}
-% %   \label{fig:yahoo-dom-user}
-%  }
-%  \subfigure[Google View of Yahoo Dom Simhash]{
-%    \centering
-%    \includegraphics[width=.5\textwidth]{fig/yahoo-dom-google}
-%    \label{fig:yahoo-dom-google}
-%  }
-%  \caption{Comparison of user and google seen dom simhash}
-%%  \label{fig:yahoo-simhash}
-%\end{figure}
 
 
 
@@ -379,7 +362,7 @@ to compute $\mu$ and $\sigma$.
 
 \subsection{Cloaking Detection}
 In the above section, for observations of each website, $S_{spider}$, we have 
-learned clusters , which is$S_{spider, k}, k \in (1, c)$. For each cluster, we
+learned clusters , which is $S_{spider, k}, k \in (1, c)$. For each cluster, we
 represent it as $S_{spider, k} = \{centroid, links\}$.
 In order to use these clusters, we first illustrate how the comparison can be
 done.
@@ -402,35 +385,50 @@ shown in ~\autoref{coefficient:detect} and use detection threshold to reject
 $s_{user}$.
 
 \begin{equation}
-\label{coefficient:detect}
-\begin{gathered}
-  \alpha' = \frac{d' - \mu}{\sigma}, \text{reject } s_{user} \text{ if } \alpha' >
-  T_{detect} \\
-  \mu = avg(x), x \in  \{d'\} \cup links \\
-  \sigma = std(x), x \in \{d'\} \cup links \\
-\end{gathered}
+  \label{coefficient:detect}
+  \begin{gathered}
+    \text {If } \alpha' = \frac{d' - \mu}{\sigma} > T_{detect}, \text{reject } s_{user} \\
+    \mu = avg(x), x \in  \{d'\} \cup links \\
+    \sigma = std(x), x \in \{d'\} \cup links \\
+  \end{gathered}
 \end{equation}
 
 For observation $s_{user}$, if all clusters $S_{spider, k}, k \in (1, c)$ rejects it, then
 mark $s_{user}$ as cloaking.
 
+\begin{figure}[t]
+  \centering
+  \subfigure[User View of Google Dom Simhash]{
+    \centering
+    \includegraphics[width=.5\textwidth]{fig/google-dom-user}
+    \label{fig:google-dom-user}
+  }
+  \subfigure[Spider View of Google Dom Simhash]{
+    \centering
+    \includegraphics[width=.5\textwidth]{fig/google-dom-google}
+    \label{fig:google-dom-google}
+  }
+  \caption{Comparison of user and spider copies dom simhash, over 7x24 period Feb.1-7, 2015}
+  \label{fig:google-simhash}
+\end{figure}
+
 However, in reality, there can be consistent differences between what spider
-sees and what user sees and this is totally leagal. An example is, a website may
+sees and what user sees and this is totally leagal. For example, a website
+delivers non-javascript version to spider, but javascript version to user.
+~\autoref{fig:google-simhash} shows the difference between spider and user
+observations of {\it www.google.com} DOM simhash. Another example is that a website may
 present advertisements to normal user, but non-advertisement version to spider.
-Besides, there are websites that rarely changes at all. Therefore, $\sigma$ is
+Besides, there are websites that rarely changes at all, meaning $\sigma$ is
 zero, thus ~\autoref{coefficient:detect} doesn't work. To fix the two problem, we introduce
-a minimum radius $R_{detect}$. The modified formula is like this:
+a minimum radius $R_{detect}$. The modified formula is ~\autoref{radius:detect}:
 \begin{equation}
   \label{radius:detect}
-  \frac{d_{j,i} - R_{detect} - \mu}{\sigma} > T_{detect}
+  \text{If } d' - R_{detect} - \mu > T_{detect} \sigma, \text{reject } s_{user}
 \end{equation}
 
-
-
-For simhash computation, we implements a browser extension which exposes
-negligible overhead to user.
-
-
+~\label{s:evaluation} evaluates the proposed SWM and cloaking detection
+algorithm, and provides insights and suggestion on selection of $T_{learn}, T_{detect},
+R_{detect}$.
 
 %Classification hinges on having access to a robust set of features derived from
 %URLs to discern between spam and non-spam. Previous work has shown that lexical
@@ -473,7 +471,49 @@ negligible overhead to user.
 
 \subsection{Dataset}
 \label{ss:dataset}
+This work is focusing on detecting cloaking in SEO and SEM, therefore, we
+collect search words for both SEO and SEM. Similar to ~\cite{wang2011cloak},
+in order to detect and measure cloaking in SEO cloaking, we collect both
+
+
+those reflecting popular terms intended to gather high volumes of
+undifferentiated traffic, and terms reflecting highly targeted traffic where the
+cloaked content matches the cloaked search terms.
+
+
+
+
+
+abusive words and hot words. Inspired from ~\cite{chellapilla2006improving}, we
+collect monetizable words for advertisement collection. Monetizable words are
+used because hot search words may not have advertisements.
+
 \subsubsection{Keywords}
+Four set of words are collected. For SEO, we collect monthly hot search words
+from Google trend ~\cite{google-trend} from Jan 2013 to Dec 2014, which has 170
+unique words in total. In terms of 
+
+24 month
+in total,  \XXX{N} words.
+
+
+We have collected four datasets, spammy search, $D_{spam, search}$, hot search,
+$D_{hot, search}$, spammy ads $D_{spam, ad}$, hot ads, $D_{hot, ad}$. 
+$D_{spam, search}$, spammy search words collected manually, \XXX{N} words.
+$D_{hot, search}$, hot search monthly words from Jan 2013, Dec, 2014, 24 month
+in total,  \XXX{N} words.
+From $D_{hot, search}$, we evaluate the monetizability of each word through
+Google Keyword Planner~\cite{keyword-planner} and simply
+remove the words that have no bid price. This results in our spammy
+advertisements words set, $D_{spam, ad}$, we have collected advertisements from 573 words.
+$D_{hot, ad}$, we need as much words as possible, i.e. as much ads as possible,
+therefore first download hots words list from Google Trend, for hot words in
+each category, we download weekly, monthly, and yearly from 2004 to 2014, and
+then we find the useful keywords with Keyword Planner~\cite{keyword-planner}.
+We have collected advertisements from 4108 words.
+
+
+
 Because we want to measure cloaking in SEO and SEM, we have compiled a list of
 cloaking words, from the policies specified by Adwords, inspired by the words
 collection process in ~\cite{wang2011cloak}. We have looked at the policies, and
@@ -497,21 +537,6 @@ values and keep all the parameter names, and throw away the scheme field, i.e.
 
 
 
-
-We have collected four datasets, spammy search, $D_{spam, search}$, hot search,
-$D_{hot, search}$, spammy ads $D_{spam, ad}$, hot ads, $D_{hot, ad}$. 
-$D_{spam, search}$, spammy search words collected manually, \XXX{N} words.
-$D_{hot, search}$, hot search monthly words from Jan 2013, Dec, 2014, 24 month
-in total,  \XXX{N} words.
-From $D_{hot, search}$, we evaluate the monetizability of each word through
-Google Keyword Planner~\cite{keyword-planner} and simply
-remove the words that have no bid price. This results in our spammy
-advertisements words set, $D_{spam, ad}$, we have collected advertisements from 573 words.
-$D_{hot, ad}$, we need as much words as possible, i.e. as much ads as possible,
-therefore first download hots words list from Google Trend, for hot words in
-each category, we download weekly, monthly, and yearly from 2004 to 2014, and
-then we find the useful keywords with Keyword Planner~\cite{keyword-planner}.
-We have collected advertisements from 4108 words.
 
 For the above keywords, we do the following:
 Step 1: For each word, with chrome user agent, we click and visit search results and advertisements on first

@@ -1,20 +1,27 @@
 \section{Measurement}
 \label{s:measurement}
 
-\begin{table}
+\begin{table*}[t]
 \centering
 \begin{center}
-\begin{tabular}{c|c|c|c|c|c|c|c|c|c|c|c}
-Category & Pharmacy & Gambiling & Loan & Traffic Sale & PPC & Error & Illegal Service & Phishing & Baddomain &  Malware & Total\\
+  \begin{tabularx}{1\textwidth}{c|c|c|c|c|c|c|c|c|c|c|c}
+Category & Pharmacy & Gamble & Loan & TS & PPC & Error & IS & Phishing & RD &  Malware & Total\\
 \hline
 Spammy Search & 661 & 1514 & 33 & 28 & 28 & 43 & 122 & 17 & 73 & 20 & 2491 \\
 Hot Search & 33 & 2 & 26 & 27 & 0 &  2 & 2 & 0 &   3 & 0 & 93\\
 Spammy Ads & 0 & 0 & 0 & 0 & 1 & 0 & 5 & 0 & 0 & 0 & 6\\
 Hot Ads & 0 & 0 & 0 & 4 & 0 &  0 & 6 & 0 & 0 & 0 & 10\\
-\end{tabular}
+\bottomrule
+\multicolumn{10}{c} {TS: Traffic Sale, PPC: Pay-Per-Click, IS: Illegal
+Service, RD: Redirect Domain}
+
+\end{tabularx}
 \end{center}
 \caption{Spammy Search Cloaking Distribution.}
-\end{table}
+\end{table*}
+
+
+
 
 With the model built in ~\autoref{s:evaluation}, we detect cloaking in
 the four collected datasets, spammy search, $D_{spam, search}$, hot search,
