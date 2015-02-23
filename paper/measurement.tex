@@ -16,47 +16,40 @@
       \bottomrule
       \multicolumn{10}{c} {TS: Traffic Sale, PPC: Pay-Per-Click, IS: Illegal
       Service, PD: Parking Domain}
-
     \end{tabularx}
   \end{center}
   \caption{Cloaking Distribution.}
 \end{table*}
 
+
 With the model built in ~\autoref{s:evaluation}, we detect cloaking in
-the four collected datasets, spammy search, $D_{spam, search}$, hot search,
+four collected datasets, spammy search, $D_{spam, search}$, hot search,
 $D_{hot, search}$, spammy ads $D_{spam, ad}$, hot ads, $D_{hot, ad}$. 
 $D_{spam, search}$. From our observations, we categorize cloaking websites into 9 types:
 pharmacy, gambling, loan, general traffic sale, pay per click, error page, illegal service,
-phishing, redirect domain and malware downloading. To better analyze cloaking incentives, 
+phishing, parking domain and malware downloading. To better analyze cloaking incentives, 
 we divided traffic sale into 4 categories: pharmacy, gambling, loan and general traffic sale. 
-
-
-
-
-
 
 \subsection{Cloaking in SEO}
 
 In SEO field, we detect cloaking websites in spammy search and hot search field. In spammy search,
 we applied our cloaking detection system on 129393 websites. Cloaking detection system reported 2491
-cloaking websites. 661 websites are cloaking of pharmacy. 1514 websites are cloaking of gambling.
+cloaking websites. We manually labeled all reported cloaking websites into categories.
+661 websites are cloaking of pharmacy. 1514 websites are cloaking of gambling.
 33 websites are cloaking of loan. 28 websites are cloaking of general traffic sale. 28 websites are cloaking
 of pay per click. 43 websites are cloaking of error page. 122 websites are cloaking of illegal service. 
-17 websites are cloaking of phishing. 73 websites are cloaking of redirect domain. 20 websites are cloaking of malware downloading.
+17 websites are cloaking of phishing. 73 websites are cloaking of parking domain. 20 websites are cloaking of malware downloading.
 In hot search, we applied our cloaking detection system on 25533 websites. Cloaking detection system reported 93
 cloaking websites. 33 websites are cloaking of pharmacy. 2 websites are cloaking of gambling.
 26 websites are cloaking of loan. 27 websites are cloaking of traffic sale. 2 websites are cloaking of cloaking of
-error page. 2 websites are cloaking of illegal service. 3 websites are cloaking of redirect domain. 
+error page. 2 websites are cloaking of illegal service. 3 websites are cloaking of parking domain.
 
-SEO: How severe is cloaking? How many categories and percentages of various
-cloaking? For each type of cloaking, what are their incentives?
+From the data from SEO field, we see that the main goal of cloaking as an SEO technique is to obtain user traffic.
+In spammy search, 87.3\%traffic sale cloaking is from pharmacy and gamble area. 
 
-\XXX{Plot a log scale pie or histogram for categories in SEO}
-Out of the 20k distinct urls, we detect 1600 urls. There are mainly composed of
-60\% phishing sites, 30\%illegal services, 10\% malicous domain. Phishing sites includes rogue
-pharmacy sites. Illegal services include gambling, essay writing. Malicious
-domain are verified manually, we manually visit these URLs and are redirected to
-malware download.
+
+
+
 
 %label total cloaking
 %173
@@ -64,11 +57,8 @@ malware download.
 %78 + 69 (gambling)
 %cheat, dishonest behavior
 %13
-%malware or redirect domain
+%malware or parking domain
 %16
-Compared to  ~\cite{wang2011cloak}, we detected a relatively small percentage of
-cloaking, this is probably because search engine is taking active action now, or
-the cloaking methods have evolved.
 
 %We have detected.
 %We manually examine the results and found \XXX{N} are actually cloaking.
@@ -85,10 +75,6 @@ the cloaking methods have evolved.
 %after dedup: 1487
 
 
-
-
-
-
 \subsection{Cloaking in SEM}
 
 In SEM field, we deteck cloaking websites in spammy ads and hot ads. In spammy ads,
@@ -97,11 +83,7 @@ we applied cloaking detection system on 25533 websites. Cloaking detection syste
 Cloaking detection system reported 10 cloaking websites. 4 websites are cloaking of traffic sale.
 6 websites are cloaking of illegal service. 
 
-How severe is cloaking? How many categories and percentages of various cloaking?
-For each type of cloaking, what are their incentives?
-
-\XXX{Plot a log scale pie or histogram for categories in SEM}
-In SEM, we have detected 100 claoking examples out of 10k ads. This percentage
+In SEM, we have detected 100 cloaking examples out of 10k ads. This percentage
 is lower compared to SEO. However, ads are much more important because they
 matters, clicks in ads equals money. Most of the detected cloaking are providing
 illegal services.
@@ -125,4 +107,5 @@ crowdsourcing is an achievable and elegant way to detect cloaking.
 %every copy their website to be different and have meaningful and stay attractive
 %to user.
 %
+
 
