@@ -14,30 +14,31 @@ Besides, we demonstrate the complexity of simhash algorithm, and show
 that this plugin introduces negligible overhead to user browser.
 
 \subsection{Simhash-based Website Model}
+A website is usually rendered through Document
+Object Model (DOM), which is maintained by browser in the fashion of a tree.
+DOM tree contains information about layout of a website (Cascading Style
+Sheets (CSS) is supplemental to DOM in describing the look and
+formatting of a document). Out of various kinds of DOM nodes,  text nodes
+represents the actual text that is displayed to user. This work focuses on
+structure of DOM tree and text nodes that user actually sees, and use simhash
+clusters to model them.
+
+%Although, there are other interesting nodes, such as
+%Javascript, we argue that Javascript need to modify the DOM tree to change what
+%user actually sees, therefore, layout and text information suffices.
+
 \subsubsection{Distance Approximation}
 Simhash~\cite{charikar2002similarity} is a dimensionality reduction technique.
 It is a fuzzy hash function family that maps a high dimension dataset into fixed
 bits and preserves the following properties: 
-(A) The fingerprint of a dataset is a “hash” of its features, and (B) The
+(A) The fingerprint of a dataset is a "hash" of its features, and (B) The
 hamming distance between two hash values is an estimation of the distance
 between the original datasets.
 This is different from 
 cryptographic hash functions like SHA-1 or MD5, because they will hash two
 documents which differs by single byte into two completely different hash-values and the
 hamming distance between them is meaningless. 
-However, simhash will hash them into similar hash-values.
-
-In modeling the content and layout change of a website, we want to do learning
-and comparing on a per url basis, therefore, we are assuming that the small hamming
-distance between 
-
-Since we are modeling website on a per url basis and parameters in url may
-change every time of visit, it is necessary to define the granurity of
-comparison. We took a simplified approach, we simply strip all the parameter
-values and keep all the parameter names, and throw away the scheme field, i.e.
-{\it http://www.gatech.edu/?user=1234} is simplified to
-{\it //www.gatech.edu/?user=}
-
+In constrast, simhash will hash them into similar hash-values.
 
 %However, simhash
 %will hash them into similar hash-values (the Hamming distance would be small).
@@ -64,41 +65,47 @@ values and keep all the parameter names, and throw away the scheme field, i.e.
 \subsubsection{Computation}
 In terms of simhash computation, we use the same settings described in 
 ~\cite{manku2007detecting}, which turns out to be effective given the corpus of
-5 billion websites over the Internet.
+8 billion websites over the Internet.
 
 The computation of simhash start from a set of features.
 Given a set of features extracted from a document and their corresponding
-weights, we use simhash to generate an f-bit fingerprint as follows. We maintain
-an f-dimensional vector V, each of whose dimensions is initialized to zero.
+weights, we use simhash to generate an f-bit fingerprint as follows.
+We maintain an f-dimensional vector V, each of whose dimensions is initialized to zero.
 A feature is hashed into an f-bit hash value. These f bits (unique to the
 feature) increment/decrement the f components of the vector by the weight of
-that feature as follows: if the i-th bit of the hash value is 1, the i-th com-
-ponent of V is incremented by the weight of that feature; if the i-th bit of the
+that feature as follows: if the i-th bit of the hash value is 1, the i-th component
+of V is incremented by the weight of that feature; if the i-th bit of the
 hash value is 0, the i-th component of V is decremented by the weight of that
 feature. When all features have been processed, some components of V are
 positive while others are negative. The signs of components determine the
-corresponding bits of the final fingerprint.
-In this work, f is set to 64.
+corresponding bits of the final fingerprint. In this work, we set f to 64.
 
-\subsubsection{Insights On Feature Set Selection}
-From the computation of the simhash, we can draw two insights:
-(A) The order of the features in the original dataset does not matter, because
-the algorithm randomly projects each feature to f-dimensional vector and count
-the weighted presence in each dimension.
-(B) Size of the feature set should be relatively large. Simhash is known to
-perform badly on near duplicate detection when there are feature words. The
-reason is that, when the number of features are small, each feature votes too
-much on the vectors, difference in one feature may result in many bits of
-difference.
+\subsubsection{Requirements On Feature Set}
+There are two characteristics in the computation of the simhash. First, the order of
+the features doesn't matter because simhash is maintaining a global counter V.
+Second, size of the feature set should be relatively large, because simhash is
+random projection based approach, small set of features may result in completely
+different simhash with one feature difference due to randomness.
 
-Insight (A) is telling us, if the order of the original feature matters, the feature
-set should cover this. Insight (B) means, simhash works on relatively large
-number of datasets. The two insights are used in designing the text and dom
-simhash.
+The two characteristics can be considered as requirements in feature selection
+phase: (A) If the order of feature matters, feature set should include
+structural information. (B) Size of feature set should be relatively large.
 
-\subsubsection{Text Simhash and Dom Simhash}
+%The order of the features in the original dataset does not matter, because
+%the algorithm randomly projects each feature to f-dimensional vector and count
+%the weighted presence in each dimension.
+%(B) Size of the feature set should be relatively large. Simhash is known to
+%perform badly on near duplicate detection when there are feature words. The
+%reason is that, when the number of features are small, each feature votes too
+%much on the vectors, difference in one feature may result in many bits of
+%difference.
+%
+%Insight (A) is telling us, if the order of the original feature matters, the feature
+%set should cover this. Insight (B) means, simhash works on relatively large
+%number of datasets. The two insights are used in designing the text and dom
+%simhash.
 
-
+\subsubsection{Text Simhash and DOM Simhash}
 %
 %Charikar’s simhash [17] is a dimensionality reduction tech- nique. It maps
 %high-dimensional vectors to small-sized fin- gerprints. It is applied to
@@ -137,28 +144,38 @@ simhash.
 \end{figure*}
 
 In order to detect cloaking, we need to capture the bahavior and similarity that
-a same website maintains. That is to say, we not only need to look at the text-based simhash,
-but also dom-based simhash. We implemented the text-simhash algorithm 
-same as the simhash algorithm used in spam detection by Google.
+a same website maintains. Inspired by ~\cite{wang2011cloak}, this work looks at
+both text and dom features and generate simhash separately.
+%We implemented the text-simhash algorithm 
+%same as the simhash algorithm used in spam detection by Google.
 %described
 %in ~\cite{manku2007detecting},
-This algorithm extract words, bi-gram, tri-gram set
-(repeated elements only recorded once) from a website and compute simhash using
-simhash algorithm described in ~\cite{charikar2002similarity}. For example, for
-sentence: thank you so much!, corresponds to feature set \{thank, you, so, much,
+
+For text simhahsh, the algorithm extracts visible sequence of words from website.
+From the sequence, this algorithm extracts words, bi-gram, tri-gram set
+(repeated elements only recorded once). For example, for
+sentence: thank you so much, corresponds to feature set \{thank, you, so, much,
 thank you, you so, so much, thank you so, you so much\}.
-Because there are usually large number of words on a website, insight (B)
+Because there are usually large number of words on a website, Requirement (B)
 suffices. ~\autoref{fig:text-feature-stats} shows text feature statistics on %25610 urls in
-set urls obtained from hot search results $D_{hot, search}$. Besides, bi-gram, tri-gram is essentially the structure of the document,
-thus insight (A) suffices.
-This approach
-and has great benefit in our use scenario, because this requires a single pass
-of the document and no extra information. In contrast,
-~\cite{manku2007detecting} implement extract weighted features using standard IR
-techniques like tokenization, case folding, stop-word removal, stemming and
-phrase detection, and may introduce more overhead and need extra knowledge.
+urls obtained from hot search results $D_{hot, search}$. Since bi-gram, tri-gram 
+shows how words are concatenated and represents strcture of documents,
+Requirement (A) suffices. This algorithm is used rather than weighted version
+described in  ~\cite{manku2007detecting}, because it is light-weight and doesn't
+require inverse document frequency and phrase detection. This is important
+in our case, because we are designing an algorithm that is deployable in user
+browser, where efficiency matters.
+%text feature set
+%We implemented the text-simhash algorithm 
+%same as the simhash algorithm used in spam detection by Google.
+%described
+%in ~\cite{manku2007detecting},
 
-
+%and has great benefit in our use scenario, because this requires a single pass
+%of the document and no extra information. In contrast,
+%~\cite{manku2007detecting} implement extract weighted features using standard IR
+%techniques like tokenization, case folding, stop-word removal, stemming and
+%phrase detection, and may introduce more overhead and need extra knowledge.
 
 \begin{figure}[t]
   \centering
@@ -167,23 +184,30 @@ phrase detection, and may introduce more overhead and need extra knowledge.
   \label{fig:dom-tree}
 \end{figure}
 
-The content of a web page, Document Object Model (DOM), is organized in the form of a tree.
-~\autoref{fig:dom-tree} shows a typical dom tree.
-There is no current algorithm for generating dom simhash. Therefore, we design
-an algorithm based on drawn insights.
+Regarding structure of websites, we design an algorithm to extract DOM features
+out of DOM tree.
 
-For each dom tree, we record presence of each node, as
+For each DOM tree, we record presence of each node (tag name), as
 well as presence of each child parent pair. The node set tells us information about what
 tag is present in this page, and child parent pair tells us how these tags are
-organized, suffices insight (B). ~\autoref{fig:dom-feature-stats} shows dom
-feature statistics $D_{hot, search}$. And the number of features extracted in this
-fashion is relatively large, suffices insight (A). In order to get more
-features, we also record add attribute name to tag name, attribute value is
-discarded because some of them changes on every visit. For example,
-~\autoref{fig:dom-tree} correspond to feature set \{html, head, body, title,
-  meta charset, h1, img src, button type, script type, (head, html), (body,
-  html), (title, head), (meta charset, head), (h1, body), (img src, body),
-(button type, body), (script type, h1)\}
+organized, i.e., structure information, suffices Requirement (A).
+Since we are recording presence of tags and type of tags are relatively small,
+we record tag name and associated attribute names to gain more features (higher
+entropy).
+Attribute value is discarded because based on our observation, attribute value
+may change on every visit.
+For example,
+~\autoref{fig:dom-tree} correspond to feature set 
+\{html, head, body, title, \ldots, (head, html), (body, html), \ldots \}
+%\{html, head, body, title,
+%  meta charset, h1, img src, button type, script type, (head, html), (body,
+%  html), (title, head), (meta charset, head), (h1, body), (img src, body),
+%(button type, body), (script type, h1)\}
+
+~\autoref{fig:dom-feature-stats} shows dom
+feature statistics $D_{hot, search}$ and the number of features extracted in this
+fashion is relatively large, suffices Requirement (B). 
+
 
 % you can also use the wonderful epsfig package...
 \begin{figure}[t]
@@ -193,7 +217,7 @@ discarded because some of them changes on every visit. For example,
     \includegraphics[width=.5\textwidth]{fig/yahoo-text-user}
     \label{fig:yahoo-text-user}
   }
-  \subfigure[User View of Yahoo Dom Simhash]{
+  \subfigure[User View of Yahoo DOM Simhash]{
     \centering
     \includegraphics[width=.5\textwidth]{fig/yahoo-dom-user}
     \label{fig:yahoo-dom-user}
@@ -202,64 +226,94 @@ discarded because some of them changes on every visit. For example,
   \label{fig:yahoo-simhash}
 \end{figure}
 
+~\autoref{fig:yahoo-simhash} gives an example on how DOM and text simhash looks
+like and how they are distributed on {\it www.yahoo.com} over 7 x 24 period from
+Feb. 1, 2015 to Feb. 7, 2015. ~\autoref{fig:yahoo-text-user} shows text simhash
+and ~\autoref{fig:yahoo-dom-user}. The x-axis is bits of simhash value and
+y-axis is the id of each observation (id increases in the order of time).
+
 It is pretty straightforward from ~\autoref{fig:yahoo-simhash} that,
 text simhash changes rapidly, indicating dynamic nature of this
 website, and dom simhash changes relatively slow and less.
 
 Till now, we have demonstrated the algorithm we are using to generate
 text-simhash and dom-simhash out of a website. Based on our observation, the
-text-simhash may change rapidly, while dom-simhash relatively remain the same.
+text-simhash might change rapidly, while dom-simhash relatively remain the same.
 
 \subsubsection{Aggregating / Clustering}
-Assume we are monitoring the same website over a period of time. This website
-have dynamic changes all the time. But there can be another kind of change -
-whole page change. In this case, it is reasonable to first separate them apart
-and look at each of them.
+Websites could have multiple versions of content due to many reasons.
+An example is page construction. The server might return some notice or help
+information for apology and instructions on what to do next.
+Since we are monitoring websites over a period of time, we need to be able to
+build model for different version of websites and learn corresponding pattern.
 
 Different from ~\cite{manku2007detecting}, we not only want to know whether two pages are
 duplicate, we also want to know the patterns of these simhash. In this work, we employ
 hierarchical clustering to do this job.
 
-Since simhash maps a hightdimensional
+Since simhash maps a high-dimensional
 features set into fixed number of bits, where hamming distance represents the
 similarity between the original feature set. We leverage the fact that hamming
 distance is euclidean distance (L1 norm on 64 dimension). On each dimension, the
 original value is either 0 or 1. But it can be averaged and centriod can be
 computed.
 
-In this work, we use hierarchical clustering ~\cite{jones2014scipy} to cluster
-collected simhash. The distance metric used is hamming distance, the linkage
-method used is average. Criterion used is inconsistent coefficient.
+In this work, we use agglomerative hierarchical clustering ~\cite{jones2014scipy} to cluster
+collected simhash. This is a bottom up approach: each observation starts in its
+own cluster, and pairs of clusters are merged as one moves up the hierarchy.
+In order to decide which clusters should be combined, a measure of dissimilarity
+between sets of observations is required. In most methods of hierarchical
+clustering, this is achieved by use of an appropriate metric (a measure of
+distance between pairs of observations), and a linkage criterion which specifies
+the dissimilarity of sets as a function of the pairwise distances of
+observations in the sets. This work represents each simhash as a 64 dimension
+bit vector and specifies hamming distance as distance metric. The linkage method
+used is average distance and criterion is inconsistent coefficient.
 
-These choice is actually straightforward. {\bf Average linkage:} 
+%These choices are reasonable. 
+{\bf Average linkage:} 
 Consider the following use case, spider collect
-multiple copies of a website and compute corresponding simhash $S_{spider} = s_{i}, i \in
-(1,n)$ and the user return observation $s_{j}$ for this website. In order to
-compare whether $s_{j}$ with $S_{spider}$, and take into consideration of the all the
-collected simhash, the distance from $s_{j}$ to centroid of $S_{spider}$ seems a
-reasonable measure. 
+multiple copies of a website and compute corresponding simhash $S_{spider} = \{s_{i}, i \in
+(1,n)\}$ and the user return observation $s_{j}$ for this website. In order to
+compare $s_{j}$ with $S_{spider}$, and take into consideration of the all the
+collected simhash, the distance from $s_{j}$ to centroid of $S_{spider}$ is a
+reasonable measure. In order to be consistent with detection phase (user versus
+spider), clustering phase uses average linkage as well.
 
 {\bf Inconsistency coefficient:} this coefficient characterizes each link in a cluster tree by
-comparing its height with the average height of neighboring links
-below it in the tree. The higher the value of this coefficient, the less similar the
+comparing its height with the average height of neighboring links at the same
+level and below it in the tree. The higher the value of this
+coefficient, the less similar the
 objects connected by the link. By using threshold of inconsistency
-coefficient as stop scenario, we could get several clusters for each website.
+coefficient as criterion, we could get several clusters for each website.
 
-This is reasonable, because for collected copies of a website, there can be two
-kind of changes, minor change and major chagne. Minor change refers to the
-change that happens daily or even every time, for example, advertisements are
-different on each visit. Major chagne refers to new version of a website, e.g.,
-one domain expired and is re-sold to another entity, which follows 
-completely different dynamics. By doing clustering, we could handle
-differentiate minor and major change of a website, and build separate model
-accordingly. In the clustering phase, let $d$ denote the distance from $s_{j}$
-to 
 \begin{equation}
-  \label{coefficient:learn}
-  \frac{d - \mu}{\sigma} < T_{learn}
+  \label{coefficient:define}
+  \alpha  = \frac{d - \mu}{\sigma}
 \end{equation}
 
+~\autoref{coefficient:define} explains how inconsistent coefficient is computed.
+$\alpha$ is inconsistent coefficient, $d$ is the distance between two
+clusters, $\mu$ is mean of the heights of all the links included in the
+calculation, $\sigma$ is standard deviation of the heights of all the links
+included in the calculation. In our case, each computation includes all links at
+the same level and below it, and this is done by setting $depth$ in
+$inconsistent(Z, depth)$ ~\cite{icintro} to $m-1$, where $m$ is total number of observations.
+Let $T_{learn}$ denote the threshold for inconsistent coefficient, by applying
+~\autoref{coefficient:learn} in clustering phase, $S_{spider}$ is divided into
+serveral clusters $S_{spider, k}, k \in (1, c)$. These clusters are
+Simhash-based Website Model for this website.
 
+We represent each cluster $S_{spider, k}$ with centroid and links formed in
+clustering phase $S_{spider, k} = \{centroid, links\}$. This representation is
+intended for comparison with a new observation (single node cluster). $centroid$ is used to
+compute distance from new observation to current cluster $d$, $links$ are used
+to compute $\mu$ and $\sigma$.
+
+\begin{equation}
+  \label{coefficient:learn}
+  \alpha = \frac{d - \mu}{\sigma} < T_{learn}
+\end{equation}
 
 %For different websites, simhash can be considered as an algorithm to map them to
 %a 64-bit number randomly ~\cite{manku2007detecting}. For the same website,
@@ -267,21 +321,21 @@ to
 %
 
 
-\begin{figure}[t]
-  \centering
-  \subfigure[User View of Yahoo Dom Simhash]{
-    \centering
-    \includegraphics[width=.5\textwidth]{fig/yahoo-dom-user}
-    \label{fig:yahoo-dom-user}
-  }
-  \subfigure[Google View of Yahoo Dom Simhash]{
-    \centering
-    \includegraphics[width=.5\textwidth]{fig/yahoo-dom-google}
-    \label{fig:yahoo-dom-google}
-  }
-  \caption{Comparison of user and google seen dom simhash}
-  \label{fig:yahoo-simhash}
-\end{figure}
+%\begin{figure}[t]
+%  \centering
+%  \subfigure[User View of Yahoo Dom Simhash]{
+%    \centering
+%    \includegraphics[width=.5\textwidth]{fig/yahoo-dom-user}
+% %   \label{fig:yahoo-dom-user}
+%  }
+%  \subfigure[Google View of Yahoo Dom Simhash]{
+%    \centering
+%    \includegraphics[width=.5\textwidth]{fig/yahoo-dom-google}
+%    \label{fig:yahoo-dom-google}
+%  }
+%  \caption{Comparison of user and google seen dom simhash}
+%%  \label{fig:yahoo-simhash}
+%\end{figure}
 
 
 
@@ -313,9 +367,31 @@ to
 %criterion is the distance one.
 
 \subsection{Cloaking Detection}
-In the above section, for each website, we have learned clusters, which is
+In the above section, for observations of each website, $S_{spider}$, we have 
+learned clusters , which is$S_{spider, k}, k \in (1, c)$. 
+$S_{spider, k} = \{centroid, links\}$.
+
 Simhash-based Website Model. In order to use SWM, let's first look at how the
-comparison is going to be done. In order to detect SEO and SEM cloaking,
+comparison is going to be done.
+
+In modeling the content and layout change of a website, we want to do learning
+and comparing on a per url basis, therefore, we are assuming that the small hamming
+distance between different copies of same url should be small.
+
+Since we are modeling website on a per url basis and parameters in url may
+change every time of visit, it is necessary to define the granularity of
+comparison. For simplicity, we strip all the parameter
+values and keep all the parameter names, and throw away the scheme field, i.e.
+{\it http://www.gatech.edu/?user=1234} is simplified to
+{\it //www.gatech.edu/?user=}
+
+
+
+For simhash computation, we implements a browser extension which exposes
+negligible overhead to user.
+
+
+In order to detect SEO and SEM cloaking,
 this work first search and click results with normal user agent, then visit 
 landing urls collected with google bot user agent.
 For a specific website, we denote the spider copies as $S_{spider} = s_{i}, i \in

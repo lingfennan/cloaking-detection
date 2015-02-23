@@ -12,10 +12,12 @@ Example Usage:
 
 import numpy as np
 import sys, getopt
+import matplotlib.pyplot as plt
+import pylab as pl
 from learning_detection_util import write_proto_to_file, read_proto_from_file
 import proto.cloaking_detection_pb2 as CD
 
-def feature_hist(filename, feature_type):
+def feature_hist(filename, feature_type, allow_repeat = True):
 	if feature_type == "TEXT":
 		count_attr_name = "text_feature_count"
 		simhash_attr_name = "text_simhash"
@@ -30,9 +32,16 @@ def feature_hist(filename, feature_type):
 	feature_count_list = list()
 	count = 0
 	ob_count = 0
+
+	added_site_set = set()
 	for site in observed_sites.site:
 		count += 1
 		ob_count += len(site.observation)
+		if not allow_repeat:
+			if site.name in added_site_set:
+				continue
+			else:
+				added_site_set.add(site.name)
 		for observation in site.observation:
 			feature_count = getattr(observation, count_attr_name)
 			simhash_value = getattr(observation, simhash_attr_name)
@@ -42,10 +51,35 @@ def feature_hist(filename, feature_type):
 	print "there are {0} websites".format(count)
 	print "there are {0} urls".format(ob_count)
 	feature_count_array = np.array(feature_count_list)
-	feature_count_array = np.log2(np.add(feature_count_array, 1))
-	hist, edges = np.histogram(feature_count_array)
-	# print hist, edges
+	for i in range(len(feature_count_array)):
+		feature_count_array[i] += 1
 
+	MIN, MAX = 1, 100000 if feature_type == "TEXT" else 1000 
+	#feature_count_array = np.log2(np.add(feature_count_array, 1))
+	#hist, bins = np.histogram(feature_count_array, bins=np.logspace(MIN,
+	#	MAX, 50))
+
+	pl.figure()
+	pl.hist(feature_count_array, bins=10 ** np.linspace(np.log10(MIN),
+		np.log10(MAX), 50))#, color='black', alpha=0.5)
+	pl.gca().set_xscale("log")
+	pl.title(feature_type.lower() + ' feature count statistics', fontsize=20)
+	pl.ylabel('Number of Websites', fontsize=20)
+	pl.xlabel('Number of extracted ' + feature_type.lower() + ' features', fontsize=20)
+	#pl.show()
+	pl.savefig(filename + ".svg")
+	"""
+	hist, bins = np.histogram(feature_count_array, bins=10 **
+			np.linspace(np.log10(MIN), np.log10(MAX), 50))
+	print hist, bins 
+	width = 0.7 * (bins[1] - bins[0])
+	center = (bins[:-1] + bins[1:]) / 2
+	fig, ax = plt.subplots()
+	ax.bar(center, hist, align='center', width=width)
+	ax.set_xscale('log')
+	# pyplot.yscale('log')
+	fig.savefig(filename + ".svg")
+	"""
 
 def suc_fail_counter(filename, links_to_check):
 	links_to_check = links_to_check.split(',') if links_to_check else list()
@@ -77,13 +111,15 @@ def suc_fail_counter(filename, links_to_check):
 
 def main(argv):
 	has_function = False
-	help_msg = "statistics.py -f <function> [-i <inputfile> -t <feature_type>] [-i <inputfile> -l <links_to_check>], valid functions are feature_hist, count_failure"
+	help_msg = "statistics.py -f <function> [-i <inputfile> -t <feature_type> -a] [-i <inputfile> -l <links_to_check>], valid functions are feature_hist, count_failure"
 	try:
-		opts, args = getopt.getopt(argv, "hf:i:t:l:", ["function=", "ifile=", "type=", "links="])
+		opts, args = getopt.getopt(argv, "hf:i:t:l:a", ["function=",
+			"ifile=", "type=", "links=", "allow_repeat"])
 	except getopt.GetoptError:
 		print help_msg
 		sys.exit(2)
 	links_to_check = None
+	allow_repeat = False
 	for opt, arg in opts:
 		if opt == "-h":
 			print help_msg
@@ -97,6 +133,8 @@ def main(argv):
 			feature_type = arg
 		elif opt in ("-l", "--links"):
 			links_to_check = arg
+		elif opt in ("-a", "--allow_repeat"):
+			allow_repeat = True
 		else:
 			print help_msg
 			sys.exit(2)
@@ -104,7 +142,7 @@ def main(argv):
 		print help_msg
 		sys.exit()
 	if function == "feature_hist":
-		feature_hist(inputfile, feature_type)
+		feature_hist(inputfile, feature_type, allow_repeat)
 	elif function == "count_failure":
 		suc_fail_counter(inputfile, links_to_check)
 	else:

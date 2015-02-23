@@ -38,12 +38,13 @@ attackers could identify them and incrementally blacklist IPs.
 Intuitively, an alternate is to collect data from user side directly. However, it is hard
 to collect sufficient data for comparison while protecting user privacy.
 Regarding the second challenge, previous works go through the documents multiple times and compare page
-difference to address the second challenge ~\cite{lin2009detection,
-chellapilla2006improving, deng2013uncovering, wang2011cloak}.
+difference to address the second challenge ~\cite{chellapilla2006improving, deng2013uncovering,
+lin2009detection, wang2011cloak}.
 There are mainly two shortcomings in previous approaches.
 First,  they are slow, because pairwise comparison of documents is
-computationally expensive.
-Second, they are not suitable for crowdsourcing, because they introduces
+computationally expensive and they usually require multiple passes of a
+document.
+Second, they are not suitable for crowdsourcing, because they may introduce
 high overhead to user and violates user privacy. 
 
 %To address the second challenge, ~\cite{wu2005cloaking} looks at the
@@ -62,7 +63,7 @@ This work employs simhash to address the two challenges.
 Charikar's simhash ~\cite{charikar2002similarity} is a special signature of feature set. 
 It is a class of Locality Sensitive Hash (LSH) that has been extensively used in
 near duplicate in search engine.
-It is an random project based algorithm that maps high dimentional data to fixed bits while
+It is an random projection based algorithm that maps high dimentional data to fixed bits while
 maintaining the property that, hamming distance between the resulting bits is an
 estimation of similarity between the original feature set.
 %estimation of the Earth Mover Distance (EMD) between the original feature set.
@@ -91,18 +92,21 @@ The proposed system achieves 97.1\% true positive rate with
 %And much higher efficiency compared to past
 %approaches. 
 
-By applying the trained model, we detected 3925\% cloaking samples in total.
+By applying the trained model on collected dataset, we detected 2600 cloaking samples in total.
 Then, we manually classify and illustrate the incentives behind cloaking,
-results show that 9\% of cloaking sites are malicious and 80\% of cloaking sites
-are phishing. With strong relationship between cloaking and phishing sites
-and malicious download,  we propose a novel model to collect simhash
+results show that the majority are doing blackhat SEO for traffic sale,
+4.3\% of cloaking sites are malicious download or phishing sites. A breakdown of
+the results are described in ~\autoref{s:measurement}.
+
+With motivation of both search engine and user to combat cloaking, we propose a
+novel model to collect simhash
 %
 %we establish incentives both search engine and users in cloaking detection.
 %both user and search engine are interested in this.
 %
-from user side, with low overhead by Simhash and privacy guarantee provided by RAPPOR.
-By crowd-sourcing the fuzzy signatures of what is actually shown to user, we can
-address both challenges elegantly.
+from user side, with low overhead and privacy guarantee provided by RAPPOR.
+By crowdsourcing the fuzzy signatures of what is actually shown to user, we
+address both challenges in cloaking elegantly.
 
 %In the new model, we can detect cloaking in SEM, because what we need to collect
 %is url and statistics of simhash, which doesn't comply to click fraud. 
@@ -156,6 +160,3 @@ deployment, proposes the frameworks and corresponding pros and cons.
 
 %More fascinating text. Features\endnote{Remember to use endnotes, not
 %footnotes!} galore, plethora of promises.\\
-
-
-
