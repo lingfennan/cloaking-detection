@@ -304,14 +304,15 @@ $inconsistent(Z, depth)$ ~\cite{icintro} to $m-1$, where $m$ is total number of 
 \begin{equation}
   \label{coefficient:learn}
   \begin{gathered}
-    S_{spider, r} = \{centroid_r, links_r\}, \\
-    S_{spider, s} = \{centroid_s, links_s\} \\
     \alpha = \frac{d_{r,s} - \mu}{\sigma}, \text{merge } S_{spider, r},
     S_{spider, s} \text{ if } \alpha < T_{learn} \\
+    \text{where }
+    S_{spider, r} = \{s_{spider, r, i}, i \in (1, n_r), links_r\}, \\
+    S_{spider, s} = \{s_{spider, s, j}, j \in (1, n_s), links_s\}, \\
     d_{r, s} = \frac{1}{n_rn_s}\sum_{i=1}^{n_r}\sum_{j=1}^{n_s} dist(s_{spider,
-    r, i}, s_{spider, s, j}) \\ 
-    \mu = avg(x), x \in  links_i \cup links_j \\
-    \sigma = std(x), x \in link_i \cup links_j \\
+    r, i}, s_{spider, s, j}), \\ 
+    \mu = avg(x), x \in  links_r \cup links_s, \\
+    \sigma = std(x), x \in links_r \cup links_s \\
   \end{gathered}
 \end{equation}
 
@@ -388,9 +389,12 @@ $s_{user}$.
   \label{coefficient:detect}
   \begin{gathered}
     \text {If } \alpha' = \frac{d' - \mu}{\sigma} > T_{detect}, \text{reject } s_{user} \\
+    \text{where }
+    S_{user} = \{s_{user}\}, \\
+   S_{spider, k} = \{centroid, links\}, \\
     d' = \frac{1}{n_k}\sum_{i=1}^{n_k} dist(s_{user}, s_{spider, k, i}) =
-    dist(s_{user}, ceontroid) \\ 
-    \mu = avg(x), x \in  \{d'\} \cup links \\
+    dist(s_{user}, centroid), \\ 
+    \mu = avg(x), x \in  \{d'\} \cup links, \\
     \sigma = std(x), x \in \{d'\} \cup links \\
   \end{gathered}
 \end{equation}
@@ -593,12 +597,15 @@ Through steps described in ~\autoref{sss:crawling}, we get four datasets,
 $D_{spam, search}$, $D_{hot, serch}$, $D_{spam, ad}$ and $D_{hot, ad}$.
 Since we are modeling website on a per url basis and parameters in url may
 change every time of visit, it is necessary to define the granularity of
-comparison. For simplicity, we strip all the parameter
+comparison. For example, ad campaign information are encoded in the landing url of many 
+advertisements, which is different almost every visit, making it difficult to
+compare based on exact url.
+For simplicity, we strip all the parameter
 values and keep all the parameter names, and throw away the scheme field, i.e.
 {\it http://www.gatech.edu/?user=1234} is simplified to
 {\it //www.gatech.edu/?user=}. Under this definition of url, $D_{spam, search}$
 has 129393 unique urls, $D_{hot, search}$ has 25533, $D_{spam, ad}$ has 2219,
-and $D_{hot, ad}$ has 25209 
+and $D_{hot, ad}$ has 25209.
 \footnote{Automating website visit through selenium
   and chrome can sometimes result in rendering errors or empty content, these
 examples are removed from collected dataset}.
