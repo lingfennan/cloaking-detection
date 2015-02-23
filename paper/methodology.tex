@@ -388,6 +388,8 @@ $s_{user}$.
   \label{coefficient:detect}
   \begin{gathered}
     \text {If } \alpha' = \frac{d' - \mu}{\sigma} > T_{detect}, \text{reject } s_{user} \\
+    d' = \frac{1}{n_k}\sum_{i=1}^{n_k} dist(s_{user}, s_{spider, k, i}) =
+    dist(s_{user}, ceontroid) \\ 
     \mu = avg(x), x \in  \{d'\} \cup links \\
     \sigma = std(x), x \in \{d'\} \cup links \\
   \end{gathered}
@@ -419,7 +421,7 @@ delivers non-javascript version to spider, but javascript version to user.
 observations of {\it www.google.com} DOM simhash. Another example is that a website may
 present advertisements to normal user, but non-advertisement version to spider.
 Besides, there are websites that rarely changes at all, meaning $\sigma$ is
-zero, thus ~\autoref{coefficient:detect} doesn't work. To fix the two problem, we introduce
+zero, thus ~\autoref{coefficient:detect} doesn't work. To fix the two problems, we introduce
 a minimum radius $R_{detect}$. The modified formula is ~\autoref{radius:detect}:
 \begin{equation}
   \label{radius:detect}
@@ -472,94 +474,140 @@ R_{detect}$.
 \subsection{Dataset}
 \label{ss:dataset}
 This work is focusing on detecting cloaking in SEO and SEM, therefore, we
-collect search words for both SEO and SEM. Similar to ~\cite{wang2011cloak},
-in order to detect and measure cloaking in SEO cloaking, we collect both
-
-
-those reflecting popular terms intended to gather high volumes of
-undifferentiated traffic, and terms reflecting highly targeted traffic where the
-cloaked content matches the cloaked search terms.
-
-
-
-
-
-abusive words and hot words. Inspired from ~\cite{chellapilla2006improving}, we
-collect monetizable words for advertisement collection. Monetizable words are
-used because hot search words may not have advertisements.
+collect search words for both SEO and SEM.
 
 \subsubsection{Keywords}
-Four set of words are collected. For SEO, we collect monthly hot search words
-from Google trend ~\cite{google-trend} from Jan 2013 to Dec 2014, which has 170
-unique words in total. In terms of 
+Similar to ~\cite{wang2011cloak},
+in order to detect and measure cloaking that intended to gather high volumes of
+undifferentiated traffic, and those target on specific cloak search terms, we
+collected two set of words, hot search words $W_{hot, search}$ and abuse
+oriented words $W_{spam, search}$. $W_{hot, search}$ consists of 170
+unique monthly hot search words
+from Google trend ~\cite{google-trend} from Jan 2013 to Dec 2014. $W_{spam,
+search}$ is first manually collected by referring to ~\cite{google-ad-policy} for
+basic abuse oriented words in search engine, mainly from categories including
+gaming ad network, adult-oriented content, alcoholic beverages,
+dangerous products, dishonest behavior,
+gambling-related content, healthcare and medicines. Then we expand $W_{spam,
+search}$ using Google Suggest, and get 1024 words.
 
-24 month
-in total,  \XXX{N} words.
+For SEM cloaking detection, the selection of keywords is a different, because
+Google Adwords system is based on a real time bidding system and advertisers will bid on
+monetizable keywords, e.g. instant loan, but not on navigational keywords, e.g.
+facebook. Inspired from ~\cite{chellapilla2006improving}, we
+collect monetizable words for advertisement collection. Monetizability is
+measured by Google Keyword Planner (GKP) ~\cite{keyword-planner}. Keyword planner
+provides convenient API for checking competition and suggested bid for list of
+keywords. Similar to SEO, we collect monetizable keywords from hot search and
+abuse oriented list. Abuse oriented ad words are collected by filtering words
+that has no competition and no bid price in $W_{spam, search}$, as a result, 573
+words composes spammy advertisement word set $W_{spam, ad}$. In order to get as
+much advertisements as possible, we collect 11671 hot keywords from Google Trend
+~\cite{google-trend} (from 2004 to 2014, and each categories are collected), 
+filter this word set by GKP, and get 4108 keywords, $W_{hot, ad}$.
+
+%9 cat: 686
+%dishonest: 103
+%
+%gambling: 128
+%dangerous: 64
+%health: 43
 
 
-We have collected four datasets, spammy search, $D_{spam, search}$, hot search,
-$D_{hot, search}$, spammy ads $D_{spam, ad}$, hot ads, $D_{hot, ad}$. 
-$D_{spam, search}$, spammy search words collected manually, \XXX{N} words.
-$D_{hot, search}$, hot search monthly words from Jan 2013, Dec, 2014, 24 month
-in total,  \XXX{N} words.
-From $D_{hot, search}$, we evaluate the monetizability of each word through
-Google Keyword Planner~\cite{keyword-planner} and simply
-remove the words that have no bid price. This results in our spammy
-advertisements words set, $D_{spam, ad}$, we have collected advertisements from 573 words.
-$D_{hot, ad}$, we need as much words as possible, i.e. as much ads as possible,
-therefore first download hots words list from Google Trend, for hot words in
-each category, we download weekly, monthly, and yearly from 2004 to 2014, and
-then we find the useful keywords with Keyword Planner~\cite{keyword-planner}.
-We have collected advertisements from 4108 words.
+%We have collected four datasets, spammy search, $D_{spam, search}$, hot search,
+%$D_{hot, search}$, spammy ads $D_{spam, ad}$, hot ads, $D_{hot, ad}$. 
+%$D_{spam, search}$, spammy search words collected manually, \XXX{N} words.
+%$D_{hot, search}$, hot search monthly words from Jan 2013, Dec, 2014, 24 month
+%in total,  \XXX{N} words.
+%From $D_{hot, search}$, we evaluate the monetizability of each word through
+%Google Keyword Planner~\cite{keyword-planner} and simply
+%remove the words that have no bid price. This results in our spammy
+%advertisements words set, $D_{spam, ad}$, we have collected advertisements from 573 words.
+%$D_{hot, ad}$, we need as much words as possible, i.e. as much ads as possible,
+%therefore first download hots words list from Google Trend, for hot words in
+%each category, we download weekly, monthly, and yearly from 2004 to 2014, and
+%then we find the useful keywords with Keyword Planner~\cite{keyword-planner}.
+%We have collected advertisements from 4108 words.
+%
 
+%
+%Because we want to measure cloaking in SEO and SEM, we have compiled a list of
+%cloaking words, from the policies specified by Adwords, inspired by the words
+%collection process in ~\cite{wang2011cloak}. We have looked at the policies, and
+%collected \XXX{N} words, from ad network abuse, adult abuse, alcohol abusive, dangerous behavior
+%abuse, dishonest behavior abuse, health abuse, gambling abuse.
+%
 
+\subsubsection{Crawling}
+\label{sss:crawling}
+Starting from the four collected keyword set, we automate browser to do
+search-and-click. This work uses Selenium ~\cite{selenium}, an open source
+browser automation tool, to visit websites while mimicked as users and spiders.
+For SEO keywords crawling, we set browser user agent to 
 
-Because we want to measure cloaking in SEO and SEM, we have compiled a list of
-cloaking words, from the policies specified by Adwords, inspired by the words
-collection process in ~\cite{wang2011cloak}. We have looked at the policies, and
-collected \XXX{N} words, from ad network abuse, adult abuse, alcohol abusive, dangerous behavior
-abuse, dishonest behavior abuse, health abuse, gambling abuse.
+{\it Googlebot/2.1
+(+http://www.google.com/bot.html)}
 
+to mimic Google bot and 
 
-\subsubsection{Crawl}
+{\it Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like
+Gecko) Chrome/37.0.2049.0 Safari/537.36}
 
-In modeling the content and layout change of a website, we want to do learning
-and comparing on a per url basis, therefore, we are assuming that the small hamming
-distance between different copies of same url should be small.
+to mimic Chrome user on windows
+machine. For SEM keywords, Chrome user setting is the same, but spider user
+agent is set to {\it AdsBot-Google (+http://www.google.com/adsbot.html)}, which
+is the user agent used by Google to inspect ads and advertisement landing pages
+are required by Adwords Policy ~\cite{google-ad-policy} to show consistent 
+content to Google and normal user.
 
+In SEO, we use a university IP running ubuntu to perform crawling (browser user
+agent can be forged, thus will be considered as windows machine by site owner).
+Since redirection is popular on Internet, what user actually clicks may not be
+where he goes to. In this work, we denote the link that user directly clicks on
+or input to browser as $URL_{visit}$, and resulting page that user is finally
+led to as $URL_{landing}$.
+The crawling process is: 
+(A) For each word in $W_{hot, search}$ and $W_{spam, search}$, we search in Google
+and click on top 200 result as normal user. The landing url $URL_{landing, user}$ 
+and website content are saved to disk. 
+(B) For landing urls collected in step (A), we directly visit them 6 times
+(because we need multiple spider copies to learn clusters) as Googlebot and
+save website content and record the landing url in step (A), $URL_{visit,
+spider} = URL_{landing, user}$.
+
+The above steps are different from past approaches ~\cite{lin2009detection,
+wu2005cloaking, wang2011cloak}, which visit $URL_{visit, user}$ in step (B). Our
+approach is reasonable, because we leverage the fact that, in order to reach
+real user, $URL_{landing, user}$ have to show cloaked content to user. If 
+site owner cloaks on landing page, we can catch them; and if site owner employs
+redirect cloaking~\cite{wu2005cloaking}, he has the incentive to cloak on
+landing page in order to evade inspection.
+
+In SEM, the crawling process is similar, except that: word sets are
+$W_{hot, ad}$ and $W_{spam, ad}$; click and visit ads in fist 5 pages as normal
+user (empirically only first 5 pages contains advertisemetns); 
+and spider user agent is set to ads bot.
+
+\subsubsection{Data Statistics}
+Through steps described in ~\autoref{sss:crawling}, we get four datasets,
+$D_{spam, search}$, $D_{hot, serch}$, $D_{spam, ad}$ and $D_{hot, ad}$.
 Since we are modeling website on a per url basis and parameters in url may
 change every time of visit, it is necessary to define the granularity of
 comparison. For simplicity, we strip all the parameter
 values and keep all the parameter names, and throw away the scheme field, i.e.
 {\it http://www.gatech.edu/?user=1234} is simplified to
-{\it //www.gatech.edu/?user=}
+{\it //www.gatech.edu/?user=}. Under this definition of url, $D_{spam, search}$
+has 129393 unique urls, $D_{hot, search}$ has 25533, $D_{spam, ad}$ has 2219,
+and $D_{hot, ad}$ has 25209 
+\footnote{Automating website visit through selenium
+  and chrome can sometimes result in rendering errors or empty content, these
+examples are removed from collected dataset}.
 
 
-
-
-
-For the above keywords, we do the following:
-Step 1: For each word, with chrome user agent, we click and visit search results and advertisements on first
-twenty pages.
-Step 2: For the landing pages collected in step 1, with google bot user agent, we visit them 6 times at an
-interval of around 20 miniutes.
-
-6 copy is collected because we need to model the distribution of websites. It is
-a tradeoff between space and precision. If we want to model the website better,
-we may want to collect as many examples as possible.
-
-\subsubsection{Data Statistics}
-
-For each dataset.
-
-
-
-
-
-\subsection{Server-based Cloaking Detection System}
-The server based detection system.
-For each search word, user visit once, then spider visit 6 times (this number
-can be tweaked) and we levearge the fact that, if we want to monitor the change
-of a website, multiple copies are essential.
-
+%\subsection{Server-based Cloaking Detection System}
+%The server based detection system.
+%For each search word, user visit once, then spider visit 6 times (this number
+%can be tweaked) and we levearge the fact that, if we want to monitor the change
+%of a website, multiple copies are essential.
+%
 
