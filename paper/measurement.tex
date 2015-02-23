@@ -1,31 +1,27 @@
 \section{Measurement}
 \label{s:measurement}
 
-\begin{table*}[t]
+\begin{table}
 \centering
 \begin{center}
-  \begin{tabularx}{1\textwidth}{c|c|c|c|c|c|c|c|c|c|c|c}
-Category & Pharmacy & Gamble & Loan & TS & PPC & Error & IS & Phishing & RD &  Malware & Total\\
+\begin{tabular}{c|c|c|c|c|c|c|c|c|c|c|c}
+Category & Pharmacy & Gambiling & Loan & Traffic Sale & PPC & Error & Illegal Service & Phishing & Baddomain &  Malware & Total\\
 \hline
 Spammy Search & 661 & 1514 & 33 & 28 & 28 & 43 & 122 & 17 & 73 & 20 & 2491 \\
 Hot Search & 33 & 2 & 26 & 27 & 0 &  2 & 2 & 0 &   3 & 0 & 93\\
 Spammy Ads & 0 & 0 & 0 & 0 & 1 & 0 & 5 & 0 & 0 & 0 & 6\\
 Hot Ads & 0 & 0 & 0 & 4 & 0 &  0 & 6 & 0 & 0 & 0 & 10\\
-\bottomrule
-\multicolumn{10}{c} {TS: Traffic Sale, PPC: Pay-Per-Click, IS: Illegal
-Service, RD: Redirect Domain}
-
-\end{tabularx}
+\end{tabular}
 \end{center}
 \caption{Cloaking Distribution.}
-\end{table*}
+\end{table}
 
 With the model built in ~\autoref{s:evaluation}, we detect cloaking in
 the four collected datasets, spammy search, $D_{spam, search}$, hot search,
 $D_{hot, search}$, spammy ads $D_{spam, ad}$, hot ads, $D_{hot, ad}$. 
 $D_{spam, search}$. From our observations, we categorize cloaking websites into 9 types:
 pharmacy, gambling, loan, general traffic sale, pay per click, error page, illegal service,
-phishing, bad domain and malware downloading. To better analyze cloaking incentives, 
+phishing, redirect domain and malware downloading. To better analyze cloaking incentives, 
 we divided traffic sale into 4 categories: pharmacy, gambling, loan and general traffic sale. 
 
 
@@ -34,11 +30,11 @@ we applied our cloaking detection system on 129393 websites. Cloaking detection 
 cloaking websites. 661 websites are cloaking of pharmacy. 1514 websites are cloaking of gambling.
 33 websites are cloaking of loan. 28 websites are cloaking of general traffic sale. 28 websites are cloaking
 of pay per click. 43 websites are cloaking of error page. 122 websites are cloaking of illegal service. 
-17 websites are cloaking of phishing. 73 websites are cloaking of baddomain. 20 websites are cloaking of malware downloading.
+17 websites are cloaking of phishing. 73 websites are cloaking of redirect domain. 20 websites are cloaking of malware downloading.
 In hot search, we applied our cloaking detection system on 25533 websites. Cloaking detection system reported 93
 cloaking websites. 33 websites are cloaking of pharmacy. 2 websites are cloaking of gambling.
 26 websites are cloaking of loan. 27 websites are cloaking of traffic sale. 2 websites are cloaking of cloaking of
-error page. 2 websites are cloaking of illegal service. 3 websites are cloaking of bad domain. 
+error page. 2 websites are cloaking of illegal service. 3 websites are cloaking of redirect domain. 
 
 In SEM field, we deteck cloaking websites in spammy ads and hot ads. In spammy ads,
 we applied cloaking detection system on 25533 websites. Cloaking detection system reported 6 cloaking websites.
@@ -66,7 +62,7 @@ malware download.
 %78 + 69 (gambling)
 %cheat, dishonest behavior
 %13
-%malware or bad domain
+%malware or redirect domain
 %16
 Compared to  ~\cite{wang2011cloak}, we detected a relatively small percentage of
 cloaking, this is probably because search engine is taking active action now, or
