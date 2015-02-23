@@ -229,8 +229,8 @@ fashion is relatively large, suffices Requirement (B).
 ~\autoref{fig:yahoo-simhash} gives an example on how DOM and text simhash looks
 like and how they are distributed on {\it www.yahoo.com} over 7 x 24 period from
 Feb. 1, 2015 to Feb. 7, 2015. ~\autoref{fig:yahoo-text-user} shows text simhash
-and ~\autoref{fig:yahoo-dom-user}. The x-axis is bits of simhash value and
-y-axis is the id of each observation (id increases in the order of time).
+and ~\autoref{fig:yahoo-dom-user} shows dom simhash. The x-axis is bits of simhash value and
+y-axis is the id of each observation (id increases in the order of collection time).
 
 It is pretty straightforward from ~\autoref{fig:yahoo-simhash} that,
 text simhash changes rapidly, indicating dynamic nature of this
@@ -240,7 +240,8 @@ Till now, we have demonstrated the algorithm we are using to generate
 text-simhash and dom-simhash out of a website. Based on our observation, the
 text-simhash might change rapidly, while dom-simhash relatively remain the same.
 
-\subsubsection{Aggregating / Clustering}
+\subsubsection{Clustering}
+\label{sss:clustering}
 Websites could have multiple versions of content due to many reasons.
 An example is page construction. The server might return some notice or help
 information for apology and instructions on what to do next.
@@ -274,9 +275,9 @@ used is average distance and criterion is inconsistent coefficient.
 {\bf Average linkage:} 
 Consider the following use case, spider collect
 multiple copies of a website and compute corresponding simhash $S_{spider} = \{s_{i}, i \in
-(1,n)\}$ and the user return observation $s_{j}$ for this website. In order to
-compare $s_{j}$ with $S_{spider}$, and take into consideration of the all the
-collected simhash, the distance from $s_{j}$ to centroid of $S_{spider}$ is a
+(1,n)\}$ and the user return observation $s_{user}$ for this website. In order to
+compare $s_{user}$ with $S_{spider}$, and take into consideration of the all the
+collected simhash, the distance from $s_{user}$ to centroid of $S_{spider}$ is a
 reasonable measure. In order to be consistent with detection phase (user versus
 spider), clustering phase uses average linkage as well.
 
@@ -299,21 +300,31 @@ calculation, $\sigma$ is standard deviation of the heights of all the links
 included in the calculation. In our case, each computation includes all links at
 the same level and below it, and this is done by setting $depth$ in
 $inconsistent(Z, depth)$ ~\cite{icintro} to $m-1$, where $m$ is total number of observations.
-Let $T_{learn}$ denote the threshold for inconsistent coefficient, by applying
-~\autoref{coefficient:learn} in clustering phase, $S_{spider}$ is divided into
-serveral clusters $S_{spider, k}, k \in (1, c)$. These clusters are
-Simhash-based Website Model for this website.
-
-We represent each cluster $S_{spider, k}$ with centroid and links formed in
-clustering phase $S_{spider, k} = \{centroid, links\}$. This representation is
-intended for comparison with a new observation (single node cluster). $centroid$ is used to
-compute distance from new observation to current cluster $d$, $links$ are used
-to compute $\mu$ and $\sigma$.
 
 \begin{equation}
   \label{coefficient:learn}
-  \alpha = \frac{d - \mu}{\sigma} < T_{learn}
+  \begin{gathered}
+    S_{spider, r} = \{centroid_r, links_r\}, \\
+    S_{spider, s} = \{centroid_s, links_s\} \\
+    \alpha = \frac{d_{r,s} - \mu}{\sigma}, \text{merge } S_{spider, r},
+    S_{spider, s} \text{ if } \alpha < T_{learn} \\
+    d_{r, s} = \frac{1}{n_rn_s}\sum_{i=1}^{n_r}\sum_{j=1}^{n_s} dist(s_{spider,
+    r, i}, s_{spider, s, j}) \\ 
+  \mu = avg(x), x \in  links_i \cup links_j \\
+  \sigma = std(x), x \in link_i \cup links_j \\
+\end{gathered}
 \end{equation}
+
+Let $T_{learn}$ denote the threshold for inconsistent coefficient, 
+~\autoref{coefficient:learn} shows the merging criterion in clustering phase.
+After clustering, $S_{spider}$ is divided into $c$ clusters $S_{spider, k}, k \in (1, c)$.
+These clusters are Simhash-based Website Model for this website.
+
+We denote each cluster $S_{spider, k}$ with centroid and links formed in
+clustering phase $S_{spider, k} = \{centroid, links\}$. This representation is
+intended for comparison with a new observation (single node cluster). $centroid$ is used to
+compute distance from new observation to current cluster, $links$ are used
+to compute $\mu$ and $\sigma$.
 
 %For different websites, simhash can be considered as an algorithm to map them to
 %a 64-bit number randomly ~\cite{manku2007detecting}. For the same website,
@@ -368,50 +379,40 @@ to compute $\mu$ and $\sigma$.
 
 \subsection{Cloaking Detection}
 In the above section, for observations of each website, $S_{spider}$, we have 
-learned clusters , which is$S_{spider, k}, k \in (1, c)$. 
-$S_{spider, k} = \{centroid, links\}$.
-
-Simhash-based Website Model. In order to use SWM, let's first look at how the
-comparison is going to be done.
-
-In modeling the content and layout change of a website, we want to do learning
-and comparing on a per url basis, therefore, we are assuming that the small hamming
-distance between different copies of same url should be small.
-
-Since we are modeling website on a per url basis and parameters in url may
-change every time of visit, it is necessary to define the granularity of
-comparison. For simplicity, we strip all the parameter
-values and keep all the parameter names, and throw away the scheme field, i.e.
-{\it http://www.gatech.edu/?user=1234} is simplified to
-{\it //www.gatech.edu/?user=}
-
-
-
-For simhash computation, we implements a browser extension which exposes
-negligible overhead to user.
-
+learned clusters , which is$S_{spider, k}, k \in (1, c)$. For each cluster, we
+represent it as $S_{spider, k} = \{centroid, links\}$.
+In order to use these clusters, we first illustrate how the comparison can be
+done.
 
 In order to detect SEO and SEM cloaking,
 this work first search and click results with normal user agent, then visit 
-landing urls collected with google bot user agent.
-For a specific website, we denote the spider copies as $S_{spider} = s_{i}, i \in
-(1,n)$, n is the number observations collected by spiders.
-Denote the user observation as $s_{j}$. In order to
-compare $s_{j}$ with $S_{spider}$, $S_{spider}$ is first lerned through
-hierarchical clustering, and this results in $C_{spider, i}, i \in (1,c)$, c is
-the number of clusters learned.
+landing urls collected with google bot user agent (described in detail in
+~\autoref{ss:dataset}).
+For a specific website, we denote user observation of this website as
+$s_{user}$, denote spider copies as $S_{spider}$ and 
+$S_{spider, k}$ are the learned clusters.
 
-For each cluster $C_{spider, i}$, we have link heights and centroid recorded.
-When comparing $s_{j}$ with $C_{spider, i}$, distance from $s_{j}$ to centroid
-of $C_{spider, i}$, i.e. $d_{j,i}$ can be computed.
-In order to reject $s_{j}$, we use inconsistent coefficient as well. If
+For each cluster $S_{spider, k}$, we record link heights and centroid.
+When comparing $s_{user}$ with $S_{spider, k} = \{centroid, links\}$, 
+distance $d'$ from $s_{user}$ to $centroid$ is computed, which is average distance
+from cluster $\{s_{user}\}$ to $S_{spider, k}$. In ~\autoref{sss:clustering}, we
+merge clusters if inconsistent coefficient $\alpha < T_{learn}$. Similarly, we
+could compute inconsistent coefficient $\alpha'$ for $\{s_{user}\}$ to $S_{spider, k}$ as
+shown in ~\autoref{coefficient:detect} and use detection threshold to reject
+$s_{user}$.
+
 \begin{equation}
-  \label{coefficient:detect}
-  \frac{d_{j,i} - \mu}{\sigma} > T_{detect}
+\label{coefficient:detect}
+\begin{gathered}
+  \alpha' = \frac{d' - \mu}{\sigma}, \text{reject } s_{user} \text{ if } \alpha' >
+  T_{detect} \\
+  \mu = avg(x), x \in  \{d'\} \cup links \\
+  \sigma = std(x), x \in \{d'\} \cup links \\
+\end{gathered}
 \end{equation}
 
-we reject this observation.
-An observation is marked as cloaking only when all the clusters reject it.
+For observation $s_{user}$, if all clusters $S_{spider, k}, k \in (1, c)$ rejects it, then
+mark $s_{user}$ as cloaking.
 
 However, in reality, there can be consistent differences between what spider
 sees and what user sees and this is totally leagal. An example is, a website may
@@ -423,6 +424,13 @@ a minimum radius $R_{detect}$. The modified formula is like this:
   \label{radius:detect}
   \frac{d_{j,i} - R_{detect} - \mu}{\sigma} > T_{detect}
 \end{equation}
+
+
+
+For simhash computation, we implements a browser extension which exposes
+negligible overhead to user.
+
+
 
 %Classification hinges on having access to a robust set of features derived from
 %URLs to discern between spam and non-spam. Previous work has shown that lexical
@@ -462,25 +470,9 @@ a minimum radius $R_{detect}$. The modified formula is like this:
 %After mannual check of those results.
 %
 %
-%
-%
-%You have to run {\tt latex} once to prepare your references for
-%munging.  Then run {\tt bibtex} to build your bibliography metadata.
-%Then run {\tt latex} twice to ensure all references have been resolved.
-%If your source file is called {\tt usenixTemplate.tex} and your {\tt
-%bibtex} file is called {\tt usenixTemplate.bib}, here's what you do:
-%{\tt \small
-%  \begin{verbatim}
-%  latex usenixTemplate
-%  bibtex usenixTemplate
-%  latex usenixTemplate
-%  latex usenixTemplate
-%  \end{verbatim}
-%}
-%
-
 
 \subsection{Dataset}
+\label{ss:dataset}
 \subsubsection{Keywords}
 Because we want to measure cloaking in SEO and SEM, we have compiled a list of
 cloaking words, from the policies specified by Adwords, inspired by the words
@@ -490,6 +482,21 @@ abuse, dishonest behavior abuse, health abuse, gambling abuse.
 
 
 \subsubsection{Crawl}
+
+In modeling the content and layout change of a website, we want to do learning
+and comparing on a per url basis, therefore, we are assuming that the small hamming
+distance between different copies of same url should be small.
+
+Since we are modeling website on a per url basis and parameters in url may
+change every time of visit, it is necessary to define the granularity of
+comparison. For simplicity, we strip all the parameter
+values and keep all the parameter names, and throw away the scheme field, i.e.
+{\it http://www.gatech.edu/?user=1234} is simplified to
+{\it //www.gatech.edu/?user=}
+
+
+
+
 
 We have collected four datasets, spammy search, $D_{spam, search}$, hot search,
 $D_{hot, search}$, spammy ads $D_{spam, ad}$, hot ads, $D_{hot, ad}$. 
