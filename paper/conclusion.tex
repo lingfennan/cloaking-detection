@@ -1,15 +1,25 @@
 \section{Conclusion}
 \label{s:conclusion}
 
-This work proposes Simhash Website Model and apply it to cloaking detection.
-A great advantage of this work is efficiency. While we are not able to deploy
+Cloaking is an ongoing war between inspectors and cloakers. 
+In the field of SEO and SEM, cloakers have different incentives for cloaking,
+i.e. monetizing traffic versus providing illegal service.
+The two challenges in cloaking deteciton enables cloaking to be popular in the
+wild: revealing cloaked content and diffrentiate dynamics from cloaking.
+This work proposes Simhash-based Website Model to address these challenges and
+achieves 97\% true positive rate at a false positive rate of 0.3\%.  
+
+A great advantage of this
+solution compared to past approaches is efficiency and ability to be deployed as
+user plugin. By crowdsourcing user views, both challenges are addressed
+elegantly. While we are not able to deploy
 the crowdsourcing model, we implement the data collection as browser plugin and
 encourage search engine or other inspectors to adopt this solution.
 
-Previous work on simhash focuses on using simhash to find near duplicates, in
-contrast, this work leverage the assuption that content from same website are
-likely to be near duplicates and use simhash to learn clusters and model website
-dynamics.
+%Previous work on simhash focuses on using simhash to find near duplicates, in
+%contrast, this work leverage the assuption that content from same website are
+%likely to be near duplicates and use simhash to learn clusters and model website
+%dynamics.
 
 
 
