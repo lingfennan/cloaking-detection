@@ -28,9 +28,15 @@ Similar to ~\cite{lin2009detection}, we start by remove duplicates (same simhash
 from user view and Google view) from $D_{hot, search}$ and $D_{spam, search}$,
 because these are not helpful for the algorithm training (designed to handle
 dynamics of websites, non-changing websites are handled by default). Then we
-manually label websites from $D_{hot, search}$ and $D_{spam, search}$ until we
-have relatively large sample size for training. By conducting this massive
-labeling, we collect 1195 cloaking examples. In terms of normal websites, we randomly
+manually label websites from $D_{hot, search}$ and $D_{spam, search}$ using
+heuristics such as domain reputation ~\cite{wot} until we
+have relatively large sample size for training. 
+It is important to notice that, although the labeling process uses some url
+reputation information (highly reputated domains are less likely to do cloaking),
+it is not relevant to the algorithm, for algorithm only measures text difference
+and layout difference of the original documents.
+By conducting this massive
+labeling process, we collect 1195 cloaking examples. In terms of normal websites, we randomly
 select 5308 samples from non-cloaking dataset. The two parts, 6503 urls in
 total, are combined as groundtruth $D_{g}$ for algorithm training and evaluation.
 By applying feature extraction and simhash computation described in

@@ -1,6 +1,41 @@
 \section{Discussion}
 \label{s:discussion}
 
+\begin{table*}[t]
+  \centering
+  \begin{center}
+    \begin{tabularx}{1\textwidth}{c|c|c|c|c|c}
+    \toprule
+    \multicolumn{6}{c} {$W$: number of words, $T$: number of tags,
+    $L$: number of links} \\
+    \midrule
+      Methods & Features & Complexity &
+      Efficiency & Effectiveness & Deployment \\
+      \hline
+      Najork ~\cite{najork2005system} & words, links, tags 
+      & $O(W^2 + L^2 + T^2)$ & low & low & User \\
+      Term \& Link Diff ~\cite{wu2005cloaking} & words and links & $O(W^2 + L^2)$
+      & low & medium  & Server  \\
+      Wu \& Davison ~\cite{wu2006detecting} & words, links & $O(W^2 + L^2)$ & 
+      low & medium &  Server \\
+      CloakingScore ~\cite{chellapilla2006improving} & words & $O(W^2)$ &
+      low & medium & Server  \\
+%      Click-Through ~\cite{wang2006detecting} & click-through  & 
+%      $O(W^2 + L^2 + T^2)$ & high & low & Server  \\
+      TagDiff ~\cite{lin2009detection} & tags  & $O(T^2)$  & medium &
+      medium &  Server  \\
+      Cloaker and Dagger ~\cite{wang2011cloak} & words, tags  &  $O(W +
+      T^2)$ & medium & high & Server \\
+      Hybrid Detection ~\cite{deng2013uncovering} & words, links, tags &
+      $O(W + L^2 + T^2)$ & medium & high & Server \\
+      SWM & words, tags & $O(W + T)$ & high & high & Server and User \\
+      \bottomrule
+    \end{tabularx}
+  \end{center}
+  \caption{Comparison of cloaking detection methods}
+  \label{comparison}
+\end{table*}
+
 In this section, we first compare our work with previous cloaking detection
 works, then discuss two kinds of deployment of simhash-based cloaking
 detection system: server-based and crowdsoucing-based. We analyze the attack models
@@ -36,50 +71,14 @@ set computation probability to $p = \frac{1}{100}$ to further reduce overhead.
 %though). Let $N$ denote the number of total urls collected, $M$ denoete the
 %number of cloaking websites. The time complexity is \XXX{Plot}.
 
-\begin{table*}[t]
-  \centering
-  \begin{center}
-    \begin{tabularx}{1\textwidth}{c|c|c|c|c|c}
-    \toprule
-    \multicolumn{6}{c} {$W$: number of words, $T$: number of tags,
-    $L$: number of links} \\
-    \midrule
-      Methods & Features & Complexity & Performance &
-      Efficiency & Deployment \\
-      \hline
-      Najork ~\cite{najork2005system} & terms, links, tags 
-      & $O(W^2 + L^2 + T^2)$ & medium & low & Server \\
-      Term \& Link Diff ~\cite{wu2005cloaking}       & terms and links & $O(W^2 + L^2)$
-      & low & low & Server  \\
-      Wu \& Davison ~\cite{wu2006detecting} & terms, links, tags & $O(W^2 + L^2 + T^2)$ & 
-      high & low &  Server \\
-      CloakingScore ~\cite{chellapilla2006improving} & terms &   $O(W^2 +
-      L^2 + T^2)$ & high & low & Server  \\
-      Click-Through ~\cite{wang2006detecting} & click-through  & 
-      $O(W^2 + L^2 + T^2)$ & high & low & Server  \\
-      TagDiff ~\cite{lin2009detection} & tags  &    $O(T^2)$  & medium &
-      high &  Server  \\
-      Cloaker and Dagger ~\cite{wang2011cloak} & terms, tags  &  $O(W^2 +
-      T^2)$ & high & medium & Server \\
-      Hybrid Detection ~\cite{deng2013uncovering} & terms, links, tags &
-      $O(W^2 + T^2)$ & high & low & Server \\
-      SWM & terms, tags & $O(W + T)$ & high & high & Server and User \\
-      \bottomrule
-    \end{tabularx}
-  \end{center}
-  \caption{Comparison of cloaking detection methods}
-  \label{comparison}
-\end{table*}
-
-
 
 
 
 
 \subsection{Server-based Deployment}
 In server-based cloaking detection system,
-we first collect targeted search terms includes commecial terms, cloaking oriented terms and hot trend words.
-Using these search terms, the system retrieves the search results from the search engines for seven times.
+we first collect targeted search words includes commecial terms, cloaking oriented terms and hot trend words.
+Using these search words, the system retrieves the search results from the search engines for seven times.
 First, the system disguises as normal user by using normal user agent. Next, the
 system disguises as Google crawler by using the Google Agent and visit landing
 pages obtained from the first visit. With this data that
@@ -147,7 +146,7 @@ from real users instead of crawlers. Advertisers don't need to pay extra money f
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=.45\textwidth]{fig/crowdsourcing-cloaking-detection-system}
+  \includegraphics[width=.5\textwidth]{fig/crowdsourcing-cloaking-detection-system}
   \caption{Workflow of crowdsource cloaking detection sysetem}
   \label{fig:workflow}
 \end{figure}

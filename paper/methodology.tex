@@ -301,6 +301,18 @@ included in the calculation. In our case, each computation includes all links at
 the same level and below it, and this is done by setting $depth$ in
 $inconsistent(Z, depth)$ ~\cite{icintro} to $m-1$, where $m$ is total number of observations.
 
+
+Let $T_{learn}$ denote the threshold for inconsistent coefficient, 
+~\autoref{coefficient:learn} shows the merging criterion in clustering phase.
+After clustering, $S_{spider}$ is divided into $c$ clusters $S_{spider, k}, k \in (1, c)$.
+These clusters are Simhash-based Website Model for this website.
+
+We denote each cluster $S_{spider, k}$ with centroid and links formed in
+clustering phase $S_{spider, k} = \{centroid, links\}$. This representation is
+intended for comparison with a new observation (single node cluster). $centroid$ is used to
+compute distance from new observation to current cluster, $links$ are used
+to compute $\mu$ and $\sigma$.
+
 \begin{equation}
   \label{coefficient:learn}
   \begin{gathered}
@@ -315,17 +327,6 @@ $inconsistent(Z, depth)$ ~\cite{icintro} to $m-1$, where $m$ is total number of 
     \sigma = std(x), x \in links_r \cup links_s \\
   \end{gathered}
 \end{equation}
-
-Let $T_{learn}$ denote the threshold for inconsistent coefficient, 
-~\autoref{coefficient:learn} shows the merging criterion in clustering phase.
-After clustering, $S_{spider}$ is divided into $c$ clusters $S_{spider, k}, k \in (1, c)$.
-These clusters are Simhash-based Website Model for this website.
-
-We denote each cluster $S_{spider, k}$ with centroid and links formed in
-clustering phase $S_{spider, k} = \{centroid, links\}$. This representation is
-intended for comparison with a new observation (single node cluster). $centroid$ is used to
-compute distance from new observation to current cluster, $links$ are used
-to compute $\mu$ and $\sigma$.
 
 %For different websites, simhash can be considered as an algorithm to map them to
 %a 64-bit number randomly ~\cite{manku2007detecting}. For the same website,

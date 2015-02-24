@@ -19,35 +19,50 @@
     \end{tabularx}
   \end{center}
   \caption{Cloaking Distribution.}
+  \label{tbl:result}
 \end{table*}
 
 
 With the model built in ~\autoref{s:evaluation}, we detect cloaking in
 four collected datasets, spammy search, $D_{spam, search}$, hot search,
 $D_{hot, search}$, spammy ads $D_{spam, ad}$, hot ads, $D_{hot, ad}$. 
-$D_{spam, search}$. From our observations, we categorize cloaking websites into 9 types:
-pharmacy, gambling, loan, general traffic sale, pay per click, error page, illegal service,
-phishing, parking domain and malware downloading. To better analyze cloaking incentives, 
-we divided traffic sale into 4 categories: pharmacy, gambling, loan and general traffic sale. 
+$D_{spam, search}$. From our observations, we categorize cloaking websites into
+seven types:
+Traffic Sale, Pay-Per-Click (PPC), Error Page, Illegal Service,
+Phishing, Parking Domain and Malware Downloading.
+To better analyze cloaking incentives, 
+we divided traffic sale into four categories: pharmacy, gambling, loan and general traffic sale. 
+Traffic sale sites are usually third party url composed of single iframe
+pointing the target site for traffic monetization, ~\autoref{seo:cloaking} gives
+an example. PPC means user view of landing page simply host pay-per-click advertisements.
+Error Page refers to website that deliver simple information, such as character 'P' to user,
+but SEO content to Google, the reason is unknown.
+Illegal Service includes websites that provide essay writing service, copyrighted
+content and bot service, e.g. buy 10k youtube likes.
+Parking Domain refers to domains that redirect user to unwanted download, but
+not necessarily malicious.
 
 \subsection{Cloaking in SEO}
-
-In SEO field, we detect cloaking websites in spammy search and hot search field. In spammy search,
-we applied our cloaking detection system on 129393 websites. Cloaking detection system reported 2491
-cloaking websites. We manually labeled all reported cloaking websites into categories.
-661 websites are cloaking of pharmacy. 1514 websites are cloaking of gambling.
-33 websites are cloaking of loan. 28 websites are cloaking of general traffic sale. 28 websites are cloaking
-of pay per click. 43 websites are cloaking of error page. 122 websites are cloaking of illegal service. 
-17 websites are cloaking of phishing. 73 websites are cloaking of parking domain. 20 websites are cloaking of malware downloading.
-In hot search, we applied our cloaking detection system on 25533 websites. Cloaking detection system reported 93
+In SEO, we detect cloaking websites in $D_{spam, search}$ and $D_{hot,
+search}$. In $D_{spam, search}$, we applied our cloaking detection system 
+on 129393 websites. We manually label
+the detection results and identified 2491 cloaking websites which are further
+labeled with its incentive ~\autoref{tbl:result}. Majority of these sites fall into traffic sale. 
+But it is worth noticing that phishing, parking domain and malware sums to 110
+in the table, which need to be cautious about.
+In $D_{hot, search}$, cloaking detection system returned 93
 cloaking websites. 33 websites are cloaking of pharmacy. 2 websites are cloaking of gambling.
-26 websites are cloaking of loan. 27 websites are cloaking of traffic sale. 2 websites are cloaking of cloaking of
-error page. 2 websites are cloaking of illegal service. 3 websites are cloaking of parking domain.
+26 websites are cloaking of loan. 27 websites are cloaking of traffic sale. 
+2 websites are cloaking of illegal service. 3 websites are cloaking of parking domain.
 
-From the data from SEO field, we see that the main goal of cloaking as an SEO technique is to obtain user traffic.
-In spammy search, 89.7\% is traffic sale cloaking. 97.27\% of them are from pharmacy and gambling. After analyzes, we found that
-pharmacy and gambling websites has strong motivations to raise their page rank in order to expose their websites to users and gain
-profits. In hot search, 94.6\% is traffic sale cloaking. We concluded that majority of cloaking websites in SEO field is doing traffic cloaking.
+From the detection result, we see that the main goal of cloaking as an SEO 
+technique is to obtain user traffic.
+In spammy search, 89.7\% is traffic sale cloaking. 97.27\% of them are from
+pharmacy and gambling. 
+In hot search, 94.6\% is traffic sale cloaking. 
+We conclude that majority of cloaking websites in SEO field is doing traffic
+sale, but there are sites promoting illegal service and even phishing and
+malware as well.
 
 %label total cloaking
 %173
@@ -75,21 +90,27 @@ profits. In hot search, 94.6\% is traffic sale cloaking. We concluded that major
 
 \subsection{Cloaking in SEM}
 
-In SEM field, we deteck cloaking websites in spammy ads and hot ads. In spammy ads,
+In SEM field, we deteck cloaking websites in $D_{spam, ad}$ and $D_{hot, ad}$. In spammy ads,
 we applied cloaking detection system on 25533 websites. Cloaking detection system reported 6 cloaking websites.
 1 website is cloaking of pay per click. In hot ads, we applied cloaking tection system on 25209 websites.
 Cloaking detection system reported 10 cloaking websites. 4 websites are cloaking of traffic sale.
 6 websites are cloaking of illegal service. 
 
-In spammy Ads and hot Ads, none of cloaking websites are traffic sale cloaking. 
+In spammy ads and hot ads, none of cloaking websites are traffic sale cloaking. 
 One reason is page ranking mechamisms in SEM.
-Because most of Ads are ranked by their real time bidding, there is no incentives to raise page rank by increasing traffic sale.
-In addition, using Ads to increase traffic sale can cost a lot. In stead of using Ads to increase page rank, a direct way
-is to pay search engine like Google to get higher rank. Most of cloaking websites in SEM have strong commercial incentives. In spammy Ads,
-83.3\% are providing illegal services to gain profits. 16.7\% are pay per click cloaking website. As long as the pay per click cloaking 
-website get engough clicks and gain more money than bidding cost, it is worthy to do pay per click cloaking in SEM. In hot ads, we see 60\%
-cloaking websites are providing illegal service. This fact confirmed our conclusion that most of cloaking in SEM are incented by commercial profits.
-We also see 40\% of them are doing general traffic sale. This implies that bidding cost is lower than profits of traffic sale. 
+Because most of ads are ranked by their real time bid price,
+there is no incentives to raise page rank by increasing traffic sale.
+In addition, using ads to increase traffic sale can cost a lot.
+Instead of using ads to increase page rank, a direct way
+is to pay search engine like Google to get higher rank. 
+Most of cloaking websites in SEM have strong commercial incentives. In spammy Ads,
+83.3\% are providing illegal services to gain profits. 
+16.7\% are pay per click cloaking website. As long as the pay per click cloaking 
+website get enough clicks and gain more money than bidding cost,
+it is worthy to do pay per click cloaking in SEM. In hot ads, we see 60\%
+cloaking websites are providing illegal service.
+This fact confirmed our conclusion that most of cloaking in
+SEM are motivated by commercial profits.
 
 %We argue that, previous methods cannot be used to detect SEM cloaking, simply
 %because performing clicks from search engine side, is ad fraud. In contrast,
