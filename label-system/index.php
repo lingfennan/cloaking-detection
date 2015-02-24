@@ -28,7 +28,15 @@ if (isset($_GET["userFile"])) {
 	//$userFile = "data/all.computed/ad.detection.result.eval";
 	//$userFile = "data/dishonest_behavior_abusive_words.computed/search.detection.result.eval";
 	//$userFile = "data/all.computed/search_sample_list_600_1.user.sample.text.eval";
-	$userFile = "data/all.computed/search_sample_list_600_combined_user.sample.text.eval";
+	//$userFile = "data/all.computed/search_sample_list_600_combined_user.sample.text.eval";
+	//$userFile = "data/effective_abusive_words.computed/effective_abusive_linux_ad_user_compute_list.detection.result.eval";
+	//$userFile = "data/2013_2014_monthly.w.computed/24_month_search_user_compute_list.detection.result.eval";
+
+	//$userFile = "data/detect/spammy_ad.computed/spammy_ad_user_in.detection.result.eval";
+	//$userFile = "data/detect/hot_ad.computed/hot_ad_user_in.detection.result.eval";
+	//$userFile = "data/detect/hot_search.computed/hot_search_user_in.detection.result.eval";
+	$userFile = "data/detect/spammy_search.computed/detection_result.eval";
+
 }
 if (isset($_GET["googleFile"])) {
 	$googleFile = $_GET["googleFile"];
@@ -39,7 +47,14 @@ if (isset($_GET["googleFile"])) {
 	//$googleFile = "data/all.computed/ad.detection.learned.eval";
 	//$googleFile = "data/dishonest_behavior_abusive_words.computed/search.detection.learned.eval";
 	//$googleFile = "data/all.computed/search_sample_list_600_1.google.sample.text.eval";
-	$googleFile = "data/all.computed/search_sample_list_600_combined_google.sample.text.eval";
+	//$googleFile = "data/all.computed/search_sample_list_600_combined_google.sample.text.eval";
+	//$googleFile = "data/effective_abusive_words.computed/effective_abusive_linux_ad_user_compute_list.detection.learned.eval";
+	//$googleFile = "data/2013_2014_monthly.w.computed/24_month_search_user_compute_list.detection.learned.eval";
+
+	//$googleFile = "data/detect/spammy_ad.computed/spammy_ad_user_in.detection.learned.eval";
+	//$googleFile = "data/detect/hot_ad.computed/hot_ad_user_in.detection.learned.eval";
+	//$googleFile = "data/detect/hot_search.computed/hot_search_user_in.detection.learned.eval";
+	$googleFile = "data/detect/spammy_search.computed/detection_learned.eval";
 }
 if (isset($_GET["table"])) {
 	$table_name = $_GET["table"];
@@ -52,7 +67,14 @@ if (isset($_GET["table"])) {
 	//$table_name = "dishonest_ad_detection";
 	//$table_name = "dishonest_search_detection";
 	//$table_name = "search_sample_list_600_1";
-	$table_name = "search_sample_list_600_combined";
+	// $table_name = "search_sample_list_600_combined";
+	//$table_name = "effective_abusive_linux";
+	//$table_name = "search_hot_24_month";
+
+	//$table_name = "detect_spammy_ad";
+	//$table_name = "detect_hot_ad";
+	//$table_name = "detect_hot_search";
+	$table_name = "detect_spammy_search";
 }
 // echo $userFile . $googleFile . $table_name;
 $oper = new Operations;
@@ -104,23 +126,33 @@ echo "<title>" . $table_name . "</title>";
 <form method="post">
 <div class="wrapper">
 <input class="button" type="radio" name="response" value="No">Similar
-<input class="button" type="radio" name="response" value="BenignCloaking">Benign Cloaking
+<input class="button" type="radio" name="response" value="SEOBusiness">SEO-ed Business
 <input class="button" type="radio" name="response" value="PageBroken">PageBroken
 <input class="button" type="radio" name="response" value="NotSure">Not Sure
 <br>
 <br>
-<input class="button" type="radio" name="response" value="Adult">Adult
 <input class="button" type="radio" name="response" value="Pharmacy">Pharmacy
-<input class="button" type="radio" name="response" value="Cheat">Cheat
 <input class="button" type="radio" name="response" value="Gambling">Gambling
-<input class="button" type="radio" name="response" value="BadDomain">Bad Domain
+<input class="button" type="radio" name="response" value="Loan">Loan
+<input class="button" type="radio" name="response" value="TrafficSale">General Traffic Sale
+<input class="button" type="radio" name="response" value="PPC">Pay-per-click
+<input class="button" type="radio" name="response" value="Error">Page Error
 <br>
-<input class="button" type="submit" name="submit" value="submit">
+<br>
+<input class="button" type="radio" name="response" value="IllegalService">IllegalService
+<input class="button" type="radio" name="response" value="Phishing">Phishing
+<input class="button" type="radio" name="response" value="BadDomain">BadDomain
+<input class="button" type="radio" name="response" value="Malware">Malware
+<br>
 <input class="button" type="submit" name="submit" value="label and skip url">
 <input class="button" type="submit" name="submit" value="exit">
 </div>
 
 <?php
+
+//<input class="button" type="submit" name="submit" value="submit">
+
+
 $url = $result["url"];
 $userFilePath = $result["userFilePath"];
 if ($userFilePath == "") {

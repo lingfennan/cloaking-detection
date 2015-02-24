@@ -1,0 +1,11 @@
+Install php memcached
+http://php.net/manual/en/book.memcached.php
+
+
+Step 1. 
+$ sudo apt-get install memcached 
+Step 2. 
+$ sudo apt-get install php5-memcached 
+Step 3. 
+$ sudo /etc/init.d/apache2 restart 
+

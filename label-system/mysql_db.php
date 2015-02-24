@@ -91,7 +91,15 @@ class Operations {
 			url VARCHAR(1000) NOT NULL,
 			userFilePath VARCHAR(1000) NOT NULL,
 			googleFilePath VARCHAR(1000) NOT NULL,
-			label ENUM('Adult', 'Pharmacy', 'Cheat', 'Gambling', 'BadDomain', 'BenignCloaking', 'No', 'NoByRef', 'PageBroken', 'NotSure', 'TODO', 'Processing'))";
+			label ENUM('Pharmacy', 'Gambling', 'Loan', 'TrafficSale', 'PPC', 'Error', 'IllegalService', 'Phishing', 'BadDomain', 'Malware',
+		       	'SEOBusiness', 'No', 'NoByRef', 'PageBroken', 'NotSure', 'TODO', 'Processing'))";
+		/*
+			Traffic Sale Error
+			Legitimate Software SEO-ed Business PPC
+			Fake-AV CPALead Insurance Link farm
+
+			label ENUM('Adult', 'Pharmacy', 'Cheat', 'Gambling', 'Phishing', 'BadDomain',
+		 */
 		// TODO is the start state,
 		// Processing is the processing state,
 		// Yes, No, NoByRef, PageBroken, NotSure are processed state.
@@ -222,7 +230,7 @@ class Operations {
 		$result = $result[1];
 		$result = array_slice($result[0], 1);
 		foreach($result as $table_name) {
-			$update_format = "UPDATE %s SET label = 'TODO' where label = 'Processing'";
+			$update_format = "UPDATE %s SET label = 'TODO' where label = 'Processing' or label = ''";
 			$update_query = sprintf($update_format, $table_name["Tables_in_LabelDB"]);
 			$q = array(
 				array("query" => $update_query),
