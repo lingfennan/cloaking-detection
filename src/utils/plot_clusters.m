@@ -6,6 +6,15 @@ function [ output_args ] = plot_clusters( filename )
 %       plot_clusters('train13_test24/plot_clusters_md_9_mcz_2_sw_1_tw_1');
 
 fid = fopen(filename);
+% Make the title more illustrative
+if ~isempty(strfind(filename,'dom'))
+    label_suffix = ': dom simhash';
+elseif ~isempty(strfind(filename,'text'))
+    label_suffix = ': text simhash';
+else
+    label_suffix = '';
+end
+
 label_md5_map = containers.Map();
 label_md5_map_filename = strcat(filename, '_label_md5_map');
 label_md5_map_fid = fopen(label_md5_map_filename, 'w');
@@ -40,7 +49,8 @@ while ~feof(fid)
         label = label(1:end-1);
     end
 
-    count = str2num(char(C(2)));
+    % the counter is not necessarily C(2)
+    count = str2num(char(C(end)));
     data = zeros(count, SIMHASH_SIZE);
     for n = 1:count
         tline = fgetl(fid);
@@ -62,11 +72,11 @@ while ~feof(fid)
     %image(data);
     %title(label_md5);
     bm_to_bw(data);
-    title(label);
-    xlabel('bits');
-    ylabel('simhashs');
-    
-    out_filename = strcat(in_filename, '_', label_md5, '.svg');
+    ht = title(strcat(label, label_suffix));
+    hx = xlabel('Simhash Bits');
+    hy = ylabel('Observations');
+    set([ht, hx, hy], 'FontSize', 20, 'FontName','Times New Roman');
+    out_filename = strcat(in_filename, '_', label_md5, '.png');
     saveas(h, fullfile(out_dir, out_filename));
 end
 labels = keys(label_md5_map);
@@ -82,14 +92,14 @@ function bm_to_bw( mat )
 [r,c] = size(mat);                           %# Get the matrix size
 imagesc((1:c)+0.5,(1:r)+0.5, mat);            %# Plot the image
 colormap(gray);                              %# Use a gray colormap
-axis equal                                   %# Make axes grid sizes equal
+%axis equal                                   %# Make axes grid sizes equal
 %{
 set(gca,'XTick',1:(c+1),'YTick',1:(r+1),...  %# Change some axes properties
         'XLim',[1 c+1],'YLim',[1 r+1],...
         'GridLineStyle','-','XGrid','on','YGrid','on');
 %}
 set(gca, 'XLim',[1 c+1],'YLim',[1 r+1], 'GridLineStyle','-', ...
-    'XGrid','on','YGrid','on');
+    'XGrid','on','YGrid','on', 'FontSize', 18, 'FontName','Times New Roman');
 
 end
 

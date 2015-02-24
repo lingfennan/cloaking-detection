@@ -1,5 +1,8 @@
 README	: Current file. Listing functionalities of each data file.
 
+gen_compute_list.sh: this script is to generate compute list for cluster_learning.py 
+
+
 trend/	: google trend data, including google hot search words etc.
 credentials	: accounts used for Google data collecting.
 google_bot_list	: user agents used by Google.
@@ -14,8 +17,6 @@ US_web_search_list.Firefox[2]	: google ad list collected through Firefox, using 
 US_web_search_list.Chrome.201411(10 + 2N)*	: ad list [1] crawled data using google_bot_list (even dates)
 US_web_search_list.Chrome.201411(11 + 2N)*	: ad list [2] crawled data using nong_google_bot_list_1 (odd dates)
 *.computed/	: the computed files, they are all processed.
-
-
 
 
 The following are labels.

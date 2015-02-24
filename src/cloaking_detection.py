@@ -4,6 +4,8 @@ python cloaking_detection.py -f detect -i <inputfile> -l <learnedfile> [-r <min_
 
 python cloaking_detection.py -f evaluate -i <inputfile> -l <learnedfile> -e <expectedfile> [-t <simhash_type>]
 
+python cloaking_detection.py -f evaluate_both -i <inputfile> -l <text_learnedfile> -e <expectedfile> [-t <simhash_type>]
+
 """
 
 import numpy as np

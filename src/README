@@ -5,12 +5,19 @@ cluster_learning.py
 	python cluster_learning.py -f compute -i <inputfile_list> [-o <outputfile> -t <simhash_type> -g]
 	# learn cluster
 	python cluster_learning.py -f learn -i <inputfile_list> [-o <outputfile>]
+	# compute list of crawl logs
+	python cluster_learning.py -f compute_list -i <list of inputfile_list> [-o <outputfile> -t <simhash_type> -g]
 
 cloaking_detection.py
 	# detect cloaking
 	python cloaking_detection.py -f detect -i <inputfile> -l <learnedfile> [-r <min_radius> -n <std_constant>, -t <simhash_type> default to TEXT]
 	# evaluate the result against expected result and give performance
 	python cloaking_detection.py -f evaluate -i <inputfile> -l <learnedfile> -e <expectedfile> [-t <simhash_type>]
+	# evaluate detected text and dom signatures.
+	python cloaking_detection.py -f evaluate_both -i <inputfile> -l <text_learnedfile> -e <expectedfile> [-t <simhash_type>]
+
+
+
 
 html_simhash_computer.py
 	used by cluster_learning.py

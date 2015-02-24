@@ -224,8 +224,8 @@ def main(argv):
 			learned_file = outputfile + ".text.learned"
 			evaluation_form(learned_file, learned_file + ".eval", "LearnedSites")
 	elif function == 'learn':
-		observed_sites_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
-		#observed_sites_filenames = [inputfile]
+		#observed_sites_filenames = filter(bool, open(inputfile, 'r').read().split('\n'))
+		observed_sites_filenames = [inputfile]
 		outputfile = inputfile + ".learned" if not outputfile else outputfile
 		learn(observed_sites_filenames, outputfile, inconsistent_coefficient)
 		plot_sim_distance(outputfile + ".learned", outputfile + ".learned.plot_sim_distance",

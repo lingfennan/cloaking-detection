@@ -1,3 +1,21 @@
+"""
+How to use:
+# run cross validation, to select parameters
+python cross_validation.py -f cross_validation [-i <inputfile> -t <trainfile> -e <expectedfile> -o <outfile> -c <min_train,max_train,min_test,max_test> -r <min_radius,max_radius>]
+
+# test with different parameters, and output FPR, FNR, can be used by
+# plot_ROC_new.m to plot ROC curve.
+python cross_validation.py -f plot_ROC [-i <inputfile> -t <trainfile> -e <expectedfile>
+	-o <outfile> -c <train,test> -r <min_radius,max_radius>]
+
+# test both DOM and text with different parameters, and output FPR, FNR, can be
+# used by plot_ROC_new.m to plot ROC curve.
+python cross_validation.py -f integrated_plot_ROC [-i <inputfile>
+	-c <text_train,text_test,dom_train,dom_test> 
+	-r <text_min_radius,text_max_radius,dom_min_radius,text_max_radius>] 
+"""
+
+
 import logging
 import sys, getopt
 import numpy as np
