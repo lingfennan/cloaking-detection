@@ -12,6 +12,10 @@ pip install -U scikit-learn
 sudo apt-get install python-numpy python-scipy
 wget https://protobuf.googlecode.com/svn/rc/protobuf-2.6.0.tar.gz
 	Follow instruction to install c++ and python version of protobuf.
+http://nodejs.org
+	Install nodejs
+npm install protobufjs
+
 
 one of the following:
 chrome, firefox, htmlunit
@@ -50,3 +54,15 @@ protocol buffer issue:
 	(2) then do the following
 	python setup.py build --cpp_implementation
 	python setup.py install --cpp_implementation
+
+node.js
+	Used to convert proto to js
+	directory: node_modules
+protobufjs
+	Communicate js in protocol buffer
+	How to convert proto to js / json
+		https://github.com/dcodeIO/ProtoBuf.js/wiki/proto2js
+pbjs
+	The newer version of protobufjs
+
+

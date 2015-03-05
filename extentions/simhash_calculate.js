@@ -13,6 +13,8 @@
    }
    );
    */
+var builder = ProtoBuf.loadJsonFile("cloaking_detection.json");
+
 
 
 //console.log(getText());
@@ -42,15 +44,17 @@ console.log(hash_text);
 var text_hash_val = buildByFeatures(hash_text);
 console.log(text_hash_val);
 
+var dom_features = breadthTraversal(document.documentElement);
+
 /*
-function removedup(arr){
-	var unique = [];
-	$.each(arr, function(i, el){
-		if($.inArray(el, unique) === -1) unique.push(el);
-	});
-	return unique;
-}
-*/
+   function removedup(arr){
+   var unique = [];
+   $.each(arr, function(i, el){
+   if($.inArray(el, unique) === -1) unique.push(el);
+   });
+   return unique;
+   }
+   */
 
 function nonempty(a) {
 	return a.filter(function(item) {
@@ -72,6 +76,31 @@ function ngram(text_array, n){
 		res.push(tmpstr);
 	}
 	return res;
+}
+
+function extract_one_node(node) {
+	var resultSet = $();
+	var node_str = node.tagName;
+	for () {
+	}
+}
+
+function breadthTraversal(node) {
+	var queue = [];
+	var resultSet = $();
+	queue.push(node);
+	while (queue.length > 0) {
+		var node = queue.shift();
+		var tempSet = extract_one_node(node, resultSet);
+		for (
+		resultSet.push($child[0]); //well, we found one
+		var children = node.children();
+		for (var i = 0; i < children.length; ++i) {
+			var $child = $(children[i]);
+			queue.push($child); //go deeper
+		}
+	}
+	return resultSet;
 }
 
 function buildByFeatures(features){
