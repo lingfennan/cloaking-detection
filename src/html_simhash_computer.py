@@ -111,11 +111,15 @@ class HtmlSimhashComputer(object):
 		q.put(node)
 		while not q.empty():
 			current_node = q.get()
-			if current_node.name is not None:
-				# extract info from current node
-				self._extract_one_node(current_node, html_dom_set)
-				for child in current_node.children:
-					q.put(child)
+			try:
+				if current_node.name is not None:
+					# extract info from current node
+					self._extract_one_node(current_node, html_dom_set)
+					for child in current_node.children:
+						q.put(child)
+			except:
+				print current_node
+				print sys.exc_info()[0]
 
 	def _extract_html_node_recursive(self, node, html_dom_set):
 		# current node is tag

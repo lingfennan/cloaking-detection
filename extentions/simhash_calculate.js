@@ -13,11 +13,14 @@
    }
    );
    */
-var builder = ProtoBuf.loadJsonFile("cloaking_detection.json");
 
+// This is the class for dom features.
+var HtmlDomFeatures = function() {
+	this.node = [];
+	this.bi_node = [];
+	this.tri_node = [];
+}
 
-
-//console.log(getText());
 var tabURL = window.location.href;
 //get visible text
 //var clone = $('#content').clone();
@@ -28,16 +31,10 @@ var text_arr = nonempty(raw_text.split(/[^A-Za-z0-9]/));
 var text = text_arr.toString();
 //clone.remove();
 console.log(tabURL);
-/*
-   chrome.tabs.getSelected(null, function(tab){
-   console.log(tab);
-   });
-   */
 
 var text_set = uniq(text_arr);
-//var text_set = removedup(text_arr).toString();
-var bigram = ngram(text_arr,2);
-var trigram = ngram(text_arr,3);
+var bigram = uniq(ngram(text_arr,2));
+var trigram = uniq(ngram(text_arr,3));
 
 var hash_text = text_set.concat(bigram.concat(trigram));
 console.log(hash_text);
@@ -45,16 +42,13 @@ var text_hash_val = buildByFeatures(hash_text);
 console.log(text_hash_val);
 
 var dom_features = breadthTraversal(document.documentElement);
-
-/*
-   function removedup(arr){
-   var unique = [];
-   $.each(arr, function(i, el){
-   if($.inArray(el, unique) === -1) unique.push(el);
-   });
-   return unique;
-   }
-   */
+// Only use node and bi-node features. tri-node is not used.
+var node_set = uniq(dom_features.node);
+var bi_node_set = uniq(dom_features.bi_node);
+var hash_dom = node_set.concat(bi_node_set);
+console.log(hash_dom);
+var dom_hash_val = buildByFeatures(hash_dom);
+console.log(dom_hash_val);
 
 function nonempty(a) {
 	return a.filter(function(item) {
@@ -78,29 +72,49 @@ function ngram(text_array, n){
 	return res;
 }
 
-function extract_one_node(node) {
-	var resultSet = $();
-	var node_str = node.tagName;
-	for () {
+function extract_one_node(node, features) {
+	var node_str = node.nodeName;
+	for (var i = 0; i < node.attributes.length; i++) {
+		node_str += "_" + node.attributes[i].name;
+	}
+	features.node.push(node_str);
+	if (node.parentNode) {
+		pn = node.parentNode;
+		pn_str = pn.nodeName;
+		if (pn.attributes) {
+			for (var i = 0; i < pn.attributes.length; i++) {
+				pn_str += "_" + pn.attributes[i].name;
+			}
+		}
+		bi_node = pn_str + "," + node_str;
+		features.bi_node.push(bi_node);
+	}
+	if (node.parentNode && node.parentNode.parentNode) {
+		grand = node.parentNode.parentNode;
+		grand_str = grand.nodeName;
+		if (grand.attributes) {
+			for (var i = 0; i < grand.attributes.length; i++) {
+				grand_str += "_" + grand.attributes[i].nodeName;
+			}
+		}
+		tri_node = grand_str + "," + pn_str + "," + node_str;
+		features.tri_node.push(tri_node);
 	}
 }
 
 function breadthTraversal(node) {
 	var queue = [];
-	var resultSet = $();
+	var features = new HtmlDomFeatures();
 	queue.push(node);
 	while (queue.length > 0) {
 		var node = queue.shift();
-		var tempSet = extract_one_node(node, resultSet);
-		for (
-		resultSet.push($child[0]); //well, we found one
-		var children = node.children();
-		for (var i = 0; i < children.length; ++i) {
-			var $child = $(children[i]);
-			queue.push($child); //go deeper
+		// deal with current node
+		extract_one_node(node, features);
+		for (var i = 0; i < node.children.length; ++i) {
+			queue.push(node.children[i]); //go deeper
 		}
 	}
-	return resultSet;
+	return features;
 }
 
 function buildByFeatures(features){
@@ -125,7 +139,7 @@ function buildByFeatures(features){
 	}
 
 	for(var h in hashs){
-		console.log(hashs[h]);
+		// console.log(hashs[h]);
 		for(var w_i=0; w_i<range/word_size; w_i++) {
 			for(i=0; i<word_size; i++){
 				if (hashs[h].words[w_i] & masks[i]) vec[i + w_i * word_size] += 1;
@@ -149,5 +163,3 @@ function getText(){
 function getHTML(){
 	return document.body.outerHTML
 }
-
-

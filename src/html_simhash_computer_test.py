@@ -36,6 +36,32 @@ def test_compute_simhash():
 		recursive_res = HtmlSimhashComputer(config).compute_simhash(data, False)
 		assert_equal(recursive_res[0][0].value, res[0][0].value)
 
+def test_yahoo():
+	filename= '../data/example_inner.html'
+	print filename
+	
+	data = open(filename, 'r').read()
+	# print visible_text(data)
+
+	config = CD.SimhashConfig()
+	config.simhash_type = CD.TEXT
+	config.usage.tri_gram = True
+	res = HtmlSimhashComputer(config).compute_simhash(data)
+	# print '%x' % res[0].value
+	print res[0][0].value
+	print res
+
+	# iteratively extract dom features
+	data = open(filename, 'r').read()
+	config = CD.SimhashConfig()
+	config.simhash_type = CD.DOM
+	config.usage.tri_gram = False
+	res = HtmlSimhashComputer(config).compute_simhash(data)
+	# print '%x' % res[0].value
+	print res[0][0].value
+	print res
+
 if __name__ == "__main__":
-	test_compute_simhash()
+	# test_compute_simhash()
+	test_yahoo()
 
